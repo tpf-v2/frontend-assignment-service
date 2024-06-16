@@ -1,55 +1,35 @@
-# Assignment Service
 
-This project uses React and Material-UI (MUI) for the frontend, and Poetry to manage the virtual environment for Python.
+## Instalación
 
-## Requirements
+1. Clona el repositorio:
 
-- Python 3.x
-- Poetry
-
-## Installation
-
-1. **Install Python dependencies using Poetry:**
     ```bash
-    poetry install
+    git clone <URL_de_tu_repositorio>
+    cd fronted-assignment-service
     ```
 
-2. **Initialize the React project using the setup script:**
+2. Instala las dependencias:
+
     ```bash
-    poetry run python setup_react.py
+    npm install
     ```
 
-## Running the Project
+3. Inicia la aplicación:
 
-To start the React development server:
-
-1. **Navigate to the React project directory:**
     ```bash
-    cd frontend-assignment-service
+    npm start
     ```
 
-2. **Start the development server:**
-    ```bash
-    poetry run npm start
-    ```
+La aplicación estará disponible en `http://localhost:3000`.
 
-The application will open at `http://localhost:3000`.
+## Componentes
 
-## Building for Production
+### `RoleSelection.js`
+Este componente permite al usuario seleccionar su rol (Estudiante o Profesor) y redirige al formulario correspondiente.
 
-To create an optimized production build:
+### `StudentForm.js` y `TeacherForm.js`
+Estos componentes representan los formularios para Estudiantes y Profesores, respectivamente. Actualmente, ambos formularios son idénticos y permiten la entrada de Nombre, Apellido y Padrón.
 
-1. **Navigate to the React project directory:**
-    ```bash
-    cd frontend-assignment-service
-    ```
+## License
 
-2. **Run the build command:**
-    ```bash
-    poetry run npm run build
-    ```
-
-## Project Structure
-
-- `frontend-assignment-service/`: Contains the React project.
-- `setup_react.py`: Script to initialize the Node.js environment and the React project.
+Este proyecto está licenciado bajo la MIT License.
