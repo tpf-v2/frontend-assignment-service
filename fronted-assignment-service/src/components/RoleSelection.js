@@ -15,11 +15,14 @@ const RoleSelection = () => {
             <Typography variant="h4" gutterBottom>
                 Selecciona tu rol
             </Typography>
-            <Button variant="contained" color="primary" onClick={() => navigate('/student')} style={{ margin: '10px', backgroundColor: '#0072C6' }}>
+            <Button variant="contained" color="primary" onClick={() => navigate('/student')} style={{ margin: '10px' }}>
                 Estudiante
             </Button>
-            <Button variant="contained" color="secondary" onClick={() => navigate('/teacher')} style={{ margin: '10px', backgroundColor: '#0072C6' }}>
+            <Button variant="contained" color="primary" onClick={() => navigate('/teacher')} style={{ margin: '10px' }}>
                 Profesor
+            </Button>
+            <Button variant="contained" color="primary" onClick={() => navigate('/calendar')} style={{ margin: '10px' }}>
+                Calendario
             </Button>
         </Container>
     );
