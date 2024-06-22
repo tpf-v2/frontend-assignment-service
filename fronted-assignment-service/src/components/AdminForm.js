@@ -1,45 +1,42 @@
-import React, { useState } from 'react';
-import { Typography, TextField, Button, Box, Container, Paper } from '@mui/material';
+import React from 'react';
+import { Container, Typography, Button, Paper, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
   padding: theme.spacing(4),
   boxShadow: theme.shadows[10],
+  textAlign: 'center',
 }));
 
 const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
-
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
+  margin: theme.spacing(2),
 }));
 
 const AdminForm = () => {
-  const [tutorEmail, setTutorEmail] = useState('');
-
-  const handleAssignTutor = () => {
-    alert(`El email ${tutorEmail} ha sido asignado como tutor`);
-  };
+  const navigate = useNavigate();
 
   return (
     <Container maxWidth="sm">
       <Root>
-        <Title variant="h5">Asignar Tutor</Title>
-        <TextField
-          label="Email del tutor"
-          fullWidth
-          margin="normal"
-          variant="outlined"
-          value={tutorEmail}
-          onChange={(e) => setTutorEmail(e.target.value)}
-          required
-        />
-        <ButtonStyled variant="contained" color="primary" onClick={handleAssignTutor}>
-          Asignar Tutor
-        </ButtonStyled>
+        <Typography variant="h5">Admin Dashboard</Typography>
+        <Box>
+          <ButtonStyled
+            variant="contained"
+            color="primary"
+            onClick={() => navigate('/admin-add-topic')}
+          >
+            Agregar Nuevo Tema
+          </ButtonStyled>
+          <ButtonStyled
+            variant="contained"
+            color="secondary"
+            onClick={() => navigate('/admin-add-corrector')}
+          >
+            Agregar Tutor
+          </ButtonStyled>
+        </Box>
       </Root>
     </Container>
   );

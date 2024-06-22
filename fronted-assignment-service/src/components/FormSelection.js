@@ -49,7 +49,7 @@ const FormSelection = () => {
                 Enviar Formulario de Temas a Tutorear
               </ButtonStyled>
               <ButtonStyled variant="contained" color="secondary" onClick={() => handleNavigation('/admin-form')}>
-                Asignar Tutor
+                Agregar Tutor o Tema
               </ButtonStyled>
             </>
           )}
