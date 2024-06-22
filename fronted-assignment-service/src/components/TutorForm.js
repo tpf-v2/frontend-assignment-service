@@ -1,6 +1,7 @@
-import React from 'react';
-import { Typography, FormGroup, FormControlLabel, Checkbox, Box, Button, Container, Paper } from '@mui/material';
+import React, { useState } from 'react';
+import { Typography, Box, Button, Container, Paper, MenuItem, FormControl, InputLabel, Select, Chip } from '@mui/material';
 import { styled } from '@mui/system';
+import { useTheme } from '@mui/material/styles';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -17,31 +18,61 @@ const Title = styled(Typography)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-const topics = ['Álgebra', 'Cálculo', 'Física', 'Química'];
+const topics = ['Álgebra', 'Cálculo', 'Física', 'Química', 'Probabilidad', 'Estadística'];
+
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: 224, // Altura máxima del dropdown
+      width: 250,
+    },
+  },
+};
 
 const TutorForm = () => {
-  const [selectedTopics, setSelectedTopics] = React.useState([]);
+  const theme = useTheme();
+  const [selectedTopics, setSelectedTopics] = useState([]);
 
   const handleTopicChange = (event) => {
-    const newTopics = event.target.checked
-      ? [...selectedTopics, event.target.name]
-      : selectedTopics.filter((topic) => topic !== event.target.name);
-    setSelectedTopics(newTopics);
+    setSelectedTopics(event.target.value);
+  };
+
+  const handleDelete = (topicToDelete) => () => {
+    setSelectedTopics((topics) => topics.filter((topic) => topic !== topicToDelete));
   };
 
   return (
     <Container maxWidth="sm">
       <Root>
         <Title variant="h5">Seleccione los temas que va a tutorear</Title>
-        <FormGroup>
-          {topics.map((topic) => (
-            <FormControlLabel
-              control={<Checkbox name={topic} onChange={handleTopicChange} />}
-              label={topic}
-              key={topic}
-            />
-          ))}
-        </FormGroup>
+        <FormControl fullWidth variant="outlined" margin="normal">
+          <InputLabel>Temas</InputLabel>
+          <Select
+            label="Temas"
+            multiple
+            value={selectedTopics}
+            onChange={handleTopicChange}
+            MenuProps={MenuProps}
+            renderValue={(selected) => (
+              <Box display="flex" flexWrap="wrap">
+                {selected.map((value) => (
+                  <Chip
+                    key={value}
+                    label={value}
+                    style={{ margin: 2 }}
+                    onDelete={handleDelete(value)}
+                  />
+                ))}
+              </Box>
+            )}
+          >
+            {topics.map((topic) => (
+              <MenuItem key={topic} value={topic}>
+                {topic}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <ButtonStyled variant="contained" color="primary">
           Enviar Temas
         </ButtonStyled>
