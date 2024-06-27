@@ -41,10 +41,10 @@ const StudentForm = ({ studentEmail }) => {
     e.preventDefault();
     
     const payload = {
-        email_sender: formData.email,
-        email_student_2: formData.email2 || null,
-        email_student_3: formData.email3 || null,
-        email_student_4: formData.email4 || null,
+        email: formData.email,
+        email_student_group_2: formData.email2 || null,
+        email_student_group_3: formData.email3 || null,
+        email_student_group_4: formData.email4 || null,
         group_id: new Date().toISOString(),
         topic1: formData.topic1,
         topic2: formData.topic2,
