@@ -41,7 +41,7 @@ const StudentForm = ({ studentEmail }) => {
     e.preventDefault();
     
     const payload = {
-        email: formData.email,
+        email: "student@gmail.com",
         email_student_group_2: formData.email2 || null,
         email_student_group_3: formData.email3 || null,
         email_student_group_4: formData.email4 || null,
@@ -54,8 +54,8 @@ const StudentForm = ({ studentEmail }) => {
     console.log('Payload:', payload); // Print payload to console for verification
 
     try {
-        const response = await axios.post('YOUR_BACKEND_URL', payload);
-        if (response.status === 200) {
+        const response = await axios.post('http://127.0.0.1:8000/topic_preferences/', payload);
+        if (response.status === 201) {
             alert('Formulario enviado con éxito');
         } else {
             alert('Error al enviar el formulario');
