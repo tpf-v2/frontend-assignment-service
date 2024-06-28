@@ -41,14 +41,14 @@ const StudentForm = ({ studentEmail }) => {
     e.preventDefault();
     
     const payload = {
-        email: "student@gmail.com",
-        email_student_group_2: formData.email2 || null,
-        email_student_group_3: formData.email3 || null,
-        email_student_group_4: formData.email4 || null,
+        email_sender: "student@example.com",
+        email_student_2: formData.email2 || null,
+        email_student_3: formData.email3 || null,
+        email_student_4: formData.email4 || null,
         group_id: new Date().toISOString(),
-        topic1: formData.topic1,
-        topic2: formData.topic2,
-        topic3: formData.topic3,
+        topic_1: formData.topic1,
+        topic_2: formData.topic2,
+        topic_3: formData.topic3,
     };
     
     console.log('Payload:', payload); // Print payload to console for verification
