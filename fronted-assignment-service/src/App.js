@@ -14,21 +14,38 @@ import { Box } from '@mui/material';
 import './App.css'; // Importar los estilos globales
 
 const App = () => {
-  // Ejemplo de usuario logueado (puedes obtener esta información desde el backend)
-  const [user, setUser] = useState({
-    name: 'Juan',
-    lastName: 'Perez',
-    email: 'juan.perez@example.com'
-  });
+  const [user, setUser] = useState(null);
+
+  const logInUser = (userData) => {
+    setUser(userData);
+  };
+
+  const resetUser = () => {
+    setUser(null);
+  };
+
+  const getColorBasedOnRole = (role) => {
+    switch (role) {
+      case 'tutor':
+        return '#6A0DAD'; // Violeta medio oscurito
+      case 'admin':
+        return '#4CAF50'; // Verde
+      case 'student':
+      default:
+        return '#0072C6'; // Celeste predeterminado
+    }
+  };
+
+  const color = user ? getColorBasedOnRole(user.role) : '#0072C6'; // Color predeterminado para los no logueados
 
   return (
     <Router>
       <Box className="main-container">
         {/* Mostrar Header solo si el usuario está logueado */}
-        {user && <Header user={user} />}
+        {user && <Header user={user} color={color} handleHomeClick={resetUser} />}
         <Box className="content-container">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home logInUser={logInUser} />} />
             <Route path="/form-selection" element={<FormSelection />} />
             <Route path="/student-form" element={<StudentForm />} />
             <Route path="/tutor-form" element={<TutorForm />} />
@@ -40,7 +57,7 @@ const App = () => {
           </Routes>
         </Box>
         {/* Mostrar Footer solo si el usuario está logueado */}
-        {user && <Footer />}
+        {user && <Footer color={color} />}
       </Box>
     </Router>
   );

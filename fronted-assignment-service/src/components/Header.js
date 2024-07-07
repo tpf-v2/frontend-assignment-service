@@ -1,12 +1,18 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button, Container, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import fiubaLogo from '../assets/Logo-fiuba_big_face.png'; // Asegúrate de que el path al logo es correcto
-const Header = ({ user }) => {
+import fiubaLogo from '../assets/Logo-fiuba_big_face.png'; 
+
+const Header = ({ user, color, handleHomeClick }) => {
   const navigate = useNavigate();
 
+  const handleHome = () => {
+    handleHomeClick();  // Llamar la función para restablecer el estado
+    navigate('/');
+  };
+
   return (
-    <AppBar position="static">
+    <AppBar position="static" style={{ backgroundColor: color }}>
       <Container maxWidth="lg">
         <Toolbar>
           <Box display="flex" alignItems="center" flexGrow={1}>
@@ -17,7 +23,7 @@ const Header = ({ user }) => {
           </Box>
           {user && (
             <Box>
-              <Button color="inherit" onClick={() => navigate('/')}>
+              <Button color="inherit" onClick={handleHome}>
                 Home
               </Button>
               <Button color="inherit" onClick={() => navigate('/profile')}>

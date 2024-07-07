@@ -19,12 +19,12 @@ const Title = styled(Typography)(({ theme }) => ({
 }));
 
 const hardcodedUsers = {
-  'student@example.com': { name: 'Juan', role: 'student' },
-  'tutor@example.com': { name: 'María', role: 'tutor' },
-  'admin@example.com': { name: 'Admin', role: 'admin' },
+  'student@example.com': { name: 'Juan', role: 'student', lastName: 'Perez' },
+  'tutor@example.com': { name: 'María', role: 'tutor', lastName: 'Gomez' },
+  'admin@example.com': { name: 'Admin', role: 'admin', lastName: 'Smith' },
 };
 
-const Home = () => {
+const Home = ({ logInUser }) => {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
 
@@ -32,6 +32,7 @@ const Home = () => {
     e.preventDefault();
     const userData = hardcodedUsers[email];
     if (userData) {
+      logInUser(userData);
       navigate('/form-selection', { state: { user: userData } });
     } else {
       alert('Usuario no encontrado');
