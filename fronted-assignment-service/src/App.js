@@ -7,6 +7,7 @@ import TutorForm from './components/Forms/TutorForm';
 import AdminForm from './components/Forms/AdminForm';
 import AddTopicForm from './components/Forms/AddTopicForm';
 import AddTutorForm from './components/Forms/AddTutorForm';
+import UploadWhitelistForm from './components/Forms/UploadWhitelistForm';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Profile from './components/Profile';
@@ -52,6 +53,7 @@ const App = () => {
             <Route path="/admin-form" element={<AdminForm />} />
             <Route path="/admin-add-topic" element={<AddTopicForm />} />
             <Route path="/admin-add-corrector" element={<AddTutorForm />} />
+            <Route path="/upload-whitelist" element={<UploadWhitelistForm />} />
             <Route path="/profile" element={<Profile user={user} />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

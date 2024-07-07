@@ -7,15 +7,25 @@ const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
   padding: theme.spacing(4),
   boxShadow: theme.shadows[10],
+  textAlign: 'center', // Centrar el texto en el papel
+  borderRadius: theme.shape.borderRadius, // Bordes redondeados
+  backgroundColor: '#f5f5f5', // Color de fondo más claro
 }));
 
 const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
+  margin: theme.spacing(2),
+  width: '80%', // Ensanchar los botones
+  padding: theme.spacing(1.5), // Aumentar el padding para botones más grandes
+  fontSize: '1rem', // Aumentar el tamaño de la fuente
+  '&.MuiButton-containedPrimary': { backgroundColor: '#0072C6' }, // Color celeste FIUBA
+  '&.MuiButton-containedSecondary': { backgroundColor: '#A6A6A6' }, // Color gris claro para botones secundarios
+  '&:hover.MuiButton-containedPrimary': { backgroundColor: '#005B9A' }, // Color hover para botones primarios
+  '&:hover.MuiButton-containedSecondary': { backgroundColor: '#7A7A7A' }, // Color hover para botones secundarios
 }));
 
 const Title = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
+  color: '#0072C6', // Color celeste FIUBA
   textAlign: 'center',
 }));
 
@@ -50,6 +60,9 @@ const FormSelection = () => {
               </ButtonStyled>
               <ButtonStyled variant="contained" color="secondary" onClick={() => handleNavigation('/admin-form')}>
                 Agregar Tutor o Tema
+              </ButtonStyled>
+              <ButtonStyled variant="contained" color="secondary" onClick={() => handleNavigation('/upload-whitelist')}>
+                Agregar Lista de Alumnos
               </ButtonStyled>
             </>
           )}
