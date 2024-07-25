@@ -31,7 +31,7 @@ const AdminForm = () => {
           </ButtonStyled>
           <ButtonStyled
             variant="contained"
-            color="secondary"
+            color="primary"
             onClick={() => navigate('/admin-add-corrector')}
           >
             Agregar Tutor

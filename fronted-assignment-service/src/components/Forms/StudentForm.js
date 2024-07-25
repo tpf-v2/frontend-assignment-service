@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Typography, TextField, Button, Container, Paper, FormControl, InputLabel, Select, MenuItem, Box } from '@mui/material';
+import { Typography, TextField, Button, Container, Paper, FormControl, InputLabel, Select, MenuItem, Box, Alert } from '@mui/material';
 import { styled } from '@mui/system';
-import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
+import { sendGroupForm } from '../../api/sendGroupForm'; // Importa la función desde api.js
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -11,173 +10,190 @@ const Root = styled(Paper)(({ theme }) => ({
 }));
 
 const ButtonStyled = styled(Button)(({ theme }) => ({
-    marginTop: theme.spacing(2),
+  marginTop: theme.spacing(2),
 }));
 
 const Title = styled(Typography)(({ theme }) => ({
-    marginBottom: theme.spacing(3),
-    color: theme.palette.primary.main,
+  marginBottom: theme.spacing(3),
+  color: theme.palette.primary.main,
 }));
 
 const topics = ['Álgebra', 'Cálculo', 'Física', 'Química', 'Probabilidad', 'Estadística'];
 
-const StudentForm = ({ studentEmail }) => {
-    // Inicializa el estado del formulario con el email del estudiante.
-    const [formData, setFormData] = useState({
-    email: studentEmail || 'USER FORM WAS NOT ADDED YET',
-    email2: '',
-    email3: '',
-    email4: '',
+const StudentForm = ({ studentUid }) => {
+  const [formData, setFormData] = useState({
+    uid: studentUid || "000000",
+    uid2: '',
+    uid3: '',
+    uid4: '',
     topic1: '',
     topic2: '',
     topic3: '',
-    });
+  });
 
-    const handleChange = (e) => {
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [companionNames, setCompanionNames] = useState([]);
+
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+  };
 
-    const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     const payload = {
-        email_sender: "student@example.com",
-        email_student_2: formData.email2 || null,
-        email_student_3: formData.email3 || null,
-        email_student_4: formData.email4 || null,
-        group_id: new Date().toISOString(),
-        topic_1: formData.topic1,
-        topic_2: formData.topic2,
-        topic_3: formData.topic3,
+      uid_sender: formData.uid,
+      uid_student_2: formData.uid2 || null,
+      uid_student_3: formData.uid3 || null,
+      uid_student_4: formData.uid4 || null,
+      group_id: new Date().toISOString(),
+      topic_1: formData.topic1,
+      topic_2: formData.topic2,
+      topic_3: formData.topic3,
     };
     
     console.log('Payload:', payload); // Print payload to console for verification
 
     try {
-        const response = await axios.post('http://127.0.0.1:8000/topic_preferences/', payload);
-        if (response.status === 201) {
-            alert('Formulario enviado con éxito');
-        } else {
-            alert('Error al enviar el formulario');
-        }
-    } catch (error) {
-        console.error('Error al enviar el formulario', error);
+      const response = await sendGroupForm(payload);
+      if (response.status === 201) {
+        setSubmitSuccess(true);
+        setCompanionNames(response.data.companions); // Asume que el backend devuelve un array de compañeros con 'name' y 'lastName'
+      } else {
         alert('Error al enviar el formulario');
+      }
+    } catch (error) {
+      console.error('Error al enviar el formulario', error);
+      alert('Error al enviar el formulario');
     }
-    };
+  };
 
-    const isTopicDisabled = (topic) => {
-        return formData.topic1 === topic || formData.topic2 === topic || formData.topic3 === topic;
-    };
+  const isTopicDisabled = (topic) => {
+    return formData.topic1 === topic || formData.topic2 === topic || formData.topic3 === topic;
+  };
 
-    return (
+  return (
     <Container maxWidth="sm">
-        <Root>
+      <Root>
         <Title variant="h5">Formulario del Grupo</Title>
-        <form onSubmit={handleSubmit}>
+        {submitSuccess && (
+          <Alert severity="success">
+            Gracias por enviar el formulario de grupo, tus compañeros son:
+            <ul>
+              {companionNames.map((companion, index) => (
+                <li key={index}>
+                  {companion.name} {companion.lastName}
+                </li>
+              ))}
+            </ul>
+          </Alert>
+        )}
+        {!submitSuccess && (
+          <form onSubmit={handleSubmit}>
             <TextField
-            label="Email"
-            name="email"
-            type="email"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            value={formData.email}
-            onChange={handleChange}
-            InputProps={{
+              label="Padron"
+              name="uid"
+              type="number"
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              value={formData.uid}
+              onChange={handleChange}
+              InputProps={{
                 readOnly: true,
-            }}
-            required
+              }}
+              required
             />
             <TextField
-            label="Email integrante 2"
-            name="email2"
-            type="email"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            value={formData.email2}
-            onChange={handleChange}
+              label="Padron integrante 2"
+              name="uid2"
+              type="number"
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              value={formData.uid2}
+              onChange={handleChange}
             />
             <TextField
-            label="Email integrante 3"
-            name="email3"
-            type="email"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            value={formData.email3}
-            onChange={handleChange}
+              label="Padron integrante 3"
+              name="uid3"
+              type="number"
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              value={formData.uid3}
+              onChange={handleChange}
             />
             <TextField
-            label="Email integrante 4"
-            name="email4"
-            type="email"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            value={formData.email4}
-            onChange={handleChange}
+              label="Padron integrante 4"
+              name="uid4"
+              type="number"
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              value={formData.uid4}
+              onChange={handleChange}
             />
             <FormControl fullWidth variant="outlined" margin="normal">
-            <InputLabel>Tema 1</InputLabel>
-            <Select
+              <InputLabel>Tema 1</InputLabel>
+              <Select
                 name="topic1"
                 value={formData.topic1}
                 onChange={handleChange}
                 label="Tema 1"
                 required
-            >
+              >
                 {topics.map((topic) => (
-                <MenuItem key={topic} value={topic} disabled={isTopicDisabled(topic)}>
+                  <MenuItem key={topic} value={topic} disabled={isTopicDisabled(topic)}>
                     {topic}
-                </MenuItem>
+                  </MenuItem>
                 ))}
-            </Select>
+              </Select>
             </FormControl>
             <FormControl fullWidth variant="outlined" margin="normal">
-            <InputLabel>Tema 2</InputLabel>
-            <Select
+              <InputLabel>Tema 2</InputLabel>
+              <Select
                 name="topic2"
                 value={formData.topic2}
                 onChange={handleChange}
                 label="Tema 2"
                 required
-            >
+              >
                 {topics.map((topic) => (
-                <MenuItem key={topic} value={topic} disabled={isTopicDisabled(topic) || formData.topic1 === topic}>
+                  <MenuItem key={topic} value={topic} disabled={isTopicDisabled(topic) || formData.topic1 === topic}>
                     {topic}
-                </MenuItem>
+                  </MenuItem>
                 ))}
-            </Select>
+              </Select>
             </FormControl>
             <FormControl fullWidth variant="outlined" margin="normal">
-            <InputLabel>Tema 3</InputLabel>
-            <Select
+              <InputLabel>Tema 3</InputLabel>
+              <Select
                 name="topic3"
                 value={formData.topic3}
                 onChange={handleChange}
                 label="Tema 3"
                 required
-            >
+              >
                 {topics.map((topic) => (
-                <MenuItem
+                  <MenuItem
                     key={topic}
                     value={topic}
                     disabled={isTopicDisabled(topic) || formData.topic1 === topic || formData.topic2 === topic}
-                >
+                  >
                     {topic}
-                </MenuItem>
+                  </MenuItem>
                 ))}
-            </Select>
+              </Select>
             </FormControl>
             <ButtonStyled variant="contained" color="primary" type="submit">
-            Enviar Formulario
+              Enviar Formulario
             </ButtonStyled>
-        </form>
-        </Root>
+          </form>
+        )}
+      </Root>
     </Container>
-    );
+  );
 };
 
 export default StudentForm;

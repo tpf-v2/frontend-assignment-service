@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button, Container, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import fiubaLogo from '../assets/Logo-fiuba_big_face.png'; 
+import fiubaLogo from '../../assets/Logo-fiuba_big_face.png'; 
 
 const Header = ({ user, color, handleHomeClick }) => {
     const navigate = useNavigate();

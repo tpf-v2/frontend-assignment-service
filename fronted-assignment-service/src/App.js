@@ -7,9 +7,9 @@ import TutorForm from './components/Forms/TutorForm';
 import AdminForm from './components/Forms/AdminForm';
 import AddTopicForm from './components/Forms/AddTopicForm';
 import AddTutorForm from './components/Forms/AddTutorForm';
-import UploadWhitelistForm from './components/Forms/UploadWhitelistForm';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import UploadCSVForm from './components/Forms/UploadCSVForm';
+import Header from './components/UI/Header';
+import Footer from './components/UI/Footer';
 import Profile from './components/Profile';
 import { Box } from '@mui/material';
 import './App.css'; // Importar los estilos globales
@@ -53,7 +53,9 @@ const App = () => {
             <Route path="/admin-form" element={<AdminForm />} />
             <Route path="/admin-add-topic" element={<AddTopicForm />} />
             <Route path="/admin-add-corrector" element={<AddTutorForm />} />
-            <Route path="/upload-whitelist" element={<UploadWhitelistForm />} />
+            <Route path="/upload-students" element={user && user.role === 'admin' ? <UploadCSVForm formType="students" /> : <Navigate to="/" />} />
+            <Route path="/upload-topics" element={user && user.role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />} />
+            <Route path="/upload-tutors" element={user && user.role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />} />
             <Route path="/profile" element={<Profile user={user} />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

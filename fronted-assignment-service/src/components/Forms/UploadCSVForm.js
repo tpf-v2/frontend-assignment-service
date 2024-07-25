@@ -30,7 +30,7 @@ const DropzoneBox = styled(Box)(({ theme }) => ({
 
 const cuatrimestres = ['2C2024', '1C2025', '2C2025'];
 
-const UploadWhitelistForm = () => {
+const UploadCSVForm = ({ formType }) => {
   const [cuatrimestre, setCuatrimestre] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileError, setFileError] = useState('');
@@ -56,25 +56,40 @@ const UploadWhitelistForm = () => {
       setFileError('Por favor cargue un archivo CSV.');
       return;
     }
-    
+
     const formData = new FormData();
     formData.append('file', selectedFile);
     formData.append('cuatrimestre', cuatrimestre);
 
+    let apiUrl;
+    switch (formType) {
+      case 'students':
+        apiUrl = 'YOUR_BACKEND_URL/upload-students';
+        break;
+      case 'topics':
+        apiUrl = 'YOUR_BACKEND_URL/upload-topics';
+        break;
+      case 'tutors':
+        apiUrl = 'YOUR_BACKEND_URL/upload-tutors';
+        break;
+      default:
+        apiUrl = '';
+    }
+
     try {
-      const response = await axios.post('http://127.0.0.1:8000/upload-whitelist', formData, {
+      const response = await axios.post(apiUrl, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
       if (response.status === 200) {
-        alert('Whitelist cargada con éxito');
+        alert(`Archivo de ${formType} cargado con éxito`);
       } else {
-        alert('Hubo un problema al cargar la whitelist');
+        alert(`Hubo un problema al cargar el archivo de ${formType}`);
       }
     } catch (error) {
-      console.error('Error al cargar la whitelist', error);
-      alert('Error al cargar la whitelist');
+      console.error(`Error al cargar el archivo de ${formType}`, error);
+      alert(`Error al cargar el archivo de ${formType}`);
     }
   };
 
@@ -82,7 +97,11 @@ const UploadWhitelistForm = () => {
     <Container maxWidth="sm">
       <Root>
         <Box textAlign="center">
-          <Title variant="h5">Cargar Whitelist de Alumnos</Title>
+          <Title variant="h5">
+            {formType === 'students' && 'Cargar Archivo de Alumnos'}
+            {formType === 'topics' && 'Cargar Archivo de Temas'}
+            {formType === 'tutors' && 'Cargar Archivo de Tutores'}
+          </Title>
         </Box>
         <form onSubmit={handleSubmit}>
           <FormControl fullWidth margin="normal">
@@ -127,4 +146,4 @@ const UploadWhitelistForm = () => {
   );
 };
 
-export default UploadWhitelistForm;
+export default UploadCSVForm;

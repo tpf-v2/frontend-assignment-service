@@ -58,11 +58,17 @@ const FormSelection = () => {
               <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/tutor-form')}>
                 Enviar Formulario de Temas a Tutorear
               </ButtonStyled>
-              <ButtonStyled variant="contained" color="secondary" onClick={() => handleNavigation('/admin-form')}>
+              <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/admin-form')}>
                 Agregar Tutor o Tema
               </ButtonStyled>
-              <ButtonStyled variant="contained" color="secondary" onClick={() => handleNavigation('/upload-whitelist')}>
-                Agregar Lista de Alumnos
+              <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/upload-students')}>
+                Cargar Archivo de Alumnos
+              </ButtonStyled>
+              <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/upload-topics')}>
+                Cargar Archivo de Temas
+              </ButtonStyled>
+              <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/upload-tutors')}>
+                Cargar Archivo de Tutores
               </ButtonStyled>
             </>
           )}
