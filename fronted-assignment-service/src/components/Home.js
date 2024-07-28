@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Container, TextField, Button, Typography, Box, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
+import BackgroundContainer from './UI/BackgroundContainer';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -42,6 +43,7 @@ const Home = ({ logInUser }) => {
 
   return (
     <Container maxWidth="sm">
+      <BackgroundContainer/>
       <Root>
         <Box textAlign="center">
           <Title variant="h4">Iniciar Sesión</Title>

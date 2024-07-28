@@ -12,6 +12,7 @@ import Header from './components/UI/Header';
 import Footer from './components/UI/Footer';
 import Profile from './components/Profile';
 import { Box } from '@mui/material';
+import BackgroundContainer from './components/UI/BackgroundContainer';
 import './App.css'; // Importar los estilos globales
 
 const App = () => {
@@ -44,6 +45,7 @@ const App = () => {
       <Box className="main-container">
         {/* Mostrar Header solo si el usuario está logueado */}
         {user && <Header user={user} color={color} handleHomeClick={resetUser} />}
+        <BackgroundContainer/>
         <Box className="content-container">
           <Routes>
             <Route path="/" element={<Home logInUser={logInUser} />} />
