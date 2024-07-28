@@ -1,7 +1,25 @@
-import React, { useState } from 'react';
-import { Typography, TextField, Button, Container, Paper, FormControl, InputLabel, Select, MenuItem, Box, Alert } from '@mui/material';
+import React, { useState, useEffect } from 'react'; // Importa useEffect
+import {
+  Typography,
+  TextField,
+  Button,
+  Container,
+  Paper,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Box,
+  Alert,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
 import { styled } from '@mui/system';
 import { sendGroupForm } from '../../api/sendGroupForm'; // Importa la función desde api.js
+import { getStudents } from '../../api/getStudents'; // Importa la nueva función para obtener nombres
+import { getTopics } from '../../api/getTopics'; // Importa la nueva función para obtener topics
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -18,8 +36,6 @@ const Title = styled(Typography)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-const topics = ['Álgebra', 'Cálculo', 'Física', 'Química', 'Probabilidad', 'Estadística'];
-
 const StudentForm = ({ studentUid }) => {
   const [formData, setFormData] = useState({
     uid: studentUid || "000000",
@@ -32,15 +48,45 @@ const StudentForm = ({ studentUid }) => {
   });
 
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [companionNames, setCompanionNames] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false); // Estado para controlar el diálogo
+  const [studentNames, setStudentNames] = useState([]);
+  const [topics, setTopics] = useState([]); // Estado para los topics
+
+  useEffect(() => {
+    const fetchTopics = async () => {
+      try {
+        const response = await getTopics();
+        setTopics(response.data); // Asume que el backend devuelve un array de topics
+      } catch (error) {
+        console.error("Error al obtener los topics", error);
+        alert('Error al obtener los topics');
+      }
+    };
+  
+    fetchTopics();
+  }, []); // Fetch topics only on component mount
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     
+    const padrones = [formData.uid, formData.uid2, formData.uid3, formData.uid4];
+    
+    getStudents(padrones)
+      .then(response => {
+        setStudentNames(response.data);
+        setOpenDialog(true);
+      })
+      .catch(error => {
+        console.error("Error al obtener los compañeros", error);
+        alert('Error al obtener los compañeros');
+      });
+  };
+
+  const handleConfirm = async () => {
     const payload = {
       uid_sender: formData.uid,
       uid_student_2: formData.uid2 || null,
@@ -52,13 +98,11 @@ const StudentForm = ({ studentUid }) => {
       topic_3: formData.topic3,
     };
     
-    console.log('Payload:', payload); // Print payload to console for verification
-
     try {
       const response = await sendGroupForm(payload);
       if (response.status === 201) {
         setSubmitSuccess(true);
-        setCompanionNames(response.data.companions); // Asume que el backend devuelve un array de compañeros con 'name' y 'lastName'
+        setOpenDialog(false);
       } else {
         alert('Error al enviar el formulario');
       }
@@ -66,6 +110,10 @@ const StudentForm = ({ studentUid }) => {
       console.error('Error al enviar el formulario', error);
       alert('Error al enviar el formulario');
     }
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false); // Cerrar el diálogo sin enviar
   };
 
   const isTopicDisabled = (topic) => {
@@ -78,14 +126,7 @@ const StudentForm = ({ studentUid }) => {
         <Title variant="h5">Formulario del Grupo</Title>
         {submitSuccess && (
           <Alert severity="success">
-            Gracias por enviar el formulario de grupo, tus compañeros son:
-            <ul>
-              {companionNames.map((companion, index) => (
-                <li key={index}>
-                  {companion.name} {companion.lastName}
-                </li>
-              ))}
-            </ul>
+            Gracias por enviar el formulario de grupo.
           </Alert>
         )}
         {!submitSuccess && (
@@ -144,8 +185,8 @@ const StudentForm = ({ studentUid }) => {
                 required
               >
                 {topics.map((topic) => (
-                  <MenuItem key={topic} value={topic} disabled={isTopicDisabled(topic)}>
-                    {topic}
+                  <MenuItem key={topic.name} value={topic.name} disabled={isTopicDisabled(topic.name)}>
+                    {topic.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -160,8 +201,8 @@ const StudentForm = ({ studentUid }) => {
                 required
               >
                 {topics.map((topic) => (
-                  <MenuItem key={topic} value={topic} disabled={isTopicDisabled(topic) || formData.topic1 === topic}>
-                    {topic}
+                  <MenuItem key={topic.name} value={topic.name} disabled={isTopicDisabled(topic.name) || formData.topic1 === topic.name}>
+                    {topic.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -177,11 +218,11 @@ const StudentForm = ({ studentUid }) => {
               >
                 {topics.map((topic) => (
                   <MenuItem
-                    key={topic}
-                    value={topic}
-                    disabled={isTopicDisabled(topic) || formData.topic1 === topic || formData.topic2 === topic}
+                    key={topic.name}
+                    value={topic.name}
+                    disabled={isTopicDisabled(topic.name) || formData.topic1 === topic.name || formData.topic2 === topic.name}
                   >
-                    {topic}
+                    {topic.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -191,6 +232,24 @@ const StudentForm = ({ studentUid }) => {
             </ButtonStyled>
           </form>
         )}
+
+        {/* Diálogo de Confirmación */}
+        <Dialog open={openDialog} onClose={handleCloseDialog}>
+          <DialogTitle>Confirmar Envío</DialogTitle>
+          <DialogContent>
+            <Typography variant="body1">
+              ¿Estás seguro que quieres crear un grupo con los estudiantes: {studentNames.map(s => `${s.name} ${s.last_name}`).join(', ')}?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog} color="primary">
+              Seguir Editando
+            </Button>
+            <Button onClick={handleConfirm} color="primary">
+              Confirmar
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Root>
     </Container>
   );
