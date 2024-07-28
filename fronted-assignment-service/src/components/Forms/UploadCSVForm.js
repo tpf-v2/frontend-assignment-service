@@ -59,35 +59,41 @@ const UploadCSVForm = ({ formType }) => {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
-    formData.append('cuatrimestre', cuatrimestre);
+    //formData.append('cuatrimestre', cuatrimestre);
 
     let apiUrl;
     switch (formType) {
       case 'students':
-        apiUrl = 'YOUR_BACKEND_URL/upload-students';
+        apiUrl = 'http://127.0.0.1:8000/students/upload';
         break;
       case 'topics':
-        apiUrl = 'YOUR_BACKEND_URL/upload-topics';
+        apiUrl = 'http://127.0.0.1:8000/topics/upload';
         break;
       case 'tutors':
-        apiUrl = 'YOUR_BACKEND_URL/upload-tutors';
+        apiUrl = 'http://127.0.0.1:8000/tutors/upload';
         break;
       default:
         apiUrl = '';
     }
 
     try {
+      console.log(formData.get('file'))
       const response = await axios.post(apiUrl, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'text/csv',
         },
       });
-      if (response.status === 200) {
+      if (response.status === 201) {
         alert(`Archivo de ${formType} cargado con éxito`);
       } else {
+        console.log("entre al else")
+        console.log(formData.file)
+        console.log(response)
         alert(`Hubo un problema al cargar el archivo de ${formType}`);
       }
     } catch (error) {
+      console.log("error del catch")
+      console.log(error)
       console.error(`Error al cargar el archivo de ${formType}`, error);
       alert(`Error al cargar el archivo de ${formType}`);
     }

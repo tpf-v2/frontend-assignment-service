@@ -19,23 +19,24 @@ const Title = styled(Typography)(({ theme }) => ({
 }));
 
 const hardcodedUsers = {
-  'student@example.com': { name: 'Juan', role: 'student', lastName: 'Perez' },
-  'tutor@example.com': { name: 'María', role: 'tutor', lastName: 'Gomez' },
-  'admin@example.com': { name: 'Admin', role: 'admin', lastName: 'Smith' },
+  'student@example.com': { name: 'Juan', role: 'student', lastName: 'Perez', password: 'password' },
+  'tutor@example.com': { name: 'María', role: 'tutor', lastName: 'Gomez', password: 'password' },
+  'admin@example.com': { name: 'Admin', role: 'admin', lastName: 'Smith', password: 'password' },
 };
 
 const Home = ({ logInUser }) => {
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const userData = hardcodedUsers[email];
-    if (userData) {
+    if (userData && userData.password === password) {
       logInUser(userData);
       navigate('/form-selection', { state: { user: userData } });
     } else {
-      alert('Usuario no encontrado');
+      alert('Usuario no encontrado o contraseña incorrecta');
     }
   };
 
@@ -43,7 +44,7 @@ const Home = ({ logInUser }) => {
     <Container maxWidth="sm">
       <Root>
         <Box textAlign="center">
-          <Title variant="h4">Ingrese su Email</Title>
+          <Title variant="h4">Iniciar Sesión</Title>
         </Box>
         <form onSubmit={handleSubmit}>
           <TextField
@@ -56,8 +57,18 @@ const Home = ({ logInUser }) => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+          <TextField
+            label="Contraseña"
+            type="password"
+            fullWidth
+            margin="normal"
+            variant="outlined"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
           <ButtonStyled variant="contained" color="primary" type="submit" fullWidth>
-            Submit
+            Iniciar Sesión
           </ButtonStyled>
         </form>
       </Root>
