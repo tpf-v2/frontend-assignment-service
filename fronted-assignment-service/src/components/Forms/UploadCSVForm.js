@@ -1,8 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Container, TextField, Button, Typography, Box, Paper, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Paper,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
 import { styled } from '@mui/system';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -34,6 +50,21 @@ const UploadCSVForm = ({ formType }) => {
   const [cuatrimestre, setCuatrimestre] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileError, setFileError] = useState('');
+  const [responseMessage, setResponseMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false); // Estado para controlar el diálogo
+  const navigate = useNavigate();
+
+  // Effecto para redireccionar si la carga fue exitosa
+  useEffect(() => {
+    if (isSuccess) {
+      const timer = setTimeout(() => {
+        navigate('/'); // Redirige a la homepage
+      }, 3000); // Espera 3 segundos antes de redirigir
+
+      return () => clearTimeout(timer);
+    }
+  }, [isSuccess, navigate]);
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -47,7 +78,7 @@ const UploadCSVForm = ({ formType }) => {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: '.csv'
+    accept: '.csv',
   });
 
   const handleSubmit = async (e) => {
@@ -59,7 +90,6 @@ const UploadCSVForm = ({ formType }) => {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
-    //formData.append('cuatrimestre', cuatrimestre);
 
     let apiUrl;
     switch (formType) {
@@ -77,25 +107,32 @@ const UploadCSVForm = ({ formType }) => {
     }
 
     try {
-      console.log(formData.get('file'))
       const response = await axios.post(apiUrl, formData, {
         headers: {
           'Content-Type': 'text/csv',
         },
       });
+      //Check this since it's a temporary fix for server behavior
       if (response.status === 201) {
-        alert(`Archivo de ${formType} cargado con éxito`);
+        setResponseMessage(`Archivo de ${formType} cargado con éxito`);
+        setIsSuccess(true);
       } else {
-        console.log("entre al else")
-        console.log(formData.file)
-        console.log(response)
-        alert(`Hubo un problema al cargar el archivo de ${formType}`);
+        setResponseMessage(`Hubo un problema al cargar el archivo de ${formType}`);
+        setIsSuccess(false);
       }
     } catch (error) {
-      console.log("error del catch")
-      console.log(error)
       console.error(`Error al cargar el archivo de ${formType}`, error);
-      alert(`Error al cargar el archivo de ${formType}`);
+      setResponseMessage(`Error al cargar el archivo de ${formType}`);
+      setIsSuccess(false);
+    } finally {
+      setOpenDialog(true); // Abre el diálogo al finalizar
+    }
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    if (isSuccess) {
+      navigate('/'); // Redirige a la homepage al cerrar el diálogo
     }
   };
 
@@ -109,6 +146,7 @@ const UploadCSVForm = ({ formType }) => {
             {formType === 'tutors' && 'Cargar Archivo de Tutores'}
           </Title>
         </Box>
+
         <form onSubmit={handleSubmit}>
           <FormControl fullWidth margin="normal">
             <InputLabel>Cuatrimestre</InputLabel>
@@ -147,6 +185,21 @@ const UploadCSVForm = ({ formType }) => {
             Enviar
           </ButtonStyled>
         </form>
+
+        {/* Diálogo de respuesta */}
+        <Dialog open={openDialog} onClose={handleCloseDialog}>
+          <DialogTitle>{isSuccess ? "Éxito" : "Error"}</DialogTitle>
+          <DialogContent>
+            <Typography variant="body1">
+              {responseMessage}
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog} color="primary">
+              Aceptar
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Root>
     </Container>
   );
