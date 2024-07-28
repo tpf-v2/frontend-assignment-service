@@ -38,13 +38,13 @@ const Title = styled(Typography)(({ theme }) => ({
 
 const StudentForm = ({ studentUid }) => {
   const [formData, setFormData] = useState({
-    uid: studentUid || "000000",
-    uid2: '',
-    uid3: '',
-    uid4: '',
-    topic1: '',
-    topic2: '',
-    topic3: '',
+    uid: studentUid || "123456789",
+    uid2: undefined,
+    uid3: undefined,
+    uid4: undefined,
+    topic1: undefined,
+    topic2: undefined,
+    topic3: undefined,
   });
 
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -73,7 +73,7 @@ const StudentForm = ({ studentUid }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    const padrones = [formData.uid, formData.uid2, formData.uid3, formData.uid4];
+    const padrones = [formData.uid, formData.uid2, formData.uid3, formData.uid4].filter(uid => uid);
     
     getStudents(padrones)
       .then(response => {
