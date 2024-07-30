@@ -55,12 +55,6 @@ const FormSelection = () => {
           )}
           {user.role === 'admin' && (
             <>
-              <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/tutor-form')}>
-                Enviar Formulario de Temas a Tutorear
-              </ButtonStyled>
-              <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/admin-form')}>
-                Agregar Tutor o Tema
-              </ButtonStyled>
               <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/upload-students')}>
                 Cargar Archivo de Alumnos
               </ButtonStyled>

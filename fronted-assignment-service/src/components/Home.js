@@ -3,6 +3,8 @@ import { Container, TextField, Button, Typography, Box, Paper } from '@mui/mater
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import BackgroundContainer from './UI/BackgroundContainer';
+import { postLogin } from '../api/postLogin';
+import axios from 'axios'
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -20,7 +22,7 @@ const Title = styled(Typography)(({ theme }) => ({
 }));
 
 const hardcodedUsers = {
-  'student@example.com': { name: 'Juan', role: 'student', lastName: 'Perez', password: 'password' },
+  'jperez1@fi.uba.ar': { name: 'Juan', role: 'student', lastName: 'Perez', password: 'password' },
   'tutor@example.com': { name: 'María', role: 'tutor', lastName: 'Gomez', password: 'password' },
   'admin@example.com': { name: 'Admin', role: 'admin', lastName: 'Smith', password: 'password' },
 };
@@ -30,12 +32,38 @@ const Home = ({ logInUser }) => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+  
     const userData = hardcodedUsers[email];
-    if (userData && userData.password === password) {
-      logInUser(userData);
-      navigate('/form-selection', { state: { user: userData } });
+  
+    if (email && password) {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/connect', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            username: email,
+            password: password,
+          }),
+        });
+  
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Token:", data);
+          
+          logInUser(userData); // También puedes llamar a logInUser aquí
+          navigate('/form-selection', { state: { user: userData } });
+        } else {
+          const errorData = await response.json();
+          alert(errorData.detail || 'Error al iniciar sesión');
+        }
+      } catch (error) {
+        console.error("Error al intentar loguear el usuario", error);
+        alert('Error al intentar iniciar sesión');
+      }
     } else {
       alert('Usuario no encontrado o contraseña incorrecta');
     }
@@ -43,7 +71,7 @@ const Home = ({ logInUser }) => {
 
   return (
     <Container maxWidth="sm">
-      <BackgroundContainer/>
+      <BackgroundContainer />
       <Root>
         <Box textAlign="center">
           <Title variant="h4">Iniciar Sesión</Title>

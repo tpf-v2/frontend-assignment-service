@@ -38,7 +38,7 @@ const Title = styled(Typography)(({ theme }) => ({
 
 const StudentForm = ({ studentUid }) => {
   const [formData, setFormData] = useState({
-    uid: studentUid || "123456789",
+    uid: studentUid || "105001",
     uid2: undefined,
     uid3: undefined,
     uid4: undefined,
