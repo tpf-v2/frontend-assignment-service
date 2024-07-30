@@ -3,8 +3,6 @@ import { Container, TextField, Button, Typography, Box, Paper } from '@mui/mater
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import BackgroundContainer from './UI/BackgroundContainer';
-import { postLogin } from '../api/postLogin';
-import axios from 'axios'
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -37,7 +35,8 @@ const Home = ({ logInUser }) => {
   
     const userData = hardcodedUsers[email];
   
-    if (email && password) {
+    //TO-DO scale for admins & tutors
+    if (email.includes("fi.uba.ar")) {
       try {
         const response = await fetch('http://127.0.0.1:8000/connect', {
           method: 'POST',
@@ -64,8 +63,10 @@ const Home = ({ logInUser }) => {
         console.error("Error al intentar loguear el usuario", error);
         alert('Error al intentar iniciar sesión');
       }
-    } else {
-      alert('Usuario no encontrado o contraseña incorrecta');
+    }
+    else {
+      logInUser(userData); // También puedes llamar a logInUser aquí
+      navigate('/form-selection', { state: { user: userData } });
     }
   };
 
