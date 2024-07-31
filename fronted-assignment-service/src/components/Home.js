@@ -3,6 +3,7 @@ import { Container, TextField, Button, Typography, Box, Paper } from '@mui/mater
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import BackgroundContainer from './UI/BackgroundContainer';
+import { authenticateUser } from '../api/auth.js'; // Importa las funciones desde auth.js
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -32,40 +33,21 @@ const Home = ({ logInUser }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const userData = hardcodedUsers[email];
-  
-    //TO-DO scale for admins & tutors
+
     if (email.includes("fi.uba.ar")) {
       try {
-        const response = await fetch('http://127.0.0.1:8000/connect', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: new URLSearchParams({
-            username: email,
-            password: password,
-          }),
-        });
-  
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Token:", data);
-          
-          logInUser(userData); // También puedes llamar a logInUser aquí
-          navigate('/form-selection', { state: { user: userData } });
-        } else {
-          const errorData = await response.json();
-          alert(errorData.detail || 'Error al iniciar sesión');
-        }
+        const data = await authenticateUser(email, password);
+        console.log("User data:", data);
+        logInUser(userData);
+        navigate('/form-selection', { state: { user: userData } });
       } catch (error) {
         console.error("Error al intentar loguear el usuario", error);
-        alert('Error al intentar iniciar sesión');
+        alert(error.message || 'Error al intentar iniciar sesión');
       }
-    }
-    else {
-      logInUser(userData); // También puedes llamar a logInUser aquí
+    } else {
+      logInUser(userData);
       navigate('/form-selection', { state: { user: userData } });
     }
   };
