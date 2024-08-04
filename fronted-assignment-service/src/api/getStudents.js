@@ -6,7 +6,7 @@ export const getStudents = async (uids) => {
 
     // Agrega cada uid al objeto de parámetros
     uids.forEach(uid => {
-        params.append('uids', uid);
+        params.append('user_ids', uid);
     });
 
     // Realiza la solicitud GET con los parámetros de consulta dinámicos

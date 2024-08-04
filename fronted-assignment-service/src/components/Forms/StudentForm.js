@@ -91,11 +91,11 @@ const StudentForm = () => {
 
   const handleConfirm = async () => {
     const payload = {
-      uid_sender: formData.uid,
-      uid_student_2: formData.uid2 || null,
-      uid_student_3: formData.uid3 || null,
-      uid_student_4: formData.uid4 || null,
-      group_id: new Date().toISOString(),
+      user_id_sender: formData.uid,
+      user_id_student_2: formData.uid2 || null,
+      user_id_student_3: formData.uid3 || null,
+      user_id_student_4: formData.uid4 || null,
+      answer_id: new Date().toISOString(),
       topic_1: formData.topic1,
       topic_2: formData.topic2,
       topic_3: formData.topic3,
