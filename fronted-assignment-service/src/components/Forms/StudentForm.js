@@ -20,6 +20,7 @@ import { styled } from '@mui/system';
 import { sendGroupForm } from '../../api/sendGroupForm'; // Importa la función desde api.js
 import { getStudents } from '../../api/getStudents'; // Importa la nueva función para obtener nombres
 import { getTopics } from '../../api/getTopics'; // Importa la nueva función para obtener topics
+import { useSelector } from 'react-redux';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -36,9 +37,11 @@ const Title = styled(Typography)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-const StudentForm = ({ studentUid }) => {
+const StudentForm = () => {
+  const user = useSelector((state) => state.user);
+
   const [formData, setFormData] = useState({
-    uid: studentUid || "105001",
+    uid: user.id ,
     uid2: undefined,
     uid3: undefined,
     uid4: undefined,

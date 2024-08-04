@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Container, Button, Typography, Box, Paper } from '@mui/material';
 import { styled } from '@mui/system';
+import { useSelector } from 'react-redux';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -30,12 +31,14 @@ const Title = styled(Typography)(({ theme }) => ({
 }));
 
 const FormSelection = () => {
-  const { state } = useLocation();
+  // const { state } = useLocation();
   const navigate = useNavigate();
-  const { user } = state;
+  // const { user } = state;
+
+  const user = useSelector((state) => state.user);
 
   const handleNavigation = (path) => {
-    navigate(path, { state: { user } });
+    navigate(path);
   };
 
   return (
