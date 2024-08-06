@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Typography, Box, Paper } from '@mui/material';
 import { styled } from '@mui/system';
 import { useSelector } from 'react-redux';
@@ -8,34 +8,35 @@ const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
   padding: theme.spacing(4),
   boxShadow: theme.shadows[10],
-  textAlign: 'center', // Centrar el texto en el papel
-  borderRadius: theme.shape.borderRadius, // Bordes redondeados
-  backgroundColor: '#f5f5f5', // Color de fondo más claro
+  textAlign: 'center',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: '#f5f5f5',
 }));
 
 const ButtonStyled = styled(Button)(({ theme }) => ({
   margin: theme.spacing(2),
-  width: '80%', // Ensanchar los botones
-  padding: theme.spacing(1.5), // Aumentar el padding para botones más grandes
-  fontSize: '1rem', // Aumentar el tamaño de la fuente
-  '&.MuiButton-containedPrimary': { backgroundColor: '#0072C6' }, // Color celeste FIUBA
-  '&.MuiButton-containedSecondary': { backgroundColor: '#A6A6A6' }, // Color gris claro para botones secundarios
-  '&:hover.MuiButton-containedPrimary': { backgroundColor: '#005B9A' }, // Color hover para botones primarios
-  '&:hover.MuiButton-containedSecondary': { backgroundColor: '#7A7A7A' }, // Color hover para botones secundarios
+  width: '80%',
+  padding: theme.spacing(1.5),
+  fontSize: '1rem',
+  '&.MuiButton-containedPrimary': { backgroundColor: '#0072C6' },
+  '&.MuiButton-containedSecondary': { backgroundColor: '#A6A6A6' },
+  '&:hover.MuiButton-containedPrimary': { backgroundColor: '#005B9A' },
+  '&:hover.MuiButton-containedSecondary': { backgroundColor: '#7A7A7A' },
 }));
 
 const Title = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(3),
-  color: '#0072C6', // Color celeste FIUBA
+  color: '#0072C6',
   textAlign: 'center',
+  fontSize: '2rem',
+  fontWeight: 'bold',
+  textShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
 }));
 
 const FormSelection = () => {
-  // const { state } = useLocation();
-  const navigate = useNavigate();
-  // const { user } = state;
-
-  const user = useSelector((state) => state.user);
+  const { cuatrimestre } = useParams(); // Captura del cuatrimestre
+  const navigate = useNavigate(); // Hook para navegación
+  const user = useSelector((state) => state.user); // Obtener el usuario desde Redux
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -44,7 +45,12 @@ const FormSelection = () => {
   return (
     <Container maxWidth="sm">
       <Root>
-        <Title variant="h4">Bienvenido, {user.name}!</Title>
+        {user.role !== 'admin' ? (
+          <Title variant="h4">Bienvenido, {user.name}!</Title>
+        ) : null}
+        <Typography variant="h5" style={{ color: '#555' }}>
+          Cuatrimestre: {cuatrimestre || 'No especificado'}
+        </Typography>
         <Box textAlign="center">
           {user.role === 'student' && (
             <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/student-form')}>
@@ -58,13 +64,13 @@ const FormSelection = () => {
           )}
           {user.role === 'admin' && (
             <>
-              <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/upload-students')}>
+              <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation(`/upload-students/${cuatrimestre}`)}>
                 Cargar Archivo de Alumnos
               </ButtonStyled>
-              <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/upload-topics')}>
+              <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation(`/upload-topics/${cuatrimestre}`)}>
                 Cargar Archivo de Temas
               </ButtonStyled>
-              <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/upload-tutors')}>
+              <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation(`/upload-tutors/${cuatrimestre}`)}>
                 Cargar Archivo de Tutores
               </ButtonStyled>
             </>

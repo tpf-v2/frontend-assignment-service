@@ -48,14 +48,16 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home/>} />
             <Route path="/form-selection" element={<FormSelection />} />
+            {/* Improve to have only one /form-selection */}
+            <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />
             <Route path="/student-form" element={<StudentForm />} />
             <Route path="/tutor-form" element={<TutorForm />} />
             <Route path="/admin" element={user && user.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/" />} />
             <Route path="/admin-add-topic" element={<AddTopicForm />} />
             <Route path="/admin-add-corrector" element={<AddTutorForm />} />
-            <Route path="/upload-students" element={user.token && user.role === 'admin' ? <UploadCSVForm formType="students" /> : <Navigate to="/" />} />
-            <Route path="/upload-topics" element={user.token && user.role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />} />
-            <Route path="/upload-tutors" element={user.token && user.role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />} />
+            <Route path="/upload-students/:cuatrimestre" element={user.token && user.role === 'admin' ? <UploadCSVForm formType="students" /> : <Navigate to="/" />} />
+            <Route path="/upload-topics/:cuatrimestre" element={user.token && user.role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />} />
+            <Route path="/upload-tutors/:cuatrimestre" element={user.token && user.role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />} />
             <Route path="/profile" element={<Profile user={user} />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

@@ -44,10 +44,7 @@ const DropzoneBox = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
 
-const cuatrimestres = ['2C2024', '1C2025', '2C2025'];
-
 const UploadCSVForm = ({ formType }) => {
-  const [cuatrimestre, setCuatrimestre] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileError, setFileError] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
@@ -148,21 +145,6 @@ const UploadCSVForm = ({ formType }) => {
         </Box>
 
         <form onSubmit={handleSubmit}>
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Cuatrimestre</InputLabel>
-            <Select
-              value={cuatrimestre}
-              onChange={(e) => setCuatrimestre(e.target.value)}
-              label="Cuatrimestre"
-              required
-            >
-              {cuatrimestres.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
           <DropzoneBox {...getRootProps()}>
             <input {...getInputProps()} />
             {isDragActive ? (
