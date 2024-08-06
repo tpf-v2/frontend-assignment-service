@@ -24,7 +24,6 @@ export const authenticateUser = (email, password) => async (dispatch) =>
                 'Content-Type': 'application/x-www-form-urlencoded',
             }
         });
-        console.log(response.data)
         const data = parseJwt(response.data.access_token).sub
         const userData = {
             id: data.id,

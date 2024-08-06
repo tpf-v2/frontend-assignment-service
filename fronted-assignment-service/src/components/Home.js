@@ -30,13 +30,15 @@ const Home = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // const userData = hardcodedUsers[email];
     if (email && password) {
-    // if (email.includes("fi.uba.ar")) {
       try {
         const data = await dispatch(authenticateUser(email, password));
-        console.log("User data:", data);
-        navigate('/form-selection');
+        if(data.role === 'admin'){
+          navigate('/admin')
+        }
+        else{
+          navigate('/form-selection');
+        }
       } catch (error) {
         console.error("Error al intentar loguear el usuario", error);
         alert(error.message || 'Error al intentar iniciar sesión');

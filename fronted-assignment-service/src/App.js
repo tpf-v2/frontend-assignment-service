@@ -4,7 +4,7 @@ import Home from './components/Home';
 import FormSelection from './components/Forms/FormSelection';
 import StudentForm from './components/Forms/StudentForm';
 import TutorForm from './components/Forms/TutorForm';
-import AdminForm from './components/Forms/AdminForm';
+import AdminDashboard from './components/UI/AdminDashboard';
 import AddTopicForm from './components/Forms/AddTopicForm';
 import AddTutorForm from './components/Forms/AddTutorForm';
 import UploadCSVForm from './components/Forms/UploadCSVForm';
@@ -50,7 +50,7 @@ const App = () => {
             <Route path="/form-selection" element={<FormSelection />} />
             <Route path="/student-form" element={<StudentForm />} />
             <Route path="/tutor-form" element={<TutorForm />} />
-            <Route path="/admin-form" element={<AdminForm />} />
+            <Route path="/admin" element={user && user.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/" />} />
             <Route path="/admin-add-topic" element={<AddTopicForm />} />
             <Route path="/admin-add-corrector" element={<AddTutorForm />} />
             <Route path="/upload-students" element={user.token && user.role === 'admin' ? <UploadCSVForm formType="students" /> : <Navigate to="/" />} />
