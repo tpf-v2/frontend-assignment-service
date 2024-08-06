@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { setToken, setUser } from "../redux/userSlice";
 
 export function parseJwt(token) {
     // Dividir el token en sus tres partes: header, payload y firma
@@ -12,8 +13,8 @@ export function parseJwt(token) {
     // Parsear y retornar el JSON
     return JSON.parse(jsonPayload);
 }
-
-export async function authenticateUser(email, password) {
+export const authenticateUser = (email, password) => async (dispatch) =>
+    {
     try {
         const response = await axios.post('http://127.0.0.1:8000/connect', new URLSearchParams({
             username: email,
@@ -23,8 +24,19 @@ export async function authenticateUser(email, password) {
                 'Content-Type': 'application/x-www-form-urlencoded',
             }
         });
+        console.log(response.data)
+        const data = parseJwt(response.data.access_token).sub
+        const userData = {
+            id: data.id,
+            name: data.name,
+            last_name: data.last_name,
+            role: data.role,
+            email: email,
+            token: response.data.access_token
+        }
+        dispatch(setUser(userData));
 
-        return parseJwt(response.data.access_token);
+        return data;
     } catch (error) {
         if (error.response) {
             throw new Error(error.response.data.detail || 'Error al iniciar sesión');

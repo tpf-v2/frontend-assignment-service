@@ -14,16 +14,14 @@ import Profile from './components/Profile';
 import { Box } from '@mui/material';
 import BackgroundContainer from './components/UI/BackgroundContainer';
 import './App.css'; // Importar los estilos globales
+import { useDispatch, useSelector } from "react-redux";
 
 const App = () => {
-  const [user, setUser] = useState(null);
-
-  const logInUser = (userData) => {
-    setUser(userData);
-  };
+  // const [user, setUser] = useState(null);
+  const user = useSelector((state) => state.user);
 
   const resetUser = () => {
-    setUser(null);
+    //setUser(null);
   };
 
   const getColorBasedOnRole = (role) => {
@@ -44,26 +42,26 @@ const App = () => {
     <Router>
       <Box className="main-container">
         {/* Mostrar Header solo si el usuario está logueado */}
-        {user && <Header user={user} color={color} handleHomeClick={resetUser} />}
+        {user.token && <Header user={user} color={color} handleHomeClick={resetUser} />}
         <BackgroundContainer/>
         <Box className="content-container">
           <Routes>
-            <Route path="/" element={<Home logInUser={logInUser} />} />
+            <Route path="/" element={<Home/>} />
             <Route path="/form-selection" element={<FormSelection />} />
             <Route path="/student-form" element={<StudentForm />} />
             <Route path="/tutor-form" element={<TutorForm />} />
             <Route path="/admin-form" element={<AdminForm />} />
             <Route path="/admin-add-topic" element={<AddTopicForm />} />
             <Route path="/admin-add-corrector" element={<AddTutorForm />} />
-            <Route path="/upload-students" element={user && user.role === 'admin' ? <UploadCSVForm formType="students" /> : <Navigate to="/" />} />
-            <Route path="/upload-topics" element={user && user.role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />} />
-            <Route path="/upload-tutors" element={user && user.role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />} />
+            <Route path="/upload-students" element={user.token && user.role === 'admin' ? <UploadCSVForm formType="students" /> : <Navigate to="/" />} />
+            <Route path="/upload-topics" element={user.token && user.role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />} />
+            <Route path="/upload-tutors" element={user.token && user.role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />} />
             <Route path="/profile" element={<Profile user={user} />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Box>
         {/* Mostrar Footer solo si el usuario está logueado */}
-        {user && <Footer color={color} />}
+        {user.token && <Footer color={color} />}
       </Box>
     </Router>
   );

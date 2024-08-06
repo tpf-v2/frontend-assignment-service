@@ -10,7 +10,7 @@ const Profile = ({ user }) => {
         </Typography>
         <Box>
           <Typography variant="body1"><strong>Nombre:</strong> {user.name}</Typography>
-          <Typography variant="body1"><strong>Apellido:</strong> {user.lastName}</Typography>
+          <Typography variant="body1"><strong>Apellido:</strong> {user.last_name}</Typography>
           <Typography variant="body1"><strong>Email:</strong> {user.email}</Typography>
         </Box>
       </Paper>

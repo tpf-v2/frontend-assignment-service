@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import BackgroundContainer from './UI/BackgroundContainer';
 import { authenticateUser } from '../api/auth.js'; // Importa las funciones desde auth.js
+import { useDispatch } from "react-redux";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -20,35 +21,28 @@ const Title = styled(Typography)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-const hardcodedUsers = {
-  'jperez1@fi.uba.ar': { name: 'Juan', role: 'student', lastName: 'Perez', password: 'password' },
-  'tutor@example.com': { name: 'María', role: 'tutor', lastName: 'Gomez', password: 'password' },
-  'admin@example.com': { name: 'Admin', role: 'admin', lastName: 'Smith', password: 'password' },
-};
-
-const Home = ({ logInUser }) => {
+const Home = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const userData = hardcodedUsers[email];
-
-    if (email.includes("fi.uba.ar")) {
+    // const userData = hardcodedUsers[email];
+    if (email && password) {
+    // if (email.includes("fi.uba.ar")) {
       try {
-        const data = await authenticateUser(email, password);
+        const data = await dispatch(authenticateUser(email, password));
         console.log("User data:", data);
-        logInUser(userData);
-        navigate('/form-selection', { state: { user: userData } });
+        navigate('/form-selection');
       } catch (error) {
         console.error("Error al intentar loguear el usuario", error);
         alert(error.message || 'Error al intentar iniciar sesión');
       }
     } else {
-      logInUser(userData);
-      navigate('/form-selection', { state: { user: userData } });
+      navigate('/form-selection');
     }
   };
 
