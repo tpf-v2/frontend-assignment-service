@@ -15,6 +15,8 @@ import { Box } from '@mui/material';
 import BackgroundContainer from './components/UI/BackgroundContainer';
 import './App.css'; // Importar los estilos globales
 import { useDispatch, useSelector } from "react-redux";
+import Dashboard from './components/UI/Dashboard';
+import DynamicTable from './components/UI/Tables/DynamicTable';
 
 const App = () => {
   // const [user, setUser] = useState(null);
@@ -48,6 +50,8 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home/>} />
             <Route path="/form-selection" element={<FormSelection />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/table-view" element={<DynamicTable />} />
             {/* Improve to have only one /form-selection */}
             <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />
             <Route path="/student-form" element={<StudentForm />} />
