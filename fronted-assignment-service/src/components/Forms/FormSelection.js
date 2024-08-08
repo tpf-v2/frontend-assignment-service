@@ -49,7 +49,7 @@ const FormSelection = () => {
           <Title variant="h4">Bienvenido, {user.name}!</Title>
         ) : null}
         <Typography variant="h5" style={{ color: '#555' }}>
-          Cuatrimestre: {cuatrimestre || 'No especificado'}
+          {cuatrimestre || 'No especificado'}
         </Typography>
         <Box textAlign="center">
           {user.role === 'student' && (
@@ -61,19 +61,6 @@ const FormSelection = () => {
             <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/tutor-form')}>
               Enviar Formulario de Temas a Tutorear
             </ButtonStyled>
-          )}
-          {user.role === 'admin' && (
-            <>
-              <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation(`/upload-students/${cuatrimestre}`)}>
-                Cargar Archivo de Alumnos
-              </ButtonStyled>
-              <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation(`/upload-topics/${cuatrimestre}`)}>
-                Cargar Archivo de Temas
-              </ButtonStyled>
-              <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation(`/upload-tutors/${cuatrimestre}`)}>
-                Cargar Archivo de Tutores
-              </ButtonStyled>
-            </>
           )}
         </Box>
       </Root>

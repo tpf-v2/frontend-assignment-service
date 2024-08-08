@@ -4,7 +4,7 @@ import Home from './components/Home';
 import FormSelection from './components/Forms/FormSelection';
 import StudentForm from './components/Forms/StudentForm';
 import TutorForm from './components/Forms/TutorForm';
-import AdminDashboard from './components/UI/AdminDashboard';
+import AdminDashboard from './components/UI/Dashboards/AdminDashboard';
 import AddTopicForm from './components/Forms/AddTopicForm';
 import AddTutorForm from './components/Forms/AddTutorForm';
 import UploadCSVForm from './components/Forms/UploadCSVForm';
@@ -15,7 +15,7 @@ import { Box } from '@mui/material';
 import BackgroundContainer from './components/UI/BackgroundContainer';
 import './App.css'; // Importar los estilos globales
 import { useDispatch, useSelector } from "react-redux";
-import Dashboard from './components/UI/Dashboard';
+import Dashboard from './components/UI/Dashboards/Dashboard';
 import DynamicTable from './components/UI/Tables/DynamicTable';
 
 const App = () => {
@@ -50,7 +50,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home/>} />
             <Route path="/form-selection" element={<FormSelection />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/:cuatrimestre" element={<Dashboard />} />
             <Route path="/table-view" element={<DynamicTable />} />
             {/* Improve to have only one /form-selection */}
             <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />

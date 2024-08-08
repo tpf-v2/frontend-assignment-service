@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Button, Typography, Box, Paper } from '@mui/material';
 import { styled } from '@mui/system';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, PieChart, Pie } from 'recharts';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -66,8 +66,12 @@ const barData = [
 ];
 
 const Dashboard = () => {
-  const cuatrimestre = "2C2024"; // Reemplaza esto con tu estado o props
   const navigate = useNavigate();
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
+  //It's not working. Will be hardcoded for the first delivery
+  const { cuatrimestre } = useParams(); // Captura del cuatrimestre
 
   const handleView = (endpoint, columns, columnNames) => {
     navigate('/table-view', { state: { endpoint, columns, columnNames } });
@@ -76,16 +80,16 @@ const Dashboard = () => {
   return (
     <Container maxWidth="lg">
       <Root>
-        <Title variant="h4">Cuatrimestre: {cuatrimestre}</Title>
+        <Title variant="h4">{cuatrimestre}</Title>
         <Box mt={2} display="flex" flexDirection="column" alignItems="center">
           <Box display="flex" justifyContent="space-between" width="100%">
-            <ButtonStyled variant="contained">CARGAR ARCHIVO DE ALUMNOS</ButtonStyled>
-            <ButtonStyled variant="contained">CARGAR ARCHIVO DE TEMAS</ButtonStyled>
-            <ButtonStyled variant="contained">CARGAR ARCHIVO DE TUTORES</ButtonStyled>
+            <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation(`/upload-students/${cuatrimestre}`)}>CARGAR ARCHIVO DE ALUMNOS</ButtonStyled>
+            <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation(`/upload-topics/${cuatrimestre}`)}>CARGAR ARCHIVO DE TEMAS</ButtonStyled>
+            <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation(`/upload-tutors/${cuatrimestre}`)}>CARGAR ARCHIVO DE TUTORES</ButtonStyled>
           </Box>
           <Box display="flex" justifyContent="space-between" width="100%">
-            <ButtonStyled variant="contained">VER LISTA ALUMNOS</ButtonStyled>
-            <ButtonStyled variant="contained">VER LISTA TEMAS</ButtonStyled>
+            <ButtonStyled variant="contained" >VER LISTA ALUMNOS</ButtonStyled>
+            <ButtonStyled variant="contained" onClick={() => handleView('/topics/', ['tema', 'categoria'], ['Temas', 'Categorías'])}>VER LISTA TEMAS</ButtonStyled>
             <ButtonStyled variant="contained">VER LISTA TUTORES</ButtonStyled>
           </Box>
         </Box>
@@ -98,11 +102,11 @@ const Dashboard = () => {
               <Typography variant="h3" color="#0072C6">240</Typography>
             </StatCard>
             <StatCard>
-              <Typography variant="h6">Total de Tutores</Typography>
+              <Typography variant="h6">Total de Temas</Typography>
               <Typography variant="h3" color="#0072C6">120</Typography>
             </StatCard>
             <StatCard>
-              <Typography variant="h6">Total de Temas</Typography>
+              <Typography variant="h6">Total de Tutores</Typography>
               <Typography variant="h3" color="#0072C6">150</Typography>
             </StatCard>
           </StatsContainer>

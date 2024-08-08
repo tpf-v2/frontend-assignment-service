@@ -12,7 +12,12 @@ const Header = ({ user, color, handleHomeClick }) => {
 
     const handleLogoClick = () => {
         handleHomeClick();  // Llamar la función para restablecer el estado
-        navigate('/form-selection');
+        if(user.role === 'admin'){
+          navigate('/admin');  
+        }
+        else{
+          navigate('/form-selection');
+        }
     };
 
     const handleLogout = () => {

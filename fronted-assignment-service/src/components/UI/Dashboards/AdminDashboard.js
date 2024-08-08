@@ -83,7 +83,7 @@ const AdminDashboard = () => {
   };
 
   const handleCardClick = (cuatrimestre) => {
-    navigate(`/form-selection/${cuatrimestre}`);
+    navigate(`/dashboard/${cuatrimestre}`);
   };
 
   const handleClickOpen = () => {
