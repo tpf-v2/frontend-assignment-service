@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; // Importa useEffect
+import React, { useState, useEffect } from 'react';
 import {
   Typography,
   TextField,
@@ -15,11 +15,14 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
 } from '@mui/material';
 import { styled } from '@mui/system';
-import { sendGroupForm } from '../../api/sendGroupForm'; // Importa la función desde api.js
-import { getStudents } from '../../api/getStudents'; // Importa la nueva función para obtener nombres
-import { getTopics } from '../../api/getTopics'; // Importa la nueva función para obtener topics
+import { sendGroupForm } from '../../api/sendGroupForm';
+import { getStudents } from '../../api/getStudents';
+import { getTopics } from '../../api/getTopics';
 import { useSelector } from 'react-redux';
 
 const Root = styled(Paper)(({ theme }) => ({
@@ -41,25 +44,30 @@ const StudentForm = () => {
   const user = useSelector((state) => state.user);
 
   const [formData, setFormData] = useState({
-    uid: user.id ,
+    uid: user.id,
     uid2: undefined,
     uid3: undefined,
     uid4: undefined,
     topic1: undefined,
     topic2: undefined,
     topic3: undefined,
+    selectedOption: 'selection', // Para manejar la selección de tema
+    specificTopic: '',
+    tutorName: '',
+    tutorLastName: '',
+    tutorEmail: '',
   });
 
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false); // Estado para controlar el diálogo
+  const [openDialog, setOpenDialog] = useState(false);
   const [studentNames, setStudentNames] = useState([]);
-  const [topics, setTopics] = useState([]); // Estado para los topics
+  const [topics, setTopics] = useState([]);
 
   useEffect(() => {
     const fetchTopics = async () => {
       try {
         const response = await getTopics();
-        setTopics(response.data); // Asume que el backend devuelve un array de topics
+        setTopics(response.data);
       } catch (error) {
         console.error("Error al obtener los topics", error);
         alert('Error al obtener los topics');
@@ -67,7 +75,7 @@ const StudentForm = () => {
     };
   
     fetchTopics();
-  }, []); // Fetch topics only on component mount
+  }, []); 
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -96,9 +104,12 @@ const StudentForm = () => {
       user_id_student_3: formData.uid3 || null,
       user_id_student_4: formData.uid4 || null,
       answer_id: new Date().toISOString(),
-      topic_1: formData.topic1,
-      topic_2: formData.topic2,
-      topic_3: formData.topic3,
+      topic_1: formData.selectedOption === 'existing' ? formData.specificTopic : formData.topic1,
+      topic_2: formData.selectedOption === 'existing' ? formData.specificTopic : formData.topic2,
+      topic_3: formData.selectedOption === 'existing' ? formData.specificTopic : formData.topic3,
+      tutor_name: formData.selectedOption === 'existing' ? formData.tutorName : null,
+      tutor_last_name: formData.selectedOption === 'existing' ? formData.tutorLastName : null,
+      tutor_email: formData.selectedOption === 'existing' ? formData.tutorEmail : null,
     };
     
     try {
@@ -116,11 +127,20 @@ const StudentForm = () => {
   };
 
   const handleCloseDialog = () => {
-    setOpenDialog(false); // Cerrar el diálogo sin enviar
+    setOpenDialog(false);
+  };
+
+  const handleOptionChange = (e) => {
+    setFormData({ ...formData, selectedOption: e.target.value });
   };
 
   const isTopicDisabled = (topic) => {
-    return formData.topic1 === topic || formData.topic2 === topic || formData.topic3 === topic;
+    return (
+      formData.topic1 === topic ||
+      formData.topic2 === topic ||
+      formData.topic3 === topic ||
+      formData.specificTopic === topic
+    );
   };
 
   return (
@@ -135,7 +155,7 @@ const StudentForm = () => {
         {!submitSuccess && (
           <form onSubmit={handleSubmit}>
             <TextField
-              label="Padron"
+              label="Padrón"
               name="uid"
               type="number"
               fullWidth
@@ -149,7 +169,7 @@ const StudentForm = () => {
               required
             />
             <TextField
-              label="Padron integrante 2"
+              label="Padrón integrante 2"
               name="uid2"
               type="number"
               fullWidth
@@ -159,7 +179,7 @@ const StudentForm = () => {
               onChange={handleChange}
             />
             <TextField
-              label="Padron integrante 3"
+              label="Padrón integrante 3"
               name="uid3"
               type="number"
               fullWidth
@@ -169,7 +189,7 @@ const StudentForm = () => {
               onChange={handleChange}
             />
             <TextField
-              label="Padron integrante 4"
+              label="Padrón integrante 4"
               name="uid4"
               type="number"
               fullWidth
@@ -178,58 +198,112 @@ const StudentForm = () => {
               value={formData.uid4}
               onChange={handleChange}
             />
-            <FormControl fullWidth variant="outlined" margin="normal">
-              <InputLabel>Tema 1</InputLabel>
-              <Select
-                name="topic1"
-                value={formData.topic1}
-                onChange={handleChange}
-                label="Tema 1"
-                required
-              >
-                {topics.map((topic) => (
-                  <MenuItem key={topic.name} value={topic.name} disabled={isTopicDisabled(topic.name)}>
-                    {topic.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl fullWidth variant="outlined" margin="normal">
-              <InputLabel>Tema 2</InputLabel>
-              <Select
-                name="topic2"
-                value={formData.topic2}
-                onChange={handleChange}
-                label="Tema 2"
-                required
-              >
-                {topics.map((topic) => (
-                  <MenuItem key={topic.name} value={topic.name} disabled={isTopicDisabled(topic.name) || formData.topic1 === topic.name}>
-                    {topic.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl fullWidth variant="outlined" margin="normal">
-              <InputLabel>Tema 3</InputLabel>
-              <Select
-                name="topic3"
-                value={formData.topic3}
-                onChange={handleChange}
-                label="Tema 3"
-                required
-              >
-                {topics.map((topic) => (
-                  <MenuItem
-                    key={topic.name}
-                    value={topic.name}
-                    disabled={isTopicDisabled(topic.name) || formData.topic1 === topic.name || formData.topic2 === topic.name}
+            
+            <Typography variant="h6" style={{ marginTop: '20px' }}>Seleccionar opción</Typography>
+            <RadioGroup value={formData.selectedOption} onChange={handleOptionChange}>
+              <FormControlLabel value="selection" control={<Radio />} label="Seleccionar 3 temas" />
+              <FormControlLabel value="existing" control={<Radio />} label="Ya tengo tema y tutor" />
+            </RadioGroup>
+
+            {formData.selectedOption === 'selection' && (
+              <>
+                <FormControl fullWidth variant="outlined" margin="normal">
+                  <InputLabel>Tema 1</InputLabel>
+                  <Select
+                    name="topic1"
+                    value={formData.topic1}
+                    onChange={handleChange}
+                    label="Tema 1"
+                    required
                   >
-                    {topic.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                    {topics.map((topic) => (
+                      <MenuItem key={topic.name} value={topic.name} disabled={isTopicDisabled(topic.name)}>
+                        {topic.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl fullWidth variant="outlined" margin="normal">
+                  <InputLabel>Tema 2</InputLabel>
+                  <Select
+                    name="topic2"
+                    value={formData.topic2}
+                    onChange={handleChange}
+                    label="Tema 2"
+                    required
+                  >
+                    {topics.map((topic) => (
+                      <MenuItem key={topic.name} value={topic.name} disabled={isTopicDisabled(topic.name) || formData.topic1 === topic.name}>
+                        {topic.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl fullWidth variant="outlined" margin="normal">
+                  <InputLabel>Tema 3</InputLabel>
+                  <Select
+                    name="topic3"
+                    value={formData.topic3}
+                    onChange={handleChange}
+                    label="Tema 3"
+                    required
+                  >
+                    {topics.map((topic) => (
+                      <MenuItem key={topic.name} value={topic.name} disabled={isTopicDisabled(topic.name) || formData.topic1 === topic.name || formData.topic2 === topic.name}>
+                        {topic.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </>
+            )}
+
+            {formData.selectedOption === 'existing' && (
+              <>
+                <TextField
+                  label="Tema Específico"
+                  name="specificTopic"
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
+                  value={formData.specificTopic}
+                  onChange={handleChange}
+                  required
+                />
+                <TextField
+                  label="Nombre del Tutor"
+                  name="tutorName"
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
+                  value={formData.tutorName}
+                  onChange={handleChange}
+                  required
+                />
+                <TextField
+                  label="Apellido del Tutor"
+                  name="tutorLastName"
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
+                  value={formData.tutorLastName}
+                  onChange={handleChange}
+                  required
+                />
+                <TextField
+                  label="Email del Tutor"
+                  name="tutorEmail"
+                  type="email"
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
+                  value={formData.tutorEmail}
+                  onChange={handleChange}
+                  required
+                />
+              </>
+            )}
+
             <ButtonStyled variant="contained" color="primary" type="submit">
               Enviar Formulario
             </ButtonStyled>
