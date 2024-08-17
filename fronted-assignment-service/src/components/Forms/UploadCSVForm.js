@@ -129,7 +129,7 @@ const UploadCSVForm = ({ formType }) => {
   const handleCloseDialog = () => {
     setOpenDialog(false);
     if (isSuccess) {
-      navigate('/form-selection'); // Redirige a la homepage al cerrar el diálogo
+      navigate('/admin'); // Redirige a la homepage al cerrar el diálogo
     }
   };
 

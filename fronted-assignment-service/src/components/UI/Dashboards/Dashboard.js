@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Button, Typography, Box, Paper } from '@mui/material';
 import { styled } from '@mui/system';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, PieChart, Pie } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getDashboardData } from '../../../api/dashboardStats';
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -67,11 +68,33 @@ const barData = [
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { cuatrimestre } = useParams(); // Captura del cuatrimestre
+  const [dashboardData, setDashboardData] = useState(null); // Estado para almacenar datos del dashboard
+  const [loading, setLoading] = useState(true); // Estado de carga
+
   const handleNavigation = (path) => {
     navigate(path);
   };
-  //It's not working. Will be hardcoded for the first delivery
-  const { cuatrimestre } = useParams(); // Captura del cuatrimestre
+
+  const getData = async () => {
+    try {
+      const data = await getDashboardData();
+      console.log(data)
+      setDashboardData(data); // Actualiza el estado con los datos obtenidos
+    } catch (error) {
+      console.error('Error al obtener datos del dashboard:', error);
+    } finally {
+      setLoading(false); // Finaliza el estado de carga, independientemente del resultado
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []); // Se ejecuta solo una vez
+
+  if (loading) {
+    return <div>Cargando...</div>; // Indicador de carga
+  }
 
   const handleView = (endpoint, columns, columnNames) => {
     navigate('/table-view', { state: { endpoint, columns, columnNames } });
@@ -88,7 +111,7 @@ const Dashboard = () => {
             <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation(`/upload-tutors/${cuatrimestre}`)}>CARGAR ARCHIVO DE TUTORES</ButtonStyled>
           </Box>
           <Box display="flex" justifyContent="space-between" width="100%">
-            <ButtonStyled variant="contained" >VER LISTA ALUMNOS</ButtonStyled>
+            <ButtonStyled variant="contained" onClick={() => handleView('/students/', ['padron', 'nombre','apellido','email'], ['Padron', 'Nombre', 'Apellido', 'Email'])}>VER LISTA ALUMNOS</ButtonStyled>
             <ButtonStyled variant="contained" onClick={() => handleView('/topics/', ['tema', 'categoria'], ['Temas', 'Categorías'])}>VER LISTA TEMAS</ButtonStyled>
             <ButtonStyled variant="contained">VER LISTA TUTORES</ButtonStyled>
           </Box>
@@ -99,11 +122,11 @@ const Dashboard = () => {
           <StatsContainer>
             <StatCard>
               <Typography variant="h6">Total de Alumnos</Typography>
-              <Typography variant="h3" color="#0072C6">240</Typography>
+              <Typography variant="h3" color="#0072C6">{dashboardData.studentCard}</Typography>
             </StatCard>
             <StatCard>
               <Typography variant="h6">Total de Temas</Typography>
-              <Typography variant="h3" color="#0072C6">120</Typography>
+              <Typography variant="h3" color="#0072C6">{dashboardData.topicsCard}</Typography>
             </StatCard>
             <StatCard>
               <Typography variant="h6">Total de Tutores</Typography>
