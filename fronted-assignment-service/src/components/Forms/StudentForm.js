@@ -98,22 +98,24 @@ const StudentForm = () => {
   };
 
   const handleConfirm = async () => {
+
+    const existingGroup = formData.selectedOption === 'existing' ? true : false;
     const payload = {
       user_id_sender: formData.uid,
       user_id_student_2: formData.uid2 || null,
       user_id_student_3: formData.uid3 || null,
       user_id_student_4: formData.uid4 || null,
       answer_id: new Date().toISOString(),
-      topic_1: formData.selectedOption === 'existing' ? formData.specificTopic : formData.topic1,
-      topic_2: formData.selectedOption === 'existing' ? formData.specificTopic : formData.topic2,
-      topic_3: formData.selectedOption === 'existing' ? formData.specificTopic : formData.topic3,
-      tutor_name: formData.selectedOption === 'existing' ? formData.tutorName : null,
-      tutor_last_name: formData.selectedOption === 'existing' ? formData.tutorLastName : null,
-      tutor_email: formData.selectedOption === 'existing' ? formData.tutorEmail : null,
+      topic_1: existingGroup ? formData.specificTopic : formData.topic1,
+      topic_2: existingGroup ? formData.specificTopic : formData.topic2,
+      topic_3: existingGroup ? formData.specificTopic : formData.topic3,
+      tutor_name: existingGroup ? formData.tutorName : null,
+      tutor_last_name: existingGroup ? formData.tutorLastName : null,
+      tutor_email: existingGroup ? formData.tutorEmail : null,
     };
     
     try {
-      const response = await sendGroupForm(payload);
+      const response = await sendGroupForm(payload,existingGroup);
       if (response.status === 201) {
         setSubmitSuccess(true);
         setOpenDialog(false);
@@ -260,16 +262,22 @@ const StudentForm = () => {
 
             {formData.selectedOption === 'existing' && (
               <>
-                <TextField
-                  label="Tema Específico"
-                  name="specificTopic"
-                  fullWidth
-                  margin="normal"
-                  variant="outlined"
-                  value={formData.specificTopic}
-                  onChange={handleChange}
-                  required
-                />
+                <FormControl fullWidth variant="outlined" margin="normal">
+                  <InputLabel>Tema Específico</InputLabel>
+                  <Select
+                    name="specificTopic"
+                    value={formData.specificTopic}
+                    onChange={handleChange}
+                    label="Tema Específico"
+                    required
+                  >
+                    {topics.map((topic) => (
+                      <MenuItem key={topic.name} value={topic.name} disabled={isTopicDisabled(topic.name)}>
+                        {topic.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
                 <TextField
                   label="Nombre del Tutor"
                   name="tutorName"
