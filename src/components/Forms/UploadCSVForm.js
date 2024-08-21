@@ -91,13 +91,13 @@ const UploadCSVForm = ({ formType }) => {
     let apiUrl;
     switch (formType) {
       case 'students':
-        apiUrl = 'http://127.0.0.1:8000/students/upload';
+        apiUrl = 'http://127.0.0.1:5000/students/upload';
         break;
       case 'topics':
-        apiUrl = 'http://127.0.0.1:8000/topics/upload';
+        apiUrl = 'http://127.0.0.1:5000/topics/upload';
         break;
       case 'tutors':
-        apiUrl = 'http://127.0.0.1:8000/tutors/upload';
+        apiUrl = 'http://127.0.0.1:5000/tutors/upload';
         break;
       default:
         apiUrl = '';

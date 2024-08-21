@@ -142,7 +142,7 @@ const Dashboard = () => {
         </Box>
             <Typography variant="h6" style={{ padding: '16px', color: '#0072C6', textAlign: 'left' }}>Cantidad de grupos segun integrantes</Typography>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={barData}>
+              <BarChart data={dashboardData.answersChart}>
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />

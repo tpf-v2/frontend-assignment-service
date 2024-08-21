@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Container, TextField, Button, Typography, Box, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
-import BackgroundContainer from './UI/BackgroundContainer';
+import BackgroundContainer from './UI/BackgroundContainer.js';
 import { authenticateUser } from '../api/auth.js'; // Importa las funciones desde auth.js
 import { useDispatch } from "react-redux";
 

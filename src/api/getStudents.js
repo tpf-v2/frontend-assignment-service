@@ -10,7 +10,7 @@ export const getStudents = async (uids) => {
     });
 
     // Realiza la solicitud GET con los parámetros de consulta dinámicos
-    const response = await axios.get(`http://127.0.0.1:8000/students/`, { params });
+    const response = await axios.get(`http://127.0.0.1:5000/students/`, { params });
     
     return response;
 };

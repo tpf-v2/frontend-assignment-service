@@ -3,8 +3,8 @@ import axios from 'axios';
 export const sendGroupForm = async (payload, existingGroup) => {
   try {
     var response;
-    if(existingGroup){
-      response = await axios.post('http://127.0.0.1:8000/forms/answers', payload);
+    if(!existingGroup){
+      response = await axios.post('http://127.0.0.1:5000/forms/answers', payload);
     }
     else{
       //TO-DO dynamic period in QP
@@ -18,7 +18,7 @@ export const sendGroupForm = async (payload, existingGroup) => {
         tutor_email: payload.tutor_email,
         topic: payload.topic_1
       }
-      response = await axios.post('http://127.0.0.1:8000/groups/?period=2C2024', groupPayload);
+      response = await axios.post('http://127.0.0.1:5000/groups/?period=2C2024', groupPayload);
     }
     
     return response;
