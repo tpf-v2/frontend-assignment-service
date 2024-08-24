@@ -78,7 +78,7 @@ const Dashboard = () => {
 
   const getData = async () => {
     try {
-      const data = await getDashboardData();
+      const data = await getDashboardData(cuatrimestre);
       console.log(data)
       setDashboardData(data); // Actualiza el estado con los datos obtenidos
     } catch (error) {
@@ -111,9 +111,9 @@ const Dashboard = () => {
             <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation(`/upload-tutors/${cuatrimestre}`)}>CARGAR ARCHIVO DE TUTORES</ButtonStyled>
           </Box>
           <Box display="flex" justifyContent="space-between" width="100%">
-            <ButtonStyled variant="contained" onClick={() => handleView('/students/', ['padron', 'nombre','apellido','email'], ['Padron', 'Nombre', 'Apellido', 'Email'])}>VER LISTA ALUMNOS</ButtonStyled>
-            <ButtonStyled variant="contained" onClick={() => handleView('/topics/', ['tema', 'categoria'], ['Temas', 'Categorías'])}>VER LISTA TEMAS</ButtonStyled>
-            <ButtonStyled variant="contained">VER LISTA TUTORES</ButtonStyled>
+            <ButtonStyled variant="contained" onClick={() => navigate(`/dashboard/${cuatrimestre}/students`)}>VER LISTA ALUMNOS</ButtonStyled>
+            <ButtonStyled variant="contained" onClick={() => navigate(`/dashboard/${cuatrimestre}/topics`)}>VER LISTA TEMAS</ButtonStyled>
+            <ButtonStyled variant="contained" onClick={() => navigate(`/dashboard/${cuatrimestre}/tutors`)}>VER LISTA TUTORES</ButtonStyled>
           </Box>
         </Box>
 
@@ -130,7 +130,7 @@ const Dashboard = () => {
             </StatCard>
             <StatCard>
               <Typography variant="h6">Total de Tutores</Typography>
-              <Typography variant="h3" color="#0072C6">150</Typography>
+              <Typography variant="h3" color="#0072C6">{dashboardData.tutorsCard}</Typography>
             </StatCard>
           </StatsContainer>
           <Box mt={4}>
@@ -138,7 +138,7 @@ const Dashboard = () => {
             Conformación de grupos    
         </Typography>
         <Box mt={2} display="flex" flexDirection="column" alignItems="center">
-            <ButtonStyled onClick={() => handleView('/forms/answers', ['integrantes', 'temas'], ['Integrantes', 'Temas'])}>VER RESPUESTAS</ButtonStyled>
+            <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/form-answers`)}>VER RESPUESTAS</ButtonStyled>
         </Box>
             <Typography variant="h6" style={{ padding: '16px', color: '#0072C6', textAlign: 'left' }}>Cantidad de grupos segun integrantes</Typography>
             <ResponsiveContainer width="100%" height={300}>

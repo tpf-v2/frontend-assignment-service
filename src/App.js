@@ -16,7 +16,11 @@ import BackgroundContainer from './components/UI/BackgroundContainer';
 import './App.css'; // Importar los estilos globales
 import { useDispatch, useSelector } from "react-redux";
 import Dashboard from './components/UI/Dashboards/Dashboard';
-import DynamicTable from './components/UI/Tables/DynamicTable';
+import ParentTable from './components/UI/Tables/ParentTable';
+import StudentsTable from './components/UI/Tables/ChildTables/StudentsTable';
+import TopicsTable from './components/UI/Tables/ChildTables/TopicsTable';
+import TutorsTable from './components/UI/Tables/ChildTables/TutorsTable';
+import FormAnswersTable from './components/UI/Tables/ChildTables/FormAnswersTable';
 
 const App = () => {
   // const [user, setUser] = useState(null);
@@ -51,7 +55,11 @@ const App = () => {
             <Route path="/" element={<Home/>} />
             <Route path="/form-selection" element={<FormSelection />} />
             <Route path="/dashboard/:cuatrimestre" element={<Dashboard />} />
-            <Route path="/table-view" element={<DynamicTable />} />
+            <Route path="/table-view" element={<ParentTable />} />
+            <Route path="dashboard/:cuatrimestre/students" element={<StudentsTable />} />
+            <Route path="dashboard/:cuatrimestre/topics" element={<TopicsTable />} />
+            <Route path="dashboard/:cuatrimestre/tutors" element={<TutorsTable />} />
+            <Route path="dashboard/:cuatrimestre/form-answers" element={<FormAnswersTable />} />
             {/* Improve to have only one /form-selection */}
             <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />
             <Route path="/student-form" element={<StudentForm />} />

@@ -12,9 +12,9 @@ export const getTableData = async (endpoint) => {
   }
 };
 
-export const deleteResponse = async (endpoint, id) => {
+export const deleteRow = async (endpoint, id) => {
   try {
-    await axios.delete(`${BASE_URL}${endpoint}/${id}`); // Cambia esta URL según tu API
+    await axios.delete(`${BASE_URL}${endpoint}${id}`); // Cambia esta URL según tu API
   } catch (error) {
     throw error; // Lanza el error para manejarlo en el componente
   }

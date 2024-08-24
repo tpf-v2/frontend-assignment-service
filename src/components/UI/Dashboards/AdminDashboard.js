@@ -80,7 +80,7 @@ const AdminDashboard = () => {
     const fetchData = async () => {
       try {
         const data = await fetchCuatrimestres();
-        setCuatrimestres(data.map(item => item.id)); // Adjust according to your data structure
+        setCuatrimestres(data.map(item => item.id).sort()); // Adjust according to your data structure
       } catch (error) {
         console.error(error.message);
       }

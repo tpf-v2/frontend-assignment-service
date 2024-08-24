@@ -20,19 +20,21 @@ const countResponsesByStudentLength = (responses) => {
     return countMap;
   };
 
-export const getDashboardData = async () => {
+export const getDashboardData = async (cuatrimestre) => {
     const studentEndpoint = '/students/';
     const answersEndpoint = '/forms/answers';
     const topicsEndpoint = '/topics/';
+    const tutorsEndpoint = `/tutors/periods/${cuatrimestre}`
     try {
         const responseStudent = await axios.get(`${BASE_URL}${studentEndpoint}`);
         const responseTopics = await axios.get(`${BASE_URL}${topicsEndpoint}`);
-        //review answers!
+        const responseTutors = await axios.get(`${BASE_URL}${tutorsEndpoint}`);
         const responseAnswers = await axios.get(`${BASE_URL}${answersEndpoint}`);
         
         var data = {
             studentCard: null,
             topicsCard: null,
+            tutorsCard: null,
             answersChart: [
                 { name: '1 Integrantes', cantidad: null },
                 { name: '2 Integrantes', cantidad: null },
@@ -43,6 +45,7 @@ export const getDashboardData = async () => {
 
         data.studentCard = responseStudent.data.length;
         data.topicsCard = responseTopics.data.length;
+        data.tutorsCard =responseTutors.data.length;
         
         var clusteredGroups = countResponsesByStudentLength(responseAnswers.data);
         console.log(clusteredGroups)

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
+import { Container, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
 import { styled } from '@mui/system';
-import { useLocation } from 'react-router-dom';
-import { getTableData, deleteResponse } from '../../../api/handleTableData';
+import { getTableData, deleteRow } from '../../../api/handleTableData';
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -21,9 +20,7 @@ const Title = styled(Typography)(({ theme }) => ({
   fontWeight: 'bold',
 }));
 
-const DynamicTable = () => {
-  const location = useLocation();
-  const { endpoint } = location.state; // Recibe el endpoint desde la navegación
+const ParentTable = ({ title, columns, endpoint, renderRow }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -31,55 +28,51 @@ const DynamicTable = () => {
     const fetchData = async () => {
       try {
         const responseData = await getTableData(endpoint);
-        setData(responseData); // Guarda los datos en el estado
+        setData(responseData); // Updates state with fetched data
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
-        setLoading(false); // Maneja el error
+        setLoading(false); // Handle error
       }
     };
 
     fetchData();
   }, [endpoint]);
 
-  const handleDelete = async (endpoint,id) => {
+  const handleDelete = async (id) => {
     try {
-      await deleteResponse(endpoint,id); // Llama a deleteResponse para eliminar el registro
-      setData(data.filter(item => item.answer_id !== id)); // Actualiza el estado
+      // Call deleteResponse to remove the record
+      await deleteRow(endpoint, id); 
+      // Filter the data state to remove the deleted item
+      setData(prevData => prevData.filter(item => item.id !== id)); 
     } catch (error) {
       console.error('Error deleting item:', error);
     }
   };
-
+  
   if (loading) return <Typography variant="h6">Cargando...</Typography>;
-
-  const keys = Object.keys(data[0] || {});
 
   return (
     <Container maxWidth="lg">
       <Root>
-        <Title variant="h4">Lista de Respuestas</Title>
+        <Title variant="h4">{title}</Title>
         
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
-                {keys.map(key => (
-                  <TableCell key={key}>{key.charAt(0).toUpperCase() + key.slice(1)}</TableCell>
+                {columns.map((column, index) => (
+                  <TableCell key={index}>{column}</TableCell>
                 ))}
                 <TableCell>Acciones</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data.map((item) => (
-                <TableRow key={item.answer_id}>
-                  {keys.map(key => (
-                    <TableCell key={key}>
-                      {Array.isArray(item[key]) ? item[key].join(', ') : item[key]}
-                    </TableCell>
-                  ))}
+                <TableRow key={item.id}>
+                  {renderRow(item)}
                   <TableCell>
-                    <Button onClick={() => handleDelete(endpoint,item.answer_id)} style={{ backgroundColor: 'red', color: 'white' }}>
+                    <Button onClick={() => handleDelete(item.id)} style={{ backgroundColor: 'red', color: 'white' }}>
                       Eliminar
                     </Button>
                   </TableCell>
@@ -93,4 +86,4 @@ const DynamicTable = () => {
   );
 };
 
-export default DynamicTable;
+export default ParentTable;
