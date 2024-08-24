@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { Container, Box, Paper, Card, CardContent, CardActionArea, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Container, Box, Card, CardContent, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
 import { useSelector } from 'react-redux';
+import { fetchCuatrimestres, addCuatrimestre } from '../../../api/handlePeriods'
 
 const Root = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -69,16 +70,35 @@ const terms = ['1', '2'];
 
 const AdminDashboard = () => {
   const user = useSelector((state) => state.user);
-  const [cuatrimestres, setCuatrimestres] = useState(['2C2024']); // Ejemplo inicial
+  const [cuatrimestres, setCuatrimestres] = useState([]);
   const [open, setOpen] = useState(false);
   const [newCuatrimestre, setNewCuatrimestre] = useState({ year: '', term: '' });
   const navigate = useNavigate();
 
-  const handleAddCuatrimestre = () => {
+  // Fetch existing cuatrimesters on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchCuatrimestres();
+        setCuatrimestres(data.map(item => item.id)); // Adjust according to your data structure
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleAddCuatrimestre = async () => {
     if (newCuatrimestre.year && newCuatrimestre.term) {
       const newEntry = `${newCuatrimestre.term}C${newCuatrimestre.year}`;
-      setCuatrimestres([...cuatrimestres, newEntry]);
-      handleClose();
+      try {
+        await addCuatrimestre(newEntry); // Call the add function
+        setCuatrimestres([...cuatrimestres, newEntry]);
+        handleClose();
+      } catch (error) {
+        console.error(error.message);
+      }
     }
   };
 
