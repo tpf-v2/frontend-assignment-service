@@ -4,6 +4,7 @@ import { styled } from '@mui/system';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getDashboardData } from '../../../api/dashboardStats';
+import { useSelector } from 'react-redux';
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -71,14 +72,16 @@ const Dashboard = () => {
   const { cuatrimestre } = useParams(); // Captura del cuatrimestre
   const [dashboardData, setDashboardData] = useState(null); // Estado para almacenar datos del dashboard
   const [loading, setLoading] = useState(true); // Estado de carga
+  const user = useSelector((state) => state.user);
 
   const handleNavigation = (path) => {
     navigate(path);
   };
 
   const getData = async () => {
+
     try {
-      const data = await getDashboardData(cuatrimestre);
+      const data = await getDashboardData(cuatrimestre, user);
       console.log(data)
       setDashboardData(data); // Actualiza el estado con los datos obtenidos
     } catch (error) {

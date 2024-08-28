@@ -66,7 +66,7 @@ const StudentForm = () => {
   useEffect(() => {
     const fetchTopics = async () => {
       try {
-        const response = await getTopics();
+        const response = await getTopics(user);
         setTopics(response.data);
       } catch (error) {
         console.error("Error al obtener los topics", error);
@@ -86,7 +86,7 @@ const StudentForm = () => {
     
     const padrones = [formData.uid, formData.uid2, formData.uid3, formData.uid4].filter(uid => uid);
     
-    getStudents(padrones)
+    getStudents(padrones, user)
       .then(response => {
         setStudentNames(response.data);
         setOpenDialog(true);
@@ -115,7 +115,7 @@ const StudentForm = () => {
     };
     
     try {
-      const response = await sendGroupForm(payload,existingGroup);
+      const response = await sendGroupForm(payload,existingGroup, user);
       if (response.status === 201) {
         setSubmitSuccess(true);
         setOpenDialog(false);

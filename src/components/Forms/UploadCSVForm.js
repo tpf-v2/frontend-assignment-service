@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { useSelector } from "react-redux";
+
 import {
   Container,
   TextField,
@@ -18,7 +20,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/system';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -51,6 +53,10 @@ const UploadCSVForm = ({ formType }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [openDialog, setOpenDialog] = useState(false); // Estado para controlar el diálogo
   const navigate = useNavigate();
+
+  const { cuatrimestre } = useParams(); // Captura del cuatrimestre
+
+  const user = useSelector((state) => state.user);
 
   // Effecto para redireccionar si la carga fue exitosa
   useEffect(() => {
@@ -97,7 +103,7 @@ const UploadCSVForm = ({ formType }) => {
         apiUrl = 'http://127.0.0.1:5000/topics/upload';
         break;
       case 'tutors':
-        apiUrl = 'http://127.0.0.1:5000/tutors/upload';
+        apiUrl = `http://127.0.0.1:5000/tutors/upload?period=${cuatrimestre}`;
         break;
       default:
         apiUrl = '';
@@ -107,6 +113,7 @@ const UploadCSVForm = ({ formType }) => {
       const response = await axios.post(apiUrl, formData, {
         headers: {
           'Content-Type': 'text/csv',
+          Authorization: `Bearer ${user.token}`
         },
       });
       //Check this since it's a temporary fix for server behavior
