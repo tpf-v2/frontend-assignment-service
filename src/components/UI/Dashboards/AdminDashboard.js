@@ -79,7 +79,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchCuatrimestres();
+        const data = await fetchCuatrimestres(user);
         setCuatrimestres(data.map(item => item.id).sort()); // Adjust according to your data structure
       } catch (error) {
         console.error(error.message);
@@ -93,7 +93,7 @@ const AdminDashboard = () => {
     if (newCuatrimestre.year && newCuatrimestre.term) {
       const newEntry = `${newCuatrimestre.term}C${newCuatrimestre.year}`;
       try {
-        await addCuatrimestre(newEntry); // Call the add function
+        await addCuatrimestre(newEntry, user); // Call the add function
         setCuatrimestres([...cuatrimestres, newEntry]);
         handleClose();
       } catch (error) {

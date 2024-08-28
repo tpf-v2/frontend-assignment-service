@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
 import { styled } from '@mui/system';
 import { getTableData, deleteRow } from '../../../api/handleTableData';
+import { useSelector } from 'react-redux';
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -24,10 +25,12 @@ const ParentTable = ({ title, columns, endpoint, renderRow }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const user = useSelector((state) => state.user);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseData = await getTableData(endpoint);
+        const responseData = await getTableData(endpoint, user);
         setData(responseData); // Updates state with fetched data
         setLoading(false);
       } catch (error) {
@@ -42,7 +45,7 @@ const ParentTable = ({ title, columns, endpoint, renderRow }) => {
   const handleDelete = async (id) => {
     try {
       // Call deleteResponse to remove the record
-      await deleteRow(endpoint, id); 
+      await deleteRow(endpoint, id, user); 
       // Filter the data state to remove the deleted item
       setData(prevData => prevData.filter(item => item.id !== id)); 
     } catch (error) {

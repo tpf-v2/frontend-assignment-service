@@ -1,16 +1,25 @@
-import axios from 'axios';
+import axios from "axios";
 
-export const getStudents = async (uids) => {
-    // Crea una instancia de URLSearchParams
-    const params = new URLSearchParams();
+export const getStudents = async (uids, user) => {
+  // Crea una instancia de URLSearchParams
+  const params = new URLSearchParams();
 
-    // Agrega cada uid al objeto de parámetros
-    uids.forEach(uid => {
-        params.append('user_ids', uid);
-    });
+  // Agrega cada uid al objeto de parámetros
+  uids.forEach((uid) => {
+    params.append("user_ids", uid);
+  });
 
-    // Realiza la solicitud GET con los parámetros de consulta dinámicos
-    const response = await axios.get(`http://127.0.0.1:5000/students/`, { params });
-    
-    return response;
+  const config = {
+    params,
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
+
+  console.log("Token:", user.token);
+
+  // Realiza la solicitud GET con los parámetros de consulta dinámicos
+  const response = await axios.get(`http://127.0.0.1:5000/students`, config);
+
+  return response;
 };
