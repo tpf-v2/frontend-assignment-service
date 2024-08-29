@@ -82,7 +82,6 @@ const Dashboard = () => {
 
     try {
       const data = await getDashboardData(cuatrimestre, user);
-      console.log(data)
       setDashboardData(data); // Actualiza el estado con los datos obtenidos
     } catch (error) {
       console.error('Error al obtener datos del dashboard:', error);
@@ -143,7 +142,7 @@ const Dashboard = () => {
         <Box mt={2} display="flex" flexDirection="column" alignItems="center">
             <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/form-answers`)}>VER RESPUESTAS</ButtonStyled>
         </Box>
-            <Typography variant="h6" style={{ padding: '16px', color: '#0072C6', textAlign: 'left' }}>Cantidad de grupos segun integrantes</Typography>
+            <Typography variant="h6" style={{ padding: '16px', color: '#0072C6', textAlign: 'left' }}>Integrantes por respuesta</Typography>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={dashboardData.answersChart}>
                 <XAxis dataKey="name" />

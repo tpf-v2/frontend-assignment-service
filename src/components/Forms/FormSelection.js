@@ -49,7 +49,7 @@ const FormSelection = () => {
           <Title variant="h4">Bienvenido, {user.name}!</Title>
         ) : null}
         <Typography variant="h5" style={{ color: '#555' }}>
-          {cuatrimestre || 'No especificado'}
+          {cuatrimestre || '2C2024'}
         </Typography>
         <Box textAlign="center">
           {user.role === 'student' && (

@@ -97,13 +97,13 @@ const UploadCSVForm = ({ formType }) => {
     let apiUrl;
     switch (formType) {
       case 'students':
-        apiUrl = 'http://127.0.0.1:5000/students/upload';
+        apiUrl = 'https://tpp-g4-fiuba.azurewebsites.net/students/upload';
         break;
       case 'topics':
-        apiUrl = 'http://127.0.0.1:5000/topics/upload';
+        apiUrl = 'https://tpp-g4-fiuba.azurewebsites.net/topics/upload';
         break;
       case 'tutors':
-        apiUrl = `http://127.0.0.1:5000/tutors/upload?period=${cuatrimestre}`;
+        apiUrl = `https://tpp-g4-fiuba.azurewebsites.net/tutors/upload?period=${cuatrimestre}`;
         break;
       default:
         apiUrl = '';

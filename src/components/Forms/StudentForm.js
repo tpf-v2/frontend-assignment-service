@@ -24,6 +24,7 @@ import { sendGroupForm } from '../../api/sendGroupForm';
 import { getStudents } from '../../api/getStudents';
 import { getTopics } from '../../api/getTopics';
 import { useSelector } from 'react-redux';
+import { getAllStudents } from '../../api/getStudents';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -262,39 +263,13 @@ const StudentForm = () => {
 
             {formData.selectedOption === 'existing' && (
               <>
-                <FormControl fullWidth variant="outlined" margin="normal">
-                  <InputLabel>Tema Específico</InputLabel>
-                  <Select
-                    name="specificTopic"
-                    value={formData.specificTopic}
-                    onChange={handleChange}
-                    label="Tema Específico"
-                    required
-                  >
-                    {topics.map((topic) => (
-                      <MenuItem key={topic.name} value={topic.name} disabled={isTopicDisabled(topic.name)}>
-                        {topic.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
                 <TextField
-                  label="Nombre del Tutor"
-                  name="tutorName"
+                  label="Tema"
+                  name="specificTopic"
                   fullWidth
                   margin="normal"
                   variant="outlined"
-                  value={formData.tutorName}
-                  onChange={handleChange}
-                  required
-                />
-                <TextField
-                  label="Apellido del Tutor"
-                  name="tutorLastName"
-                  fullWidth
-                  margin="normal"
-                  variant="outlined"
-                  value={formData.tutorLastName}
+                  value={formData.specificTopic}
                   onChange={handleChange}
                   required
                 />

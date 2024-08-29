@@ -7,6 +7,6 @@ export const getTopics = async (user) => {
         },
       };
 
-    const response = await axios.get(`http://127.0.0.1:5000/topics/`, config);
+    const response = await axios.get(`https://tpp-g4-fiuba.azurewebsites.net/topics/`, config);
     return response;
 };

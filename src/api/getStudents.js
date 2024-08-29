@@ -10,16 +10,28 @@ export const getStudents = async (uids, user) => {
   });
 
   const config = {
-    params,
     headers: {
       Authorization: `Bearer ${user.token}`,
     },
+    params
   };
 
-  console.log("Token:", user.token);
+  // Realiza la solicitud GET con los parámetros de consulta dinámicos
+  const response = await axios.get(`https://tpp-g4-fiuba.azurewebsites.net/students/`, config);
+
+  return response;
+};
+
+
+export const getAllStudents = async (user) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    }
+  };
 
   // Realiza la solicitud GET con los parámetros de consulta dinámicos
-  const response = await axios.get(`http://127.0.0.1:5000/students`, config);
+  const response = await axios.get(`https://tpp-g4-fiuba.azurewebsites.net/students/`, config);
 
   return response;
 };

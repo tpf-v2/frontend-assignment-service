@@ -27,7 +27,6 @@ const AddTopicForm = () => {
 
   const handleAddTopicSubmit = (e) => {
     e.preventDefault();
-    console.log('Nuevo Tema:', newTopic);
     alert('Nuevo tema agregado con éxito');
     setNewTopic('');
   };

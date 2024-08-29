@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://127.0.0.1:5000'; 
+const BASE_URL = 'https://tpp-g4-fiuba.azurewebsites.net'; 
 
 //TO-DO handle all the endpoints
 export const getTableData = async (endpoint, user) => {
