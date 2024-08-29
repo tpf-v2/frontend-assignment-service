@@ -9,7 +9,7 @@ export const fetchCuatrimestres = async (user) => {
     },
   };
   try {
-    const url = 'http://127.0.0.1:5000/tutors/periods';
+    const url = 'https://tpp-g4-fiuba.azurewebsites.net/api/tutors/periods';
     const response = await axios.get(url, config);
     return response.data;
   } catch (error) {
@@ -26,7 +26,7 @@ export const addCuatrimestre = async (newEntry, user) => {
   };
 
   try {
-    const url = 'http://127.0.0.1:5000/tutors/periods';
+    const url = 'https://tpp-g4-fiuba.azurewebsites.net/tutors/periods';
     await axios.post(url, { id: newEntry }, config);
   } catch (error) {
     throw new Error('Error adding cuatrimestre: ' + error.message);

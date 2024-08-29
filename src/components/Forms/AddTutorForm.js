@@ -31,7 +31,6 @@ const AddTutorForm = () => {
 
   const handleAddCorrectorSubmit = (e) => {
     e.preventDefault();
-    console.log('Nuevo Corrector:', corrector);
     alert('Nuevo corrector agregado con éxito');
     setCorrector({ name: '', lastName: '', email: '' });
   };

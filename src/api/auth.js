@@ -16,7 +16,7 @@ export function parseJwt(token) {
 export const authenticateUser = (email, password) => async (dispatch) =>
     {
     try {
-        const response = await axios.post('http://127.0.0.1:5000/connect', new URLSearchParams({
+        const response = await axios.post('https://tpp-g4-fiuba.azurewebsites.net/connect', new URLSearchParams({
             username: email,
             password: password,
         }), {

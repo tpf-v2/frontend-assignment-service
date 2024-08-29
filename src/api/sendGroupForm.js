@@ -8,8 +8,8 @@ export const sendGroupForm = async (payload, existingGroup, user) => {
   };
   try {
     var response;
-    if(existingGroup){
-      response = await axios.post('http://127.0.0.1:5000/forms/answers', payload, config);
+    if(!existingGroup){
+      response = await axios.post('https://tpp-g4-fiuba.azurewebsites.net/forms/answers', payload, config);
     }
     else{
       //TO-DO dynamic period in QP
@@ -23,7 +23,7 @@ export const sendGroupForm = async (payload, existingGroup, user) => {
         tutor_email: payload.tutor_email,
         topic: payload.topic_1
       }
-      response = await axios.post('http://127.0.0.1:5000/groups/?period=2C2024', groupPayload, config);
+      response = await axios.post('https://tpp-g4-fiuba.azurewebsites.net/groups/?period=2C2024', groupPayload, config);
     }
     
     return response;

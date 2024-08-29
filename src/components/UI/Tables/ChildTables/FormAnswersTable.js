@@ -9,7 +9,7 @@ const FormAnswersTable = () => {
 
   const renderRow = (item) => (
     <>
-      <TableCell>{item.answer_id}</TableCell>
+      <TableCell>{item.id}</TableCell>
       <TableCell>{item.students.join(', ')}</TableCell> {/* Join array for display */}
       <TableCell>{item.topics.join(', ')}</TableCell> {/* Join array for display */}
     </>

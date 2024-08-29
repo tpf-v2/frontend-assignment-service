@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://127.0.0.1:5000'; 
+const BASE_URL = 'https://tpp-g4-fiuba.azurewebsites.net'; 
 
 //TO-DO handle all the endpoints
 export const getTableData = async (endpoint, user) => {
@@ -24,7 +24,7 @@ export const deleteRow = async (endpoint, id, user) => {
     },
   };
   try {
-    await axios.delete(`${BASE_URL}${endpoint}${id}`, config); // Cambia esta URL según tu API
+    await axios.delete(`${BASE_URL}${endpoint}/${id}`, config); // Cambia esta URL según tu API
   } catch (error) {
     throw error; // Lanza el error para manejarlo en el componente
   }

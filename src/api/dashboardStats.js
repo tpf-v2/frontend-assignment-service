@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://127.0.0.1:5000";
+const BASE_URL = "https://tpp-g4-fiuba.azurewebsites.net";
 
 const countResponsesByStudentLength = (responses) => {
   const countMap = {};
@@ -54,7 +54,6 @@ export const getDashboardData = async (cuatrimestre, user) => {
     data.tutorsCard = responseTutors.data.length;
 
     var clusteredGroups = countResponsesByStudentLength(responseAnswers.data);
-    console.log(clusteredGroups);
     data.answersChart[0].cantidad = clusteredGroups[1] || 0;
     data.answersChart[1].cantidad = clusteredGroups[2] || 0;
     data.answersChart[2].cantidad = clusteredGroups[3] || 0;
