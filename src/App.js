@@ -21,6 +21,7 @@ import StudentsTable from './components/UI/Tables/ChildTables/StudentsTable';
 import TopicsTable from './components/UI/Tables/ChildTables/TopicsTable';
 import TutorsTable from './components/UI/Tables/ChildTables/TutorsTable';
 import FormAnswersTable from './components/UI/Tables/ChildTables/FormAnswersTable';
+import GroupsTable from './components/UI/Tables/ChildTables/GroupsTable';
 
 const App = () => {
   // const [user, setUser] = useState(null);
@@ -35,7 +36,7 @@ const App = () => {
       case 'tutor':
         return '#6A0DAD'; // Violeta medio oscurito
       case 'admin':
-        return '#4CAF50'; // Verde
+        return '#4B84F5'; // Azul clarito
       case 'student':
       default:
         return '#0072C6'; // Celeste predeterminado
@@ -60,6 +61,7 @@ const App = () => {
             <Route path="dashboard/:cuatrimestre/topics" element={<TopicsTable />} />
             <Route path="dashboard/:cuatrimestre/tutors" element={<TutorsTable />} />
             <Route path="dashboard/:cuatrimestre/form-answers" element={<FormAnswersTable />} />
+            <Route path="dashboard/:cuatrimestre/groups" element={<GroupsTable />} />
             {/* Improve to have only one /form-selection */}
             <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />
             <Route path="/student-form" element={<StudentForm />} />

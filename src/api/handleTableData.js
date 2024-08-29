@@ -24,7 +24,7 @@ export const deleteRow = async (endpoint, id, user) => {
     },
   };
   try {
-    await axios.delete(`${BASE_URL}${endpoint}${id}`, config); // Cambia esta URL según tu API
+    await axios.delete(`${BASE_URL}${endpoint}/${id}`, config); // Cambia esta URL según tu API
   } catch (error) {
     throw error; // Lanza el error para manejarlo en el componente
   }
