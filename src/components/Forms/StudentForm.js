@@ -25,6 +25,7 @@ import { getStudents } from '../../api/getStudents';
 import { getTopics } from '../../api/getTopics';
 import { useSelector } from 'react-redux';
 import { getAllStudents } from '../../api/getStudents';
+import MySnackbar from '../UI/MySnackBar';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -63,15 +64,29 @@ const StudentForm = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [studentNames, setStudentNames] = useState([]);
   const [topics, setTopics] = useState([]);
+  const [notification, setNotification] = useState({
+    open: false,
+    message: "",
+    status: "",
+  });
+
+  const handleSnackbarClose = () => {
+    setNotification({ ...notification, open: false });
+  };
 
   useEffect(() => {
     const fetchTopics = async () => {
       try {
         const response = await getTopics(user);
-        setTopics(response.data);
+        const topics = response.data.filter(c => c.category.name !== 'default');
+        setTopics(topics);
       } catch (error) {
         console.error("Error al obtener los topics", error);
-        alert('Error al obtener los topics');
+        setNotification({
+          open: true,
+          message: "Error al obtener los temas. Por favor contactar al administrador",
+          status: "error",
+        });
       }
     };
   
@@ -94,7 +109,11 @@ const StudentForm = () => {
       })
       .catch(error => {
         console.error("Error al obtener los compañeros", error);
-        alert('Error al obtener los compañeros');
+        setNotification({
+          open: true,
+          message: "Error al obtener los compañeros. Por favor revisar que los padrones sean correctos",
+          status: "error",
+        });
       });
   };
 
@@ -117,15 +136,25 @@ const StudentForm = () => {
     
     try {
       const response = await sendGroupForm(payload,existingGroup, user);
+      console.log(response)
       if (response.status === 201) {
         setSubmitSuccess(true);
         setOpenDialog(false);
       } else {
-        alert('Error al enviar el formulario');
+        console.log(response)
+        setNotification({
+          open: true,
+          message: response.data.detail,
+          status: "error",
+        });
       }
     } catch (error) {
+      setNotification({
+        open: true,
+        message: "Error al enviar el formulario",
+        status: "error",
+      });
       console.error('Error al enviar el formulario', error);
-      alert('Error al enviar el formulario');
     }
   };
 
@@ -311,6 +340,12 @@ const StudentForm = () => {
           </DialogActions>
         </Dialog>
       </Root>
+      <MySnackbar
+        open={notification.open}
+        handleClose={handleSnackbarClose}
+        message={notification.message}
+        status={notification.status}
+      />
     </Container>
   );
 };

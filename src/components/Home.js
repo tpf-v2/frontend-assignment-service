@@ -5,6 +5,7 @@ import { styled } from '@mui/system';
 import BackgroundContainer from './UI/BackgroundContainer.js';
 import { authenticateUser } from '../api/auth.js'; // Importa las funciones desde auth.js
 import { useDispatch } from "react-redux";
+import MySnackbar from './UI/MySnackBar.js';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -27,6 +28,16 @@ const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const [notification, setNotification] = useState({
+    open: false,
+    message: "",
+    status: "",
+  });
+
+  const handleSnackbarClose = () => {
+    setNotification({ ...notification, open: false });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -41,7 +52,11 @@ const Home = () => {
         }
       } catch (error) {
         console.error("Error al intentar loguear el usuario", error);
-        alert(error.message || 'Error al intentar iniciar sesión');
+        setNotification({
+          open: true,
+          message: "Nombre de usuario o contraseña incorrectos",
+          status: "error",
+        });
       }
     } else {
       navigate('/form-selection');
@@ -80,6 +95,12 @@ const Home = () => {
             Iniciar Sesión
           </ButtonStyled>
         </form>
+        <MySnackbar
+        open={notification.open}
+        handleClose={handleSnackbarClose}
+        message={notification.message}
+        status={notification.status}
+      />
       </Root>
     </Container>
   );

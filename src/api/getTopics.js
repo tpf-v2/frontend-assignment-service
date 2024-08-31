@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const BASE_URL = process.env.REACT_APP_API_URL;
+
 export const getTopics = async (user) => {
     const config = {
         headers: {
@@ -7,6 +9,6 @@ export const getTopics = async (user) => {
         },
       };
 
-    const response = await axios.get(`https://tpp-g4-fiuba.azurewebsites.net/topics/`, config);
+    const response = await axios.get(`${BASE_URL}/topics/`, config);
     return response;
 };

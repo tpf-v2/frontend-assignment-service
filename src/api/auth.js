@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { setToken, setUser } from "../redux/userSlice";
 
+const BASE_URL = process.env.REACT_APP_API_URL;
+
 export function parseJwt(token) {
     // Dividir el token en sus tres partes: header, payload y firma
     var base64Url = token.split('.')[1];
@@ -16,7 +18,7 @@ export function parseJwt(token) {
 export const authenticateUser = (email, password) => async (dispatch) =>
     {
     try {
-        const response = await axios.post('https://tpp-g4-fiuba.azurewebsites.net/connect', new URLSearchParams({
+        const response = await axios.post(`${BASE_URL}/connect`, new URLSearchParams({
             username: email,
             password: password,
         }), {
