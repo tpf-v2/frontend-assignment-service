@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   TextField,
@@ -18,14 +18,15 @@ import {
   Radio,
   RadioGroup,
   FormControlLabel,
-} from '@mui/material';
-import { styled } from '@mui/system';
-import { sendGroupForm } from '../../api/sendGroupForm';
-import { getStudents } from '../../api/getStudents';
-import { getTopics } from '../../api/getTopics';
-import { useSelector } from 'react-redux';
-import { getAllStudents } from '../../api/getStudents';
-import MySnackbar from '../UI/MySnackBar';
+} from "@mui/material";
+import { styled } from "@mui/system";
+import { sendGroupForm } from "../../api/sendGroupForm";
+import { getStudents } from "../../api/getStudents";
+import { getTopics } from "../../api/getTopics";
+import { useSelector } from "react-redux";
+import { getAllStudents } from "../../api/getStudents";
+import MySnackbar from "../UI/MySnackBar";
+import { NumericFormat } from "react-number-format";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -53,11 +54,11 @@ const StudentForm = () => {
     topic1: undefined,
     topic2: undefined,
     topic3: undefined,
-    selectedOption: 'selection', // Para manejar la selección de tema
-    specificTopic: '',
-    tutorName: '',
-    tutorLastName: '',
-    tutorEmail: '',
+    selectedOption: "selection", // Para manejar la selección de tema
+    specificTopic: "",
+    tutorName: "",
+    tutorLastName: "",
+    tutorEmail: "",
   });
 
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -78,20 +79,23 @@ const StudentForm = () => {
     const fetchTopics = async () => {
       try {
         const response = await getTopics(user);
-        const topics = response.data.filter(c => c.category.name !== 'default');
+        const topics = response.data.filter(
+          (c) => c.category.name !== "default"
+        );
         setTopics(topics);
       } catch (error) {
         console.error("Error al obtener los topics", error);
         setNotification({
           open: true,
-          message: "Error al obtener los temas. Por favor contactar al administrador",
+          message:
+            "Error al obtener los temas. Por favor contactar al administrador",
           status: "error",
         });
       }
     };
-  
+
     fetchTopics();
-  }, []); 
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -99,27 +103,32 @@ const StudentForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    const padrones = [formData.uid, formData.uid2, formData.uid3, formData.uid4].filter(uid => uid);
-    
+
+    const padrones = [
+      formData.uid,
+      formData.uid2,
+      formData.uid3,
+      formData.uid4,
+    ].filter((uid) => uid);
+
     getStudents(padrones, user)
-      .then(response => {
+      .then((response) => {
         setStudentNames(response.data);
         setOpenDialog(true);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error al obtener los compañeros", error);
         setNotification({
           open: true,
-          message: "Error al obtener los compañeros. Por favor revisar que los padrones sean correctos",
+          message:
+            "Error al obtener los compañeros. Por favor revisar que los padrones sean correctos",
           status: "error",
         });
       });
   };
 
   const handleConfirm = async () => {
-
-    const existingGroup = formData.selectedOption === 'existing' ? true : false;
+    const existingGroup = formData.selectedOption === "existing" ? true : false;
     const payload = {
       user_id_sender: formData.uid,
       user_id_student_2: formData.uid2 || null,
@@ -133,15 +142,15 @@ const StudentForm = () => {
       tutor_last_name: existingGroup ? formData.tutorLastName : null,
       tutor_email: existingGroup ? formData.tutorEmail : null,
     };
-    
+
     try {
-      const response = await sendGroupForm(payload,existingGroup, user);
-      console.log(response)
+      const response = await sendGroupForm(payload, existingGroup, user);
+      console.log(response);
       if (response.status === 201) {
         setSubmitSuccess(true);
         setOpenDialog(false);
       } else {
-        console.log(response)
+        console.log(response);
         setNotification({
           open: true,
           message: response.data.detail,
@@ -154,7 +163,7 @@ const StudentForm = () => {
         message: "Error al enviar el formulario",
         status: "error",
       });
-      console.error('Error al enviar el formulario', error);
+      console.error("Error al enviar el formulario", error);
     }
   };
 
@@ -186,11 +195,12 @@ const StudentForm = () => {
         )}
         {!submitSuccess && (
           <form onSubmit={handleSubmit}>
-            <TextField
+            <NumericFormat
+              allowNegative={false}
+              fullWidth
               label="Padrón"
               name="uid"
-              type="number"
-              fullWidth
+              customInput={TextField}
               margin="normal"
               variant="outlined"
               value={formData.uid}
@@ -200,44 +210,60 @@ const StudentForm = () => {
               }}
               required
             />
-            <TextField
+            <NumericFormat
+              allowNegative={false}
+              customInput={TextField}
               label="Padrón integrante 2"
               name="uid2"
-              type="number"
               fullWidth
               margin="normal"
               variant="outlined"
               value={formData.uid2}
               onChange={handleChange}
             />
-            <TextField
+            <NumericFormat
+              allowNegative={false}
+              customInput={TextField}
               label="Padrón integrante 3"
               name="uid3"
-              type="number"
               fullWidth
               margin="normal"
               variant="outlined"
               value={formData.uid3}
               onChange={handleChange}
             />
-            <TextField
+            <NumericFormat
+              allowNegative={false}
+              customInput={TextField}
               label="Padrón integrante 4"
               name="uid4"
-              type="number"
               fullWidth
               margin="normal"
               variant="outlined"
               value={formData.uid4}
               onChange={handleChange}
             />
-            
-            <Typography variant="h6" style={{ marginTop: '20px' }}>Seleccionar opción</Typography>
-            <RadioGroup value={formData.selectedOption} onChange={handleOptionChange}>
-              <FormControlLabel value="selection" control={<Radio />} label="Seleccionar 3 temas" />
-              <FormControlLabel value="existing" control={<Radio />} label="Ya tengo tema y tutor" />
+
+            <Typography variant="h6" style={{ marginTop: "20px" }}>
+              Seleccionar opción
+            </Typography>
+            <RadioGroup
+              value={formData.selectedOption}
+              onChange={handleOptionChange}
+            >
+              <FormControlLabel
+                value="selection"
+                control={<Radio />}
+                label="Seleccionar 3 temas"
+              />
+              <FormControlLabel
+                value="existing"
+                control={<Radio />}
+                label="Ya tengo tema y tutor"
+              />
             </RadioGroup>
 
-            {formData.selectedOption === 'selection' && (
+            {formData.selectedOption === "selection" && (
               <>
                 <FormControl fullWidth variant="outlined" margin="normal">
                   <InputLabel>Tema 1</InputLabel>
@@ -249,7 +275,11 @@ const StudentForm = () => {
                     required
                   >
                     {topics.map((topic) => (
-                      <MenuItem key={topic.name} value={topic.name} disabled={isTopicDisabled(topic.name)}>
+                      <MenuItem
+                        key={topic.name}
+                        value={topic.name}
+                        disabled={isTopicDisabled(topic.name)}
+                      >
                         {topic.name}
                       </MenuItem>
                     ))}
@@ -265,7 +295,14 @@ const StudentForm = () => {
                     required
                   >
                     {topics.map((topic) => (
-                      <MenuItem key={topic.name} value={topic.name} disabled={isTopicDisabled(topic.name) || formData.topic1 === topic.name}>
+                      <MenuItem
+                        key={topic.name}
+                        value={topic.name}
+                        disabled={
+                          isTopicDisabled(topic.name) ||
+                          formData.topic1 === topic.name
+                        }
+                      >
                         {topic.name}
                       </MenuItem>
                     ))}
@@ -281,7 +318,15 @@ const StudentForm = () => {
                     required
                   >
                     {topics.map((topic) => (
-                      <MenuItem key={topic.name} value={topic.name} disabled={isTopicDisabled(topic.name) || formData.topic1 === topic.name || formData.topic2 === topic.name}>
+                      <MenuItem
+                        key={topic.name}
+                        value={topic.name}
+                        disabled={
+                          isTopicDisabled(topic.name) ||
+                          formData.topic1 === topic.name ||
+                          formData.topic2 === topic.name
+                        }
+                      >
                         {topic.name}
                       </MenuItem>
                     ))}
@@ -290,7 +335,7 @@ const StudentForm = () => {
               </>
             )}
 
-            {formData.selectedOption === 'existing' && (
+            {formData.selectedOption === "existing" && (
               <>
                 <TextField
                   label="Tema"
@@ -327,7 +372,8 @@ const StudentForm = () => {
           <DialogTitle>Confirmar Envío</DialogTitle>
           <DialogContent>
             <Typography variant="body1">
-              ¿Estás seguro que quieres crear un grupo con los estudiantes: {studentNames.map(s => `${s.name} ${s.last_name}`).join(', ')}?
+              ¿Estás seguro que quieres crear un grupo con los estudiantes:{" "}
+              {studentNames.map((s) => `${s.name} ${s.last_name}`).join(", ")}?
             </Typography>
           </DialogContent>
           <DialogActions>
