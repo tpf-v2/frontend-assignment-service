@@ -5,6 +5,7 @@ import { styled } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
 import { useSelector } from 'react-redux';
 import { fetchCuatrimestres, addCuatrimestre } from '../../../api/handlePeriods'
+import MySnackbar from '../MySnackBar';
 
 const Root = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -75,6 +76,16 @@ const AdminDashboard = () => {
   const [newCuatrimestre, setNewCuatrimestre] = useState({ year: '', term: '' });
   const navigate = useNavigate();
 
+  const [notification, setNotification] = useState({
+    open: false,
+    message: "",
+    status: "",
+  });
+
+  const handleSnackbarClose = () => {
+    setNotification({ ...notification, open: false });
+  };
+
   // Fetch existing cuatrimesters on component mount
   useEffect(() => {
     const fetchData = async () => {
@@ -97,7 +108,11 @@ const AdminDashboard = () => {
         setCuatrimestres([...cuatrimestres, newEntry]);
         handleClose();
       } catch (error) {
-        console.error(error.message);
+        setNotification({
+          open: true,
+          message: "Cuatrimestre ya existente",
+          status: "error",
+        });
       }
     }
   };
@@ -174,6 +189,12 @@ const AdminDashboard = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <MySnackbar
+        open={notification.open}
+        handleClose={handleSnackbarClose}
+        message={notification.message}
+        status={notification.status}
+      />
     </Root>
   );
 };

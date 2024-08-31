@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const BASE_URL = process.env.REACT_APP_API_URL;
+
 export const sendGroupForm = async (payload, existingGroup, user) => {
   const config = {
     headers: {
@@ -9,7 +11,7 @@ export const sendGroupForm = async (payload, existingGroup, user) => {
   try {
     var response;
     if(!existingGroup){
-      response = await axios.post('https://tpp-g4-fiuba.azurewebsites.net/forms/answers', payload, config);
+      response = await axios.post(`${BASE_URL}/forms/answers`, payload, config);
     }
     else{
       //TO-DO dynamic period in QP
@@ -23,11 +25,13 @@ export const sendGroupForm = async (payload, existingGroup, user) => {
         tutor_email: payload.tutor_email,
         topic: payload.topic_1
       }
-      response = await axios.post('https://tpp-g4-fiuba.azurewebsites.net/groups/?period=2C2024', groupPayload, config);
+
+      groupPayload.students_ids = groupPayload.students_ids.filter(uid => uid);
+      response = await axios.post(`${BASE_URL}/groups/?period=2C2024`, groupPayload, config);
     }
-    
+    console.log(response)
     return response;
   } catch (error) {
-    throw new Error('Error al enviar el formulario');
+    return error.response
   }
 };
