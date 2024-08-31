@@ -25,7 +25,7 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
 }));
 
 const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
+  marginBottom: theme.spacing(0),
   color: '#0072C6',
   textAlign: 'center',
   fontSize: '2rem',
@@ -37,6 +37,7 @@ const FormSelection = () => {
   const { cuatrimestre } = useParams(); // Captura del cuatrimestre
   const navigate = useNavigate(); // Hook para navegación
   const user = useSelector((state) => state.user); // Obtener el usuario desde Redux
+  const groupCount = 1; //Usar api para integrar feature
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -45,12 +46,17 @@ const FormSelection = () => {
   return (
     <Container maxWidth="sm">
       <Root>
-        {user.role !== 'admin' ? (
-          <Title variant="h4">Bienvenido, {user.name}!</Title>
-        ) : null}
-        <Typography variant="h5" style={{ color: '#555' }}>
+        <Title variant="h4" style={{ color: '#555' }}>
           {cuatrimestre || '2C2024'}
-        </Typography>
+        </Title>
+        {user.role !== 'admin' ? (
+          <Title variant="h6">Bienvenido, {user.name}!</Title>
+        ) : null}
+        {user.role === 'student' && (
+            <Typography variant="h6">
+              Estas participando en {groupCount} grupo{groupCount !== 1 ? 's' : ''}
+            </Typography>
+        )}
         <Box textAlign="center">
           {user.role === 'student' && (
             <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/student-form')}>
