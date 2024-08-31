@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const BASE_URL = process.env.REACT_APP_API_URL;
+
 export const getStudents = async (uids, user) => {
   // Crea una instancia de URLSearchParams
   const params = new URLSearchParams();
@@ -17,7 +19,7 @@ export const getStudents = async (uids, user) => {
   };
 
   // Realiza la solicitud GET con los parámetros de consulta dinámicos
-  const response = await axios.get(`https://tpp-g4-fiuba.azurewebsites.net/students/`, config);
+  const response = await axios.get(`${BASE_URL}/students/`, config);
 
   return response;
 };
@@ -31,7 +33,7 @@ export const getAllStudents = async (user) => {
   };
 
   // Realiza la solicitud GET con los parámetros de consulta dinámicos
-  const response = await axios.get(`https://tpp-g4-fiuba.azurewebsites.net/students/`, config);
+  const response = await axios.get(`${BASE_URL}/students/`, config);
 
   return response;
 };

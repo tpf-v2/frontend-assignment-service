@@ -2,17 +2,23 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
-
+## Available Scriptsy
+Don't forget to run `yarn add env-cmd` beforehand in case you don't have env-cmd installed.
 In the project directory, you can run:
 
-### `npm start`
+### `npm start:dev`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The page will use the host [http://127.0.0.1:5000](http://127.0.0.1:5000) as the backend service.
+
+### `npm start:prod`
+
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+The page will use the host [https://tpp-g4-fiuba.azurewebsites.net](https://tpp-g4-fiuba.azurewebsites.net) as the backend service.
 
 ### `npm test`
 

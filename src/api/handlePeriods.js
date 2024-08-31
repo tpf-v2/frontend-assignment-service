@@ -1,6 +1,8 @@
 // src/services/apiService.js
 import axios from 'axios';
 
+const BASE_URL = process.env.REACT_APP_API_URL;
+
 // Fetch existing cuatrimesters
 export const fetchCuatrimestres = async (user) => {
   const config = {
@@ -9,7 +11,7 @@ export const fetchCuatrimestres = async (user) => {
     },
   };
   try {
-    const url = 'https://tpp-g4-fiuba.azurewebsites.net/api/tutors/periods';
+    const url = `${BASE_URL}/api/tutors/periods`;
     const response = await axios.get(url, config);
     return response.data;
   } catch (error) {
@@ -26,9 +28,9 @@ export const addCuatrimestre = async (newEntry, user) => {
   };
 
   try {
-    const url = 'https://tpp-g4-fiuba.azurewebsites.net/tutors/periods';
+    const url = `${BASE_URL}/tutors/periods`;
     await axios.post(url, { id: newEntry }, config);
   } catch (error) {
-    throw new Error('Error adding cuatrimestre: ' + error.message);
+    throw new Error(error);
   }
 };

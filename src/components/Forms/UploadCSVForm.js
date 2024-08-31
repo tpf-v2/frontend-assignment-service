@@ -21,6 +21,7 @@ import {
 import { styled } from '@mui/system';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import MySnackbar from '../UI/MySnackBar';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -46,6 +47,8 @@ const DropzoneBox = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
 
+const BASE_URL = process.env.REACT_APP_API_URL;
+
 const UploadCSVForm = ({ formType }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileError, setFileError] = useState('');
@@ -62,7 +65,7 @@ const UploadCSVForm = ({ formType }) => {
   useEffect(() => {
     if (isSuccess) {
       const timer = setTimeout(() => {
-        navigate('/form-selection'); // Redirige a la homepage
+        navigate('/admin'); // Redirige a la homepage
       }, 3000); // Espera 3 segundos antes de redirigir
 
       return () => clearTimeout(timer);
@@ -97,13 +100,13 @@ const UploadCSVForm = ({ formType }) => {
     let apiUrl;
     switch (formType) {
       case 'students':
-        apiUrl = 'https://tpp-g4-fiuba.azurewebsites.net/students/upload';
+        apiUrl = `${BASE_URL}/students/upload`;
         break;
       case 'topics':
-        apiUrl = 'https://tpp-g4-fiuba.azurewebsites.net/topics/upload';
+        apiUrl = `${BASE_URL}/topics/upload`;
         break;
       case 'tutors':
-        apiUrl = `https://tpp-g4-fiuba.azurewebsites.net/tutors/upload?period=${cuatrimestre}`;
+        apiUrl = `${BASE_URL}/tutors/upload?period=${cuatrimestre}`;
         break;
       default:
         apiUrl = '';
