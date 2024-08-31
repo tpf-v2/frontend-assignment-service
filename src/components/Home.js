@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, TextField, Button, Typography, Box, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import BackgroundContainer from './UI/BackgroundContainer.js';
 import { authenticateUser } from '../api/auth.js'; // Importa las funciones desde auth.js
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MySnackbar from './UI/MySnackBar.js';
 
 const Root = styled(Paper)(({ theme }) => ({
@@ -33,6 +33,18 @@ const Home = () => {
     message: "",
     status: "",
   });
+
+  const user = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (user.token) {
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/form-selection");
+      }
+    }
+  }, []);
 
   const handleSnackbarClose = () => {
     setNotification({ ...notification, open: false });
