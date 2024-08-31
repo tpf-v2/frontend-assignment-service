@@ -96,8 +96,8 @@ const Dashboard = () => {
         <Box mt={4}>
           <StatsContainer>
             <StatCard title="Total de Alumnos" value={loading? -1 : dashboardData.studentCard} />
-            <StatCard title="Total de Temas" value={loading? -1 : dashboardData.topicsCard} />
             <StatCard title="Total de Tutores" value={loading? -1 : dashboardData.tutorsCard} />
+            <StatCard title="Total de Temas" value={loading? -1 : dashboardData.topicsCard} />
           </StatsContainer>
           <Box mt={2} display="flex" flexDirection="column" alignItems="center">
             <Box mt={2} display="flex" flexDirection="row" justifyContent="space-evenly" alignItems="center" width="100%">
