@@ -4,7 +4,7 @@ import Home from './components/Home';
 import FormSelection from './components/Forms/FormSelection';
 import StudentForm from './components/Forms/StudentForm';
 import TutorForm from './components/Forms/TutorForm';
-import AdminDashboard from './components/UI/Dashboards/AdminDashboard';
+import AdminDashboard from './components/UI/Dashboards/Periods/AdminDashboard';
 import AddTopicForm from './components/Forms/AddTopicForm';
 import AddTutorForm from './components/Forms/AddTutorForm';
 import UploadCSVForm from './components/Forms/UploadCSVForm';
@@ -15,7 +15,7 @@ import { Box } from '@mui/material';
 import BackgroundContainer from './components/UI/BackgroundContainer';
 import './App.css'; // Importar los estilos globales
 import { useDispatch, useSelector } from "react-redux";
-import Dashboard from './components/UI/Dashboards/Dashboard';
+import Dashboard from './components/UI/Dashboards/AdminStats/Dashboard';
 import ParentTable from './components/UI/Tables/ParentTable';
 import StudentsTable from './components/UI/Tables/ChildTables/StudentsTable';
 import TopicsTable from './components/UI/Tables/ChildTables/TopicsTable';

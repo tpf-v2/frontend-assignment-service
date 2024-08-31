@@ -31,7 +31,8 @@
     "start": "react-scripts start .env.development",
     "build": "react-scripts build .env.production",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prod": "REACT_APP_API_URL=https://tpp-g4-fiuba.azurewebsites.net react-scripts start"
   },
   "eslintConfig": {
     "extends": [
