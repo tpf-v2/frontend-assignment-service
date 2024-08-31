@@ -81,7 +81,7 @@ const StudentForm = () => {
         const response = await getTopics(user);
         const topics = response.data.filter(
           (c) => c.category.name !== "default"
-        );
+        ).sort((a, b) => a.name.localeCompare(b.name)); // Sorting alphabetically;
         setTopics(topics);
       } catch (error) {
         console.error("Error al obtener los topics", error);
