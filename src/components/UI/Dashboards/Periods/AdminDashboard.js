@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
 import { useSelector } from 'react-redux';
-import { fetchCuatrimestres, addCuatrimestre } from '../../../api/handlePeriods'
-import MySnackbar from '../MySnackBar';
+import { fetchCuatrimestres, addCuatrimestre } from '../../../../api/handlePeriods'
+import MySnackbar from '../../MySnackBar';
 
 const Root = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(8),
