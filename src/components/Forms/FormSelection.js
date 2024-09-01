@@ -3,6 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Typography, Box, Paper } from '@mui/material';
 import { styled } from '@mui/system';
 import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { getFormAnswersById } from '../../api/getFormAnswersById';
+import { useState } from 'react';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -37,11 +40,25 @@ const FormSelection = () => {
   const { cuatrimestre } = useParams(); // Captura del cuatrimestre
   const navigate = useNavigate(); // Hook para navegación
   const user = useSelector((state) => state.user); // Obtener el usuario desde Redux
-  const groupCount = 1; //Usar api para integrar feature
+  const [groupCount, setGroupAnswer] = useState([]);
 
   const handleNavigation = (path) => {
     navigate(path);
   };
+
+  useEffect(() => {
+    const fetchGroupAnswer = async () => {
+      try {
+        const response = await getFormAnswersById(user);
+        const groupCount = response.data.length;
+        setGroupAnswer(groupCount);
+      } catch (error) {
+        console.error("Error al obtener los topics", error);
+      }
+    };
+  
+    fetchGroupAnswer();
+  }, []); 
 
   return (
     <Container maxWidth="sm">
@@ -54,7 +71,7 @@ const FormSelection = () => {
         ) : null}
         {user.role === 'student' && (
             <Typography variant="h6">
-              Estas participando en {groupCount} grupo{groupCount !== 1 ? 's' : ''}
+              Tu padrón se registró en {groupCount} respuesta{groupCount !== 1 ? 's' : ''}
             </Typography>
         )}
         <Box textAlign="center">
