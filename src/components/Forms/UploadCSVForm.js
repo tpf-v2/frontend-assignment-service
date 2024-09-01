@@ -103,7 +103,7 @@ const UploadCSVForm = ({ formType }) => {
         apiUrl = `${BASE_URL}/students/upload`;
         break;
       case 'topics':
-        apiUrl = `${BASE_URL}/topics/upload`;
+        apiUrl = `${BASE_URL}/topics/upload?period_id=${cuatrimestre}`;
         break;
       case 'tutors':
         apiUrl = `${BASE_URL}/tutors/upload?period=${cuatrimestre}`;
