@@ -4,19 +4,16 @@ import { setToken, setUser } from "../redux/userSlice";
 const BASE_URL = process.env.REACT_APP_API_URL;
 
 export function parseJwt(token) {
-    // Dividir el token en sus tres partes: header, payload y firma
     var base64Url = token.split('.')[1];
-    // Reemplazar caracteres de URL por los correspondientes de base64 y decodificar
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
 
-    // Parsear y retornar el JSON
     return JSON.parse(jsonPayload);
 }
-export const authenticateUser = (email, password) => async (dispatch) =>
-    {
+
+export const authenticateUser = (email, password) => async (dispatch) => {
     try {
         const response = await axios.post(`${BASE_URL}/connect`, new URLSearchParams({
             username: email,
@@ -26,15 +23,24 @@ export const authenticateUser = (email, password) => async (dispatch) =>
                 'Content-Type': 'application/x-www-form-urlencoded',
             }
         });
-        const data = parseJwt(response.data.access_token).sub
+
+        const decodedToken = parseJwt(response.data.access_token);
+        const data = decodedToken.sub;
+
+        // Obtener el tiempo de expiración del token
+        const expirationTime = decodedToken.exp * 1000; // Convertir de segundos a milisegundos
+
         const userData = {
             id: data.id,
             name: data.name,
             last_name: data.last_name,
             role: data.role,
             email: email,
-            token: response.data.access_token
-        }
+            token: response.data.access_token,
+            expirationTime // Almacena el tiempo de expiración
+        };
+
+        // Guarda el usuario y el token en Redux
         dispatch(setUser(userData));
 
         return data;

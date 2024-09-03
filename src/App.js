@@ -22,9 +22,12 @@ import TopicsTable from './components/UI/Tables/ChildTables/TopicsTable';
 import TutorsTable from './components/UI/Tables/ChildTables/TutorsTable';
 import FormAnswersTable from './components/UI/Tables/ChildTables/FormAnswersTable';
 import GroupsTable from './components/UI/Tables/ChildTables/GroupsTable';
+import FormClosedAlert from './components/SubmitSuccess';
+import TokenManager from './components/TokenManager';
+
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
-  // const [user, setUser] = useState(null);
   const user = useSelector((state) => state.user);
 
   const resetUser = () => {
@@ -47,6 +50,7 @@ const App = () => {
 
   return (
     <Router>
+      <TokenManager />
       <Box className="main-container">
         {/* Mostrar Header solo si el usuario está logueado */}
         {user.token && <Header user={user} color={color} handleHomeClick={resetUser} />}
@@ -54,29 +58,28 @@ const App = () => {
         <Box className="content-container">
           <Routes>
             <Route path="/" element={<Home/>} />
-            <Route path="/form-selection" element={<FormSelection />} />
-            <Route path="/dashboard/:cuatrimestre" element={<Dashboard />} />
-            <Route path="/table-view" element={<ParentTable />} />
-            <Route path="dashboard/:cuatrimestre/students" element={<StudentsTable />} />
-            <Route path="dashboard/:cuatrimestre/topics" element={<TopicsTable />} />
-            <Route path="dashboard/:cuatrimestre/tutors" element={<TutorsTable />} />
-            <Route path="dashboard/:cuatrimestre/form-answers" element={<FormAnswersTable />} />
-            <Route path="dashboard/:cuatrimestre/groups" element={<GroupsTable />} />
-            {/* Improve to have only one /form-selection */}
+            <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} />
+            <Route path="/dashboard/:cuatrimestre" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/table-view" element={<ProtectedRoute><ParentTable /></ProtectedRoute>} />
+            <Route path="dashboard/:cuatrimestre/students" element={<ProtectedRoute><StudentsTable /></ProtectedRoute>} />
+            <Route path="dashboard/:cuatrimestre/topics" element={<ProtectedRoute><TopicsTable /></ProtectedRoute>} />
+            <Route path="dashboard/:cuatrimestre/tutors" element={<ProtectedRoute><TutorsTable /></ProtectedRoute>} />
+            <Route path="dashboard/:cuatrimestre/form-answers" element={<ProtectedRoute><FormAnswersTable /></ProtectedRoute>} />
+            <Route path="dashboard/:cuatrimestre/groups" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
             <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />
-            <Route path="/student-form" element={<StudentForm />} />
-            <Route path="/tutor-form" element={<TutorForm />} />
-            <Route path="/admin" element={user && user.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/" />} />
-            <Route path="/admin-add-topic" element={<AddTopicForm />} />
-            <Route path="/admin-add-corrector" element={<AddTutorForm />} />
-            <Route path="/upload-students/:cuatrimestre" element={user.token && user.role === 'admin' ? <UploadCSVForm formType="students" /> : <Navigate to="/" />} />
-            <Route path="/upload-topics/:cuatrimestre" element={user.token && user.role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />} />
-            <Route path="/upload-tutors/:cuatrimestre" element={user.token && user.role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />} />
-            <Route path="/profile" element={<Profile user={user} />} />
+            {/* <Route path="/student-form" element={<ProtectedRoute><StudentForm /></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente*/} 
+            <Route path="/student-form" element={<FormClosedAlert />} />
+            <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute>{user.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />
+            <Route path="/admin-add-corrector" element={<ProtectedRoute><AddTutorForm /></ProtectedRoute>} />
+            <Route path="/upload-students/:cuatrimestre" element={<ProtectedRoute>{user.role === 'admin' ? <UploadCSVForm formType="students" /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/upload-topics/:cuatrimestre" element={<ProtectedRoute>{user.role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/upload-tutors/:cuatrimestre" element={<ProtectedRoute>{user.role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile user={user} /></ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Box>
-        {/* Mostrar Footer solo si el usuario está logueado */}
         {user.token && <Footer color={color} />}
       </Box>
     </Router>
