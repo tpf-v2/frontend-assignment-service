@@ -25,6 +25,7 @@ const Title = styled(Typography)(({ theme }) => ({
 const Home = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setloading] = useState(false)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -51,6 +52,7 @@ const Home = () => {
   };
 
   const handleSubmit = async (e) => {
+    setloading(true)
     e.preventDefault();
 
     if (email && password) {
@@ -69,6 +71,8 @@ const Home = () => {
           message: "Nombre de usuario o contraseña incorrectos",
           status: "error",
         });
+      } finally {
+        setloading(false)
       }
     } else {
       navigate('/form-selection');
@@ -103,8 +107,8 @@ const Home = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <ButtonStyled variant="contained" color="primary" type="submit" fullWidth>
-            Iniciar Sesión
+          <ButtonStyled disabled={loading} variant="contained" color="primary" type="submit" fullWidth>
+            {loading ? "Cargando ..." : "Iniciar Sesión"}
           </ButtonStyled>
         </form>
         <MySnackbar

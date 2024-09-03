@@ -65,6 +65,7 @@ const StudentForm = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [studentNames, setStudentNames] = useState([]);
   const [topics, setTopics] = useState([]);
+  const [loading, setLoading] = useState(false)
   const [notification, setNotification] = useState({
     open: false,
     message: "",
@@ -128,6 +129,7 @@ const StudentForm = () => {
   };
 
   const handleConfirm = async () => {
+    setLoading(true);
     const existingGroup = formData.selectedOption === "existing" ? true : false;
     const payload = {
       user_id_sender: formData.uid,
@@ -164,6 +166,8 @@ const StudentForm = () => {
         status: "error",
       });
       console.error("Error al enviar el formulario", error);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -377,10 +381,10 @@ const StudentForm = () => {
             </Typography>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseDialog} color="primary">
+            <Button disabled={loading} onClick={handleCloseDialog} color="primary">
               Seguir Editando
             </Button>
-            <Button onClick={handleConfirm} color="primary">
+            <Button disabled={loading} onClick={handleConfirm} color="primary">
               Confirmar
             </Button>
           </DialogActions>
