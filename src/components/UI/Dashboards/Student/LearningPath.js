@@ -48,8 +48,8 @@ const LearningPath = () => {
             {
               phase: 'Anteproyecto',
               tasks: [
-                { title: 'Borrador entregado', completed: false },
-                { title: 'Revisar retroalimentación', completed: false },
+                { title: 'Entrega de video', completed: false },
+                { title: 'Revisión del tutor', completed: false },
               ],
             },
             {
@@ -57,6 +57,13 @@ const LearningPath = () => {
               tasks: [
                 { title: 'Proyecto finalizado', completed: false },
                 { title: 'Enviar para evaluación', completed: false },
+              ],
+            },
+            {
+              phase: 'Presentación',
+              tasks: [
+                { title: 'Envio de disponibilidad', completed: false },
+                { title: 'Fecha de presentación', completed: false },
               ],
             },
           ]);
@@ -74,6 +81,15 @@ const LearningPath = () => {
           <StudentInfo user={user} />
             <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/student-form')}>
               Enviar Formulario de Grupo
+            </ButtonStyled>
+            <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>
+              Enviar Anteproyecto
+            </ButtonStyled>
+            <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>
+              Enviar Entrega Intermedia
+            </ButtonStyled>
+            <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>
+              Enviar Fechas Posibles de Presentación
             </ButtonStyled>
         </Box>
         <Box sx={{ flex: 2 }}>
