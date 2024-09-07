@@ -26,6 +26,7 @@ import FormClosedAlert from './components/SubmitSuccess';
 import TokenManager from './components/TokenManager';
 
 import ProtectedRoute from './components/ProtectedRoute';
+import LearningPath from './components/UI/Dashboards/Student/LearningPath';
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -58,6 +59,7 @@ const App = () => {
         <Box className="content-container">
           <Routes>
             <Route path="/" element={<Home/>} />
+            <Route path="/learning-path" element={<ProtectedRoute><LearningPath /></ProtectedRoute>} />
             <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} />
             <Route path="/dashboard/:cuatrimestre" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/table-view" element={<ProtectedRoute><ParentTable /></ProtectedRoute>} />
