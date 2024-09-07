@@ -12,16 +12,16 @@ const StudentInfo = ({ user }) => {
     <StyledCard>
       <CardContent>
         <Typography variant="h5" component="div" gutterBottom>
-          Información del Estudiante
+          Bienvenido, {user.name}!
         </Typography>
         <Typography color="text.secondary">
-          Nombre: {user.name}
+          Número de grupo: {user.group || "TBD"}
         </Typography>
         <Typography color="text.secondary">
-          Rol: {user.role}
+          Tema: {user.topic || "TBD"}
         </Typography>
         <Typography color="text.secondary">
-          Padrón: {user.registration}
+          Tutor: {user.tutor || "TBD"}
         </Typography>
       </CardContent>
     </StyledCard>

@@ -1,16 +1,34 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, Box, Typography } from '@mui/material';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Container, Box, Typography, Button } from '@mui/material';
+import { styled } from '@mui/system';
 import StudentInfo from './StudentInfo'; // Asegúrate de importar el nuevo componente
 import Phase from './Phase';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { getFormAnswersById } from '../../../../api/getFormAnswersById';
 
+
+const ButtonStyled = styled(Button)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+    width: '100%',
+    padding: theme.spacing(1),
+    fontSize: '1rem',
+    '&.MuiButton-containedPrimary': { backgroundColor: '#0072C6' },
+    '&.MuiButton-containedSecondary': { backgroundColor: '#A6A6A6' },
+    '&:hover.MuiButton-containedPrimary': { backgroundColor: '#005B9A' },
+    '&:hover.MuiButton-containedSecondary': { backgroundColor: '#7A7A7A' },
+  }));
+
 const LearningPath = () => {
     const { cuatrimestre } = useParams();
     const user = useSelector((state) => state.user);
     const [milestones, setMilestones] = useState([]);
+    const navigate = useNavigate(); // Hook para navegación
+
+    const handleNavigation = (path) => {
+        navigate(path);
+      };
   
     useEffect(() => {
       const fetchGroupAnswer = async () => {
@@ -20,7 +38,7 @@ const LearningPath = () => {
   
           setMilestones([
             {
-              phase: 'Formulario Completo',
+              phase: 'Inscripción',
               tasks: [
                 { title: 'Formulario enviado', completed: groupCount > 0 },
                 { title: 'Grupo asignado', completed: groupCount >= 1 },
@@ -52,12 +70,15 @@ const LearningPath = () => {
   
     return (
       <Container maxWidth="lg" sx={{ display: 'flex', mt: 5 }}>
-        <Box sx={{ flex: 1, mr: 8, mt: 9 }}> {/* Añadir margen superior para centrar con la fase */}
+        <Box sx={{ flex: 1, mr: 8, mt: 8 }}> {/* Añadir margen superior para centrar con la fase */}
           <StudentInfo user={user} />
+            <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/student-form')}>
+              Enviar Formulario de Grupo
+            </ButtonStyled>
         </Box>
         <Box sx={{ flex: 2 }}>
           <Typography variant="h4" align="center" gutterBottom>
-            {cuatrimestre || '2C2024'} - Progreso del Estudiante
+            {cuatrimestre || '2C2024'}
           </Typography>
           <Box>
             {milestones.map((phase, index) => (
