@@ -24,7 +24,7 @@ import FormAnswersTable from './components/UI/Tables/ChildTables/FormAnswersTabl
 import GroupsTable from './components/UI/Tables/ChildTables/GroupsTable';
 import FormClosedAlert from './components/SubmitSuccess';
 import TokenManager from './components/TokenManager';
-
+import CuatrimestreConfig from './components/UI/CuatrimestreConfig';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
@@ -67,6 +67,7 @@ const App = () => {
             <Route path="dashboard/:cuatrimestre/form-answers" element={<ProtectedRoute><FormAnswersTable /></ProtectedRoute>} />
             <Route path="dashboard/:cuatrimestre/groups" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
             <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />
+            <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
             {/* <Route path="/student-form" element={<ProtectedRoute><StudentForm /></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente  */}
             <Route path="/student-form" element={<FormClosedAlert />} />
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />

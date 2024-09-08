@@ -6,6 +6,7 @@ import { getDashboardData } from '../../../../api/dashboardStats';
 import { useSelector } from 'react-redux';
 import StatCard from './Components/StatCard';  // Import StatCard Component
 import BarChartComponent from './Components/BarChart';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -35,6 +36,7 @@ const Title = styled(Typography)(({ theme }) => ({
   textAlign: 'center',
   fontSize: '2rem',
   fontWeight: 'bold',
+  flexGrow: 1, // Asegura que ocupa todo el espacio
 }));
 
 const StatsContainer = styled(Box)(({ theme }) => ({
@@ -77,7 +79,14 @@ const Dashboard = () => {
   return (
     <Container maxWidth="lg">
       <Root>
-        <Title variant="h4">{cuatrimestre}</Title>
+        <Box display="flex" alignItems="center">
+          <Title variant="h4">{cuatrimestre}</Title>
+          <SettingsIcon
+            fontSize="large"
+            style={{ cursor: 'pointer', marginLeft: 'auto' }} // Lo empuja a la derecha
+            onClick={() => navigate(`/cuatrimestre-config`)} // Navegar a la vista de configuración
+          />
+        </Box>
         <Box mt={2} display="flex" flexDirection="column" alignItems="center">
           {/* Buttons Section */}
           <Box display="flex" justifyContent="space-between" width="100%">
