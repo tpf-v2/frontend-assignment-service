@@ -41,31 +41,30 @@ const LearningPath = () => {
               phase: 'Inscripción',
               tasks: [
                 { title: 'Formulario enviado', completed: groupCount > 0 },
-                { title: 'Grupo asignado', completed: groupCount >= 1 },
-                { title: 'Tutor asignado', completed: groupCount >= 1 },
+                { title: 'Tema y tutor asignado', completed: groupCount >= 1 },
               ],
             },
-            {
-              phase: 'Anteproyecto',
-              tasks: [
-                { title: 'Entrega de video', completed: false },
-                { title: 'Revisión del tutor', completed: false },
-              ],
-            },
-            {
-              phase: 'Entrega Intermedia',
-              tasks: [
-                { title: 'Proyecto finalizado', completed: false },
-                { title: 'Enviar para evaluación', completed: false },
-              ],
-            },
-            {
-              phase: 'Presentación',
-              tasks: [
-                { title: 'Envio de disponibilidad', completed: false },
-                { title: 'Fecha de presentación', completed: false },
-              ],
-            },
+            // {
+            //   phase: 'Anteproyecto',
+            //   tasks: [
+            //     { title: 'Entrega de video', completed: false },
+            //     { title: 'Revisión del tutor', completed: false },
+            //   ],
+            // },
+            // {
+            //   phase: 'Entrega Intermedia',
+            //   tasks: [
+            //     { title: 'Proyecto finalizado', completed: false },
+            //     { title: 'Enviar para evaluación', completed: false },
+            //   ],
+            // },
+            // {
+            //   phase: 'Presentación',
+            //   tasks: [
+            //     { title: 'Envio de disponibilidad', completed: false },
+            //     { title: 'Fecha de presentación', completed: false },
+            //   ],
+            // },
           ]);
         } catch (error) {
           console.error('Error al obtener las respuestas', error);
@@ -82,7 +81,7 @@ const LearningPath = () => {
             <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/student-form')}>
               Enviar Formulario de Grupo
             </ButtonStyled>
-            <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>
+            {/* <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>
               Enviar Anteproyecto
             </ButtonStyled>
             <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>
@@ -90,7 +89,7 @@ const LearningPath = () => {
             </ButtonStyled>
             <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>
               Enviar Fechas Posibles de Presentación
-            </ButtonStyled>
+            </ButtonStyled> */}
         </Box>
         <Box sx={{ flex: 2 }}>
           <Typography variant="h4" align="center" gutterBottom>

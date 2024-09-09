@@ -18,6 +18,9 @@ const StudentInfo = ({ user }) => {
           Número de grupo: {user.group || "TBD"}
         </Typography>
         <Typography color="text.secondary">
+          Integrantes: {user.teamates || "TBD"}
+        </Typography>
+        <Typography color="text.secondary">
           Tema: {user.topic || "TBD"}
         </Typography>
         <Typography color="text.secondary">
