@@ -24,6 +24,7 @@ import FormAnswersTable from './components/UI/Tables/ChildTables/FormAnswersTabl
 import GroupsTable from './components/UI/Tables/ChildTables/GroupsTable';
 import FormClosedAlert from './components/SubmitSuccess';
 import TokenManager from './components/TokenManager';
+import Algorithms from './components/Algorithms';
 
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -67,8 +68,8 @@ const App = () => {
             <Route path="dashboard/:cuatrimestre/form-answers" element={<ProtectedRoute><FormAnswersTable /></ProtectedRoute>} />
             <Route path="dashboard/:cuatrimestre/groups" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
             <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />
-            {/* <Route path="/student-form" element={<ProtectedRoute><StudentForm /></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente  */}
-            <Route path="/student-form" element={<FormClosedAlert />} />
+            <Route path="/student-form" element={<ProtectedRoute><StudentForm /></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente 
+            {/* <Route path="/student-form" element={<FormClosedAlert />} /> */}
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute>{user.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />
@@ -77,6 +78,7 @@ const App = () => {
             <Route path="/upload-topics/:cuatrimestre" element={<ProtectedRoute>{user.role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/upload-tutors/:cuatrimestre" element={<ProtectedRoute>{user.role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile user={user} /></ProtectedRoute>} />
+            <Route path="/algorithms/:cuatrimestre" element={<ProtectedRoute>{user.role === 'admin' ? <Algorithms user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Box>
