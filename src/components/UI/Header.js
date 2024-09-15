@@ -15,6 +15,9 @@ const Header = ({ user, color, handleHomeClick }) => {
         if(user.role === 'admin'){
           navigate('/admin');  
         }
+        else if(user.role === "student") {
+          navigate("/learning-path");
+        }
         else{
           navigate('/form-selection');
         }

@@ -22,10 +22,11 @@ import TopicsTable from './components/UI/Tables/ChildTables/TopicsTable';
 import TutorsTable from './components/UI/Tables/ChildTables/TutorsTable';
 import FormAnswersTable from './components/UI/Tables/ChildTables/FormAnswersTable';
 import GroupsTable from './components/UI/Tables/ChildTables/GroupsTable';
-import FormClosedAlert from './components/SubmitSuccess';
+import FormClosedAlert from './components/FormClosedAlert';
 import TokenManager from './components/TokenManager';
 
 import ProtectedRoute from './components/ProtectedRoute';
+import LearningPath from './components/UI/Dashboards/Student/LearningPath';
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -58,6 +59,7 @@ const App = () => {
         <Box className="content-container">
           <Routes>
             <Route path="/" element={<Home/>} />
+            <Route path="/learning-path" element={<ProtectedRoute><LearningPath /></ProtectedRoute>} />
             <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} />
             <Route path="/dashboard/:cuatrimestre" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/table-view" element={<ProtectedRoute><ParentTable /></ProtectedRoute>} />
@@ -67,8 +69,8 @@ const App = () => {
             <Route path="dashboard/:cuatrimestre/form-answers" element={<ProtectedRoute><FormAnswersTable /></ProtectedRoute>} />
             <Route path="dashboard/:cuatrimestre/groups" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
             <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />
-            {/* <Route path="/student-form" element={<ProtectedRoute><StudentForm /></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente  */}
-            <Route path="/student-form" element={<FormClosedAlert />} />
+            <Route path="/student-form" element={<ProtectedRoute><FormClosedAlert /></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente 
+            {/* <Route path="/student-form" element={<StudentForm />} /> */}
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute>{user.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />
