@@ -50,7 +50,7 @@ const LearningPath = () => {
           {
             phase: "Inscripción",
             tasks: [
-              { title: "Formulario enviado", completed: userData.form_answered },
+              { title: "Formulario enviado", completed: userData.form_answered || (userData.topic && userData.tutor) },
               {
                 title: "Tema y tutor asignado",
                 completed: userData.topic && userData.tutor,
