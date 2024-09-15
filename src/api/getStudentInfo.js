@@ -9,7 +9,10 @@ export const getStudentInfo = (user) => async (dispatch) => {
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
-    }
+    },
+    params: {
+      cache_bust: new Date().getTime(), // Añadir parámetro para evitar caché
+    },
   };
 
   const user_id = user.id;
