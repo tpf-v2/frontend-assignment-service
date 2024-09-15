@@ -22,7 +22,7 @@ import TopicsTable from './components/UI/Tables/ChildTables/TopicsTable';
 import TutorsTable from './components/UI/Tables/ChildTables/TutorsTable';
 import FormAnswersTable from './components/UI/Tables/ChildTables/FormAnswersTable';
 import GroupsTable from './components/UI/Tables/ChildTables/GroupsTable';
-import FormClosedAlert from './components/SubmitSuccess';
+import FormClosedAlert from './components/FormClosedAlert';
 import TokenManager from './components/TokenManager';
 
 import ProtectedRoute from './components/ProtectedRoute';
@@ -69,8 +69,8 @@ const App = () => {
             <Route path="dashboard/:cuatrimestre/form-answers" element={<ProtectedRoute><FormAnswersTable /></ProtectedRoute>} />
             <Route path="dashboard/:cuatrimestre/groups" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
             <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />
-            {/* <Route path="/student-form" element={<ProtectedRoute><StudentForm /></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente  */}
-            <Route path="/student-form" element={<StudentForm />} />
+            <Route path="/student-form" element={<ProtectedRoute><FormClosedAlert /></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente 
+            {/* <Route path="/student-form" element={<StudentForm />} /> */}
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute>{user.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />

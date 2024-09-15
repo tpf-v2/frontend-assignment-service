@@ -7,7 +7,12 @@ const initialState = {
   role: "",
   email: "",
   token: "",
-  expirationTime: null // Añade el tiempo de expiración
+  expirationTime: null, // Añade el tiempo de expiración
+  form_answered: false,
+  group_id: null,
+  tutor: "",
+  topic: "",
+  teammates:[]
 };
 
 export const userSlice = createSlice({
@@ -24,9 +29,16 @@ export const userSlice = createSlice({
     clearUser: () => {
       return initialState;
     },
+    setUserInfo: (state,action) => {
+      state.form_answered = action.payload.form_answered;
+      state.tutor = action.payload.tutor;
+      state.group_id = action.payload.group_id;
+      state.topic = action.payload.topic;
+      state.teammates = action.payload.teammates;
+    }
   },
 });
 
-export const { setUser, setToken, clearUser } = userSlice.actions;
+export const { setUser, setToken, clearUser, setUserInfo } = userSlice.actions;
 
 export default userSlice.reducer;

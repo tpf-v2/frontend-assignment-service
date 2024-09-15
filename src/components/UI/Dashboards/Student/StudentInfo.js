@@ -1,13 +1,15 @@
-import React from 'react';
-import { Card, CardContent, Typography } from '@mui/material';
-import { styled } from '@mui/system';
+import React from "react";
+import { Card, CardContent, Typography } from "@mui/material";
+import { styled } from "@mui/system";
+import { useSelector } from "react-redux";
 
 const StyledCard = styled(Card)(({ theme }) => ({
   minWidth: 275,
   boxShadow: theme.shadows[5],
 }));
 
-const StudentInfo = ({ user }) => {
+const StudentInfo = () => {
+  const user = useSelector((state) => state.user);
   return (
     <StyledCard>
       <CardContent>
@@ -15,16 +17,28 @@ const StudentInfo = ({ user }) => {
           Bienvenido, {user.name}!
         </Typography>
         <Typography color="text.secondary">
-          Número de grupo: {user.group || "TBD"}
+          <Typography component="span" color="text.primary" fontWeight="bold">
+            Número de grupo:
+          </Typography>
+          {user.group_id || "Sin asignar aún"}
         </Typography>
-        <Typography color="text.secondary">
-          Integrantes: {user.teamates || "TBD"}
+        <Typography color="text.primary">
+          <Typography component="span" color="text.primary" fontWeight="bold">
+            Integrantes:
+          </Typography>
+          {user.teammates || "Sin asignar aún"}
         </Typography>
-        <Typography color="text.secondary">
-          Tema: {user.topic || "TBD"}
+        <Typography color="text.primary">
+          <Typography component="span" color="text.primary" fontWeight="bold">
+            Tema:
+          </Typography>
+          {user.topic || "Sin asignar aún"}
         </Typography>
-        <Typography color="text.secondary">
-          Tutor: {user.tutor || "TBD"}
+        <Typography color="text.primary">
+          <Typography component="span" color="text.primary" fontWeight="bold">
+            Tutor:
+          </Typography>
+          {user.tutor || "Sin asignar aún"}
         </Typography>
       </CardContent>
     </StyledCard>
