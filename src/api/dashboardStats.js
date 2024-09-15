@@ -47,11 +47,16 @@ export const getDashboardData = async (cuatrimestre, user) => {
         { name: "3 Integrantes", cantidad: null },
         { name: "4 Integrante", cantidad: null },
       ],
+      topics: null,
+      tutors: null
     };
 
     data.studentCard = responseStudent.data.length;
     data.topicsCard = responseTopics.data.length;
     data.tutorsCard = responseTutors.data.length;
+
+    data.topics = responseTopics.data;
+    data.tutors = responseTutors.data;
 
     var clusteredGroups = countResponsesByStudentLength(responseAnswers.data);
     data.answersChart[0].cantidad = clusteredGroups[1] || 0;

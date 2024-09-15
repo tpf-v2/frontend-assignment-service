@@ -24,7 +24,7 @@ import FormAnswersTable from './components/UI/Tables/ChildTables/FormAnswersTabl
 import GroupsTable from './components/UI/Tables/ChildTables/GroupsTable';
 import FormClosedAlert from './components/SubmitSuccess';
 import TokenManager from './components/TokenManager';
-import Algorithms from './components/Algorithms';
+import Algorithms from './components/Algorithms/Algorithms';
 
 import ProtectedRoute from './components/ProtectedRoute';
 

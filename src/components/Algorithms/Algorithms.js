@@ -1,7 +1,12 @@
 import React, { useState } from "react";
-import { Container, Box, Paper, Typography, Button } from "@mui/material";
+import { Container, Box, Paper, Typography, Button, DialogTitle, DialogContent, CircularProgress, Dialog, IconButton } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { styled } from "@mui/system";
+import { styled, useMediaQuery, useTheme } from "@mui/system";
+import CloseIcon from "@mui/icons-material/Close";
+import GroupDataTable from "./GroupDataTable";
+import { useNavigate, useParams } from "react-router-dom";
+import { getTableData } from "../../api/handleTableData";
+import { useSelector } from "react-redux";
 
 // Componente para cada bloque de pasos
 const StepBlock = ({ title, onRun, isRunDisabled, isEditableDisabled, isDownloadDisabled }) => (
@@ -23,7 +28,7 @@ const StepBlock = ({ title, onRun, isRunDisabled, isEditableDisabled, isDownload
     >
       Correr
     </ButtonStyled>
-    <br />
+    {/* <br />
     <ButtonStyled
       variant="contained"
       sx={{ bgcolor: "#007bff", color: "#fff", mb: 1 }}
@@ -38,7 +43,7 @@ const StepBlock = ({ title, onRun, isRunDisabled, isEditableDisabled, isDownload
       disabled={isDownloadDisabled} // Deshabilitado si es necesario
     >
       Descargar
-    </ButtonStyled>
+    </ButtonStyled> */}
   </Box>
 );
 
@@ -84,8 +89,45 @@ const Algorithms = () => {
   const [isEditableDisabledStep3, setEditableDisabledStep3] = useState(true);
   const [isDownloadDisabledStep3, setDownloadDisabledStep3] = useState(true);
 
+  const navigate = useNavigate();
+  const { cuatrimestre } = useParams();
+
+  const [loading, setLoading] = useState(false); // Estado de carga
+  const [openDialog, setOpenDialog] = useState(false); // Control del diálogo
+  // const [groups, setGroups] = useState([]);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md')); // Para pantallas pequeñas
+  // const { cuatrimestre } = useParams(); // Captura del cuatrimestre
+  // const user = useSelector((state) => state.user);
+
+  // const fetchData = async () => {
+  //   try {
+  //     const endpoint = `/groups/?period=${cuatrimestre}`;
+  //     const responseData = await getTableData(endpoint, user);
+  //     console.log(responseData)
+  //     setGroups(responseData); // Actualiza los datos de los grupos
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error);
+  //     setLoading(false); // Handle error
+  //   }
+  // };
+
   // Función para manejar el paso 1
   const handleRunStep1 = () => {
+    setLoading(true); // Mostrar "Cargando"
+    setOpenDialog(true); // Abrir el pop-up
+
+    // Correr algoritmo
+
+    // Simula un tiempo de espera para la carga de los datos
+    setTimeout(() => {
+      setLoading(false); // Oculta el "Cargando"
+      navigate(`/dashboard/${cuatrimestre}/groups`)
+
+    }, 2000); // Simulación de 2 segundos para la carga
+
+
     setEditableDisabledStep1(false);  // Habilitar botón "Editar" del paso 1
     setDownloadDisabledStep1(false);  // Habilitar botón "Descargar" del paso 1
     setRunDisabledStep2(false);       // Habilitar botón "Correr" del paso 2
@@ -104,6 +146,10 @@ const Algorithms = () => {
     setDownloadDisabledStep1(true);
   };
 
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
   // Función para manejar el paso 3
   const handleRunStep3 = () => {
     setEditableDisabledStep3(false);  // Habilitar botón "Editar" del paso 3
@@ -116,7 +162,7 @@ const Algorithms = () => {
   };
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" >
       <Root>
         <Title variant="h4">Algoritmos de asignación</Title>
 
@@ -157,6 +203,61 @@ const Algorithms = () => {
           />
         </Container>
       </Root>
+      {/* Pop-up para mostrar la carga y los grupos */}
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        fullScreen={fullScreen} // El diálogo será pantalla completa en pantallas pequeñas
+        maxWidth="lg" // Ancho máximo del diálogo
+        fullWidth // Hace que el diálogo ocupe todo el ancho disponible
+        sx={{
+          height: '100%', // Que ocupe todo el alto de la pantalla
+          maxHeight: '100vh', // Altura máxima
+        }}
+      >
+        <DialogTitle>
+          {!loading && "Grupos Formados"}
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseDialog}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%', // Hace que el contenido ocupe todo el alto
+            minHeight: '300px', // Añadir altura mínima para evitar que se achique
+            maxHeight: '100vh', // Asegura que el contenido no se desborde
+            minWidth: '300px', // Añadir ancho mínimo
+          }}
+        >
+          {/* {loading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+              <CircularProgress />
+              <Typography>Cargando grupos...</Typography>
+            </Box>
+          ) : (
+            <GroupDataTable />
+          )} */}
+          {loading && 
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+              <CircularProgress />
+              <Typography sx={{ ml: 2 }}>Armando grupos...</Typography>
+            </Box>
+          }
+        </DialogContent>
+      </Dialog>
     </Container>
   );
 };
