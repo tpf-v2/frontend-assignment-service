@@ -1,4 +1,5 @@
 import {
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -11,15 +12,15 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getTableData } from "../../api/handleTableData";
 import { useParams } from "react-router-dom";
+import { Box } from "@mui/system";
 
 // Componente para la tabla de grupos
 const GroupDataTable = () => {
   // Obtener la lista de topics desde Redux
   const topics = Object.values(useSelector((state) => state.topics)); // Asume que el slice de Redux tiene los topics
   const tutors = Object.values(useSelector((state) => state.tutors)); // Asume que el slice de Redux tiene los topics
-  console.log(topics);
+  const [loading, setLoading] = useState(false)
 
-  console.log(tutors);
   // Función para obtener el nombre del topic por su id
   const getTopicNameById = (id) => {
     const topic = topics.find((t) => t.id === id);
@@ -28,8 +29,8 @@ const GroupDataTable = () => {
 
   // Función para obtener el nombre del tutor por su id
   const getTutorNameById = (id) => {
-    const tutor = tutors.find((t) => t.id === id);
-    return tutor ? tutor.name + " " + tutor.last_name : "Desconocido"; // Si no encuentra el topic, mostrar 'Desconocido'
+    const tutor = tutors.find((t) => t.periods[0].id === id);
+    return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el topic, mostrar 'Sin asignar'
   };
 
   const { cuatrimestre } = useParams(); // Captura del cuatrimestre
@@ -38,12 +39,16 @@ const GroupDataTable = () => {
 
   const fetchData = async () => {
     try {
+      setLoading(true)
       const endpoint = `/groups/?period=${cuatrimestre}`;
       const responseData = await getTableData(endpoint, user);
       console.log(responseData);
-      setGroups(responseData); // Actualiza los datos de los grupos
+      const sortedGroups = responseData.sort((a, b) => a.id - b.id);
+      setGroups(sortedGroups); // Actualiza los datos de los grupos
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -62,17 +67,27 @@ const GroupDataTable = () => {
             <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
             <TableCell sx={{ fontWeight: "bold" }}>Padrón</TableCell>
             <TableCell sx={{ fontWeight: "bold" }}>Tutor</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Tema asignado</TableCell>
             <TableCell sx={{ fontWeight: "bold" }}>Preferencia 1</TableCell>
             <TableCell sx={{ fontWeight: "bold" }}>Preferencia 2</TableCell>
             <TableCell sx={{ fontWeight: "bold" }}>Preferencia 3</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        {loading ? (       
+          // Mostrar CircularProgress dentro del cuerpo de la tabla
+          <TableRow>
+              <TableCell colSpan={10} align="center">
+                <Box display="flex" justifyContent="center" alignItems="center">
+                  <CircularProgress />
+                </Box>
+              </TableCell>
+            </TableRow>) : (
+          <TableBody>
           {groups.map((group) => (
             <React.Fragment key={group.id}>
               {/* Fila de separación visual */}
               <TableRow sx={{ backgroundColor: "#f0f0f0" }}>
-                <TableCell colSpan={9} align="center"></TableCell>
+                <TableCell colSpan={10} align="center"></TableCell>
               </TableRow>
 
               {/* Fila del grupo */}
@@ -92,6 +107,12 @@ const GroupDataTable = () => {
                     <TableCell rowSpan={group.students.length} align="center">
                     {getTutorNameById(group.tutor_period_id) || "Sin asignar"}{" "}
                     {/* Mostrar el tutor del grupo */}
+                  </TableCell>
+                  )}
+                  {index === 0 && (
+                    <TableCell rowSpan={group.students.length} align="center">
+                    {group.topic_id ? getTopicNameById(group.topic_id) : "Sin asignar"}{" "}
+                    {/* Mostrar el tema asignado del grupo */}
                   </TableCell>
                   )}
                   </>
@@ -126,7 +147,7 @@ const GroupDataTable = () => {
               ))}
             </React.Fragment>
           ))}
-        </TableBody>
+        </TableBody>)}
       </Table>
     </TableContainer>
   );

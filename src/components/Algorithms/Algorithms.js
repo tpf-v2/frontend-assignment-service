@@ -80,10 +80,8 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
 const Algorithms = () => {
   // Estados para controlar los botones
   const [isRunDisabledStep1, setRunDisabledStep1] = useState(false); // El primer botón de "Correr" está habilitado al principio
-  const [isRunDisabledStep2, setRunDisabledStep2] = useState(true); // "Correr" del paso 2 deshabilitado al principio
+  const [isRunDisabledStep2, setRunDisabledStep2] = useState(false); // "Correr" del paso 2 deshabilitado al principio 
   const [isRunDisabledStep3, setRunDisabledStep3] = useState(true); // "Correr" del paso 3 deshabilitado al principio
-  const [isEditableDisabledStep1, setEditableDisabledStep1] = useState(true);
-  const [isDownloadDisabledStep1, setDownloadDisabledStep1] = useState(true);
   const [isEditableDisabledStep2, setEditableDisabledStep2] = useState(true);
   const [isDownloadDisabledStep2, setDownloadDisabledStep2] = useState(true);
   const [isEditableDisabledStep3, setEditableDisabledStep3] = useState(true);
@@ -94,42 +92,23 @@ const Algorithms = () => {
 
   const [loading, setLoading] = useState(false); // Estado de carga
   const [openDialog, setOpenDialog] = useState(false); // Control del diálogo
-  // const [groups, setGroups] = useState([]);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md')); // Para pantallas pequeñas
-  // const { cuatrimestre } = useParams(); // Captura del cuatrimestre
-  // const user = useSelector((state) => state.user);
-
-  // const fetchData = async () => {
-  //   try {
-  //     const endpoint = `/groups/?period=${cuatrimestre}`;
-  //     const responseData = await getTableData(endpoint, user);
-  //     console.log(responseData)
-  //     setGroups(responseData); // Actualiza los datos de los grupos
-  //     setLoading(false);
-  //   } catch (error) {
-  //     console.error('Error fetching data:', error);
-  //     setLoading(false); // Handle error
-  //   }
-  // };
 
   // Función para manejar el paso 1
   const handleRunStep1 = () => {
     setLoading(true); // Mostrar "Cargando"
     setOpenDialog(true); // Abrir el pop-up
 
-    // Correr algoritmo
+    // TODO: Correr algoritmo
 
-    // Simula un tiempo de espera para la carga de los datos
+    // Simula un tiempo de espera para la carga de los datos (aca correr el algoritmo)
     setTimeout(() => {
       setLoading(false); // Oculta el "Cargando"
       navigate(`/dashboard/${cuatrimestre}/groups`)
 
     }, 2000); // Simulación de 2 segundos para la carga
 
-
-    setEditableDisabledStep1(false);  // Habilitar botón "Editar" del paso 1
-    setDownloadDisabledStep1(false);  // Habilitar botón "Descargar" del paso 1
     setRunDisabledStep2(false);       // Habilitar botón "Correr" del paso 2
     setRunDisabledStep1(true);        // Deshabilitar botón "Correr" del paso 1
   };
@@ -141,9 +120,6 @@ const Algorithms = () => {
     setRunDisabledStep3(false);       // Habilitar botón "Correr" del paso 3
     setRunDisabledStep2(true);        // Deshabilitar botón "Correr" del paso 2
 
-    // Deshabilitar los botones "Editar" y "Descargar" del paso 1
-    setEditableDisabledStep1(true);
-    setDownloadDisabledStep1(true);
   };
 
   const handleCloseDialog = () => {
@@ -180,8 +156,6 @@ const Algorithms = () => {
             title="Armar grupos"
             onRun={handleRunStep1} // Ejecutar y habilitar siguiente paso
             isRunDisabled={isRunDisabledStep1} // El primer botón de "Correr" está habilitado
-            isEditableDisabled={isEditableDisabledStep1}
-            isDownloadDisabled={isDownloadDisabledStep1}
           />
           <ArrowForwardIcon sx={{ fontSize: 50, mx: 2 }} />
           {/* Paso 2 */}
@@ -242,14 +216,6 @@ const Algorithms = () => {
             minWidth: '300px', // Añadir ancho mínimo
           }}
         >
-          {/* {loading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
-              <CircularProgress />
-              <Typography>Cargando grupos...</Typography>
-            </Box>
-          ) : (
-            <GroupDataTable />
-          )} */}
           {loading && 
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
               <CircularProgress />

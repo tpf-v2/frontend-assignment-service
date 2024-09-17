@@ -23,6 +23,8 @@ const Header = ({ user, color, handleHomeClick }) => {
     handleHomeClick(); // Llamar la función para restablecer el estado
     if (user.role === "admin") {
       navigate("/admin");
+    } else if (user.role === "student") {
+      navigate("/learning-path");
     } else {
       navigate("/form-selection");
     }
