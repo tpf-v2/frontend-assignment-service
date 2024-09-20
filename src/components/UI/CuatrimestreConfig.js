@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Container,
   Typography,
@@ -15,6 +15,8 @@ import {
   Divider
 } from '@mui/material';
 import { styled } from '@mui/system';
+import { useSelector, useDispatch } from 'react-redux';
+import { togglePeriodSetting } from '../../redux/periodSlice';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   fontWeight: 'bold',
@@ -28,19 +30,11 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
 }));
 
 const CuatrimestreConfig = () => {
-  const [settings, setSettings] = useState([
-    { id: 1, name: 'Inscripciones de grupos', enabled: true },
-    { id: 2, name: 'Entrega de anteproyecto', enabled: false },
-    { id: 3, name: 'Entrega intermedia', enabled: false },
-    { id: 4, name: 'Inscripción a fechas de presentación', enabled: false },
-  ]);
-
-  const handleToggle = (id) => {
-    setSettings(prevSettings =>
-      prevSettings.map(setting =>
-        setting.id === id ? { ...setting, enabled: !setting.enabled } : setting
-      )
-    );
+  const settings = useSelector((state) => state.period); // Ajuste para obtener el estado de Redux
+  const dispatch = useDispatch(); // Si quieres manejar el estado con Redux
+  
+  const handleToggle = (field) => {
+    dispatch(togglePeriodSetting({ field }));
   };
 
   return (
@@ -58,18 +52,47 @@ const CuatrimestreConfig = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {settings.map(setting => (
-              <TableRow key={setting.id}>
-                <TableCell>{setting.name}</TableCell>
-                <TableCell align="right">
-                  <Switch
-                    checked={setting.enabled}
-                    onChange={() => handleToggle(setting.id)}
-                    color="primary"
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
+            {/* Mapea los campos del estado y crea una fila por cada uno */}
+            <TableRow>
+              <TableCell>Formulario Activo</TableCell>
+              <TableCell align="right">
+                <Switch
+                  checked={settings.form_active}
+                  onChange={() => handleToggle('form_active')}
+                  color="primary"
+                />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Entrega de Anteproyecto Activa</TableCell>
+              <TableCell align="right">
+                <Switch
+                  checked={settings.initial_project_active}
+                  onChange={() => handleToggle('initial_project_active')}
+                  color="primary"
+                />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Entrega Intermedia Activa</TableCell>
+              <TableCell align="right">
+                <Switch
+                  checked={settings.intermediate_project_active}
+                  onChange={() => handleToggle('intermediate_project_active')}
+                  color="primary"
+                />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Entrega Final Activa</TableCell>
+              <TableCell align="right">
+                <Switch
+                  checked={settings.final_project_active}
+                  onChange={() => handleToggle('final_project_active')}
+                  color="primary"
+                />
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </StyledTableContainer>

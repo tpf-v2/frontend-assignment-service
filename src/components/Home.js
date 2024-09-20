@@ -41,7 +41,10 @@ const Home = () => {
     if (user.token) {
       if (user.role === "admin") {
         navigate("/admin");
-      } else {
+      } else if(user.role === "student") {
+        navigate("/learning-path");
+      }
+      else {
         navigate("/form-selection");
       }
     }
@@ -60,6 +63,9 @@ const Home = () => {
         const data = await dispatch(authenticateUser(email, password));
         if(data.role === 'admin'){
           navigate('/admin')
+        }
+        else if(data.role === "student") {
+          navigate("/learning-path");
         }
         else{
           navigate('/form-selection');
