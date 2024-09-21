@@ -54,7 +54,7 @@ const CuatrimestreConfig = () => {
           <TableBody>
             {/* Mapea los campos del estado y crea una fila por cada uno */}
             <TableRow>
-              <TableCell>Formulario Activo</TableCell>
+              <TableCell>Formulario de inscripción de grupos</TableCell>
               <TableCell align="right">
                 <Switch
                   checked={settings.form_active}
@@ -64,7 +64,7 @@ const CuatrimestreConfig = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Entrega de Anteproyecto Activa</TableCell>
+              <TableCell>Entrega de Anteproyecto</TableCell>
               <TableCell align="right">
                 <Switch
                   checked={settings.initial_project_active}
@@ -74,7 +74,7 @@ const CuatrimestreConfig = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Entrega Intermedia Activa</TableCell>
+              <TableCell>Entrega Intermedia</TableCell>
               <TableCell align="right">
                 <Switch
                   checked={settings.intermediate_project_active}
@@ -84,7 +84,7 @@ const CuatrimestreConfig = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Entrega Final Activa</TableCell>
+              <TableCell>Entrega Final</TableCell>
               <TableCell align="right">
                 <Switch
                   checked={settings.final_project_active}
@@ -96,11 +96,11 @@ const CuatrimestreConfig = () => {
           </TableBody>
         </Table>
       </StyledTableContainer>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+      {/* <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
         <Button variant="contained" color="primary" onClick={() => alert("Configuraciones guardadas!")}> 
           Guardar
         </Button>
-      </Box>
+      </Box> */}
     </Container>
   );
 };
