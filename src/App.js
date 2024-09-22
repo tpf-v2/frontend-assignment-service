@@ -28,6 +28,8 @@ import Algorithms from './components/Algorithms/Algorithms';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import LearningPath from './components/UI/Dashboards/Student/LearningPath';
+import TutorCuatrimestre from './components/UI/Tutors/TutorCuatrimester';
+import TutorGroupsCuatrimestre from './components/UI/Tutors/TutorGroupsCuatrimestre';
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -71,6 +73,8 @@ const App = () => {
             <Route path="dashboard/:cuatrimestre/groups" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
             <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />
             <Route path="/student-form" element={<ProtectedRoute><FormClosedAlert /></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente 
+            <Route path="/tutor-cuatrimestre" element={<ProtectedRoute><TutorCuatrimestre /></ProtectedRoute>} />
+            <Route path="/tutor-cuatrimestre/groups" element={<ProtectedRoute><TutorGroupsCuatrimestre /></ProtectedRoute>} />
             {/* <Route path="/student-form" element={<StudentForm />} /> */}
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute>{user.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
