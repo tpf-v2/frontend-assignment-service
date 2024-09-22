@@ -3,9 +3,11 @@ import { Container, Button, Typography, Box, Paper } from '@mui/material';
 import { styled } from '@mui/system';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getDashboardData } from '../../../../api/dashboardStats';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import StatCard from './Components/StatCard';  // Import StatCard Component
 import BarChartComponent from './Components/BarChart';
+import { setTopics } from '../../../../redux/topicsSlice';
+import { setTutors } from '../../../../redux/tutorsSlice';
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -55,9 +57,17 @@ const Dashboard = () => {
     navigate(path);
   };
 
+  const dispatch = useDispatch();
+
   const getData = async () => {
     try {
       const data = await getDashboardData(cuatrimestre, user);
+      
+      console.log("TOPICS", data.topics)
+      dispatch(setTopics(data.topics)); //Guardo los topics en Redux
+      console.log("TUTORS", data.tutors)
+      dispatch(setTutors(data.tutors)); //Guardo los tutors en Redux
+
       setDashboardData(data);
     } catch (error) {
       console.error('Error al obtener datos del dashboard:', error);

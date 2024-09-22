@@ -2,6 +2,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { clearUser } from '../redux/userSlice';
+import { clearTopics } from '../redux/topicsSlice';
+import { clearTutors } from '../redux/tutorsSlice';
 
 const TokenManager = () => {
   const dispatch = useDispatch();
@@ -16,11 +18,15 @@ const TokenManager = () => {
     if (timeRemaining <= 0) {
       // El token ya expiró, borra y redirige a iniciar sesion
       dispatch(clearUser());
+      dispatch(clearTopics());
+      dispatch(clearTutors());
       navigate('/');
     } else {
       // Configura el setTimeout para borrar el token y redirigir cuando expire
       const timeoutId = setTimeout(() => {
         dispatch(clearUser());
+        dispatch(clearTopics());
+        dispatch(clearTutors());
         navigate('/');
       }, timeRemaining);
 
