@@ -25,6 +25,8 @@ import GroupsTable from './components/UI/Tables/ChildTables/GroupsTable';
 import FormClosedAlert from './components/FormClosedAlert';
 import TokenManager from './components/TokenManager';
 import CuatrimestreConfig from './components/UI/CuatrimestreConfig';
+import Algorithms from './components/Algorithms/Algorithms';
+
 import ProtectedRoute from './components/ProtectedRoute';
 import LearningPath from './components/UI/Dashboards/Student/LearningPath';
 
@@ -82,6 +84,7 @@ const App = () => {
             <Route path="/upload-topics/:cuatrimestre" element={<ProtectedRoute>{user.role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/upload-tutors/:cuatrimestre" element={<ProtectedRoute>{user.role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile user={user} /></ProtectedRoute>} />
+            <Route path="/algorithms/:cuatrimestre" element={<ProtectedRoute>{user.role === 'admin' ? <Algorithms user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Box>

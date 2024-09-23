@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Container,
   Typography,
@@ -12,37 +12,38 @@ import {
   Paper,
   Box,
   Button,
-  Divider
-} from '@mui/material';
-import { styled } from '@mui/system';
-import { useSelector, useDispatch } from 'react-redux';
-import { togglePeriodSetting } from '../../redux/periodSlice';
+  Divider,
+} from "@mui/material";
+import { styled } from "@mui/system";
+import { useSelector, useDispatch } from "react-redux";
+import { togglePeriodSetting } from "../../redux/periodSlice";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  fontWeight: 'bold',
-  backgroundColor: '#f0f0f0',
+  fontWeight: "bold",
+  backgroundColor: "#f0f0f0",
 }));
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   marginTop: theme.spacing(3),
-  borderRadius: '8px',
+  borderRadius: "8px",
   boxShadow: theme.shadows[3],
 }));
 
 const CuatrimestreConfig = () => {
   const settings = useSelector((state) => state.period); // Ajuste para obtener el estado de Redux
   const dispatch = useDispatch(); // Si quieres manejar el estado con Redux
-  
+
   const handleToggle = (field) => {
     dispatch(togglePeriodSetting({ field }));
   };
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 5 }}>
-      <Typography variant="h4" align="center" gutterBottom>
+    <Container maxWidth="lg" sx={{ mt: 5, marginBottom: 3 }}>
+      <Divider sx={{ mb: 3 }} />
+
+      <Typography variant="h5" align="center" gutterBottom>
         Configuración del Cuatrimestre
       </Typography>
-      <Divider sx={{ mb: 3 }} />
       <StyledTableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -58,7 +59,7 @@ const CuatrimestreConfig = () => {
               <TableCell align="right">
                 <Switch
                   checked={settings.form_active}
-                  onChange={() => handleToggle('form_active')}
+                  onChange={() => handleToggle("form_active")}
                   color="primary"
                 />
               </TableCell>
@@ -68,7 +69,7 @@ const CuatrimestreConfig = () => {
               <TableCell align="right">
                 <Switch
                   checked={settings.initial_project_active}
-                  onChange={() => handleToggle('initial_project_active')}
+                  onChange={() => handleToggle("initial_project_active")}
                   color="primary"
                 />
               </TableCell>
@@ -78,7 +79,7 @@ const CuatrimestreConfig = () => {
               <TableCell align="right">
                 <Switch
                   checked={settings.intermediate_project_active}
-                  onChange={() => handleToggle('intermediate_project_active')}
+                  onChange={() => handleToggle("intermediate_project_active")}
                   color="primary"
                 />
               </TableCell>
@@ -88,7 +89,7 @@ const CuatrimestreConfig = () => {
               <TableCell align="right">
                 <Switch
                   checked={settings.final_project_active}
-                  onChange={() => handleToggle('final_project_active')}
+                  onChange={() => handleToggle("final_project_active")}
                   color="primary"
                 />
               </TableCell>
