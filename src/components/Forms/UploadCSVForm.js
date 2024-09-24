@@ -90,8 +90,7 @@ const UploadCSVForm = ({ formType }) => {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
-
-    const apiUrl = `${BASE_URL}/${formType}/upload?period_id=${cuatrimestre}`;
+    const apiUrl = `${BASE_URL}/${formType}/upload?period=${cuatrimestre}`;
     try {
       const response = await axios.post(apiUrl, formData, {
         headers: {

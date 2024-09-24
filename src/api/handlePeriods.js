@@ -28,7 +28,7 @@ export const addCuatrimestre = async (newEntry, user) => {
   };
 
   try {
-    const url = `${BASE_URL}/tutors/periods`;
+    const url = `${BASE_URL}/periods`;
     await axios.post(url, { id: newEntry }, config);
   } catch (error) {
     throw new Error(error);

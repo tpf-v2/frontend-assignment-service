@@ -68,17 +68,17 @@ const UploadProject = ({ title }) => {
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
-    if (file && file.name.endsWith('.csv')) {
+    if (file && (file.name.endsWith('.pdf'))) {
       setSelectedFile(file);
-      setFileError('');
+      setFileError(''); // Elimina cualquier error anterior
     } else {
-      setFileError('Por favor cargue un archivo pdf.');
+      setFileError('Por favor cargue un archivo PDF.');
     }
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: '.pdf',
+    accept: 'application/pdf',
   });
 
   const handleSubmit = async (e) => {
@@ -95,12 +95,13 @@ const UploadProject = ({ title }) => {
     try {
       const response = await axios.post(apiUrl, formData, {
         headers: {
-          'Content-Type': 'text/csv',
+          'Content-Type': 'application/pdf',
           Authorization: `Bearer ${user.token}`
         },
       });
       //Check this since it's a temporary fix for server behavior
-      if (response.status === 201) {
+      console.log("response:", response)
+      if (response.status === 200) {
         setResponseMessage(`Archivo cargado con éxito`);
         setIsSuccess(true);
       } else {
