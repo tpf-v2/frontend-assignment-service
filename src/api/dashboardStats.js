@@ -23,7 +23,7 @@ export const getDashboardData = async (cuatrimestre, user) => {
   const studentEndpoint = "/students/";
   const answersEndpoint = "/forms/answers";
   const topicsEndpoint = "/topics/";
-  const tutorsEndpoint = `/tutors/periods/${cuatrimestre}`;
+  const tutorsEndpoint = `/periods/${cuatrimestre}`;
 
   const config = {
     headers: {

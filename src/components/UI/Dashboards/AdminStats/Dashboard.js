@@ -6,7 +6,7 @@ import StatCard from "./Components/StatCard"; // Import StatCard Component
 import BarChartComponent from "./Components/BarChart";
 import { setTopics } from "../../../../redux/topicsSlice";
 import { setTutors } from "../../../../redux/tutorsSlice";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";  // Icono para el desplegable
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"; // Icono para el desplegable
 import DownloadIcon from "@mui/icons-material/Download";
 
 import {
@@ -33,6 +33,8 @@ import {
 import { getDashboardData } from "../../../../api/dashboardStats";
 import CuatrimestreConfig from "../../CuatrimestreConfig";
 import Algorithms from "../../../Algorithms/Algorithms";
+import { getTableData } from "../../../../api/handleTableData";
+import { setGroups } from "../../../../redux/groupsSlice";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -88,22 +90,31 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("General"); // Default selected menu
+  const [groups, setGroups] = useState(null);
   const user = useSelector((state) => state.user);
 
   const [deliveries, setDeliveries] = useState({
-    anteproyecto: { entregados: 0, faltantes: 0, lista: [{
-      grupo: "Grupo 1",
-      archivo: "archivo1.pdf",
-      fechaEntrega: "2024-09-23"
-    }, {
-      grupo: "Grupo 2",
-      archivo: "archivo2.pdf",
-      fechaEntrega: "2024-09-23"
-    }, "Archivo 3"] },
+    anteproyecto: {
+      entregados: 0,
+      faltantes: 0,
+      lista: [
+        {
+          grupo: "Grupo 1",
+          archivo: "archivo1.pdf",
+          fechaEntrega: "2024-09-23",
+        },
+        {
+          grupo: "Grupo 2",
+          archivo: "archivo2.pdf",
+          fechaEntrega: "2024-09-23",
+        },
+        "Archivo 3",
+      ],
+    },
     intermedia: { entregados: 0, faltantes: 0, lista: [] },
     final: { entregados: 0, faltantes: 0, lista: [] },
   });
-  
+
   const handleNavigation = (menu) => {
     setSelectedMenu(menu);
   };
@@ -120,6 +131,11 @@ const Dashboard = () => {
       dispatch(setTutors(data.tutors)); //Guardo los tutors en Redux
 
       setDashboardData(data);
+
+      const endpoint = `/groups/?period=${cuatrimestre}`;
+      const groups = await getTableData(endpoint, user);
+      dispatch(setGroups(groups)); //Guardo los topics en Redux
+      setGroups(groups);
     } catch (error) {
       console.error("Error al obtener datos del dashboard:", error);
     } finally {
@@ -161,10 +177,8 @@ const Dashboard = () => {
               >
                 VER GRUPOS
               </ButtonStyled>
-
             </Box>
             <CuatrimestreConfig />
-
           </>
         );
       case "Inscripciones":
@@ -218,10 +232,9 @@ const Dashboard = () => {
             </Box>
           </>
         );
-        case "Anteproyecto":
-          return (
-            <div>
-
+      case "Anteproyecto":
+        return (
+          <div>
             <Box mt={4}>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={4}>
@@ -239,82 +252,84 @@ const Dashboard = () => {
                 <Grid item xs={12} sm={4}>
                   <StatCard
                     title="Total de grupos"
-                    value={loading ? -1 : dashboardData.topicsCard}
+                    value={loading ? -1 : groups.length}
                   />
                 </Grid>
               </Grid>
             </Box>
-            
-            <TableContainer component={Paper} style={{ marginTop: "20px" }}>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ fontWeight: "bold" }}>Grupo</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Archivo</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Fecha de Entrega</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Descargar</TableCell> 
 
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {deliveries.anteproyecto.lista.map((entrega, index) => (
-              <TableRow key={index}>
-                <TableCell>{entrega.grupo}</TableCell>
-                <TableCell>{entrega.archivo}</TableCell>
-                <TableCell>{entrega.fechaEntrega}</TableCell>
-                <TableCell>
-                  <IconButton
-                    href={entrega.linkDescarga} // link para la descarga del archivo
-                    target="_blank" // Abre el archivo en una nueva pestaña
-                    rel="noopener noreferrer"
-                  >
-                    <DownloadIcon />
-                  </IconButton>
-                </TableCell> {/* Botón de descarga */}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-            </div>
-          );
-        
-        case "Intermedia":
-          return (
-            <div>
-              <Typography variant="h6">Entrega Intermedia</Typography>
-              <Typography variant="body1">
-                Grupos que entregaron: {deliveries.intermedia.entregados}
-              </Typography>
-              <Typography variant="body1">
-                Grupos que faltan entregar: {deliveries.intermedia.faltantes}
-              </Typography>
-              <List>
-                {deliveries.intermedia.lista.map((entrega, index) => (
-                  <ListItem key={index}>{entrega}</ListItem>
-                ))}
-              </List>
-            </div>
-          );
-        
-        case "Final":
-          return (
-            <div>
-              <Typography variant="h6">Entrega Final</Typography>
-              <Typography variant="body1">
-                Grupos que entregaron: {deliveries.final.entregados}
-              </Typography>
-              <Typography variant="body1">
-                Grupos que faltan entregar: {deliveries.final.faltantes}
-              </Typography>
-              <List>
-                {deliveries.final.lista.map((entrega, index) => (
-                  <ListItem key={index}>{entrega}</ListItem>
-                ))}
-              </List>
-            </div>
-          );
-        
+            <TableContainer component={Paper} style={{ marginTop: "20px" }}>
+              <Table stickyHeader>
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>Grupo</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Archivo</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      Fecha de Entrega
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Descargar</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {deliveries.anteproyecto.lista.map((entrega, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{entrega.grupo}</TableCell>
+                      <TableCell>{entrega.archivo}</TableCell>
+                      <TableCell>{entrega.fechaEntrega}</TableCell>
+                      <TableCell>
+                        <IconButton
+                          href={entrega.linkDescarga} // link para la descarga del archivo
+                          target="_blank" // Abre el archivo en una nueva pestaña
+                          rel="noopener noreferrer"
+                        >
+                          <DownloadIcon />
+                        </IconButton>
+                      </TableCell>{" "}
+                      {/* Botón de descarga */}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+        );
+
+      case "Intermedia":
+        return (
+          <div>
+            <Typography variant="h6">Entrega Intermedia</Typography>
+            <Typography variant="body1">
+              Grupos que entregaron: {deliveries.intermedia.entregados}
+            </Typography>
+            <Typography variant="body1">
+              Grupos que faltan entregar: {deliveries.intermedia.faltantes}
+            </Typography>
+            <List>
+              {deliveries.intermedia.lista.map((entrega, index) => (
+                <ListItem key={index}>{entrega}</ListItem>
+              ))}
+            </List>
+          </div>
+        );
+
+      case "Final":
+        return (
+          <div>
+            <Typography variant="h6">Entrega Final</Typography>
+            <Typography variant="body1">
+              Grupos que entregaron: {deliveries.final.entregados}
+            </Typography>
+            <Typography variant="body1">
+              Grupos que faltan entregar: {deliveries.final.faltantes}
+            </Typography>
+            <List>
+              {deliveries.final.lista.map((entrega, index) => (
+                <ListItem key={index}>{entrega}</ListItem>
+              ))}
+            </List>
+          </div>
+        );
+
       case "Fechas de presentación":
         return <div>Contenido del Formulario de Fechas</div>;
       case "Algoritmos":
@@ -325,7 +340,9 @@ const Dashboard = () => {
   };
 
   return (
-    <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>      <Root>
+    <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>
+      {" "}
+      <Root>
         <Grid container spacing={3}>
           {/* Sidebar */}
           <Grid item xs={3}>
@@ -339,9 +356,7 @@ const Dashboard = () => {
                 >
                   General
                 </ListItemStyled>
-
                 <Divider /> {/* Divider después de General */}
-
                 {/* Asignaciones - Desplegable */}
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -371,7 +386,6 @@ const Dashboard = () => {
                     </ListItemStyled>
                   </AccordionDetails>
                 </Accordion>
-
                 {/* Entregas - Desplegable */}
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
