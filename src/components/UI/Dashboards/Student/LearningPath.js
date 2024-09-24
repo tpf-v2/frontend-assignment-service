@@ -37,8 +37,18 @@ const LearningPath = () => {
     setNotification({ ...notification, open: false });
   };
 
-  const handleNavigation = (path) => {
-    navigate(path);
+
+  const handleNavigation = (root) => {
+    navigate(root);
+  };
+  
+  const handleUploadFileNavigation = () => {
+    const initial_project_active = true;
+      if (!initial_project_active) {
+        navigate('/initial-project'); // Redirigir si initial_project esta habilitado
+      } else {
+        navigate('/upload-initial-project'); // Redirigir si initial_project no esta habilitado
+      }
   };
 
   useEffect(() => {
@@ -64,20 +74,6 @@ const LearningPath = () => {
               { title: 'Revisión del tutor', completed: false },
             ],
           },
-          // {
-          //   phase: 'Entrega Intermedia',
-          //   tasks: [
-          //     { title: 'Proyecto finalizado', completed: false },
-          //     { title: 'Enviar para evaluación', completed: false },
-          //   ],
-          // },
-          // {
-          //   phase: 'Presentación',
-          //   tasks: [
-          //     { title: 'Envio de disponibilidad', completed: false },
-          //     { title: 'Fecha de presentación', completed: false },
-          //   ],
-          // },
         ]);
       } catch (error) {
         console.error("Error al obtener las respuestas", error);
@@ -100,7 +96,7 @@ const LearningPath = () => {
         >
           Enviar Formulario de Grupo
         </ButtonStyled>
-        <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/initial-project')}>
+        <ButtonStyled variant="contained" color="primary" onClick={handleUploadFileNavigation}>
             Enviar Anteproyecto
         </ButtonStyled>
         {/* <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>

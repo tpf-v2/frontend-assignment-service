@@ -11,7 +11,7 @@ export const fetchCuatrimestres = async (user) => {
     },
   };
   try {
-    const url = `${BASE_URL}/api/tutors/periods`;
+    const url = `${BASE_URL}/api/periods`;
     const response = await axios.get(url, config);
     return response.data;
   } catch (error) {

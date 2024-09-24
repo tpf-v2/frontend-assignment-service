@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Home from './components/Home';
 import FormSelection from './components/Forms/FormSelection';
-import StudentForm from './components/Forms/StudentForm';
 import TutorForm from './components/Forms/TutorForm';
 import AdminDashboard from './components/UI/Dashboards/Periods/AdminDashboard';
 import AddTopicForm from './components/Forms/AddTopicForm';
@@ -14,7 +13,7 @@ import Profile from './components/Profile';
 import { Box } from '@mui/material';
 import BackgroundContainer from './components/UI/BackgroundContainer';
 import './App.css'; // Importar los estilos globales
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Dashboard from './components/UI/Dashboards/AdminStats/Dashboard';
 import ParentTable from './components/UI/Tables/ParentTable';
 import StudentsTable from './components/UI/Tables/ChildTables/StudentsTable';
@@ -28,6 +27,8 @@ import Algorithms from './components/Algorithms/Algorithms';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import LearningPath from './components/UI/Dashboards/Student/LearningPath';
+import { UploadFile } from '@mui/icons-material';
+import UploadProject from './components/Forms/UploadProject';
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -78,6 +79,7 @@ const App = () => {
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />
             <Route path="/admin-add-corrector" element={<ProtectedRoute><AddTutorForm /></ProtectedRoute>} />
             <Route path="/upload-students/:cuatrimestre" element={<ProtectedRoute>{user.role === 'admin' ? <UploadCSVForm formType="students" /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/upload-initial-project" element={<UploadProject />} />
             <Route path="/upload-topics/:cuatrimestre" element={<ProtectedRoute>{user.role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/upload-tutors/:cuatrimestre" element={<ProtectedRoute>{user.role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile user={user} /></ProtectedRoute>} />
