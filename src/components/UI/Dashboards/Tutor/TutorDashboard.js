@@ -33,6 +33,7 @@ import {
 import { getDashboardData } from "../../../../api/dashboardStats";
 import CuatrimestreConfig from "../../CuatrimestreConfig";
 import Algorithms from "../../../Algorithms/Algorithms";
+import { getPeriodsGroup } from "../../../../api/getPeriodsGroup";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -89,21 +90,8 @@ const TutorDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("General"); // Default selected menu
   const user = useSelector((state) => state.user);
+  const [userGroups, setUserGroups] = useState([]); // Estado para almacenar los grupos
 
-  const [deliveries, setDeliveries] = useState({
-    anteproyecto: { entregados: 0, faltantes: 0, lista: [{
-      grupo: "Grupo 1",
-      archivo: "archivo1.pdf",
-      fechaEntrega: "2024-09-23"
-    }, {
-      grupo: "Grupo 2",
-      archivo: "archivo2.pdf",
-      fechaEntrega: "2024-09-23"
-    }, "Archivo 3"] },
-    intermedia: { entregados: 0, faltantes: 0, lista: [] },
-    final: { entregados: 0, faltantes: 0, lista: [] },
-  });
-  
   const handleNavigation = (menu) => {
     setSelectedMenu(menu);
   };
@@ -127,8 +115,19 @@ const TutorDashboard = () => {
     }
   };
 
+  const getGroups = async () => {
+    try {
+      const groups = await getPeriodsGroup(user); // Llamada a la API para obtener grupos
+      groups.sort((a, b) => a.id - b.id);
+      setUserGroups(groups);
+    } catch (error) {
+      console.error("Error al obtener grupos:", error);
+    }
+  };
+
   useEffect(() => {
     getData();
+    getGroups();
   }, [loading]);
 
   // Función para renderizar el contenido basado en el menú seleccionado
@@ -189,33 +188,22 @@ const TutorDashboard = () => {
 
                 <Divider /> {/* Divider después de General */}
 
-                {/* Asignaciones - Desplegable */}
+                {/* Asignaciones - Mis Grupos */}
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     Mis Grupos
                   </AccordionSummary>
                   <AccordionDetails>
-                  <ListItemStyled
-                      button
-                      selected={selectedMenu === "Grupo 1"}
-                      onClick={() => handleNavigation("Grupo 1")}
-                    >
-                      Grupo 1
-                    </ListItemStyled>
-                    <ListItemStyled
-                      button
-                      selected={selectedMenu === "Grupo 2"}
-                      onClick={() => handleNavigation("Grupo 2")}
-                    >
-                      Grupo 2
-                    </ListItemStyled>
-                    <ListItemStyled
-                      button
-                      selected={selectedMenu === "Grupo 3"}
-                      onClick={() => handleNavigation("Grupo 3")}
-                    >
-                      Grupo 3
-                    </ListItemStyled>
+                    {userGroups.map((grupo, index) => (
+                      <ListItemStyled
+                        key={index}
+                        button
+                        selected={selectedMenu === `Grupo ${grupo.id}`}
+                        onClick={() => handleNavigation(`Grupo ${grupo.id}`)}
+                      >
+                        Equipo {grupo.id} {/* asumiendo que los grupos tienen un campo "nombre" */}
+                      </ListItemStyled>
+                    ))}
                   </AccordionDetails>
                 </Accordion>
 
