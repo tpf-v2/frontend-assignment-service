@@ -71,14 +71,6 @@ const Header = ({ user, color, handleHomeClick }) => {
               {showButton && (
                 <Button
                   color="inherit"
-                  onClick={() => navigate(`/algorithms/${cuatrimestre}`)}
-                >
-                  Algoritmos
-                </Button>
-              )}
-              {showButton && (
-                <Button
-                  color="inherit"
                   onClick={() => navigate(`/dashboard/${cuatrimestre}`)}
                 >
                   Dashboard

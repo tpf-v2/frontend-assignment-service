@@ -24,12 +24,13 @@ import FormAnswersTable from './components/UI/Tables/ChildTables/FormAnswersTabl
 import GroupsTable from './components/UI/Tables/ChildTables/GroupsTable';
 import FormClosedAlert from './components/FormClosedAlert';
 import TokenManager from './components/TokenManager';
+import CuatrimestreConfig from './components/UI/CuatrimestreConfig';
 import Algorithms from './components/Algorithms/Algorithms';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import LearningPath from './components/UI/Dashboards/Student/LearningPath';
-import TutorCuatrimestre from './components/UI/Tutors/TutorCuatrimester';
-import TutorGroupsCuatrimestre from './components/UI/Tutors/TutorGroupsCuatrimestre';
+import TutorDashboard from './components/UI/Dashboards/Tutor/TutorDashboard';
+import TutorCuatrimestre from './components/UI/Dashboards/Tutor/TutorCuatrimestre';
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -72,11 +73,16 @@ const App = () => {
             <Route path="dashboard/:cuatrimestre/form-answers" element={<ProtectedRoute><FormAnswersTable /></ProtectedRoute>} />
             <Route path="dashboard/:cuatrimestre/groups" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
             <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />
+            
+            <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
+            {/* <Route path="/student-form" element={<ProtectedRoute><StudentForm /></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente  */}
             <Route path="/student-form" element={<ProtectedRoute><FormClosedAlert /></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente 
-            <Route path="/tutor-cuatrimestre" element={<ProtectedRoute><TutorCuatrimestre /></ProtectedRoute>} />
-            <Route path="/tutor-cuatrimestre/groups" element={<ProtectedRoute><TutorGroupsCuatrimestre /></ProtectedRoute>} />
             {/* <Route path="/student-form" element={<StudentForm />} /> */}
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
+            
+            <Route path="/tutor-cuatrimestre" element={<ProtectedRoute><TutorCuatrimestre /></ProtectedRoute>} />
+            <Route path="/tutor-cuatrimestre/:cuatrimestre" element={<ProtectedRoute><TutorDashboard /></ProtectedRoute>} />
+            
             <Route path="/admin" element={<ProtectedRoute>{user.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />
             <Route path="/admin-add-corrector" element={<ProtectedRoute><AddTutorForm /></ProtectedRoute>} />

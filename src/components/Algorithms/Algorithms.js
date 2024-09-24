@@ -8,15 +8,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getTableData } from "../../api/handleTableData";
 import { useSelector } from "react-redux";
 
-// Componente para cada bloque de pasos
-const StepBlock = ({ title, onRun, isRunDisabled, isEditableDisabled, isDownloadDisabled }) => (
+const StepBlock = ({ title, onRun, isRunDisabled }) => (
   <Box
     sx={{
       textAlign: "center",
       padding: "20px",
       border: "1px solid #ccc",
       borderRadius: "10px",
-      minWidth: "200px",
+      width: "100%", // Se ajusta al 100% del ancho disponible
+      maxWidth: "250px", // Tamaño máximo en pantallas grandes
+      margin: "10px",
     }}
   >
     <h3>{title}</h3>
@@ -24,36 +25,20 @@ const StepBlock = ({ title, onRun, isRunDisabled, isEditableDisabled, isDownload
       variant="contained"
       sx={{ bgcolor: "#007bff", color: "#fff", mb: 1 }}
       onClick={onRun}
-      disabled={isRunDisabled} // Deshabilitado si es necesario
+      disabled={isRunDisabled}
     >
       Correr
     </ButtonStyled>
-    {/* <br />
-    <ButtonStyled
-      variant="contained"
-      sx={{ bgcolor: "#007bff", color: "#fff", mb: 1 }}
-      disabled={isEditableDisabled} // Deshabilitado si es necesario
-    >
-      Editar resultado
-    </ButtonStyled>
-    <br />
-    <ButtonStyled
-      variant="contained"
-      sx={{ bgcolor: "#007bff", color: "#fff" }}
-      disabled={isDownloadDisabled} // Deshabilitado si es necesario
-    >
-      Descargar
-    </ButtonStyled> */}
   </Box>
 );
 
-// Estilos
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(4),
   padding: theme.spacing(2),
   borderRadius: theme.shape.borderRadius,
   backgroundColor: "#ffffff",
   boxShadow: theme.shadows[3],
+  width: '100%', // Ancho completo del contenedor padre
 }));
 
 const Title = styled(Typography)(({ theme }) => ({
@@ -71,122 +56,93 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
   backgroundColor: "#0072C6",
   color: "#ffffff",
   transition: "background-color 0.3s",
-  minWidth: "200px",
+  minWidth: "150px",
   "&:hover": {
     backgroundColor: "#005B9A",
   },
 }));
 
 const Algorithms = () => {
-  // Estados para controlar los botones
-  const [isRunDisabledStep1, setRunDisabledStep1] = useState(false); // El primer botón de "Correr" está habilitado al principio
-  const [isRunDisabledStep2, setRunDisabledStep2] = useState(false); // "Correr" del paso 2 deshabilitado al principio 
-  const [isRunDisabledStep3, setRunDisabledStep3] = useState(true); // "Correr" del paso 3 deshabilitado al principio
-  const [isEditableDisabledStep2, setEditableDisabledStep2] = useState(true);
-  const [isDownloadDisabledStep2, setDownloadDisabledStep2] = useState(true);
-  const [isEditableDisabledStep3, setEditableDisabledStep3] = useState(true);
-  const [isDownloadDisabledStep3, setDownloadDisabledStep3] = useState(true);
+  const [isRunDisabledStep1, setRunDisabledStep1] = useState(false);
+  const [isRunDisabledStep2, setRunDisabledStep2] = useState(false);
+  const [isRunDisabledStep3, setRunDisabledStep3] = useState(true);
 
   const navigate = useNavigate();
   const { cuatrimestre } = useParams();
 
-  const [loading, setLoading] = useState(false); // Estado de carga
-  const [openDialog, setOpenDialog] = useState(false); // Control del diálogo
+  const [loading, setLoading] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md')); // Para pantallas pequeñas
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  // Función para manejar el paso 1
   const handleRunStep1 = () => {
-    setLoading(true); // Mostrar "Cargando"
-    setOpenDialog(true); // Abrir el pop-up
+    setLoading(true);
+    setOpenDialog(true);
 
-    // TODO: Correr algoritmo
-
-    // Simula un tiempo de espera para la carga de los datos (aca correr el algoritmo)
     setTimeout(() => {
-      setLoading(false); // Oculta el "Cargando"
-      navigate(`/dashboard/${cuatrimestre}/groups`)
+      setLoading(false);
+      navigate(`/dashboard/${cuatrimestre}/groups`);
+    }, 2000);
 
-    }, 2000); // Simulación de 2 segundos para la carga
-
-    setRunDisabledStep2(false);       // Habilitar botón "Correr" del paso 2
-    setRunDisabledStep1(true);        // Deshabilitar botón "Correr" del paso 1
+    setRunDisabledStep2(false);
+    setRunDisabledStep1(true);
   };
 
-  // Función para manejar el paso 2
   const handleRunStep2 = () => {
-    setEditableDisabledStep2(false);  // Habilitar botón "Editar" del paso 2
-    setDownloadDisabledStep2(false);  // Habilitar botón "Descargar" del paso 2
-    setRunDisabledStep3(false);       // Habilitar botón "Correr" del paso 3
-    setRunDisabledStep2(true);        // Deshabilitar botón "Correr" del paso 2
+    setRunDisabledStep3(false);
+    setRunDisabledStep2(true);
+  };
 
+  const handleRunStep3 = () => {
+    setRunDisabledStep3(true);
   };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
 
-  // Función para manejar el paso 3
-  const handleRunStep3 = () => {
-    setEditableDisabledStep3(false);  // Habilitar botón "Editar" del paso 3
-    setDownloadDisabledStep3(false);  // Habilitar botón "Descargar" del paso 3
-    setRunDisabledStep3(true);        // Deshabilitar botón "Correr" del paso 3
-
-    // Deshabilitar los botones "Editar" y "Descargar" del paso 2
-    setEditableDisabledStep2(true);
-    setDownloadDisabledStep2(true);
-  };
-
   return (
-    <Container maxWidth="lg" >
-      <Root>
+    <Container maxWidth={false} sx={{ overflow: "hidden" }}> 
         <Title variant="h4">Algoritmos de asignación</Title>
 
         <Container
-          maxWidth="lg"
+          maxWidth={false}
           sx={{
             display: "flex",
+            flexDirection: { xs: "column", md: "row" }, // Columna en pantallas pequeñas, fila en grandes
             alignItems: "center",
             justifyContent: "center",
             mt: 5,
+            // overflowX: "auto", // Permite que el contenido se desplace en pantallas pequeñas
           }}
         >
-          {/* Paso 1 */}
           <StepBlock
             title="Armar grupos"
-            onRun={handleRunStep1} // Ejecutar y habilitar siguiente paso
-            isRunDisabled={isRunDisabledStep1} // El primer botón de "Correr" está habilitado
+            onRun={handleRunStep1}
+            isRunDisabled={isRunDisabledStep1}
           />
-          <ArrowForwardIcon sx={{ fontSize: 50, mx: 2 }} />
-          {/* Paso 2 */}
+          <ArrowForwardIcon sx={{ fontSize: { xs: 30, md: 50 }, mx: 2 }} />
           <StepBlock
             title="Asignar tema y tutor a cada grupo"
-            onRun={handleRunStep2} // Ejecutar y habilitar siguiente paso
-            isRunDisabled={isRunDisabledStep2} // Botón de "Correr" deshabilitado al principio
-            isEditableDisabled={isEditableDisabledStep2}
-            isDownloadDisabled={isDownloadDisabledStep2}
+            onRun={handleRunStep2}
+            isRunDisabled={isRunDisabledStep2}
           />
-          <ArrowForwardIcon sx={{ fontSize: 50, mx: 2 }} />
-          {/* Paso 3 */}
+          <ArrowForwardIcon sx={{ fontSize: { xs: 30, md: 50 }, mx: 2 }} />
           <StepBlock
             title="Asignar fecha de presentación"
-            onRun={handleRunStep3} // Ejecutar
-            isRunDisabled={isRunDisabledStep3} // Botón de "Correr" deshabilitado al principio
-            isEditableDisabled={isEditableDisabledStep3}
-            isDownloadDisabled={isDownloadDisabledStep3}
+            onRun={handleRunStep3}
+            isRunDisabled={isRunDisabledStep3}
           />
         </Container>
-      </Root>
-      {/* Pop-up para mostrar la carga y los grupos */}
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
-        fullScreen={fullScreen} // El diálogo será pantalla completa en pantallas pequeñas
-        maxWidth="lg" // Ancho máximo del diálogo
-        fullWidth // Hace que el diálogo ocupe todo el ancho disponible
+        fullScreen={fullScreen}
+        maxWidth="lg"
+        fullWidth
         sx={{
-          height: '100%', // Que ocupe todo el alto de la pantalla
-          maxHeight: '100vh', // Altura máxima
+          height: '100%',
+          maxHeight: '100vh',
         }}
       >
         <DialogTitle>
@@ -210,18 +166,18 @@ const Algorithms = () => {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            height: '100%', // Hace que el contenido ocupe todo el alto
-            minHeight: '300px', // Añadir altura mínima para evitar que se achique
-            maxHeight: '100vh', // Asegura que el contenido no se desborde
-            minWidth: '300px', // Añadir ancho mínimo
+            height: '100%',
+            minHeight: '300px',
+            maxHeight: '100vh',
+            minWidth: '300px',
           }}
         >
-          {loading && 
+          {loading && (
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
               <CircularProgress />
               <Typography sx={{ ml: 2 }}>Armando grupos...</Typography>
             </Box>
-          }
+          )}
         </DialogContent>
       </Dialog>
     </Container>
@@ -229,3 +185,59 @@ const Algorithms = () => {
 };
 
 export default Algorithms;
+
+// import React, { useState } from 'react';
+// import { Stepper, Step, StepLabel, Button, Box, Typography } from '@mui/material';
+
+// const steps = ['Armar grupos', 'Asignar tema y tutor a cada grupo', 'Asignar fecha de presentación'];
+
+// const Algorithms = () => {
+//   const [activeStep, setActiveStep] = useState(0);
+
+//   const handleNext = () => {
+//     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+//   };
+
+//   const handleBack = () => {
+//     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+//   };
+
+//   return (
+//     <Box sx={{ width: '100%' }}>
+//       <Stepper activeStep={activeStep} alternativeLabel>
+//         {steps.map((label) => (
+//           <Step key={label}>
+//             <StepLabel>{label}</StepLabel>
+//           </Step>
+//         ))}
+//       </Stepper>
+//       <Box sx={{ mt: 2, mb: 2 }}>
+//         {activeStep === steps.length ? (
+//           <Typography variant="h6" sx={{ textAlign: 'center' }}>
+//             ¡Todos los pasos completados!
+//           </Typography>
+//         ) : (
+//           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+//             <Typography variant="h6">{steps[activeStep]}</Typography>
+//             <Button 
+//               variant="contained" 
+//               onClick={handleNext} 
+//               sx={{ mt: 2 }}
+//               disabled={activeStep === steps.length - 1}
+//             >
+//               {activeStep === steps.length - 1 ? 'Finalizar' : 'Correr'}
+//             </Button>
+//           </Box>
+//         )}
+//       </Box>
+//       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+//         <Button disabled={activeStep === 0} onClick={handleBack}>
+//           Atrás
+//         </Button>
+//       </Box>
+//     </Box>
+//   );
+// };
+
+// export default Algorithms;
+

@@ -3,9 +3,10 @@ import { Container, Box, Card, CardContent, Typography} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
-import { useSelector } from 'react-redux';
-import MySnackbar from '../MySnackBar';
-import { getTutorCuatrimestre } from '../../../api/handlePeriods';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCuatrimestres, addCuatrimestre, getTutorCuatrimestre } from '../../../../api/handlePeriods'
+import MySnackbar from '../../MySnackBar';
+import { setPeriod } from '../../../../redux/periodSlice';
 
 const Root = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -83,22 +84,28 @@ const TutorCuatrimestre = () => {
     setNotification({ ...notification, open: false });
   };
 
-  // Fetch existing cuatrimesters on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await getTutorCuatrimestre(user);
-        setCuatrimestres(data.map(item => item.period_id).sort()); // Adjust according to your data structure
+        
+        const sortedData = data.sort((a, b) => b.id - a.id);
+      
+        setCuatrimestres(sortedData);
       } catch (error) {
         console.error(error.message);
       }
     };
 
     fetchData();
+    console.log(cuatrimestres)
   }, []);
 
+  const dispatch = useDispatch();
+
   const handleCardClick = (cuatrimestre) => {
-    navigate(`/dashboard/${cuatrimestre}`);
+    dispatch(setPeriod(cuatrimestre))
+    navigate(`/tutor-cuatrimestre/${cuatrimestre.period_id}`);
   };
 
   return (
@@ -109,7 +116,7 @@ const TutorCuatrimestre = () => {
         {cuatrimestres.map((cuatrimestre, index) => (
           <CardStyled key={index} onClick={() => handleCardClick(cuatrimestre)}>
             <CardContent>
-              <Typography variant="h6" style={{ color: '#333' }}>{cuatrimestre}</Typography>
+              <Typography variant="h6" style={{ color: '#333' }}>{cuatrimestre.period_id}</Typography>
             </CardContent>
           </CardStyled>
         ))}
