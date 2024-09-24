@@ -15,6 +15,8 @@ export function parseJwt(token) {
 
 export const authenticateUser = (email, password) => async (dispatch) => {
     try {
+        console.log(email)
+        console.log(password)
         const response = await axios.post(`${BASE_URL}/connect`, new URLSearchParams({
             username: email,
             password: password,

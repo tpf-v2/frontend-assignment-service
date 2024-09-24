@@ -57,13 +57,13 @@ const LearningPath = () => {
               },
             ],
           },
-          // {
-          //   phase: 'Anteproyecto',
-          //   tasks: [
-          //     { title: 'Entrega de video', completed: false },
-          //     { title: 'Revisión del tutor', completed: false },
-          //   ],
-          // },
+          {
+            phase: 'Anteproyecto',
+            tasks: [
+              { title: 'Entrega de archivo', completed: false },
+              { title: 'Revisión del tutor', completed: false },
+            ],
+          },
           // {
           //   phase: 'Entrega Intermedia',
           //   tasks: [
@@ -100,10 +100,10 @@ const LearningPath = () => {
         >
           Enviar Formulario de Grupo
         </ButtonStyled>
+        <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/initial-project')}>
+            Enviar Anteproyecto
+        </ButtonStyled>
         {/* <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>
-              Enviar Anteproyecto
-            </ButtonStyled>
-            <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>
               Enviar Entrega Intermedia
             </ButtonStyled>
             <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>
