@@ -29,12 +29,15 @@ import {
   TableCell,
   TableBody,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import { getDashboardData } from "../../../../api/dashboardStats";
 import CuatrimestreConfig from "../../CuatrimestreConfig";
 import Algorithms from "../../../Algorithms/Algorithms";
 import { getTableData } from "../../../../api/handleTableData";
 import { setGroups } from "../../../../redux/groupsSlice";
+import { getAnteproyectos } from "../../../../api/getAnteproyectos";
+import { downloadAnteproyecto } from "../../../../api/downloadAnteproyecto";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -89,35 +92,53 @@ const Dashboard = () => {
   const { cuatrimestre } = useParams();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadingAnteproyectos, setLoadingAnteproyectos] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("General"); // Default selected menu
   const [groups, setGroups] = useState(null);
   const user = useSelector((state) => state.user);
+  const period = useSelector((state) => state.period);
+  const [deliveries, setDeliveries] = useState(null);
 
-  const [deliveries, setDeliveries] = useState({
-    anteproyecto: {
-      entregados: 0,
-      faltantes: 0,
-      lista: [
-        {
-          grupo: "Grupo 1",
-          archivo: "archivo1.pdf",
-          fechaEntrega: "2024-09-23",
-        },
-        {
-          grupo: "Grupo 2",
-          archivo: "archivo2.pdf",
-          fechaEntrega: "2024-09-23",
-        },
-        "Archivo 3",
-      ],
-    },
-    intermedia: { entregados: 0, faltantes: 0, lista: [] },
-    final: { entregados: 0, faltantes: 0, lista: [] },
-  });
+  function getGroup(path) {
+    const parts = path.split("/");
+    return parts[1]; // Devuelve el grupo
+  }
 
-  const handleNavigation = (menu) => {
+  function getFileName(path) {
+    const parts = path.split("/");
+    return parts[2]; // Devuelve el nombre del archivo
+  }
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("es-ES", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  }
+
+  const handleNavigation = async (menu) => {
     setSelectedMenu(menu);
+
+    if (menu === "Anteproyecto") {
+      setLoadingAnteproyectos(true);
+      const anteproyectosData = await getAnteproyectos(user, period);
+      if (anteproyectosData) {
+        setDeliveries(anteproyectosData);
+      } else {
+        console.error("No se encontraron datos de anteproyectos");
+      }
+      setLoadingAnteproyectos(false);
+    }
   };
+
+  // Agrega un useEffect para observar los cambios en deliveries
+  useEffect(() => {
+    if (deliveries) {
+      console.log("Datos de deliveries actualizados:", deliveries);
+    }
+  }, [deliveries]);
 
   const dispatch = useDispatch();
 
@@ -140,6 +161,14 @@ const Dashboard = () => {
       console.error("Error al obtener datos del dashboard:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const downloadFile = async (groupId) => {
+    try {
+      await downloadAnteproyecto(groupId, user, period); // Llama a la función de descarga del backend
+    } catch (error) {
+      console.error("Error al descargar el archivo:", error);
     }
   };
 
@@ -192,9 +221,27 @@ const Dashboard = () => {
               justifyContent="space-between"
               width="100%"
             >
-              <ButtonStyled>CARGAR ARCHIVO DE ALUMNOS</ButtonStyled>
-              <ButtonStyled>CARGAR ARCHIVO DE TUTORES</ButtonStyled>
-              <ButtonStyled>CARGAR ARCHIVO DE TEMAS</ButtonStyled>
+              <ButtonStyled
+                onClick={() =>
+                  handleNavigation(`/upload-students/${cuatrimestre}`)
+                }
+              >
+                CARGAR ARCHIVO DE ALUMNOS
+              </ButtonStyled>
+              <ButtonStyled
+                onClick={() =>
+                  handleNavigation(`/upload-tutors/${cuatrimestre}`)
+                }
+              >
+                CARGAR ARCHIVO DE TUTORES
+              </ButtonStyled>
+              <ButtonStyled
+                onClick={() =>
+                  handleNavigation(`/upload-topics/${cuatrimestre}`)
+                }
+              >
+                CARGAR ARCHIVO DE TEMAS
+              </ButtonStyled>
             </Box>
             <ButtonStyled
               onClick={() =>
@@ -240,19 +287,23 @@ const Dashboard = () => {
                 <Grid item xs={12} sm={4}>
                   <StatCard
                     title="Grupos que entregaron"
-                    value={loading ? -1 : deliveries.anteproyecto.entregados}
+                    value={loadingAnteproyectos ? -1 : deliveries.length}
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <StatCard
                     title="Grupos que faltan entregar"
-                    value={loading ? -1 : deliveries.anteproyecto.faltantes}
+                    value={
+                      loadingAnteproyectos
+                        ? -1
+                        : groups.length - deliveries.length
+                    }
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <StatCard
                     title="Total de grupos"
-                    value={loading ? -1 : groups.length}
+                    value={loadingAnteproyectos ? -1 : groups.length}
                   />
                 </Grid>
               </Grid>
@@ -271,23 +322,30 @@ const Dashboard = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {deliveries.anteproyecto.lista.map((entrega, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{entrega.grupo}</TableCell>
-                      <TableCell>{entrega.archivo}</TableCell>
-                      <TableCell>{entrega.fechaEntrega}</TableCell>
-                      <TableCell>
-                        <IconButton
-                          href={entrega.linkDescarga} // link para la descarga del archivo
-                          target="_blank" // Abre el archivo en una nueva pestaña
-                          rel="noopener noreferrer"
-                        >
-                          <DownloadIcon />
-                        </IconButton>
-                      </TableCell>{" "}
-                      {/* Botón de descarga */}
+                  {loadingAnteproyectos ? (
+                    <TableRow>
+                      <TableCell colSpan={4} align="center">
+                        <CircularProgress />
+                      </TableCell>
                     </TableRow>
-                  ))}
+                  ) : (
+                    deliveries.map((entrega, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{getGroup(entrega.name)}</TableCell>
+                        <TableCell>{getFileName(entrega.name)}</TableCell>
+                        <TableCell>
+                          {formatDate(entrega.last_modified)}
+                        </TableCell>
+                        <TableCell>
+                          <IconButton
+                            onClick={() => downloadFile(getGroup(entrega.name))}
+                          >
+                            <DownloadIcon />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>

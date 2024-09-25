@@ -5,7 +5,7 @@ import { useParams } from 'react-router';
 
 const TutorsTable = () => {
   const { cuatrimestre } = useParams(); // Captura del cuatrimestre
-  const endpoint = `/periods/${cuatrimestre}`;
+  const endpoint = `/tutors/periods/${cuatrimestre}`;
   const title = 'Tutores';
   const columns = ['ID', 'Nombre', 'Apellido', 'Email'];
 

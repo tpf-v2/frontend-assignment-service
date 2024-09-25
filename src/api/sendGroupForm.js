@@ -27,7 +27,7 @@ export const sendGroupForm = async (payload, existingGroup, user) => {
       }
 
       groupPayload.students_ids = groupPayload.students_ids.filter(uid => uid);
-      response = await axios.post(`${BASE_URL}/groups/?period=2C2024`, groupPayload, config);
+      response = await axios.post(`${BASE_URL}/groups/?period=2C2024`, groupPayload, config); //TODO: Esta hardcodeado el 2024
     }
     console.log(response)
     return response;

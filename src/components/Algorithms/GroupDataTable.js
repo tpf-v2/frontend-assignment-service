@@ -29,7 +29,7 @@ const GroupDataTable = () => {
 
   // Función para obtener el nombre del tutor por su id
   const getTutorNameById = (id) => {
-    const tutor = tutors.find((t) => t.periods[0].id === id);
+    const tutor = tutors.find((t) => t.tutor_periods[0].id === id);
     return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el topic, mostrar 'Sin asignar'
   };
 
