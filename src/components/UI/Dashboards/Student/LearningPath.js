@@ -83,20 +83,8 @@ const LearningPath = () => {
         {" "}
         {/* Añadir margen superior para centrar con la fase */}
         <StudentInfo />
-        <ButtonStyled
-          variant="contained"
-          color="primary"
-          onClick={() => handleNavigation("/student-form")}
-        >
-          Enviar Formulario de Grupo
-        </ButtonStyled>
-        <SubmitButton isActive={user.group_id === null ? false : true} url="/initial-project" title="Enviar Anteproyecto"/>
-        {/* <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>
-              Enviar Entrega Intermedia
-            </ButtonStyled>
-            <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>
-              Enviar Fechas Posibles de Presentación
-            </ButtonStyled> */}
+        <SubmitButton url="/student-form" title="Enviar Formulario de Grupo"/>
+        <SubmitButton url="/initial-project" title="Enviar Anteproyecto"/>
       </Box>
       <Box sx={{ flex: 2 }}>
         <Typography variant="h4" align="center" gutterBottom>
