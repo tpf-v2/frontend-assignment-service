@@ -1,29 +1,17 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Container, Box, Typography, Button } from "@mui/material";
-import { styled } from "@mui/system";
-import StudentInfo from "./StudentInfo"; // Asegúrate de importar el nuevo componente
-import Phase from "./Phase";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
+
+import { Container, Box, Typography } from "@mui/material";
+
 import { getStudentInfo } from "../../../../api/getStudentInfo";
 import MySnackbar from "../../MySnackBar";
-import { useDispatch } from "react-redux";
 import SubmitButton  from "../../SubmitButton";
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-  width: "100%",
-  padding: theme.spacing(1),
-  fontSize: "1rem",
-  "&.MuiButton-containedPrimary": { backgroundColor: "#0072C6" },
-  "&.MuiButton-containedSecondary": { backgroundColor: "#A6A6A6" },
-  "&:hover.MuiButton-containedPrimary": { backgroundColor: "#005B9A" },
-  "&:hover.MuiButton-containedSecondary": { backgroundColor: "#7A7A7A" },
-}));
+import StudentInfo from "./StudentInfo"; // Asegúrate de importar el nuevo componente
+import Phase from "./Phase";
 
 const LearningPath = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const user = useSelector((state) => state.user);
   const cuatrimestre = useSelector((state) => state.user.period_id);
@@ -35,14 +23,8 @@ const LearningPath = () => {
     status: "",
   });
 
-  
   const handleSnackbarClose = () => {
     setNotification({ ...notification, open: false });
-  };
-
-
-  const handleNavigation = (url) => {
-    navigate(url);
   };
 
   useEffect(() => {
