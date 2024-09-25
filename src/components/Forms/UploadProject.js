@@ -53,8 +53,8 @@ const UploadProject = ({ title }) => {
     const navigate = useNavigate();
 
     const user = useSelector((state) => state.user);
-    const groupId = useSelector((state) => state.user.group_id);
-
+  const groupId = useSelector((state) => state.user.group_id);
+  
   // Efecto para redireccionar si la carga fue exitosa
   useEffect(() => {
     if (isSuccess) {

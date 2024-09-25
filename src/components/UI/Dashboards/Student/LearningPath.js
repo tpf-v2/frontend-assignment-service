@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Container, Box, Typography, Button } from "@mui/material";
 import { styled } from "@mui/system";
 import StudentInfo from "./StudentInfo"; // Asegúrate de importar el nuevo componente
@@ -9,6 +9,9 @@ import { useEffect, useState } from "react";
 import { getStudentInfo } from "../../../../api/getStudentInfo";
 import MySnackbar from "../../MySnackBar";
 import { useDispatch } from "react-redux";
+import axios from 'axios';
+
+const BASE_URL = process.env.REACT_APP_API_URL;
 
 const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -23,8 +26,8 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
 
 const LearningPath = () => {
   const dispatch = useDispatch();
-  const { cuatrimestre } = useParams();
   const user = useSelector((state) => state.user);
+  const cuatrimestre = useSelector((state) => state.user.period_id);
   const [milestones, setMilestones] = useState([]);
   const navigate = useNavigate(); // Hook para navegación
   const [notification, setNotification] = useState({
@@ -33,6 +36,30 @@ const LearningPath = () => {
     status: "",
   });
 
+  const [period, setPeriod] = useState(null);
+  const [initial_project_active, setInitialProjectActive] = useState(false);
+
+  // Efecto para habilitar/deshabilitar etapas del learning path
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const config = {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          };
+          const response = await axios.get(`${BASE_URL}/api/periods/${cuatrimestre}`, config);
+          setPeriod(response.data);
+          setInitialProjectActive(period.initial_project_active)
+          console.log(period)
+        } catch (err) {
+          console.error("Error al obtener info del period", err);
+        }
+      };
+
+      fetchData();
+    }, [period, cuatrimestre, user.token]);
+  
   const handleSnackbarClose = () => {
     setNotification({ ...notification, open: false });
   };
@@ -43,11 +70,10 @@ const LearningPath = () => {
   };
   
   const handleUploadFileNavigation = () => {
-    const initial_project_active = true;
       if (!initial_project_active) {
         navigate('/initial-project'); // Redirigir si initial_project esta habilitado
       } else {
-        navigate('/upload-initial-project'); // Redirigir si initial_project no esta habilitado
+        navigate('/upload-initial-project'); // Redirigir si initial_project esta deshabilitado
       }
   };
 

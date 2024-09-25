@@ -27,7 +27,6 @@ import Algorithms from './components/Algorithms/Algorithms';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import LearningPath from './components/UI/Dashboards/Student/LearningPath';
-import { UploadFile } from '@mui/icons-material';
 import UploadProject from './components/Forms/UploadProject';
 
 const App = () => {

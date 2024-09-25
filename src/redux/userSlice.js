@@ -12,7 +12,8 @@ const initialState = {
   group_id: null,
   tutor: "",
   topic: "",
-  teammates:[]
+  teammates: [],
+  period_id: ""
 };
 
 export const userSlice = createSlice({
@@ -35,6 +36,7 @@ export const userSlice = createSlice({
       state.group_id = action.payload.group_id;
       state.topic = action.payload.topic;
       state.teammates = action.payload.teammates;
+      state.period_id = action.payload.period_id
     }
   },
 });
