@@ -44,7 +44,7 @@ const Root = styled(Paper)(({ theme }) => ({
     marginBottom: theme.spacing(2),
   }));
 
-const UploadProject = ({ title }) => {
+const ActiveUploadView = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [fileError, setFileError] = useState('');
     const [responseMessage, setResponseMessage] = useState('');
@@ -129,7 +129,7 @@ const UploadProject = ({ title }) => {
           <Root>
             <Box textAlign="center">
               <Title variant="h5">
-                Subir entrega
+                Subir Anteproyecto
               </Title>
             </Box>
     
@@ -176,4 +176,4 @@ const UploadProject = ({ title }) => {
       );
     };
     
-    export default UploadProject;
+    export default ActiveUploadView;

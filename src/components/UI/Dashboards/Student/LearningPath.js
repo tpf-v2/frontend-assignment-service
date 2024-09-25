@@ -9,9 +9,7 @@ import { useEffect, useState } from "react";
 import { getStudentInfo } from "../../../../api/getStudentInfo";
 import MySnackbar from "../../MySnackBar";
 import { useDispatch } from "react-redux";
-import axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_API_URL;
 
 const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -36,45 +34,14 @@ const LearningPath = () => {
     status: "",
   });
 
-  const [period, setPeriod] = useState(null);
-  const [initial_project_active, setInitialProjectActive] = useState(false);
-
-  // Efecto para habilitar/deshabilitar etapas del learning path
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const config = {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
-          };
-          const response = await axios.get(`${BASE_URL}/api/periods/${cuatrimestre}`, config);
-          setPeriod(response.data);
-          setInitialProjectActive(period.initial_project_active)
-          console.log(period)
-        } catch (err) {
-          console.error("Error al obtener info del period", err);
-        }
-      };
-
-      fetchData();
-    }, [period, cuatrimestre, user.token]);
   
   const handleSnackbarClose = () => {
     setNotification({ ...notification, open: false });
   };
 
 
-  const handleNavigation = (root) => {
-    navigate(root);
-  };
-  
-  const handleUploadFileNavigation = () => {
-      if (!initial_project_active) {
-        navigate('/initial-project'); // Redirigir si initial_project esta habilitado
-      } else {
-        navigate('/upload-initial-project'); // Redirigir si initial_project esta deshabilitado
-      }
+  const handleNavigation = (url) => {
+    navigate(url);
   };
 
   useEffect(() => {
@@ -122,7 +89,7 @@ const LearningPath = () => {
         >
           Enviar Formulario de Grupo
         </ButtonStyled>
-        <ButtonStyled variant="contained" color="primary" onClick={handleUploadFileNavigation}>
+        <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation("/initial-project")}>
             Enviar Anteproyecto
         </ButtonStyled>
         {/* <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>
