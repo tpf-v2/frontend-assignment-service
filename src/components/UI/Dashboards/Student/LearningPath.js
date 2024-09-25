@@ -9,8 +9,7 @@ import { useEffect, useState } from "react";
 import { getStudentInfo } from "../../../../api/getStudentInfo";
 import MySnackbar from "../../MySnackBar";
 import { useDispatch } from "react-redux";
-
-
+import SubmitButton  from "../../SubmitButton";
 const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
   width: "100%",
@@ -24,10 +23,12 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
 
 const LearningPath = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const user = useSelector((state) => state.user);
   const cuatrimestre = useSelector((state) => state.user.period_id);
+
   const [milestones, setMilestones] = useState([]);
-  const navigate = useNavigate(); // Hook para navegación
   const [notification, setNotification] = useState({
     open: false,
     message: "",
@@ -89,9 +90,7 @@ const LearningPath = () => {
         >
           Enviar Formulario de Grupo
         </ButtonStyled>
-        <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation("/initial-project")}>
-            Enviar Anteproyecto
-        </ButtonStyled>
+        <SubmitButton isActive={user.group_id === null ? false : true} url="/initial-project" title="Enviar Anteproyecto"/>
         {/* <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>
               Enviar Entrega Intermedia
             </ButtonStyled>
