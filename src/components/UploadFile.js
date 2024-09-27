@@ -98,7 +98,6 @@ const UploadFile = () => {
           Authorization: `Bearer ${user.token}`
         },
       });
-      console.log("response:", response)
       if (response.status === 200) {
         setResponseMessage(`Archivo cargado con éxito`);
         setIsSuccess(true);
