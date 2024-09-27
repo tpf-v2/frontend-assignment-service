@@ -15,8 +15,6 @@ export const getStudentInfo = (user) => async (dispatch) => {
     },
   };
 
-  const user_id = user.id;
-
   // Realiza la solicitud GET con los parámetros de consulta dinámicos
   const response = await axios.get(`${BASE_URL}/students/info/me`, config);
   
@@ -25,7 +23,8 @@ export const getStudentInfo = (user) => async (dispatch) => {
     group_id: response.data.group_id,
     tutor: response.data.tutor,
     topic: response.data.topic,
-    teammates: response.data.teammates? response.data.teammates.join(" , ") : "",
+    teammates: response.data.teammates ? response.data.teammates.join(" , ") : "",
+    period_id: response.data.period_id
   };
 
   // Guarda la informacion del usuario

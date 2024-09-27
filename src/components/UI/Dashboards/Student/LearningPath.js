@@ -1,32 +1,22 @@
 import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Container, Box, Typography, Button } from "@mui/material";
-import { styled } from "@mui/system";
-import StudentInfo from "./StudentInfo"; // Asegúrate de importar el nuevo componente
-import Phase from "./Phase";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
+
+import { Container, Box, Typography } from "@mui/material";
+
 import { getStudentInfo } from "../../../../api/getStudentInfo";
 import MySnackbar from "../../MySnackBar";
-import { useDispatch } from "react-redux";
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-  width: "100%",
-  padding: theme.spacing(1),
-  fontSize: "1rem",
-  "&.MuiButton-containedPrimary": { backgroundColor: "#0072C6" },
-  "&.MuiButton-containedSecondary": { backgroundColor: "#A6A6A6" },
-  "&:hover.MuiButton-containedPrimary": { backgroundColor: "#005B9A" },
-  "&:hover.MuiButton-containedSecondary": { backgroundColor: "#7A7A7A" },
-}));
+import SubmitButton  from "../../SubmitButton";
+import StudentInfo from "./StudentInfo"; // Asegúrate de importar el nuevo componente
+import Phase from "./Phase";
 
 const LearningPath = () => {
   const dispatch = useDispatch();
-  const { cuatrimestre } = useParams();
+
   const user = useSelector((state) => state.user);
+  const cuatrimestre = useSelector((state) => state.user.period_id);
+
   const [milestones, setMilestones] = useState([]);
-  const navigate = useNavigate(); // Hook para navegación
   const [notification, setNotification] = useState({
     open: false,
     message: "",
@@ -35,10 +25,6 @@ const LearningPath = () => {
 
   const handleSnackbarClose = () => {
     setNotification({ ...notification, open: false });
-  };
-
-  const handleNavigation = (path) => {
-    navigate(path);
   };
 
   useEffect(() => {
@@ -57,27 +43,13 @@ const LearningPath = () => {
               },
             ],
           },
-          // {
-          //   phase: 'Anteproyecto',
-          //   tasks: [
-          //     { title: 'Entrega de video', completed: false },
-          //     { title: 'Revisión del tutor', completed: false },
-          //   ],
-          // },
-          // {
-          //   phase: 'Entrega Intermedia',
-          //   tasks: [
-          //     { title: 'Proyecto finalizado', completed: false },
-          //     { title: 'Enviar para evaluación', completed: false },
-          //   ],
-          // },
-          // {
-          //   phase: 'Presentación',
-          //   tasks: [
-          //     { title: 'Envio de disponibilidad', completed: false },
-          //     { title: 'Fecha de presentación', completed: false },
-          //   ],
-          // },
+          {
+            phase: 'Anteproyecto',
+            tasks: [
+              { title: 'Entrega de archivo', completed: false },
+              { title: 'Revisión del tutor', completed: false },
+            ],
+          },
         ]);
       } catch (error) {
         console.error("Error al obtener las respuestas", error);
@@ -93,22 +65,8 @@ const LearningPath = () => {
         {" "}
         {/* Añadir margen superior para centrar con la fase */}
         <StudentInfo />
-        <ButtonStyled
-          variant="contained"
-          color="primary"
-          onClick={() => handleNavigation("/student-form")}
-        >
-          Enviar Formulario de Grupo
-        </ButtonStyled>
-        {/* <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>
-              Enviar Anteproyecto
-            </ButtonStyled>
-            <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>
-              Enviar Entrega Intermedia
-            </ButtonStyled>
-            <ButtonStyled variant="contained" color="secondary" disabled onClick={() => handleNavigation('/student-form')}>
-              Enviar Fechas Posibles de Presentación
-            </ButtonStyled> */}
+        <SubmitButton url="/student-form" title="Enviar Formulario de Grupo"/>
+        <SubmitButton url="/initial-project" title="Enviar Anteproyecto"/>
       </Box>
       <Box sx={{ flex: 2 }}>
         <Typography variant="h4" align="center" gutterBottom>

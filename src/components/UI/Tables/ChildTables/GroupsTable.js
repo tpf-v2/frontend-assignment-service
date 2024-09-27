@@ -1,7 +1,5 @@
 import React from "react";
-import ParentTable from "../ParentTable";
-import { Paper, TableCell, Typography } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { Paper, Typography } from "@mui/material";
 import { Container, styled } from "@mui/system";
 import GroupDataTable from "../../../Algorithms/GroupDataTable";
 
