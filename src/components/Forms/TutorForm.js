@@ -30,7 +30,6 @@ const MenuProps = {
 };
 
 const TutorForm = () => {
-  const theme = useTheme();
   const [selectedTopics, setSelectedTopics] = useState([]);
 
   const handleTopicChange = (event) => {

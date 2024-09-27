@@ -13,7 +13,6 @@ const UploadView = () => {
   const user = useSelector((state) => state.user);
   const cuatrimestre = useSelector((state) => state.user.period_id);
 
-  const [period, setPeriod] = useState(null);
   const [isActive, setIsActive] = useState(false);
 
   // Efecto para habilitar/deshabilitar etapas del learning path
@@ -26,7 +25,6 @@ const UploadView = () => {
             },
           };
           const response = await axios.get(`${BASE_URL}/api/periods/${cuatrimestre}`, config);
-          setPeriod(response.data);
           setIsActive(response.data["initial_project_active"]
           )
         } catch (err) {

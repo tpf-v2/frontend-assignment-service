@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { setToken, setUser } from "../redux/userSlice";
+import { setUser } from "../redux/userSlice";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
