@@ -2,16 +2,9 @@ import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import StatCard from "../AdminStats/Components/StatCard";
-import BarChartComponent from "../AdminStats/Components/BarChart";
-import { setTopics } from "../../../../redux/topicsSlice";
-import { setTutors } from "../../../../redux/tutorsSlice";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";  // Icono para el desplegable
-import DownloadIcon from "@mui/icons-material/Download";
-
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Container,
-  Button,
   Typography,
   Box,
   Paper,
@@ -21,19 +14,13 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Divider,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  IconButton,
+  Divider
 } from "@mui/material";
+import { setTopics } from "../../../../redux/topicsSlice";
+import { setTutors } from "../../../../redux/tutorsSlice";
 import { getDashboardData } from "../../../../api/dashboardStats";
-import CuatrimestreConfig from "../../CuatrimestreConfig";
-import Algorithms from "../../../Algorithms/Algorithms";
-import { getPeriodsGroup } from "../../../../api/getPeriodsGroup";
+import { getMyGroups } from "../../../../api/getMyGroups";
+import TutorGroupLearningPath from "./TutorGroupLearningPath";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -61,19 +48,6 @@ const ListItemStyled = styled(ListItem)(({ theme, selected }) => ({
   },
 }));
 
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  margin: theme.spacing(2),
-  width: "48%",
-  padding: theme.spacing(1.5),
-  fontSize: "1rem",
-  backgroundColor: "#0072C6",
-  color: "#ffffff",
-  transition: "background-color 0.3s",
-  "&:hover": {
-    backgroundColor: "#005B9A",
-  },
-}));
-
 const Title = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(3),
   color: "#0072C6",
@@ -88,25 +62,17 @@ const TutorDashboard = () => {
   const { cuatrimestre } = useParams();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedMenu, setSelectedMenu] = useState("General"); // Default selected menu
+  const [selectedMenu, setSelectedMenu] = useState("General");
   const user = useSelector((state) => state.user);
-  const [userGroups, setUserGroups] = useState([]); // Estado para almacenar los grupos
-
-  const handleNavigation = (menu) => {
-    setSelectedMenu(menu);
-  };
+  const [userGroups, setUserGroups] = useState([]);
 
   const dispatch = useDispatch();
 
   const getData = async () => {
     try {
       const data = await getDashboardData(cuatrimestre, user);
-
-      console.log("TOPICS", data.topics);
-      dispatch(setTopics(data.topics)); //Guardo los topics en Redux
-      console.log("TUTORS", data.tutors);
-      dispatch(setTutors(data.tutors)); //Guardo los tutors en Redux
-
+      dispatch(setTopics(data.topics));
+      dispatch(setTutors(data.tutors));
       setDashboardData(data);
     } catch (error) {
       console.error("Error al obtener datos del dashboard:", error);
@@ -117,9 +83,8 @@ const TutorDashboard = () => {
 
   const getGroups = async () => {
     try {
-      const groups = await getPeriodsGroup(user); // Llamada a la API para obtener grupos
-      groups.sort((a, b) => a.id - b.id);
-      setUserGroups(groups);
+      const groups = await getMyGroups(user,cuatrimestre);
+      setUserGroups(groups.sort((a, b) => a.id - b.id));
     } catch (error) {
       console.error("Error al obtener grupos:", error);
     }
@@ -130,131 +95,60 @@ const TutorDashboard = () => {
     getGroups();
   }, [loading]);
 
-  // Función para renderizar el contenido basado en el menú seleccionado
-  const renderContent = () => {
-    switch (selectedMenu) {
-      case "General":
-        // Aquí puedes implementar el contenido específico para Grupo 1
-        return <Typography variant="h6">Contenido General</Typography>;
-  
-      case "Grupo 1":
-        // Aquí puedes implementar el contenido específico para Grupo 1
-        return <Typography variant="h6">Contenido del Grupo 1</Typography>;
-        
-      case "Grupo 2":
-        // Y así continuar para cada grupo
-        return <Typography variant="h6">Contenido del Grupo 2</Typography>;
-  
-      case "Grupo 3":
-        return <Typography variant="h6">Contenido del Grupo 3</Typography>;
-  
-      case "Grupo 4":
-        return <Typography variant="h6">Contenido del Grupo 4</Typography>;
-  
-      case "Grupo 5":
-        return <Typography variant="h6">Contenido del Grupo 5</Typography>;
-  
-      case "Grupo 6":
-        return <Typography variant="h6">Contenido del Grupo 6</Typography>;
-  
-      case "Corrección de anteproyectos":
-        return <div>Contenido del Formulario de Fechas</div>;
-  
-      case "Seleccionar disponibilidad":
-        return <div>Contenido para Seleccionar Disponibilidad</div>;
-  
-      case "Fechas de presentación":
-        return <div>Contenido para Fechas de Presentación</div>;
-  
-      default:
-        return null;
-    }
+  const contentMap = {
+    "General": <Typography variant="h6">Contenido General</Typography>,
+    "Corrección de anteproyectos": <div>Contenido del Formulario de Fechas</div>,
+    "Seleccionar disponibilidad": <div>Contenido para Seleccionar Disponibilidad</div>,
+    "Fechas de presentación": <div>Contenido para Fechas de Presentación</div>
   };
+
+  const renderContent = () => {
+    return contentMap[selectedMenu] ? contentMap[selectedMenu] : <TutorGroupLearningPath group={selectedMenu} />;
+  };
+
   return (
-    <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>      <Root>
+    <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>
+      <Root>
         <Grid container spacing={3}>
           {/* Sidebar */}
           <Grid item xs={3}>
             <SidebarContainer>
               <Title variant="h4">{cuatrimestre}</Title>
               <SidebarList>
-                <ListItemStyled
-                  button
-                  selected={selectedMenu === "General"}
-                  onClick={() => handleNavigation("General")}
-                >
+                <ListItemStyled button selected={selectedMenu === "General"} onClick={() => setSelectedMenu("General")}>
                   General
                 </ListItemStyled>
-
-                <Divider /> {/* Divider después de General */}
-
+                <Divider />
                 {/* Asignaciones - Mis Grupos */}
                 <Accordion defaultExpanded>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    Mis Grupos
-                  </AccordionSummary>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>Mis Grupos</AccordionSummary>
                   <AccordionDetails>
-                    {userGroups.map((grupo, index) => (
-                      <ListItemStyled
-                        key={index}
-                        button
-                        selected={selectedMenu === `Grupo ${grupo.id}`}
-                        onClick={() => handleNavigation(`Grupo ${grupo.id}`)}
-                      >
-                        Equipo {grupo.id} {/* asumiendo que los grupos tienen un campo "nombre" */}
+                    {userGroups.map((group) => (
+                      <ListItemStyled key={group.id} button selected={selectedMenu === `Grupo ${group.id}`} onClick={() => setSelectedMenu(`Grupo ${group.id}`)}>
+                        Grupo {group.id}
                       </ListItemStyled>
                     ))}
                   </AccordionDetails>
                 </Accordion>
-
-                {/* Asignaciones - Desplegable */}
+                
                 <Accordion defaultExpanded>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    Corrección de anteproyectos
-                  </AccordionSummary>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>Corrección de anteproyectos</AccordionSummary>
                   <AccordionDetails>
-                    <ListItemStyled
-                      button
-                      selected={selectedMenu === "Grupo 4"}
-                      onClick={() => handleNavigation("Grupo 4")}
-                    >
-                      Grupo 4
-                    </ListItemStyled>
-                    <ListItemStyled
-                      button
-                      selected={selectedMenu === "Grupo 5"}
-                      onClick={() => handleNavigation("Grupo 5")}
-                    >
-                      Grupo 5
-                    </ListItemStyled>
-                    <ListItemStyled
-                      button
-                      selected={selectedMenu === "Grupo 6"}
-                      onClick={() => handleNavigation("Grupo 6")}
-                    >
-                      Grupo 6
-                    </ListItemStyled>
+                    {userGroups.map((group) => (
+                      <ListItemStyled key={group.id+1} button selected={selectedMenu === `Grupo ${group.id+1}`} onClick={() => setSelectedMenu(`Grupo ${group.id+1}`)}>
+                        Grupo {group.id+1}
+                      </ListItemStyled>
+                    ))}
                   </AccordionDetails>
                 </Accordion>
-
-                {/* Entregas - Desplegable */}
+                
                 <Accordion defaultExpanded>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    Presentaciones
-                  </AccordionSummary>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>Presentaciones</AccordionSummary>
                   <AccordionDetails>
-                    <ListItemStyled
-                      button
-                      selected={selectedMenu === "Seleccionar disponibilidad"}
-                      onClick={() => handleNavigation("Seleccionar disponibilidad")}
-                    >
+                    <ListItemStyled button selected={selectedMenu === "Seleccionar disponibilidad"} onClick={() => setSelectedMenu("Seleccionar disponibilidad")}>
                       Seleccionar disponibilidad
                     </ListItemStyled>
-                    <ListItemStyled
-                      button
-                      selected={selectedMenu === "Fechas de presentación"}
-                      onClick={() => handleNavigation("Fechas de presentación")}
-                    >
+                    <ListItemStyled button selected={selectedMenu === "Fechas de presentación"} onClick={() => setSelectedMenu("Fechas de presentación")}>
                       Fechas de presentación
                     </ListItemStyled>
                   </AccordionDetails>
@@ -262,8 +156,7 @@ const TutorDashboard = () => {
               </SidebarList>
             </SidebarContainer>
           </Grid>
-
-          {/* Main content */}
+          {/* Contenido principal */}
           <Grid item xs={9}>
             {renderContent()}
           </Grid>

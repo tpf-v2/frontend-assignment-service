@@ -116,7 +116,7 @@ const LearningPath = () => {
         </Typography>
         <Box>
           {milestones.map((phase, index) => (
-            <Phase key={index} phase={phase.phase} tasks={phase.tasks} />
+            <Phase key={index} phase={phase.phase} tasks={phase.tasks} circle={true}/>
           ))}
         </Box>
       </Box>

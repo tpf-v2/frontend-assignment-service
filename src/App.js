@@ -42,7 +42,7 @@ const App = () => {
   const getColorBasedOnRole = (role) => {
     switch (role) {
       case 'tutor':
-        return '#6A0DAD'; // Violeta medio oscurito
+        return '#0052C6'; // Violeta medio oscurito
       case 'admin':
         return '#4B84F5'; // Azul clarito
       case 'student':
