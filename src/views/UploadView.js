@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from 'axios';
 
-import ActiveUploadView from "./ActiveUploadView";
+import UploadFile from "../components/UploadFile";
 import ProtectedRoute from '../components/ProtectedRoute';
 import ClosedAlert from "../components/ClosedAlert";
 
@@ -27,8 +27,8 @@ const UploadView = () => {
           };
           const response = await axios.get(`${BASE_URL}/api/periods/${cuatrimestre}`, config);
           setPeriod(response.data);
-          setIsActive(period.initial_project_active)
-          console.log(period)
+          setIsActive(response.data["initial_project_active"]
+          )
         } catch (err) {
           console.error("Error al obtener info del period", err);
         }
@@ -39,7 +39,7 @@ const UploadView = () => {
   
     return (
         <div>
-          {isActive ? <ActiveUploadView /> : <ProtectedRoute><ClosedAlert message="No se aceptan más entregas." /></ProtectedRoute>}
+          {isActive ? <UploadFile /> : <ProtectedRoute><ClosedAlert message="No se aceptan más entregas." /></ProtectedRoute>}
         </div>
       );
   };

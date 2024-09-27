@@ -44,22 +44,21 @@ const Root = styled(Paper)(({ theme }) => ({
     marginBottom: theme.spacing(2),
   }));
 
-const ActiveUploadView = () => {
+const UploadFile = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [fileError, setFileError] = useState('');
     const [responseMessage, setResponseMessage] = useState('');
     const [isSuccess, setIsSuccess] = useState(false);
-    const [openDialog, setOpenDialog] = useState(false); // Estado para controlar el diálogo
+    const [openDialog, setOpenDialog] = useState(false);
     const navigate = useNavigate();
 
     const user = useSelector((state) => state.user);
   const groupId = useSelector((state) => state.user.group_id);
   
-  // Efecto para redireccionar si la carga fue exitosa
   useEffect(() => {
     if (isSuccess) {
       const timer = setTimeout(() => {
-        navigate('/learning-path'); // Redirige al learning path
+        navigate('/learning-path');
       }, 3000); // Espera 3 segundos antes de redirigir
 
       return () => clearTimeout(timer);
@@ -99,7 +98,6 @@ const ActiveUploadView = () => {
           Authorization: `Bearer ${user.token}`
         },
       });
-      //Check this since it's a temporary fix for server behavior
       console.log("response:", response)
       if (response.status === 200) {
         setResponseMessage(`Archivo cargado con éxito`);
@@ -176,4 +174,4 @@ const ActiveUploadView = () => {
       );
     };
     
-    export default ActiveUploadView;
+    export default UploadFile;
