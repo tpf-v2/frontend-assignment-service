@@ -1,9 +1,10 @@
+// TutorDashboard.jsx
+
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import GroupReview from "./dashboardContent/GroupReview";
 import {
   Container,
   Typography,
@@ -25,6 +26,7 @@ import { getDashboardData } from "../../../../api/dashboardStats";
 import { getMyGroups } from "../../../../api/getMyGroups";
 import TutorGroupLearningPath from "./TutorGroupLearningPath";
 import General from "./dashboardContent/General";
+import GroupReview from "./dashboardContent/GroupReview";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -61,12 +63,38 @@ const Title = styled(Typography)(({ theme }) => ({
   flexGrow: 1,
 }));
 
+const GroupReviewContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  marginTop: theme.spacing(2),
+  padding: theme.spacing(2),
+  border: "1px solid #ccc",
+  borderRadius: "8px",
+  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+  backgroundColor: "#f9f9f9",
+  width: "100%",
+}));
+
+const PdfPreviewBox = styled(Box)(({ theme }) => ({
+  width: "100%",
+  height: "300px",
+  border: "1px solid #ccc",
+  borderRadius: "4px",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: "#ffffff",
+  marginTop: theme.spacing(2),
+}));
+
 const TutorDashboard = () => {
   const navigate = useNavigate();
   const { cuatrimestre } = useParams();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("General");
+  const [selectedGroup, setSelectedGroup] = useState(null); // Campo para el grupo seleccionado
   const user = useSelector((state) => state.user);
   const [userGroups, setUserGroups] = useState([]);
 
@@ -104,13 +132,12 @@ const TutorDashboard = () => {
     "Grupos a corregir": <div>Contenido del Formulario de Fechas</div>,
     "Seleccionar disponibilidad": <div>Contenido para Seleccionar Disponibilidad</div>,
     "Fechas de presentación": <div>Contenido para Fechas de Presentación</div>,
-    "Revisiones": userGroups.map((group) => (
+    "Revisiones": selectedGroup ? (
       <GroupReview 
-        key={group.id} 
-        groupId={group.id} 
-        pdfUrl={`./[Física] - Informe labo 2_compressed.pdf`} 
+        groupId={selectedGroup} 
+        pdfUrl={`path/to/your/pdf/group-${selectedGroup}.pdf`} // Reemplaza con la URL correcta de tu PDF
       />
-    ))
+    ) : null
   };
 
   const renderContent = () => {
@@ -135,7 +162,10 @@ const TutorDashboard = () => {
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>Mis Grupos</AccordionSummary>
                   <AccordionDetails>
                     {userGroups.map((group) => (
-                      <ListItemStyled key={group.id} button selected={selectedMenu === `Grupo ${group.id}`} onClick={() => setSelectedMenu(`Grupo ${group.id}`)}>
+                      <ListItemStyled key={group.id} button selected={selectedMenu === `Grupo ${group.id}`} onClick={() => {
+                        setSelectedGroup(group.id); // Establecer el grupo seleccionado
+                        setSelectedMenu(`Grupo ${group.id}`);
+                      }}>
                         Grupo {group.id}
                       </ListItemStyled>
                     ))}
@@ -146,7 +176,10 @@ const TutorDashboard = () => {
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>Revisiones</AccordionSummary>
                   <AccordionDetails>
                     {userGroups.map((group) => (
-                      <ListItemStyled key={group.id + 1} button selected={selectedMenu === `Grupo ${group.id}`} onClick={() => setSelectedMenu(`Revisiones`)}>
+                      <ListItemStyled key={group.id} button selected={selectedMenu === `Grupo ${group.id}`} onClick={() => {
+                        setSelectedGroup(group.id); // Establecer el grupo seleccionado
+                        setSelectedMenu(`Revisiones`);
+                      }}>
                         Grupo {group.id}
                       </ListItemStyled>
                     ))}
