@@ -3,6 +3,7 @@ import { styled } from "@mui/system";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import GroupReview from "./dashboardContent/GroupReview";
 import {
   Container,
   Typography,
@@ -14,13 +15,16 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Divider
+  Divider,
+  TextField,
+  Button
 } from "@mui/material";
 import { setTopics } from "../../../../redux/topicsSlice";
 import { setTutors } from "../../../../redux/tutorsSlice";
 import { getDashboardData } from "../../../../api/dashboardStats";
 import { getMyGroups } from "../../../../api/getMyGroups";
 import TutorGroupLearningPath from "./TutorGroupLearningPath";
+import General from "./dashboardContent/General";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -83,7 +87,7 @@ const TutorDashboard = () => {
 
   const getGroups = async () => {
     try {
-      const groups = await getMyGroups(user,cuatrimestre);
+      const groups = await getMyGroups(user, cuatrimestre);
       setUserGroups(groups.sort((a, b) => a.id - b.id));
     } catch (error) {
       console.error("Error al obtener grupos:", error);
@@ -96,10 +100,17 @@ const TutorDashboard = () => {
   }, [loading]);
 
   const contentMap = {
-    "General": <Typography variant="h6">Contenido General</Typography>,
-    "Corrección de anteproyectos": <div>Contenido del Formulario de Fechas</div>,
+    "General": <General />,
+    "Grupos a corregir": <div>Contenido del Formulario de Fechas</div>,
     "Seleccionar disponibilidad": <div>Contenido para Seleccionar Disponibilidad</div>,
-    "Fechas de presentación": <div>Contenido para Fechas de Presentación</div>
+    "Fechas de presentación": <div>Contenido para Fechas de Presentación</div>,
+    "Revisiones": userGroups.map((group) => (
+      <GroupReview 
+        key={group.id} 
+        groupId={group.id} 
+        pdfUrl={`./[Física] - Informe labo 2_compressed.pdf`} 
+      />
+    ))
   };
 
   const renderContent = () => {
@@ -130,13 +141,13 @@ const TutorDashboard = () => {
                     ))}
                   </AccordionDetails>
                 </Accordion>
-                
+
                 <Accordion defaultExpanded>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>Corrección de anteproyectos</AccordionSummary>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>Revisiones</AccordionSummary>
                   <AccordionDetails>
                     {userGroups.map((group) => (
-                      <ListItemStyled key={group.id+1} button selected={selectedMenu === `Grupo ${group.id+1}`} onClick={() => setSelectedMenu(`Grupo ${group.id+1}`)}>
-                        Grupo {group.id+1}
+                      <ListItemStyled key={group.id + 1} button selected={selectedMenu === `Grupo ${group.id}`} onClick={() => setSelectedMenu(`Revisiones`)}>
+                        Grupo {group.id}
                       </ListItemStyled>
                     ))}
                   </AccordionDetails>
