@@ -38,6 +38,7 @@ import { getTableData } from "../../../../api/handleTableData";
 import { setGroups } from "../../../../redux/groupsSlice";
 import { getAnteproyectos } from "../../../../api/getAnteproyectos";
 import { downloadAnteproyecto } from "../../../../api/downloadAnteproyecto";
+import UploadCSVForm from "../../../Forms/UploadCSVForm";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -95,6 +96,9 @@ const Dashboard = () => {
   const [loadingAnteproyectos, setLoadingAnteproyectos] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("General"); // Default selected menu
   const [groups, setGroups] = useState(null);
+  const [showUploadCSV, setShowUploadCSV] = useState(false); // New state to show upload component
+  const [uploadType, setUploadType] = useState(""); // Estado para almacenar el tipo de archivo
+
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
   const [deliveries, setDeliveries] = useState(null);
@@ -120,6 +124,7 @@ const Dashboard = () => {
 
   const handleNavigation = async (menu) => {
     setSelectedMenu(menu);
+    setShowUploadCSV(false);
 
     if (menu === "Anteproyecto") {
       setLoadingAnteproyectos(true);
@@ -131,6 +136,11 @@ const Dashboard = () => {
       }
       setLoadingAnteproyectos(false);
     }
+  };
+
+  const handleShowUpload = (type) => {
+    setUploadType(type); // Setea el tipo de archivo
+    setShowUploadCSV(true); // Show the upload component
   };
 
   // Agrega un useEffect para observar los cambios en deliveries
@@ -174,7 +184,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     getData();
-  }, [loading]);
+  }, []);
 
   // Función para renderizar el contenido basado en el menú seleccionado
   const renderContent = () => {
@@ -186,12 +196,12 @@ const Dashboard = () => {
               <ButtonStyled
                 onClick={() => navigate(`/dashboard/${cuatrimestre}/students`)}
               >
-                VER LISTA ALUMNOS
+                VER ESTUDIANTES
               </ButtonStyled>
               <ButtonStyled
                 onClick={() => navigate(`/dashboard/${cuatrimestre}/tutors`)}
               >
-                VER LISTA TUTORES
+                VER TUTORES
               </ButtonStyled>
             </Box>
 
@@ -199,7 +209,7 @@ const Dashboard = () => {
               <ButtonStyled
                 onClick={() => navigate(`/dashboard/${cuatrimestre}/topics`)}
               >
-                VER LISTA TEMAS
+                VER TEMAS
               </ButtonStyled>
               <ButtonStyled
                 onClick={() => navigate(`/dashboard/${cuatrimestre}/groups`)}
@@ -213,101 +223,99 @@ const Dashboard = () => {
       case "Inscripciones":
         return (
           <>
-            {/* Botones de carga */}
+            {showUploadCSV && <UploadCSVForm formType={uploadType} />}
+            {!showUploadCSV && (
+              <>
+                {/* Botones de carga */}
 
-            <Box
-              mt={2}
-              display="flex"
-              justifyContent="space-between"
-              width="100%"
-            >
-              <ButtonStyled
-                onClick={() =>
-                  handleNavigation(`/upload-students/${cuatrimestre}`)
-                }
-              >
-                CARGAR ARCHIVO DE ALUMNOS
-              </ButtonStyled>
-              <ButtonStyled
-                onClick={() =>
-                  handleNavigation(`/upload-tutors/${cuatrimestre}`)
-                }
-              >
-                CARGAR ARCHIVO DE TUTORES
-              </ButtonStyled>
-              <ButtonStyled
-                onClick={() =>
-                  handleNavigation(`/upload-topics/${cuatrimestre}`)
-                }
-              >
-                CARGAR ARCHIVO DE TEMAS
-              </ButtonStyled>
-            </Box>
-            <ButtonStyled
-              onClick={() =>
-                navigate(`/dashboard/${cuatrimestre}/form-answers`)
-              }
-            >
-              VER RESPUESTAS
-            </ButtonStyled>
-            <Box mt={4}>
-              <Grid container spacing={3}>
-                <Grid item xs={12} sm={4}>
-                  <StatCard
-                    title="Total de Alumnos"
-                    value={loading ? -1 : dashboardData.studentCard}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <StatCard
-                    title="Total de Tutores"
-                    value={loading ? -1 : dashboardData.tutorsCard}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <StatCard
-                    title="Total de Temas"
-                    value={loading ? -1 : dashboardData.topicsCard}
-                  />
-                </Grid>
-              </Grid>
-            </Box>
-            <Box mt={4}>
-              {!loading && (
-                <BarChartComponent data={dashboardData.answersChart} />
-              )}
-            </Box>
+                <Box
+                  mt={2}
+                  display="flex"
+                  justifyContent="space-between"
+                  width="100%"
+                >
+                  <ButtonStyled onClick={() => handleShowUpload("students")}>
+                    CARGAR ESTUDIANTES
+                  </ButtonStyled>
+
+                  <ButtonStyled onClick={() => handleShowUpload("tutors")}>
+                    CARGAR TUTORES
+                  </ButtonStyled>
+                  <ButtonStyled onClick={() => handleShowUpload("topics")}>
+                    CARGAR TEMAS
+                  </ButtonStyled>
+                </Box>
+                <ButtonStyled
+                  onClick={() =>
+                    navigate(`/dashboard/${cuatrimestre}/form-answers`)
+                  }
+                >
+                  VER RESPUESTAS
+                </ButtonStyled>
+
+                <Box mt={4}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={4}>
+                      <StatCard
+                        title="Total de Estudiantes"
+                        value={loading ? -1 : dashboardData.studentCard}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <StatCard
+                        title="Total de Tutores"
+                        value={loading ? -1 : dashboardData.tutorsCard}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <StatCard
+                        title="Total de Temas"
+                        value={loading ? -1 : dashboardData.topicsCard}
+                      />
+                    </Grid>
+                  </Grid>
+                </Box>
+
+                <Box mt={4}>
+                  {!loading && (
+                    <BarChartComponent data={dashboardData.answersChart} />
+                  )}
+                </Box>
+              </>
+            )}{" "}
           </>
         );
       case "Anteproyecto":
         return (
           <div>
-            <Box mt={4}>
-              <Grid container spacing={3}>
-                <Grid item xs={12} sm={4}>
-                  <StatCard
-                    title="Grupos que entregaron"
-                    value={loadingAnteproyectos ? -1 : deliveries.length}
-                  />
+            {groups && (
+              <Box mt={4}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={4}>
+                    <StatCard
+                      title="Grupos que entregaron"
+                      value={loadingAnteproyectos ? -1 : deliveries.length}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <StatCard
+                      title="Grupos que faltan entregar"
+                      value={
+                        loadingAnteproyectos
+                          ? -1
+                          : groups.length - deliveries.length
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <StatCard
+                      title="Total de grupos"
+                      value={loadingAnteproyectos ? -1 : groups.length}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <StatCard
-                    title="Grupos que faltan entregar"
-                    value={
-                      loadingAnteproyectos
-                        ? -1
-                        : groups.length - deliveries.length
-                    }
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <StatCard
-                    title="Total de grupos"
-                    value={loadingAnteproyectos ? -1 : groups.length}
-                  />
-                </Grid>
-              </Grid>
-            </Box>
+              </Box>
+            )}
 
             <TableContainer component={Paper} style={{ marginTop: "20px" }}>
               <Table stickyHeader>
@@ -353,41 +361,10 @@ const Dashboard = () => {
         );
 
       case "Intermedia":
-        return (
-          <div>
-            <Typography variant="h6">Entrega Intermedia</Typography>
-            <Typography variant="body1">
-              Grupos que entregaron: {deliveries.intermedia.entregados}
-            </Typography>
-            <Typography variant="body1">
-              Grupos que faltan entregar: {deliveries.intermedia.faltantes}
-            </Typography>
-            <List>
-              {deliveries.intermedia.lista.map((entrega, index) => (
-                <ListItem key={index}>{entrega}</ListItem>
-              ))}
-            </List>
-          </div>
-        );
+        return <div>Contenido de entrega Intermedia</div>;
 
       case "Final":
-        return (
-          <div>
-            <Typography variant="h6">Entrega Final</Typography>
-            <Typography variant="body1">
-              Grupos que entregaron: {deliveries.final.entregados}
-            </Typography>
-            <Typography variant="body1">
-              Grupos que faltan entregar: {deliveries.final.faltantes}
-            </Typography>
-            <List>
-              {deliveries.final.lista.map((entrega, index) => (
-                <ListItem key={index}>{entrega}</ListItem>
-              ))}
-            </List>
-          </div>
-        );
-
+        return <div>Contenido de entrega Final</div>;
       case "Fechas de presentación":
         return <div>Contenido del Formulario de Fechas</div>;
       case "Algoritmos":
