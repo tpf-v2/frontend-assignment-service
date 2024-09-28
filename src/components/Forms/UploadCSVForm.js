@@ -4,15 +4,10 @@ import { useSelector } from "react-redux";
 
 import {
   Container,
-  TextField,
   Button,
   Typography,
   Box,
   Paper,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Dialog,
   DialogActions,
   DialogContent,
@@ -21,7 +16,6 @@ import {
 import { styled } from '@mui/system';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import MySnackbar from '../UI/MySnackBar';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -96,22 +90,7 @@ const UploadCSVForm = ({ formType }) => {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
-
-    let apiUrl;
-    switch (formType) {
-      case 'students':
-        apiUrl = `${BASE_URL}/students/upload`;
-        break;
-      case 'topics':
-        apiUrl = `${BASE_URL}/topics/upload?period_id=${cuatrimestre}`;
-        break;
-      case 'tutors':
-        apiUrl = `${BASE_URL}/tutors/upload?period=${cuatrimestre}`;
-        break;
-      default:
-        apiUrl = '';
-    }
-
+    const apiUrl = `${BASE_URL}/${formType}/upload?period=${cuatrimestre}`;
     try {
       const response = await axios.post(apiUrl, formData, {
         headers: {

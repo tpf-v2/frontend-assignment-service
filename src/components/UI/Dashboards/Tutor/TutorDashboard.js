@@ -1,9 +1,7 @@
-// TutorDashboard.jsx
-
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
-import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Container,
@@ -17,12 +15,7 @@ import {
   AccordionSummary,
   AccordionDetails,
   Divider,
-  TextField,
-  Button
 } from "@mui/material";
-import { setTopics } from "../../../../redux/topicsSlice";
-import { setTutors } from "../../../../redux/tutorsSlice";
-import { getDashboardData } from "../../../../api/dashboardStats";
 import { getMyGroups } from "../../../../api/getMyGroups";
 import TutorGroupLearningPath from "./dashboardContent/TutorGroupLearningPath";
 import General from "./dashboardContent/General";
@@ -74,24 +67,26 @@ const AvailabilityContainer = styled(Box)(({ theme }) => ({
 
 const TutorDashboard = () => {
   const { cuatrimestre } = useParams();
+
+  const user = useSelector((state) => state.user);
+
+  const [userGroups, setUserGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("General");
   const [selectedGroup, setSelectedGroup] = useState(null); // Campo para el grupo seleccionado
   const [availability, setAvailability] = useState([]); // Estado para bloques de disponibilidad
-  const user = useSelector((state) => state.user);
-  const [userGroups, setUserGroups] = useState([]);
-
-  const getGroups = async () => {
-    try {
-      const groups = await getMyGroups(user, cuatrimestre);
-      setUserGroups(groups.sort((a, b) => a.id - b.id));
-    } catch (error) {
-      console.error("Error al obtener grupos:", error);
-    }
-  };
 
   useEffect(() => {
+    const getGroups = async () => {
+      try {
+        const groups = await getMyGroups(user, cuatrimestre);
+        setUserGroups(groups.sort((a, b) => a.id - b.id));
+      } catch (error) {
+        console.error("Error when getting my groups: ", error);
+      }
+    };
     getGroups();
+    setLoading(false)
   }, [loading]);
 
   const handleDateChange = (date) => {
@@ -138,7 +133,7 @@ const TutorDashboard = () => {
   };
 
   const renderContent = () => {
-    return contentMap[selectedMenu] ? contentMap[selectedMenu] : <TutorGroupLearningPath group={selectedMenu} />;
+    return contentMap[selectedMenu] ? contentMap[selectedMenu] : <TutorGroupLearningPath group_id={selectedGroup} />;
   };
 
   return (

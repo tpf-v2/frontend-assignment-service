@@ -71,7 +71,6 @@ const Title = styled(Typography)(({ theme }) => ({
 const TutorCuatrimestre = () => {
   const user = useSelector((state) => state.user);
   const [cuatrimestres, setCuatrimestres] = useState([]);
-  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   const [notification, setNotification] = useState({

@@ -90,6 +90,7 @@ const Title = styled(Typography)(({ theme }) => ({
 const Dashboard = () => {
   const navigate = useNavigate();
   const { cuatrimestre } = useParams();
+
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadingAnteproyectos, setLoadingAnteproyectos] = useState(true);
@@ -150,7 +151,6 @@ const Dashboard = () => {
       dispatch(setTopics(data.topics)); //Guardo los topics en Redux
       console.log("TUTORS", data.tutors);
       dispatch(setTutors(data.tutors)); //Guardo los tutors en Redux
-
       setDashboardData(data);
 
       const endpoint = `/groups/?period=${cuatrimestre}`;

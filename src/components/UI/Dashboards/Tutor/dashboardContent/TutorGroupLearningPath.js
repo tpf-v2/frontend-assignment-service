@@ -3,6 +3,8 @@ import { Container, Box, Typography } from "@mui/material";
 import Phase from "../../Student/Phase";
 import MySnackbar from "../../../MySnackBar";
 import { styled } from "@mui/system";
+import { useDispatch, useSelector } from "react-redux";
+import { getGroupById } from "../../../../../api/getGroupById";
 
 // Estilos
 const ContainerStyled = styled(Box)(({ theme }) => ({
@@ -16,7 +18,10 @@ const ContainerStyled = styled(Box)(({ theme }) => ({
   height: "100%"
 }));
 
-const TutorGroupLearningPath = ({ group }) => {
+const TutorGroupLearningPath = ({group_id }) => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+
   const [milestones, setMilestones] = useState([]);
   const [notification, setNotification] = useState({
     open: false,
@@ -31,24 +36,28 @@ const TutorGroupLearningPath = ({ group }) => {
   useEffect(() => {
     const fetchGroupAnswer = async () => {
       try {
+        console.log("user: ", user)
+        console.log("group_id: ", group_id)
+        const group = await dispatch(getGroupById(user, group_id));
+
         setMilestones([
           {
             phase: "Anteproyecto",
             tasks: [
-              { title: "Entregado", completed: true },
-              { title: "Corregido", completed: true },
+              { title: "Entregado", completed: group.pre_report_date ? true : false },
+              { title: "Aprobado", completed: group.pre_report_approved ? true : false },
             ],
           },
           {
             phase: "Entrega intermedia",
             tasks: [
-              { title: "Entregado", completed: true },
-              { title: "Corregido", completed: false },
+              { title: "Entregado", completed: group.intermediate_assigment_date ? true : false },
+              { title: "Aprobado", completed: group.intermediate_assigment_approved ? true : false },
             ],
           },
         ]);
       } catch (error) {
-        console.error("Error al obtener las respuestas", error);
+        console.error(`Error when getting group ${group_id} by id: `, error);
       }
     };
 
@@ -59,7 +68,7 @@ const TutorGroupLearningPath = ({ group }) => {
     <Container maxWidth="lg">
       <ContainerStyled>
         <Typography variant="h4" align="center" gutterBottom>
-          {group}
+          Group {group_id}
         </Typography>
         <Box>
           {milestones.map((phase, index) => (

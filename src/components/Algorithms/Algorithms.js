@@ -3,10 +3,7 @@ import { Container, Box, Paper, Typography, Button, DialogTitle, DialogContent, 
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { styled, useMediaQuery, useTheme } from "@mui/system";
 import CloseIcon from "@mui/icons-material/Close";
-import GroupDataTable from "./GroupDataTable";
 import { useNavigate, useParams } from "react-router-dom";
-import { getTableData } from "../../api/handleTableData";
-import { useSelector } from "react-redux";
 
 const StepBlock = ({ title, onRun, isRunDisabled }) => (
   <Box
