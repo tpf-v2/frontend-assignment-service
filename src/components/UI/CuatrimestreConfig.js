@@ -17,6 +17,7 @@ import {
 import { styled } from "@mui/system";
 import { useSelector, useDispatch } from "react-redux";
 import { togglePeriodSetting } from "../../redux/periodSlice";
+import updatePeriod from "../../api/updatePeriod";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   fontWeight: "bold",
@@ -32,9 +33,24 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
 const CuatrimestreConfig = () => {
   const settings = useSelector((state) => state.period); // Ajuste para obtener el estado de Redux
   const dispatch = useDispatch(); // Si quieres manejar el estado con Redux
+  const user = useSelector((state) => state.user);
 
-  const handleToggle = (field) => {
+  const handleToggle = async (field) => {
     dispatch(togglePeriodSetting({ field }));
+    // Prepara el payload con el campo modificado
+    const updatedSettings = {
+      id: "2C2024",
+      ...settings,
+      [field]: !settings[field],
+    };
+
+    try {
+      // Llama a la función separada que realiza la petición
+      const result = await updatePeriod(updatedSettings, user);
+      console.log("Updated successfully:", result);
+    } catch (error) {
+      console.error("Error in update:", error);
+    }
   };
 
   return (
@@ -97,11 +113,6 @@ const CuatrimestreConfig = () => {
           </TableBody>
         </Table>
       </StyledTableContainer>
-      {/* <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
-        <Button variant="contained" color="primary" onClick={() => alert("Configuraciones guardadas!")}> 
-          Guardar
-        </Button>
-      </Box> */}
     </Container>
   );
 };
