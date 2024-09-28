@@ -44,15 +44,15 @@ const TutorGroupLearningPath = ({group_id }) => {
           {
             phase: "Anteproyecto",
             tasks: [
-              { title: "Entregado", completed: group.pre_report_date ? true : false },
-              { title: "Aprobado", completed: group.pre_report_approved ? true : false },
+              { title: "Entregado", completed: group.pre_report_date !== null ? true : false },
+              { title: "Aprobado", completed: group.pre_report_approved },
             ],
           },
           {
             phase: "Entrega intermedia",
             tasks: [
-              { title: "Entregado", completed: group.intermediate_assigment_date ? true : false },
-              { title: "Aprobado", completed: group.intermediate_assigment_approved ? true : false },
+              { title: "Entregado", completed: group.intermediate_assigment_date !== null ? true : false },
+              { title: "Aprobado", completed: group.intermediate_assigment_approved },
             ],
           },
         ]);
