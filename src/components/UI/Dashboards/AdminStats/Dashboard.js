@@ -119,7 +119,11 @@ const Dashboard = () => {
     });
   }
 
-  const handleNavigation = async (menu) => {
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
+
+  const handleTutorNavigation = async (menu) => {
     setSelectedMenu(menu);
 
     if (menu === "Anteproyecto") {
@@ -222,16 +226,18 @@ const Dashboard = () => {
               width="100%"
             >
               <ButtonStyled
-                onClick={() =>
-                  handleNavigation(`/upload-students/${cuatrimestre}`)
-                }
+                onClick={() => {
+                  console.log("cuatri:", cuatrimestre)
+                  handleNavigation(`/upload-students/${cuatrimestre}`)      
+                }}
               >
                 CARGAR ARCHIVO DE ALUMNOS
               </ButtonStyled>
               <ButtonStyled
-                onClick={() =>
-                  handleNavigation(`/upload-tutors/${cuatrimestre}`)
-                }
+                onClick={() => {
+                  console.log("cuatri:", cuatrimestre)
+                  handleNavigation(`/upload-tutors/${cuatrimestre}`)   
+                }}
               >
                 CARGAR ARCHIVO DE TUTORES
               </ButtonStyled>
@@ -410,7 +416,7 @@ const Dashboard = () => {
                 <ListItemStyled
                   button
                   selected={selectedMenu === "General"}
-                  onClick={() => handleNavigation("General")}
+                  onClick={() => handleTutorNavigation("General")}
                 >
                   General
                 </ListItemStyled>
@@ -424,21 +430,21 @@ const Dashboard = () => {
                     <ListItemStyled
                       button
                       selected={selectedMenu === "Inscripciones"}
-                      onClick={() => handleNavigation("Inscripciones")}
+                      onClick={() => handleTutorNavigation("Inscripciones")}
                     >
                       Inscripciones
                     </ListItemStyled>
                     <ListItemStyled
                       button
                       selected={selectedMenu === "Fechas de presentación"}
-                      onClick={() => handleNavigation("Fechas de presentación")}
+                      onClick={() => handleTutorNavigation("Fechas de presentación")}
                     >
                       Fechas
                     </ListItemStyled>
                     <ListItemStyled
                       button
                       selected={selectedMenu === "Algoritmos"}
-                      onClick={() => handleNavigation("Algoritmos")}
+                      onClick={() => handleTutorNavigation("Algoritmos")}
                     >
                       Algoritmos
                     </ListItemStyled>
@@ -453,21 +459,21 @@ const Dashboard = () => {
                     <ListItemStyled
                       button
                       selected={selectedMenu === "Anteproyecto"}
-                      onClick={() => handleNavigation("Anteproyecto")}
+                      onClick={() => handleTutorNavigation("Anteproyecto")}
                     >
                       Anteproyecto
                     </ListItemStyled>
                     <ListItemStyled
                       button
                       selected={selectedMenu === "Intermedia"}
-                      onClick={() => handleNavigation("Intermedia")}
+                      onClick={() => handleTutorNavigation("Intermedia")}
                     >
                       Intermedia
                     </ListItemStyled>
                     <ListItemStyled
                       button
                       selected={selectedMenu === "Final"}
-                      onClick={() => handleNavigation("Final")}
+                      onClick={() => handleTutorNavigation("Final")}
                     >
                       Final
                     </ListItemStyled>
