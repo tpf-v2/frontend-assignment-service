@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Home from './components/Home';
 import FormSelection from './components/Forms/FormSelection';
-import StudentForm from './components/Forms/StudentForm';
 import TutorForm from './components/Forms/TutorForm';
 import AdminDashboard from './components/UI/Dashboards/Periods/AdminDashboard';
 import AddTopicForm from './components/Forms/AddTopicForm';
@@ -14,7 +13,7 @@ import Profile from './components/Profile';
 import { Box } from '@mui/material';
 import BackgroundContainer from './components/UI/BackgroundContainer';
 import './App.css'; // Importar los estilos globales
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Dashboard from './components/UI/Dashboards/AdminStats/Dashboard';
 import ParentTable from './components/UI/Tables/ParentTable';
 import StudentsTable from './components/UI/Tables/ChildTables/StudentsTable';
@@ -22,13 +21,14 @@ import TopicsTable from './components/UI/Tables/ChildTables/TopicsTable';
 import TutorsTable from './components/UI/Tables/ChildTables/TutorsTable';
 import FormAnswersTable from './components/UI/Tables/ChildTables/FormAnswersTable';
 import GroupsTable from './components/UI/Tables/ChildTables/GroupsTable';
-import FormClosedAlert from './components/FormClosedAlert';
+import ClosedAlert from './components/ClosedAlert';
 import TokenManager from './components/TokenManager';
 import CuatrimestreConfig from './components/UI/CuatrimestreConfig';
 import Algorithms from './components/Algorithms/Algorithms';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import LearningPath from './components/UI/Dashboards/Student/LearningPath';
+import UploadView from './views/UploadView';
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -70,12 +70,10 @@ const App = () => {
             <Route path="dashboard/:cuatrimestre/tutors" element={<ProtectedRoute><TutorsTable /></ProtectedRoute>} />
             <Route path="dashboard/:cuatrimestre/form-answers" element={<ProtectedRoute><FormAnswersTable /></ProtectedRoute>} />
             <Route path="dashboard/:cuatrimestre/groups" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
-            <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />
-            
+            <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />            
             <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
-            {/* <Route path="/student-form" element={<ProtectedRoute><StudentForm /></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente  */}
-            <Route path="/student-form" element={<ProtectedRoute><FormClosedAlert /></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente 
-
+            <Route path="/student-form" element={<ProtectedRoute><ClosedAlert message="No se aceptan mas respuestas al formulario de grupos."/></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente 
+            <Route path="/initial-project" element={<UploadView />} />
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute>{user.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />

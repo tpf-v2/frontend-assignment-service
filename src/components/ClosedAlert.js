@@ -10,18 +10,17 @@ const Root = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(4),
     boxShadow: theme.shadows[10],
   }));
-const FormClosedAlert = () => {
+
+const ClosedAlert = ({ message }) => {
   return (
     <Container maxWidth="sm">
-          <Root>
-
-      <Alert severity="info">
-        No se aceptan mas respuestas al formulario de grupos.
-      </Alert>
+      <Root>
+        <Alert severity="info">
+          {message}
+        </Alert>
       </Root>
-
     </Container>
   );
 };
 
-export default FormClosedAlert;
+export default ClosedAlert;
