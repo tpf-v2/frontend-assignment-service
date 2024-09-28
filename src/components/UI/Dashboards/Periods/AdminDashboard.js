@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCuatrimestres, addCuatrimestre } from '../../../../api/handlePeriods'
 import MySnackbar from '../../MySnackBar';
-import { setPeriod } from '../../../../redux/periodSlice';
+import { setPeriod } from '../../../../redux/slices/periodSlice';
 
 const Root = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(8),

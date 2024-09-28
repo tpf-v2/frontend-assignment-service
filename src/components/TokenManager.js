@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { clearUser } from '../redux/userSlice';
-import { clearTopics } from '../redux/topicsSlice';
-import { clearTutors } from '../redux/tutorsSlice';
+import { clearUser } from '../redux/slices/userSlice';
+import { clearTopics } from '../redux/slices/topicsSlice';
+import { clearTutors } from '../redux/slices/tutorsSlice';
 
 const TokenManager = () => {
   const dispatch = useDispatch();

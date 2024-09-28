@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import periodReducer from "./periodSlice";
-import userReducer from "./userSlice";
-import topicsReducer from "./topicsSlice"; // Importa el topicsSlice
-import tutorsReducer from "./tutorsSlice"; // Importa el tutorsSlice
-import groupsReducer from "./groupsSlice"; // Importa el tutorsSlice
+import periodReducer from "./slices/periodSlice";
+import userReducer from "./slices/userSlice";
+import topicsReducer from "./slices/topicsSlice"; // Importa el topicsSlice
+import tutorsReducer from "./slices/tutorsSlice"; // Importa el tutorsSlice
+import groupsReducer from "./slices/groupsSlice"; // Importa el tutorsSlice
 
 const persistUserConfig = {
   key: "user",

@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useSelector, useDispatch } from "react-redux";
-import { togglePeriodSetting } from "../../redux/periodSlice";
+import { togglePeriodSetting } from "../../redux/slices/periodSlice";
 import updatePeriod from "../../api/updatePeriod";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({

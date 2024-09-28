@@ -10,9 +10,9 @@ import {
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import fiubaLogo from "../../assets/Logo-fiuba_big_face.png";
 import { useDispatch } from "react-redux";
-import { clearUser } from "../../redux/userSlice";
-import { clearTopics } from "../../redux/topicsSlice";
-import { clearTutors } from "../../redux/tutorsSlice";
+import { clearUser } from "../../redux/slices/userSlice";
+import { clearTopics } from "../../redux/slices/topicsSlice";
+import { clearTutors } from "../../redux/slices/tutorsSlice";
 
 const Header = ({ user, color, handleHomeClick }) => {
   const dispatch = useDispatch();
