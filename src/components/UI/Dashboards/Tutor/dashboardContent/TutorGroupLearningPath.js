@@ -1,12 +1,22 @@
-import React from "react";
-import { Container, Box, Typography, Button } from "@mui/material";
-import Phase from "../Student/Phase";
-import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import MySnackbar from "../../MySnackBar";
+import React, { useEffect, useState } from "react";
+import { Container, Box, Typography } from "@mui/material";
+import Phase from "../../Student/Phase";
+import MySnackbar from "../../../MySnackBar";
+import { styled } from "@mui/system";
 
-const TutorGroupLearningPath = ({group}) => {
-  const user = useSelector((state) => state.user);
+// Estilos
+const ContainerStyled = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(3),
+  border: "1px solid #ccc",
+  borderRadius: "8px",
+  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+  backgroundColor: "#ffffff",
+  marginTop: theme.spacing(5),
+  width: "100%",
+  height: "100%"
+}));
+
+const TutorGroupLearningPath = ({ group }) => {
   const [milestones, setMilestones] = useState([]);
   const [notification, setNotification] = useState({
     open: false,
@@ -25,21 +35,15 @@ const TutorGroupLearningPath = ({group}) => {
           {
             phase: "Anteproyecto",
             tasks: [
-              { title: "Enviado", completed: true},
-              {
-                title: "Corregido",
-                completed: true,
-              },
+              { title: "Entregado", completed: true },
+              { title: "Corregido", completed: true },
             ],
           },
           {
             phase: "Entrega intermedia",
             tasks: [
-              { title: "Enviado", completed: true},
-              {
-                title: "Corregido",
-                completed: false,
-              },
+              { title: "Entregado", completed: true },
+              { title: "Corregido", completed: false },
             ],
           },
         ]);
@@ -52,17 +56,22 @@ const TutorGroupLearningPath = ({group}) => {
   }, []);
 
   return (
-    <Container maxWidth="lg" sx={{ display: "flex", mt: 5 }}>
-      <Box sx={{ flex: 2 }}>
+    <Container maxWidth="lg">
+      <ContainerStyled>
         <Typography variant="h4" align="center" gutterBottom>
           {group}
         </Typography>
         <Box>
           {milestones.map((phase, index) => (
-            <Phase key={index} phase={phase.phase} tasks={phase.tasks} circle={false} />
+            <Phase
+              key={index}
+              phase={phase.phase}
+              tasks={phase.tasks}
+              circle={false}
+            />
           ))}
         </Box>
-      </Box>
+      </ContainerStyled>
       <MySnackbar
         open={notification.open}
         handleClose={handleSnackbarClose}
