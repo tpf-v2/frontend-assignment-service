@@ -26,7 +26,7 @@ const Header = ({ user, color, handleHomeClick }) => {
     } else if (user.role === "student") {
       navigate("/learning-path");
     } else {
-      navigate("/form-selection");
+      navigate("/tutor-cuatrimestre");
     }
   };
 
@@ -68,14 +68,6 @@ const Header = ({ user, color, handleHomeClick }) => {
           </Box>
           {user && (
             <Box>
-              {showButton && (
-                <Button
-                  color="inherit"
-                  onClick={() => navigate(`/algorithms/${cuatrimestre}`)}
-                >
-                  Algoritmos
-                </Button>
-              )}
               {showButton && (
                 <Button
                   color="inherit"

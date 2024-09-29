@@ -4,7 +4,7 @@ import ParentTable from '../ParentTable';
 
 const StudentsTable = () => {
   const endpoint = '/students/'; // Replace with your endpoint
-  const title = 'Estudiantes';
+  const title = 'Alumnos';
   const columns = ['Padron', 'Nombre', 'Apellido', 'Email']; // Specify your column names here
 
   const renderRow = (item) => (

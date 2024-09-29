@@ -3,9 +3,10 @@ import { Container, Box, Card, CardContent, Typography, Dialog, DialogActions, D
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchCuatrimestres, addCuatrimestre } from '../../../../api/handlePeriods'
 import MySnackbar from '../../MySnackBar';
+import { setPeriod } from '../../../../redux/periodSlice';
 
 const Root = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -91,21 +92,26 @@ const AdminDashboard = () => {
     const fetchData = async () => {
       try {
         const data = await fetchCuatrimestres(user);
-        setCuatrimestres(data.map(item => item.id).sort()); // Adjust according to your data structure
+        // Ordenar los datos por 'id' antes de guardar en el estado
+      const sortedData = data.sort((a, b) => a.id - b.id);
+      
+      // Guardar solo los cuatrimestres ordenados en el estado
+      setCuatrimestres(sortedData);
       } catch (error) {
         console.error(error.message);
       }
     };
 
     fetchData();
+    console.log(cuatrimestres)
   }, []);
 
   const handleAddCuatrimestre = async () => {
     if (newCuatrimestre.year && newCuatrimestre.term) {
       const newEntry = `${newCuatrimestre.term}C${newCuatrimestre.year}`;
       try {
-        await addCuatrimestre(newEntry, user); // Call the add function
-        setCuatrimestres([...cuatrimestres, newEntry]);
+        const newPeriod = await addCuatrimestre(newEntry, user); // Call the add function
+        setCuatrimestres([...cuatrimestres, newPeriod]);
         handleClose();
       } catch (error) {
         setNotification({
@@ -116,9 +122,11 @@ const AdminDashboard = () => {
       }
     }
   };
+  const dispatch = useDispatch();
 
   const handleCardClick = (cuatrimestre) => {
-    navigate(`/dashboard/${cuatrimestre}`);
+    dispatch(setPeriod(cuatrimestre))
+    navigate(`/dashboard/${cuatrimestre.id}`);
   };
 
   const handleClickOpen = () => {
@@ -138,7 +146,7 @@ const AdminDashboard = () => {
         {cuatrimestres.map((cuatrimestre, index) => (
           <CardStyled key={index} onClick={() => handleCardClick(cuatrimestre)}>
             <CardContent>
-              <Typography variant="h6" style={{ color: '#333' }}>{cuatrimestre}</Typography>
+              <Typography variant="h6" style={{ color: '#333' }}>{cuatrimestre.id}</Typography>
             </CardContent>
           </CardStyled>
         ))}

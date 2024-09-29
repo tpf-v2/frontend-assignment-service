@@ -34,3 +34,19 @@ export const addCuatrimestre = async (newEntry, user) => {
     throw new Error(error);
   }
 };
+
+// Fetch existing cuatrimesters
+export const getTutorCuatrimestre = async (user) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
+  try {
+    const url = `${BASE_URL}/api/tutors/${user.id}/periods`;
+    const response = await axios.get(url, config);
+    return response.data.tutor_periods;
+  } catch (error) {
+    throw new Error('Error fetching cuatrimestres: ' + error.message);
+  }
+};
