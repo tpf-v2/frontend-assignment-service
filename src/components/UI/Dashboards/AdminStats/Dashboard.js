@@ -108,6 +108,7 @@ const Dashboard = () => {
             setUploadType={setUploadType}
             dashboardData={dashboardData}
             loading={loading}
+            cuatrimestre={cuatrimestre}
           />
         );
       case "Anteproyecto":
