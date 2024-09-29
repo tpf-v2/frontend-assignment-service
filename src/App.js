@@ -78,7 +78,6 @@ const App = () => {
             <Route path="/initial-project" element={<UploadView />} />
             {/* <Route path="/student-form" element={<StudentForm />} /> */}
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
-            <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
             <Route path="/tutor-cuatrimestre" element={<ProtectedRoute><TutorCuatrimestre /></ProtectedRoute>} />
             <Route path="/tutor-cuatrimestre/:cuatrimestre" element={<ProtectedRoute><TutorDashboard /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute>{user.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
