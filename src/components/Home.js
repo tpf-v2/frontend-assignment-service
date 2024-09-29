@@ -68,7 +68,7 @@ const Home = () => {
           navigate("/learning-path");
         }
         else{
-          navigate('/form-selection');
+          navigate('/tutor-cuatrimestre');
         }
       } catch (error) {
         console.error("Error al intentar loguear el usuario", error);

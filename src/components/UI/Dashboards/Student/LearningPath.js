@@ -1,14 +1,17 @@
 import React from "react";
+
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { Container, Box, Typography } from "@mui/material";
 
-import { getStudentInfo } from "../../../../api/getStudentInfo";
 import MySnackbar from "../../MySnackBar";
 import SubmitButton  from "../../SubmitButton";
-import StudentInfo from "./StudentInfo"; // Asegúrate de importar el nuevo componente
+import StudentInfo from "./StudentInfo";
 import Phase from "./Phase";
+
+import { getStudentInfo } from "../../../../api/getStudentInfo";
+import { getGroupById } from "../../../../api/getGroupById"
 
 const LearningPath = () => {
   const dispatch = useDispatch();
@@ -31,7 +34,8 @@ const LearningPath = () => {
     const fetchGroupAnswer = async () => {
       try {
         const userData = await dispatch(getStudentInfo(user));
-  
+        const group = await getGroupById(user.group_id);
+
         setMilestones([
           {
             phase: "Inscripción",
@@ -46,8 +50,8 @@ const LearningPath = () => {
           {
             phase: 'Anteproyecto',
             tasks: [
-              { title: 'Entrega de archivo', completed: false },
-              { title: 'Revisión del tutor', completed: false },
+              { title: 'Entrega de archivo', completed: group.pre_report_date !== null ? true : false },
+              { title: 'Revisión del tutor', completed: group.pre_report_approved },
             ],
           },
         ]);
@@ -74,7 +78,7 @@ const LearningPath = () => {
         </Typography>
         <Box>
           {milestones.map((phase, index) => (
-            <Phase key={index} phase={phase.phase} tasks={phase.tasks} />
+            <Phase key={index} phase={phase.phase} tasks={phase.tasks} circle={true}/>
           ))}
         </Box>
       </Box>

@@ -43,12 +43,12 @@ const MilestoneContainer = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
 
-const Phase = ({ phase, tasks }) => {
+const Phase = ({ phase, tasks, circle }) => {
   const allTasksCompleted = tasks.every((task) => task.completed);
 
   return (
     <PhaseContainer>
-      <Circle completed={allTasksCompleted} />
+      {circle && <Circle completed={allTasksCompleted} />}
       <Connector />
       <Typography variant="h5" gutterBottom>
         {phase}

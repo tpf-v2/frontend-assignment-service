@@ -23,12 +23,14 @@ import FormAnswersTable from './components/UI/Tables/ChildTables/FormAnswersTabl
 import GroupsTable from './components/UI/Tables/ChildTables/GroupsTable';
 import ClosedAlert from './components/ClosedAlert';
 import TokenManager from './components/TokenManager';
-import CuatrimestreConfig from './components/UI/CuatrimestreConfig';
 import Algorithms from './components/Algorithms/Algorithms';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import LearningPath from './components/UI/Dashboards/Student/LearningPath';
+import TutorDashboard from './components/UI/Dashboards/Tutor/TutorDashboard';
+import TutorCuatrimestre from './components/UI/Dashboards/Tutor/TutorCuatrimestre';
 import UploadView from './views/UploadView';
+import CuatrimestreConfig from './components/UI/CuatrimestreConfig';
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -40,7 +42,7 @@ const App = () => {
   const getColorBasedOnRole = (role) => {
     switch (role) {
       case 'tutor':
-        return '#6A0DAD'; // Violeta medio oscurito
+        return '#0052C6'; // Violeta medio oscurito
       case 'admin':
         return '#4B84F5'; // Azul clarito
       case 'student':
@@ -74,7 +76,11 @@ const App = () => {
             <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
             <Route path="/student-form" element={<ProtectedRoute><ClosedAlert message="No se aceptan mas respuestas al formulario de grupos."/></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente 
             <Route path="/initial-project" element={<UploadView />} />
+            {/* <Route path="/student-form" element={<StudentForm />} /> */}
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
+            <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
+            <Route path="/tutor-cuatrimestre" element={<ProtectedRoute><TutorCuatrimestre /></ProtectedRoute>} />
+            <Route path="/tutor-cuatrimestre/:cuatrimestre" element={<ProtectedRoute><TutorDashboard /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute>{user.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />
             <Route path="/admin-add-corrector" element={<ProtectedRoute><AddTutorForm /></ProtectedRoute>} />

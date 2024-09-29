@@ -26,7 +26,7 @@ const Header = ({ user, color, handleHomeClick }) => {
     } else if (user.role === "student") {
       navigate("/learning-path");
     } else {
-      navigate("/form-selection");
+      navigate("/tutor-cuatrimestre");
     }
   };
 
