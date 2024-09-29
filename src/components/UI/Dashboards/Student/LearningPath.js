@@ -34,8 +34,12 @@ const LearningPath = () => {
     const fetchGroupAnswer = async () => {
       try {
         const userData = await dispatch(getStudentInfo(user));
-        const group = await getGroupById(user.group_id);
-
+        console.log(userData);
+        
+        let group = {};
+        if (userData.group_id !== 0) {
+          group = await dispatch(getGroupById(user, userData.group_id));
+        }
         setMilestones([
           {
             phase: "Inscripción",
@@ -50,7 +54,7 @@ const LearningPath = () => {
           {
             phase: 'Anteproyecto',
             tasks: [
-              { title: 'Entrega de archivo', completed: group.pre_report_date !== null ? true : false },
+              { title: 'Entrega de archivo',completed: group.pre_report_date ? true : false },
               { title: 'Revisión del tutor', completed: group.pre_report_approved },
             ],
           },

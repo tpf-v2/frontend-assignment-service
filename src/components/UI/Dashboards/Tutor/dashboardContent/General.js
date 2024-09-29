@@ -12,9 +12,9 @@ const General = () => {
         <Typography variant="h4" align="center" gutterBottom>
           Información General
         </Typography>
-        <Typography variant="h1" align="center" gutterBottom>
+        {/* <Typography variant="h1" align="center" gutterBottom>
           TO BE DEFINED
-        </Typography>
+        </Typography> */}
         <Box mt={4}>
       </Box>
       </Box>

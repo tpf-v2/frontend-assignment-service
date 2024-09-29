@@ -65,6 +65,14 @@ const AvailabilityContainer = styled(Box)(({ theme }) => ({
   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
 }));
 
+const NonClickableAccordionHeader = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  padding: theme.spacing(2),
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  // fontWeight: "bold",
+  cursor: "default",
+}));
+
 const TutorDashboard = () => {
   const { cuatrimestre } = useParams();
 
@@ -86,7 +94,7 @@ const TutorDashboard = () => {
       }
     };
     getGroups();
-    setLoading(false)
+    setLoading(false);
   }, [loading]);
 
   const handleDateChange = (date) => {
@@ -96,7 +104,7 @@ const TutorDashboard = () => {
   };
 
   const contentMap = {
-    "General": <General />,
+    General: <General />,
     "Grupos a corregir": <div>Contenido del Formulario de Fechas</div>,
     "Seleccionar disponibilidad": (
       <AvailabilityContainer>
@@ -115,7 +123,8 @@ const TutorDashboard = () => {
         <Box>
           {availability.length > 0 && (
             <Typography variant="body1">
-              Bloques seleccionados: {availability.map((date, index) => (
+              Bloques seleccionados:{" "}
+              {availability.map((date, index) => (
                 <div key={index}>{date.toString()}</div>
               ))}
             </Typography>
@@ -124,16 +133,23 @@ const TutorDashboard = () => {
       </AvailabilityContainer>
     ),
     "Fechas de presentación": <div>Contenido para Fechas de Presentación</div>,
-    "Revisiones": selectedGroup ? (
-      <GroupReview 
-        groupId={selectedGroup} 
+    Revisiones: selectedGroup ? (
+      <GroupReview
+        groupId={selectedGroup}
         pdfUrl={`path/to/your/pdf/group-${selectedGroup}.pdf`} // Reemplaza con la URL correcta de tu PDF
       />
     ) : null,
   };
 
   const renderContent = () => {
-    return contentMap[selectedMenu] ? contentMap[selectedMenu] : <TutorGroupLearningPath group_id={selectedGroup} />;
+    return contentMap[selectedMenu] ? (
+      contentMap[selectedMenu]
+    ) : (
+      <TutorGroupLearningPath
+        group_id={selectedGroup}
+        group={userGroups.find((group) => group.id === selectedGroup)}
+      />
+    );
   };
 
   return (
@@ -145,27 +161,40 @@ const TutorDashboard = () => {
             <SidebarContainer>
               <Title variant="h4">{cuatrimestre}</Title>
               <SidebarList>
-                <ListItemStyled button selected={selectedMenu === "General"} onClick={() => setSelectedMenu("General")}>
+                <ListItemStyled
+                  button
+                  selected={selectedMenu === "General"}
+                  onClick={() => setSelectedMenu("General")}
+                >
                   General
                 </ListItemStyled>
                 <Divider />
                 {/* Asignaciones - Mis Grupos */}
                 <Accordion defaultExpanded>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>Mis Grupos</AccordionSummary>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    Mis Grupos
+                  </AccordionSummary>
                   <AccordionDetails>
                     {userGroups.map((group) => (
-                      <ListItemStyled key={group.id} button selected={selectedMenu === `Grupo ${group.id}`} onClick={() => {
-                        setSelectedGroup(group.id);
-                        setSelectedMenu(`Grupo ${group.id}`);
-                      }}>
+                      <ListItemStyled
+                        key={group.id}
+                        button
+                        selected={selectedMenu === `Grupo ${group.id}`}
+                        onClick={() => {
+                          setSelectedGroup(group.id);
+                          setSelectedMenu(`Grupo ${group.id}`);
+                        }}
+                      >
                         Grupo {group.id}
                       </ListItemStyled>
                     ))}
                   </AccordionDetails>
                 </Accordion>
 
-                <Accordion defaultExpanded>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>Revisiones</AccordionSummary>
+                {/* <Accordion defaultExpanded>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    Revisiones
+                  </AccordionSummary>
                   <AccordionDetails>
                     {userGroups.map((group) => (
                       <ListItemStyled key={group.id} button selected={selectedMenu === `Grupo ${group.id}`} onClick={() => {
@@ -176,15 +205,27 @@ const TutorDashboard = () => {
                       </ListItemStyled>
                     ))}
                   </AccordionDetails>
-                </Accordion>
-                
+                </Accordion> */}
+
                 <Accordion defaultExpanded>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>Presentaciones</AccordionSummary>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    Presentaciones
+                  </AccordionSummary>
                   <AccordionDetails>
-                    <ListItemStyled button selected={selectedMenu === "Seleccionar disponibilidad"} onClick={() => setSelectedMenu("Seleccionar disponibilidad")}>
+                    <ListItemStyled
+                      button
+                      selected={selectedMenu === "Seleccionar disponibilidad"}
+                      onClick={() =>
+                        setSelectedMenu("Seleccionar disponibilidad")
+                      }
+                    >
                       Seleccionar disponibilidad
                     </ListItemStyled>
-                    <ListItemStyled button selected={selectedMenu === "Fechas de presentación"} onClick={() => setSelectedMenu("Fechas de presentación")}>
+                    <ListItemStyled
+                      button
+                      selected={selectedMenu === "Fechas de presentación"}
+                      onClick={() => setSelectedMenu("Fechas de presentación")}
+                    >
                       Fechas de presentación
                     </ListItemStyled>
                   </AccordionDetails>

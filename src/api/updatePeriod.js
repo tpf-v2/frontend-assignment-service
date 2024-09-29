@@ -5,7 +5,7 @@ const BASE_URL = process.env.REACT_APP_API_URL;
 const updatePeriod = async (updatedSettings, user) => {
   try {
     const response = await axios.put(
-        `${BASE_URL}/api/periods`,
+        `${BASE_URL}/api/periods/`,
       updatedSettings,
       {
         headers: {

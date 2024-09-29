@@ -87,7 +87,7 @@ const Dashboard = () => {
 
   const downloadFile = async (groupId) => {
     try {
-      await downloadAnteproyecto(groupId, user, period);
+      await downloadAnteproyecto(groupId, user, period.id);
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }
