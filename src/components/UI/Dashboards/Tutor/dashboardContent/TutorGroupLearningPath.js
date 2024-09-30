@@ -9,6 +9,7 @@ import {
   CardContent,
   Avatar,
   Button,
+  CircularProgress,
 } from "@mui/material";
 import Phase from "../../Student/Phase";
 import MySnackbar from "../../../MySnackBar";
@@ -53,6 +54,7 @@ const TutorGroupLearningPath = ({ group_id, group }) => {
   const user = useSelector((state) => state.user);
 
   const [milestones, setMilestones] = useState([]);
+  const [loading, setLoading] = useState(true); // Estado de carga
   const [notification, setNotification] = useState({
     open: false,
     message: "",
@@ -70,7 +72,6 @@ const TutorGroupLearningPath = ({ group_id, group }) => {
       try {
         console.log("user: ", user);
         console.log("group_id: ", group_id);
-        // const group = await dispatch(getGroupById(user, group_id));
         const group = await dispatch(getGroupById(user, group_id));
 
         setMilestones([
@@ -101,6 +102,8 @@ const TutorGroupLearningPath = ({ group_id, group }) => {
         ]);
       } catch (error) {
         console.error(`Error when getting group ${group_id} by id: `, error);
+      } finally {
+        setLoading(false); // Termina la carga
       }
     };
 
@@ -108,89 +111,112 @@ const TutorGroupLearningPath = ({ group_id, group }) => {
   }, []);
 
   const handleAnteproyectoClick = () => {
-    console.log(selectedPhase)
     setSelectedPhase("anteproyecto");
-    console.log(selectedPhase)
   };
 
   return (
     <Container maxWidth="lg">
-      <Typography variant="h4" align="center" gutterBottom marginTop={1}>
-        Grupo {group_id}
-      </Typography>
-      {selectedPhase === "anteproyecto" ? (
-        <AnteproyectoComponent groupId={group_id} />
+      {loading ? (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="300px"
+        >
+          <CircularProgress />
+        </Box>
       ) : (
         <>
-          {/* Mostrar información del grupo */}
-
-          <StyledCard>
-            <CardContent>
-              <Grid container spacing={2}>
-                {/* 2/3 para estudiantes */}
-                <Grid item xs={12} md={8}>
-                  <Typography variant="h6" gutterBottom>
-                    Estudiantes
-                  </Typography>
-                  {group?.students.map((student) => (
-                    <Box key={student.id} marginBottom={1}>
-                      <Typography variant="body2">
-                        <strong>
-                          {student.name} {student.last_name}
-                        </strong>{" "}
-                        - {student.email}
+          {selectedPhase === "anteproyecto" ? (
+            <AnteproyectoComponent groupId={group_id} />
+          ) : (
+            <>
+              {/* Mostrar información del grupo */}
+              <Typography
+                variant="h4"
+                align="center"
+                gutterBottom
+                marginTop={1}
+              >
+                Grupo {group_id}
+              </Typography>
+              <StyledCard>
+                <CardContent>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={8}>
+                      <Typography variant="h6" gutterBottom>
+                        Estudiantes
                       </Typography>
-                    </Box>
-                  ))}
-                </Grid>
+                      {group?.students.map((student) => (
+                        <Box key={student.id} marginBottom={1}>
+                          <Typography variant="body2">
+                            <strong>
+                              {student.name} {student.last_name}
+                            </strong>{" "}
+                            - {student.email}
+                          </Typography>
+                        </Box>
+                      ))}
+                    </Grid>
 
-                {/* 1/3 para el tema */}
-                <Grid item xs={12} md={4}>
-                  <Typography variant="h6" gutterBottom>
-                    Tema
-                  </Typography>
-                  <Typography variant="body1">
-                    <strong>{group?.topic.name || "Tema no asignado"}</strong>
-                  </Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </StyledCard>
+                    <Grid item xs={12} md={4}>
+                      <Typography variant="h6" gutterBottom>
+                        Tema
+                      </Typography>
+                      <Typography variant="body1">
+                        <strong>
+                          {group?.topic.name || "Tema no asignado"}
+                        </strong>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </StyledCard>
 
-          <Divider sx={{ marginY: 3 }} />
+              <Divider sx={{ marginY: 3 }} />
 
-          {/* Sección de Entregas */}
-          <Typography variant="h5" gutterBottom>
-            Entregas
-          </Typography>
-          <Box display="flex" justifyContent="space-between" width="100%">
-            {" "}
-            <ButtonStyled
-              variant="contained"
-              color="primary"
-              onClick={handleAnteproyectoClick}
-            >
-              Anteproyecto
-            </ButtonStyled>
-            <ButtonStyled variant="contained" color="primary" disabled={true}>
-              Intermedia
-            </ButtonStyled>
-            <ButtonStyled variant="contained" color="primary" disabled={true}>
-              Final
-            </ButtonStyled>
-          </Box>
+              <Typography variant="h5" gutterBottom>
+                Entregas
+              </Typography>
+              <Box display="flex" justifyContent="space-between" width="100%">
+                <ButtonStyled
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAnteproyectoClick}
+                  disabled={!milestones[0]?.tasks[0].completed} // Se deshabilita si no hay pre_report_date
+                >
+                  Anteproyecto
+                </ButtonStyled>
 
-          <Divider sx={{ marginY: 3 }} />
-          <Box>
-            {milestones.map((phase, index) => (
-              <Phase
-                key={index}
-                phase={phase.phase}
-                tasks={phase.tasks}
-                circle={false}
-              />
-            ))}
-          </Box>
+                <ButtonStyled
+                  variant="contained"
+                  color="primary"
+                  disabled={true}
+                >
+                  Intermedia
+                </ButtonStyled>
+                <ButtonStyled
+                  variant="contained"
+                  color="primary"
+                  disabled={true}
+                >
+                  Final
+                </ButtonStyled>
+              </Box>
+
+              <Divider sx={{ marginY: 3 }} />
+              <Box>
+                {milestones.map((phase, index) => (
+                  <Phase
+                    key={index}
+                    phase={phase.phase}
+                    tasks={phase.tasks}
+                    circle={false}
+                  />
+                ))}
+              </Box>
+            </>
+          )}
         </>
       )}
       <MySnackbar

@@ -57,6 +57,9 @@ const AnteproyectoComponent = ({ groupId }) => {
 
   return (
     <>
+          <Typography variant="h4" align="center" gutterBottom marginTop={1}>
+        Anteproyecto
+      </Typography>
       <PdfPreviewBox>
         {pdfUrl ? (
           <iframe
@@ -67,7 +70,7 @@ const AnteproyectoComponent = ({ groupId }) => {
             style={{ border: "none" }}
           />
         ) : (
-          <Typography>Previsualización de PDF</Typography>
+          <Typography>Cargando ...</Typography>
         )}
       </PdfPreviewBox>
       {/* Botón para descargar el PDF */}
