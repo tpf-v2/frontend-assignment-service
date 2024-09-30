@@ -51,7 +51,7 @@ const UploadFile = () => {
     const [isSuccess, setIsSuccess] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
     const navigate = useNavigate();
-
+    const [loading, setLoading] = useState(false)
     const user = useSelector((state) => state.user);
   const groupId = useSelector((state) => state.user.group_id);
   
@@ -90,8 +90,9 @@ const UploadFile = () => {
     const formData = new FormData();
     formData.append('file', selectedFile);
 
-    const apiUrl = `${BASE_URL}/groups/${groupId}/initial_project`;
+    const apiUrl = `${BASE_URL}/groups/${groupId}/initial-project`;
     try {
+      setLoading(true)
       const response = await axios.post(apiUrl, formData, {
         headers: {
           'Content-Type': 'application/pdf',
@@ -110,6 +111,7 @@ const UploadFile = () => {
       setResponseMessage(`Error al cargar el archivo`);
       setIsSuccess(false);
     } finally {
+      setLoading(false)
       setOpenDialog(true); // Abre el diálogo al finalizar
     }
   };
@@ -149,8 +151,8 @@ const UploadFile = () => {
                   {fileError}
                 </Typography>
               )}
-              <ButtonStyled variant="contained" color="primary" type="submit" fullWidth>
-                Enviar
+              <ButtonStyled variant="contained" color="primary" type="submit" fullWidth disabled={loading}>
+              {loading ? "Cargando ..." : "Aceptar"}
               </ButtonStyled>
             </form>
     
@@ -163,7 +165,7 @@ const UploadFile = () => {
                 </Typography>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleCloseDialog} color="primary">
+                <Button onClick={handleCloseDialog} color="primary" >
                   Aceptar
                 </Button>
               </DialogActions>

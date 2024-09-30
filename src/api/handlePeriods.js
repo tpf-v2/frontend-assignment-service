@@ -11,7 +11,7 @@ export const fetchCuatrimestres = async (user) => {
     },
   };
   try {
-    const url = `${BASE_URL}/api/periods`;
+    const url = `${BASE_URL}/api/periods/`;
     const response = await axios.get(url, config);
     return response.data;
   } catch (error) {
@@ -29,7 +29,9 @@ export const addCuatrimestre = async (newEntry, user) => {
 
   try {
     const url = `${BASE_URL}/periods`;
-    await axios.post(url, { id: newEntry }, config);
+    const response = await axios.post(url, { id: newEntry }, config);
+    return response.data;
+
   } catch (error) {
     throw new Error(error);
   }

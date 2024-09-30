@@ -72,16 +72,14 @@ const App = () => {
             <Route path="dashboard/:cuatrimestre/tutors" element={<ProtectedRoute><TutorsTable /></ProtectedRoute>} />
             <Route path="dashboard/:cuatrimestre/form-answers" element={<ProtectedRoute><FormAnswersTable /></ProtectedRoute>} />
             <Route path="dashboard/:cuatrimestre/groups" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
-            <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />
+            <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />            
+            <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
             <Route path="/student-form" element={<ProtectedRoute><ClosedAlert message="No se aceptan mas respuestas al formulario de grupos."/></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente 
             <Route path="/initial-project" element={<UploadView />} />
             {/* <Route path="/student-form" element={<StudentForm />} /> */}
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
-            <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
-
             <Route path="/tutor-cuatrimestre" element={<ProtectedRoute><TutorCuatrimestre /></ProtectedRoute>} />
             <Route path="/tutor-cuatrimestre/:cuatrimestre" element={<ProtectedRoute><TutorDashboard /></ProtectedRoute>} />
-            
             <Route path="/admin" element={<ProtectedRoute>{user.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />
             <Route path="/admin-add-corrector" element={<ProtectedRoute><AddTutorForm /></ProtectedRoute>} />

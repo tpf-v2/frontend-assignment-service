@@ -127,7 +127,7 @@ const UploadCSVForm = ({ formType }) => {
       <Root>
         <Box textAlign="center">
           <Title variant="h5">
-            {formType === 'students' && 'Cargar Archivo de Alumnos'}
+            {formType === 'students' && 'Cargar Archivo de Estudiantes'}
             {formType === 'topics' && 'Cargar Archivo de Temas'}
             {formType === 'tutors' && 'Cargar Archivo de Tutores'}
           </Title>

@@ -4,6 +4,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { styled, useMediaQuery, useTheme } from "@mui/system";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const StepBlock = ({ title, onRun, isRunDisabled }) => (
   <Box
@@ -60,10 +61,7 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
 }));
 
 const Algorithms = () => {
-  const [isRunDisabledStep1, setRunDisabledStep1] = useState(false);
-  const [isRunDisabledStep2, setRunDisabledStep2] = useState(false);
-  const [isRunDisabledStep3, setRunDisabledStep3] = useState(true);
-
+  const period = useSelector((state) => state.period);
   const navigate = useNavigate();
   const { cuatrimestre } = useParams();
 
@@ -80,22 +78,14 @@ const Algorithms = () => {
       setLoading(false);
       navigate(`/dashboard/${cuatrimestre}/groups`);
     }, 2000);
-
-    setRunDisabledStep2(false);
-    setRunDisabledStep1(true);
   };
 
   const handleRunStep2 = () => {
-    setRunDisabledStep3(false);
-    setRunDisabledStep2(true);
+    // Aquí podrías agregar la lógica para manejar el segundo paso
   };
 
   const handleRunStep3 = () => {
-    setRunDisabledStep3(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
+    // Aquí podrías agregar la lógica para manejar el tercer paso
   };
 
   return (
@@ -106,7 +96,7 @@ const Algorithms = () => {
           maxWidth={false}
           sx={{
             display: "flex",
-            flexDirection: { xs: "column", md: "row" }, // Columna en pantallas pequeñas, fila en grandes
+            flexDirection: { xs: "column", md: "row" },
             alignItems: "center",
             justifyContent: "center",
             mt: 5,
@@ -116,24 +106,24 @@ const Algorithms = () => {
           <StepBlock
             title="Armar grupos"
             onRun={handleRunStep1}
-            isRunDisabled={isRunDisabledStep1}
+            isRunDisabled={period.groups_assignment_completed} // Deshabilitar si ya se completó
           />
           <ArrowForwardIcon sx={{ fontSize: { xs: 30, md: 50 }, mx: 2 }} />
           <StepBlock
             title="Asignar tema y tutor a cada grupo"
             onRun={handleRunStep2}
-            isRunDisabled={isRunDisabledStep2}
+            isRunDisabled={period.topics_tutors_assignment_completed} // Deshabilitar si ya se completó
           />
           <ArrowForwardIcon sx={{ fontSize: { xs: 30, md: 50 }, mx: 2 }} />
           <StepBlock
             title="Asignar fecha de presentación"
             onRun={handleRunStep3}
-            isRunDisabled={isRunDisabledStep3}
+            isRunDisabled={period.presentation_dates_assignment_completed} // Deshabilitar si ya se completó
           />
         </Container>
       <Dialog
         open={openDialog}
-        onClose={handleCloseDialog}
+        onClose={() => setOpenDialog(false)}
         fullScreen={fullScreen}
         maxWidth="lg"
         fullWidth
@@ -146,7 +136,7 @@ const Algorithms = () => {
           {!loading && "Grupos Formados"}
           <IconButton
             aria-label="close"
-            onClick={handleCloseDialog}
+            onClick={() => setOpenDialog(false)}
             sx={{
               position: 'absolute',
               right: 8,

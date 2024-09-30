@@ -1,5 +1,5 @@
 import axios from "axios";
-import { setUserInfo } from "../redux/userSlice";
+import { setUserInfo } from "../redux/slices/userSlice";
 
 
 const BASE_URL = process.env.REACT_APP_API_URL;

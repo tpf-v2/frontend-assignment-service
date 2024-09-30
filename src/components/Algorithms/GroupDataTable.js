@@ -111,7 +111,7 @@ const GroupDataTable = () => {
                   )}
                   {index === 0 && (
                     <TableCell rowSpan={group.students.length} align="center">
-                    {group.topic_id ? getTopicNameById(group.topic_id) : "Sin asignar"}{" "}
+                    {group.topic.name ? group.topic.name : "Sin asignar"}{" "}
                     {/* Mostrar el tema asignado del grupo */}
                   </TableCell>
                   )}
