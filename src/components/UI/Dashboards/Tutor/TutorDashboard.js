@@ -20,8 +20,8 @@ import { getMyGroups } from "../../../../api/getMyGroups";
 import TutorGroupLearningPath from "./dashboardContent/TutorGroupLearningPath";
 import General from "./dashboardContent/General";
 import GroupReview from "./dashboardContent/GroupReview";
-import DatePicker from "react-datepicker"; // Importa el DatePicker
-import "react-datepicker/dist/react-datepicker.css"; // Estilos por defecto
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -65,14 +65,6 @@ const AvailabilityContainer = styled(Box)(({ theme }) => ({
   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
 }));
 
-const NonClickableAccordionHeader = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
-  padding: theme.spacing(2),
-  borderBottom: `1px solid ${theme.palette.divider}`,
-  // fontWeight: "bold",
-  cursor: "default",
-}));
-
 const TutorDashboard = () => {
   const { cuatrimestre } = useParams();
 
@@ -82,6 +74,8 @@ const TutorDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("General");
   const [selectedGroup, setSelectedGroup] = useState(null); // Campo para el grupo seleccionado
+  const [selectedGroupReview, setSelectedGroupReview] = useState(null); // Campo para la revisión seleccionada
+
   const [availability, setAvailability] = useState([]); // Estado para bloques de disponibilidad
 
   useEffect(() => {
@@ -90,9 +84,10 @@ const TutorDashboard = () => {
         const groups = await getMyGroups(user, cuatrimestre);
         setUserGroups(groups.sort((a, b) => a.id - b.id));
       } catch (error) {
-        console.error("Error when getting my groups: ", error);
+        console.error("Error al obtener los grupos: ", error);
       }
     };
+    //TODO: traer grupos a revisar por el tutor
     getGroups();
     setLoading(false);
   }, [loading]);
@@ -118,7 +113,7 @@ const TutorDashboard = () => {
           timeFormat="HH:mm"
           timeIntervals={30}
           dateFormat="MMMM d, yyyy h:mm aa"
-          inline // Esto mostrará el calendario directamente
+          inline
         />
         <Box>
           {availability.length > 0 && (
@@ -133,12 +128,11 @@ const TutorDashboard = () => {
       </AvailabilityContainer>
     ),
     "Fechas de presentación": <div>Contenido para Fechas de Presentación</div>,
-    Revisiones: selectedGroup ? (
-      <GroupReview
-        groupId={selectedGroup}
-        pdfUrl={`path/to/your/pdf/group-${selectedGroup}.pdf`} // Reemplaza con la URL correcta de tu PDF
-      />
-    ) : null,
+    Revisiones: selectedGroupReview ? (
+      <GroupReview groupId={selectedGroupReview} />
+    ) : (
+      <div>Selecciona un grupo para ver las revisiones</div>
+    ),
   };
 
   const renderContent = () => {
@@ -191,21 +185,29 @@ const TutorDashboard = () => {
                   </AccordionDetails>
                 </Accordion>
 
-                {/* <Accordion defaultExpanded>
+                <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     Revisiones
                   </AccordionSummary>
                   <AccordionDetails>
                     {userGroups.map((group) => (
-                      <ListItemStyled key={group.id} button selected={selectedMenu === `Grupo ${group.id}`} onClick={() => {
-                        setSelectedGroup(group.id);
-                        setSelectedMenu(`Revisiones`);
-                      }}>
+                      <ListItemStyled
+                        key={group.id}
+                        button
+                        selected={
+                          selectedGroupReview === group.id &&
+                          selectedMenu === "Revisiones"
+                        }
+                        onClick={() => {
+                          setSelectedGroupReview(group.id);
+                          setSelectedMenu("Revisiones");
+                        }}
+                      >
                         Grupo {group.id}
                       </ListItemStyled>
                     ))}
                   </AccordionDetails>
-                </Accordion> */}
+                </Accordion>
 
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
