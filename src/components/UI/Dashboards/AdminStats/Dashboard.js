@@ -18,7 +18,7 @@ import {
   Divider,
 } from "@mui/material";
 import Sidebar from "./Components/Sidebar";
-import ContentGeneral from "./Components/ContentGeneral";
+import ContentInicio from "./Components/ContentInicio";
 import ContentInscripciones from "./Components/ContentInscripciones";
 import ContentAnteproyecto from "./Components/ContentAnteproyecto";
 import CuatrimestreConfig from "../../CuatrimestreConfig";
@@ -97,7 +97,7 @@ const Dashboard = () => {
     switch (selectedMenu) {
       case "General":
         return (
-          <ContentGeneral navigate={navigate} cuatrimestre={cuatrimestre} />
+          <ContentInicio navigate={navigate} cuatrimestre={cuatrimestre} />
         );
       case "Inscripciones":
         return (

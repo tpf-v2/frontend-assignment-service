@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import { getMyGroups } from "../../../../api/getMyGroups";
 import TutorGroupLearningPath from "./dashboardContent/TutorGroupLearningPath";
-import General from "./dashboardContent/General";
+import Inicio from "./dashboardContent/Inicio";
 import GroupReview from "./dashboardContent/GroupReview";
 import DatePicker from "react-datepicker"; // Importa el DatePicker
 import "react-datepicker/dist/react-datepicker.css"; // Estilos por defecto
@@ -65,13 +65,6 @@ const AvailabilityContainer = styled(Box)(({ theme }) => ({
   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
 }));
 
-const NonClickableAccordionHeader = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
-  padding: theme.spacing(2),
-  borderBottom: `1px solid ${theme.palette.divider}`,
-  // fontWeight: "bold",
-  cursor: "default",
-}));
 
 const TutorDashboard = () => {
   const { cuatrimestre } = useParams();
@@ -80,7 +73,7 @@ const TutorDashboard = () => {
 
   const [userGroups, setUserGroups] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedMenu, setSelectedMenu] = useState("General");
+  const [selectedMenu, setSelectedMenu] = useState("Inicio");
   const [selectedGroup, setSelectedGroup] = useState(null); // Campo para el grupo seleccionado
   const [availability, setAvailability] = useState([]); // Estado para bloques de disponibilidad
 
@@ -104,7 +97,7 @@ const TutorDashboard = () => {
   };
 
   const contentMap = {
-    General: <General />,
+    Inicio: <Inicio />,
     "Grupos a corregir": <div>Contenido del Formulario de Fechas</div>,
     "Seleccionar disponibilidad": (
       <AvailabilityContainer>
@@ -163,10 +156,10 @@ const TutorDashboard = () => {
               <SidebarList>
                 <ListItemStyled
                   button
-                  selected={selectedMenu === "General"}
-                  onClick={() => setSelectedMenu("General")}
+                  selected={selectedMenu === "Inicio"}
+                  onClick={() => setSelectedMenu("Inicio")}
                 >
-                  General
+                  Inicio
                 </ListItemStyled>
                 <Divider />
                 {/* Asignaciones - Mis Grupos */}

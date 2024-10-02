@@ -36,12 +36,12 @@ const Sidebar = ({ selectedMenu, handleNavigation, cuatrimestre }) => {
               <SidebarList>
                 <ListItemStyled
                   button
-                  selected={selectedMenu === "General"}
-                  onClick={() => handleNavigation("General")}
+                  selected={selectedMenu === ""}
+                  onClick={() => handleNavigation("")}
                 >
-                  General
+                  
                 </ListItemStyled>
-                <Divider /> {/* Divider después de General */}
+                <Divider /> {/* Divider después de Inicio */}
                 {/* Asignaciones - Desplegable */}
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>

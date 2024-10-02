@@ -2,14 +2,14 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { Container, Box, Typography, CircularProgress } from "@mui/material"; // Importar CircularProgress
-import MySnackbar from "../../MySnackBar";
-import SubmitButton from "../../SubmitButton";
-import StudentInfo from "./StudentInfo";
-import Phase from "./Phase";
-import { getStudentInfo } from "../../../../api/getStudentInfo";
-import { getGroupById } from "../../../../api/getGroupById";
+import MySnackbar from "../../components/UI/MySnackBar";
+import SubmitButton from "../../components/UI/SubmitButton";
+import StudentInfo from "../../components/UI/Dashboards/Student/StudentInfo";
+import Phase from "../../components/UI/Dashboards/Student/Phase";
+import { getStudentInfo } from "../../api/getStudentInfo";
+import { getGroupById } from "../../api/getGroupById";
 
-const LearningPath = () => {
+const StudentHomeView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const cuatrimestre = useSelector((state) => state.user.period_id);
@@ -99,4 +99,4 @@ const LearningPath = () => {
   );
 };
 
-export default LearningPath;
+export default StudentHomeView;

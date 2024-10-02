@@ -19,20 +19,6 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
   },
 }));
 
-// Cambia el estilo solo para el botón "VER RESPUESTAS"
-// const ViewAnswersButton = styled(Button)(({ theme }) => ({
-//   margin: theme.spacing(1),
-//   padding: theme.spacing(1.5),
-//   width: "48%",
-//   fontSize: "1rem",
-//   backgroundColor: "#FF5722", // Cambia el color del botón
-//   color: "#ffffff",
-//   transition: "background-color 0.3s",
-//   "&:hover": {
-//     backgroundColor: "#E64A19", // Cambia el color en hover
-//   },
-// }));
-
 const ContentInscripciones = ({
   showUploadCSV,
   setShowUploadCSV,
@@ -61,7 +47,7 @@ const ContentInscripciones = ({
                 setShowUploadCSV(true);
               }}
             >
-              CARGAR ESTUDIANTES
+               ALUMNOS
             </ButtonStyled>
             <ButtonStyled
               onClick={() => {
@@ -69,7 +55,7 @@ const ContentInscripciones = ({
                 setShowUploadCSV(true);
               }}
             >
-              CARGAR TUTORES
+               TUTORES
             </ButtonStyled>
             <ButtonStyled
               onClick={() => {
@@ -77,14 +63,14 @@ const ContentInscripciones = ({
                 setShowUploadCSV(true);
               }}
             >
-              CARGAR TEMAS
+               TEMAS
             </ButtonStyled>
           </Box>
           
           <Grid container spacing={3}>
             <Grid item xs={12} sm={4}>
               <StatCard
-                title="Total de Estudiantes"
+                title="Total de Alumnos"
                 value={loading ? -1 : dashboardData.studentCard}
               />
             </Grid>
@@ -101,14 +87,14 @@ const ContentInscripciones = ({
               />
             </Grid>
           </Grid>
-          {/* Centrar el botón "VER RESPUESTAS" */}
+          {/* Centrar el botón " RESPUESTAS" */}
           <Box mt={4} display="flex" justifyContent="center">
             <ButtonStyled 
               onClick={() =>
                 navigate(`/dashboard/${cuatrimestre}/form-answers`)
               }
             >
-              VER RESPUESTAS
+               RESPUESTAS
             </ButtonStyled>
           </Box>{" "}
           <Box mt={2}>
