@@ -43,7 +43,7 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadingAnteproyectos, setLoadingAnteproyectos] = useState(true);
-  const [selectedMenu, setSelectedMenu] = useState("General");
+  const [selectedMenu, setSelectedMenu] = useState("Inicio");
   const [groups, setGroups] = useState(null);
   const [deliveries, setDeliveries] = useState(null);
   const [showUploadCSV, setShowUploadCSV] = useState(false);
@@ -95,7 +95,7 @@ const Dashboard = () => {
 
   const renderContent = () => {
     switch (selectedMenu) {
-      case "General":
+      case "Inicio":
         return (
           <ContentInicio navigate={navigate} cuatrimestre={cuatrimestre} />
         );
@@ -120,7 +120,7 @@ const Dashboard = () => {
             downloadFile={downloadFile}
           />
         );
-      case "Algoritmos":
+      case "Grupos":
         return <Algorithms user={user} />;
       case "Intermedia":
         return <div>Contenido de entrega Intermedia</div>;
