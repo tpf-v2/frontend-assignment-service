@@ -17,7 +17,7 @@ import {
   Divider,
 } from "@mui/material";
 import { getMyGroups } from "../../api/getMyGroups";
-import LearningPath from "../../components/UI/Dashboards/Tutor/LearningPath";
+import LearningPath from "../../components/LearningPath";
 import Inicio from "../../components/UI/Dashboards/Tutor/Inicio";
 import GroupReview from "../../components/UI/Dashboards/Tutor/GroupReview";
 import DatePicker from "react-datepicker"; // Importa el DatePicker

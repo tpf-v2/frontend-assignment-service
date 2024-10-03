@@ -10,12 +10,13 @@ import {
   Button,
   CircularProgress,
 } from "@mui/material";
-import Phase from "../Student/Phase";
-import MySnackbar from "../../MySnackBar";
 import { styled } from "@mui/system";
 import { useDispatch, useSelector } from "react-redux";
-import { getGroupById } from "../../../../api/getGroupById";
-import AnteproyectoComponent from "./AnteproyectoComponente";
+
+import Phase from "./UI/Dashboards/Student/Phase";
+import MySnackbar from "./UI/MySnackBar";
+import AnteproyectoComponent from "./UI/Dashboards/Tutor/AnteproyectoComponente";
+import { getGroupById } from "../api/getGroupById";
 
 const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),

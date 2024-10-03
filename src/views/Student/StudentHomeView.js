@@ -55,6 +55,32 @@ const StudentHomeView = () => {
               { title: "Revisión del tutor", completed: group.pre_report_approved },
             ],
           },
+          {
+            phase: "Entrega Intermedia",
+            tasks: [
+              {
+                title: "Entregado",
+                completed: group.intermediate_assigment_date !== null ? true : false,
+              },
+              {
+                title: "Aprobado",
+                completed: group.intermediate_assigment_approved,
+              },
+            ],
+          },
+          {
+            phase: "Entrega Final",
+            tasks: [
+              {
+                title: "Entregado",
+                completed: group.final_report_date !== null ? true : false,
+              },
+              {
+                title: "Aprobado",
+                completed: group.final_report_approved,
+              },
+            ],
+          },
         ]);
       } catch (error) {
         console.error("Error al obtener las respuestas", error);
@@ -70,8 +96,10 @@ const StudentHomeView = () => {
     <Container maxWidth="lg" sx={{ display: "flex", mt: 5 }}>
       <Box sx={{ flex: 1, mr: 8, mt: 8 }}>
         <StudentInfo />
-        <SubmitButton url="/student-form" title="Enviar Formulario de Grupo" />
-        <SubmitButton url="/initial-project" title="Enviar Anteproyecto" />
+        <SubmitButton url="/student-form" title="Enviar Formulario de Grupo" disabled={!milestones[0]?.tasks[0].completed}/>
+        <SubmitButton url="/initial-project" title="Enviar Anteproyecto" disabled={!milestones[1]?.tasks[0].completed}/>
+        <SubmitButton url="/initial-project" title="Enviar Entrega Intermedia" disabled={!milestones[2]?.tasks[0].completed}/>
+        <SubmitButton url="/initial-project" title="Enviar Entrega Final" disabled={!milestones[3]?.tasks[0].completed}/>
       </Box>
       <Box sx={{ flex: 2 }}>
         <Typography variant="h4" align="center" gutterBottom>
