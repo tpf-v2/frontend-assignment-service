@@ -12,7 +12,6 @@ import { Box } from '@mui/material';
 import BackgroundContainer from './components/UI/BackgroundContainer';
 import './App.css'; // Importar los estilos globales
 import { useSelector } from "react-redux";
-import Dashboard from './components/UI/Dashboards/AdminStats/Dashboard';
 import ParentTable from './components/UI/Tables/ParentTable';
 import StudentsTable from './components/UI/Tables/ChildTables/StudentsTable';
 import TopicsTable from './components/UI/Tables/ChildTables/TopicsTable';
@@ -29,6 +28,7 @@ import UploadView from './views/UploadView';
 import CuatrimestreConfig from './components/UI/CuatrimestreConfig';
 import HomeView from './views/HomeView';
 import LoginView from './views/LoginView';
+import DashboardView from './views/Admin/DashboardView'
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -63,7 +63,7 @@ const App = () => {
             <Route path="/" element={<LoginView />} />
             <Route path="/home" element={<HomeView/>} />
             <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} />
-            <Route path="/dashboard/:cuatrimestre" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/dashboard/:cuatrimestre" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />
             <Route path="/table-view" element={<ProtectedRoute><ParentTable /></ProtectedRoute>} />
             <Route path="dashboard/:cuatrimestre/students" element={<ProtectedRoute><StudentsTable /></ProtectedRoute>} />
             <Route path="dashboard/:cuatrimestre/topics" element={<ProtectedRoute><TopicsTable /></ProtectedRoute>} />
