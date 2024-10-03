@@ -10,11 +10,11 @@ import {
   Button,
   CircularProgress,
 } from "@mui/material";
-import Phase from "../../Student/Phase";
-import MySnackbar from "../../../MySnackBar";
+import Phase from "../Student/Phase";
+import MySnackbar from "../../MySnackBar";
 import { styled } from "@mui/system";
 import { useDispatch, useSelector } from "react-redux";
-import { getGroupById } from "../../../../../api/getGroupById";
+import { getGroupById } from "../../../../api/getGroupById";
 import AnteproyectoComponent from "./AnteproyectoComponente";
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -36,7 +36,7 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
   },
 }));
 
-const TutorGroupLearningPath = ({ group_id, group }) => {
+const LearningPath = ({ group_id, group }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
@@ -73,16 +73,28 @@ const TutorGroupLearningPath = ({ group_id, group }) => {
             ],
           },
           {
-            phase: "Entrega intermedia",
+            phase: "Entrega Intermedia",
             tasks: [
               {
                 title: "Entregado",
-                completed:
-                  group.intermediate_assigment_date !== null ? true : false,
+                completed: group.intermediate_assigment_date !== null ? true : false,
               },
               {
                 title: "Aprobado",
                 completed: group.intermediate_assigment_approved,
+              },
+            ],
+          },
+          {
+            phase: "Entrega Final",
+            tasks: [
+              {
+                title: "Entregado",
+                completed: group.final_report_date !== null ? true : false,
+              },
+              {
+                title: "Aprobado",
+                completed: group.final_report_approved,
               },
             ],
           },
@@ -216,4 +228,4 @@ const TutorGroupLearningPath = ({ group_id, group }) => {
   );
 };
 
-export default TutorGroupLearningPath;
+export default LearningPath;

@@ -23,7 +23,7 @@ import TokenManager from './components/TokenManager';
 import Algorithms from './components/Algorithms/Algorithms';
 
 import ProtectedRoute from './components/ProtectedRoute';
-import TutorDashboard from './components/UI/Dashboards/Tutor/TutorDashboard';
+import TutorDashboardView from './views/Tutor/TutorDashboardView';
 import UploadView from './views/UploadView';
 import CuatrimestreConfig from './components/UI/CuatrimestreConfig';
 import HomeView from './views/HomeView';
@@ -76,7 +76,7 @@ const App = () => {
             <Route path="/initial-project" element={<UploadView />} />
             {/* <Route path="/student-form" element={<StudentForm />} /> */}
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
-            <Route path="/tutor-cuatrimestre/:cuatrimestre" element={<ProtectedRoute><TutorDashboard /></ProtectedRoute>} />
+            <Route path="/tutor-cuatrimestre/:cuatrimestre" element={<ProtectedRoute><TutorDashboardView /></ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />
             <Route path="/admin-add-corrector" element={<ProtectedRoute><AddTutorForm /></ProtectedRoute>} />
             <Route path="/upload-students/:cuatrimestre" element={<ProtectedRoute>{user.role === 'admin' ? <UploadCSVForm formType="students" /> : <Navigate to="/" />}</ProtectedRoute>} />

@@ -1,7 +1,7 @@
 import { Button, Typography } from "@mui/material";
 import { Box, styled } from "@mui/system";
 import React, { useEffect, useState } from "react";
-import { downloadAnteproyecto, fetchAnteproyectoPdf } from "../../../../../api/downloadAnteproyecto";
+import { downloadAnteproyecto, fetchAnteproyectoPdf } from "../../../../api/downloadAnteproyecto";
 import { useSelector } from "react-redux";
 
 const DownloadButton = styled(Button)(({ theme }) => ({

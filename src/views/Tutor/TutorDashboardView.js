@@ -16,10 +16,10 @@ import {
   AccordionDetails,
   Divider,
 } from "@mui/material";
-import { getMyGroups } from "../../../../api/getMyGroups";
-import TutorGroupLearningPath from "./dashboardContent/TutorGroupLearningPath";
-import Inicio from "./dashboardContent/Inicio";
-import GroupReview from "./dashboardContent/GroupReview";
+import { getMyGroups } from "../../api/getMyGroups";
+import LearningPath from "../../components/UI/Dashboards/Tutor/LearningPath";
+import Inicio from "../../components/UI/Dashboards/Tutor/Inicio";
+import GroupReview from "../../components/UI/Dashboards/Tutor/GroupReview";
 import DatePicker from "react-datepicker"; // Importa el DatePicker
 import "react-datepicker/dist/react-datepicker.css"; // Estilos por defecto
 
@@ -41,7 +41,7 @@ const SidebarList = styled(List)(({ theme }) => ({
   marginTop: theme.spacing(4),
 }));
 
-const ListItemStyled = styled(ListItem)(({ theme, selected }) => ({
+const ListItemStyled = styled(ListItem)(({ selected }) => ({
   backgroundColor: selected ? "#005B9A" : "transparent",
   color: "#000000",
   "&:hover": {
@@ -66,7 +66,7 @@ const AvailabilityContainer = styled(Box)(({ theme }) => ({
 }));
 
 
-const TutorDashboard = () => {
+const TutorDashboardView = () => {
   const { cuatrimestre } = useParams();
 
   const user = useSelector((state) => state.user);
@@ -97,9 +97,9 @@ const TutorDashboard = () => {
   };
 
   const contentMap = {
-    Inicio: <Inicio />,
-    "Grupos a corregir": <div>Contenido del Formulario de Fechas</div>,
-    "Seleccionar disponibilidad": (
+    "Inicio": <Inicio />,
+    "Mis Grupos": <div>Contenido del Formulario de Fechas</div>,
+    "Seleccionar Disponibilidad": (
       <AvailabilityContainer>
         <Typography variant="h6" gutterBottom>
           Selecciona tu Disponibilidad
@@ -125,7 +125,7 @@ const TutorDashboard = () => {
         </Box>
       </AvailabilityContainer>
     ),
-    "Fechas de presentación": <div>Contenido para Fechas de Presentación</div>,
+    "Fechas de presentaciones": <div>Contenido para Fechas de Presentación</div>,
     Revisiones: selectedGroup ? (
       <GroupReview
         groupId={selectedGroup}
@@ -138,7 +138,7 @@ const TutorDashboard = () => {
     return contentMap[selectedMenu] ? (
       contentMap[selectedMenu]
     ) : (
-      <TutorGroupLearningPath
+      <LearningPath
         group_id={selectedGroup}
         group={userGroups.find((group) => group.id === selectedGroup)}
       />
@@ -184,42 +184,26 @@ const TutorDashboard = () => {
                   </AccordionDetails>
                 </Accordion>
 
-                {/* <Accordion defaultExpanded>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    Revisiones
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    {userGroups.map((group) => (
-                      <ListItemStyled key={group.id} button selected={selectedMenu === `Grupo ${group.id}`} onClick={() => {
-                        setSelectedGroup(group.id);
-                        setSelectedMenu(`Revisiones`);
-                      }}>
-                        Grupo {group.id}
-                      </ListItemStyled>
-                    ))}
-                  </AccordionDetails>
-                </Accordion> */}
-
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    Presentaciones
+                    Mis Presentaciones
                   </AccordionSummary>
                   <AccordionDetails>
                     <ListItemStyled
                       button
-                      selected={selectedMenu === "Seleccionar disponibilidad"}
+                      selected={selectedMenu === "Seleccionar Disponibilidad"}
                       onClick={() =>
-                        setSelectedMenu("Seleccionar disponibilidad")
+                        setSelectedMenu("Seleccionar Disponibilidad")
                       }
                     >
-                      Seleccionar disponibilidad
+                      Seleccionar Disponibilidad
                     </ListItemStyled>
                     <ListItemStyled
                       button
                       selected={selectedMenu === "Fechas de presentación"}
                       onClick={() => setSelectedMenu("Fechas de presentación")}
                     >
-                      Fechas de presentación
+                      Fechas de Presentaciones
                     </ListItemStyled>
                   </AccordionDetails>
                 </Accordion>
@@ -236,4 +220,4 @@ const TutorDashboard = () => {
   );
 };
 
-export default TutorDashboard;
+export default TutorDashboardView;
