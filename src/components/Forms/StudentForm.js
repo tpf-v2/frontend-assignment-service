@@ -9,7 +9,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Box,
   Alert,
   Dialog,
   DialogActions,
@@ -24,7 +23,6 @@ import { sendGroupForm } from "../../api/sendGroupForm";
 import { getStudents } from "../../api/getStudents";
 import { getTopics } from "../../api/getTopics";
 import { useSelector } from "react-redux";
-import { getAllStudents } from "../../api/getStudents";
 import MySnackbar from "../UI/MySnackBar";
 import { NumericFormat } from "react-number-format";
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from 'axios';
 
-import UploadFile from "../components/UploadFile";
+import UploadFile from "../components/Forms/Uploads/UploadPDF";
 import ProtectedRoute from '../components/ProtectedRoute';
 import ClosedAlert from "../components/ClosedAlert";
 
