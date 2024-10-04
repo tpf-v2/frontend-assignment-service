@@ -59,7 +59,7 @@ const UploadCSVForm = ({ formType }) => {
   useEffect(() => {
     if (isSuccess) {
       const timer = setTimeout(() => {
-        navigate('/admin'); // Redirige a la homepage
+        navigate('/home'); // Redirige a la homepage
       }, 3000); // Espera 3 segundos antes de redirigir
 
       return () => clearTimeout(timer);
@@ -118,7 +118,7 @@ const UploadCSVForm = ({ formType }) => {
   const handleCloseDialog = () => {
     setOpenDialog(false);
     if (isSuccess) {
-      navigate('/admin'); // Redirige a la homepage al cerrar el diálogo
+      navigate(`/home`); // Redirige a la homepage al cerrar el diálogo
     }
   };
 
@@ -127,7 +127,7 @@ const UploadCSVForm = ({ formType }) => {
       <Root>
         <Box textAlign="center">
           <Title variant="h5">
-            {formType === 'students' && 'Cargar Archivo de Estudiantes'}
+            {formType === 'students' && 'Cargar Archivo de Alumnos'}
             {formType === 'topics' && 'Cargar Archivo de Temas'}
             {formType === 'tutors' && 'Cargar Archivo de Tutores'}
           </Title>

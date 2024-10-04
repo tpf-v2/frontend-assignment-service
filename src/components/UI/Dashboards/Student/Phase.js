@@ -4,7 +4,7 @@ import { styled } from '@mui/system';
 import Milestone from './Milestone';
 
 const PhaseContainer = styled(Box)(({ theme }) => ({
-  border: '2px solid #0072C6',
+  border: '2px solid #b8b6b6',
   borderRadius: '8px',
   padding: theme.spacing(2),
   margin: theme.spacing(2, 0),
@@ -29,7 +29,7 @@ const Circle = styled(Box)(({ completed }) => ({
   width: '30px', // Tamaño aumentado
   height: '30px', // Tamaño aumentado
   borderRadius: '50%',
-  backgroundColor: completed ? '#5cb85c' : '#d9534f',
+  backgroundColor: completed ? '#5cb85c' : '#b8b6b6',
   position: 'absolute',
   left: '-50px', // Posición centrada
   top: '40%', // Para alinearlo con el conector

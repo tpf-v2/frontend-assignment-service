@@ -90,14 +90,14 @@ const OldDashboard = () => {
         <Box mt={2} display="flex" flexDirection="column" alignItems="center">
           {/* Buttons Section */}
           <Box display="flex" justifyContent="space-between" width="100%">
-            <ButtonStyled onClick={() => handleNavigation(`/upload-students/${cuatrimestre}`)}>CARGAR ARCHIVO DE ALUMNOS</ButtonStyled>
-            <ButtonStyled onClick={() => handleNavigation(`/upload-tutors/${cuatrimestre}`)}>CARGAR ARCHIVO DE TUTORES</ButtonStyled>
-            <ButtonStyled onClick={() => handleNavigation(`/upload-topics/${cuatrimestre}`)}>CARGAR ARCHIVO DE TEMAS</ButtonStyled>
+            <ButtonStyled onClick={() => handleNavigation(`/upload-students/${cuatrimestre}`)}> ARCHIVO DE ALUMNOS</ButtonStyled>
+            <ButtonStyled onClick={() => handleNavigation(`/upload-tutors/${cuatrimestre}`)}> ARCHIVO DE TUTORES</ButtonStyled>
+            <ButtonStyled onClick={() => handleNavigation(`/upload-topics/${cuatrimestre}`)}> ARCHIVO DE TEMAS</ButtonStyled>
           </Box>
           <Box display="flex" justifyContent="space-between" width="100%">
-            <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/students`)}>VER LISTA ALUMNOS</ButtonStyled>
-            <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/tutors`)}>VER LISTA TUTORES</ButtonStyled>
-            <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/topics`)}>VER LISTA TEMAS</ButtonStyled>
+            <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/students`)}> LISTA ALUMNOS</ButtonStyled>
+            <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/tutors`)}> LISTA TUTORES</ButtonStyled>
+            <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/topics`)}> LISTA TEMAS</ButtonStyled>
           </Box>
         </Box>
 
@@ -110,8 +110,8 @@ const OldDashboard = () => {
           </StatsContainer>
           <Box mt={2} display="flex" flexDirection="column" alignItems="center">
             <Box mt={2} display="flex" flexDirection="row" justifyContent="space-evenly" alignItems="center" width="100%">
-              <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/form-answers`)}>VER RESPUESTAS</ButtonStyled>
-              <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/groups`)}>VER GRUPOS</ButtonStyled>
+              <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/form-answers`)}> RESPUESTAS</ButtonStyled>
+              <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/groups`)}> GRUPOS</ButtonStyled>
             </Box>
             
             {/* Bar Chart Section */}
