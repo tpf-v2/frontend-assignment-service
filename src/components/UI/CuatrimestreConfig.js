@@ -45,7 +45,13 @@ const CuatrimestreConfig = () => {
       [field]: !settings[field],
     };
 
-    
+    try {
+      // Llama a la función separada que realiza la petición
+      const result = await updatePeriod(updatedSettings, user);
+      console.log("Updated successfully:", result);
+    } catch (error) {
+      console.error("Error in update:", error);
+    }
   };
 
   return (
