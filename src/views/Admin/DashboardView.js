@@ -18,7 +18,7 @@ import Sidebar from "../../components/Sidebar";
 import ContentInicio from "../../components/UI/Dashboards/AdminStats/Components/ContentInicio";
 import ContentInscripciones from "../../components/UI/Dashboards/AdminStats/Components/ContentInscripciones";
 import ContentAnteproyecto from "../../components/UI/Dashboards/AdminStats/Components/ContentAnteproyecto";
-import Algorithms from "../../components/Algorithms/Algorithms";
+import Algorithms from "../../components/Roles/Admin/Algorithms/Algorithms";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({

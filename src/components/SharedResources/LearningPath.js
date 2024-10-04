@@ -13,10 +13,10 @@ import {
 import { styled } from "@mui/system";
 import { useDispatch, useSelector } from "react-redux";
 
-import Phase from "./UI/Dashboards/Student/Phase";
-import MySnackbar from "./UI/MySnackBar";
-import AnteproyectoComponent from "./UI/Dashboards/Tutor/AnteproyectoComponente";
-import { getGroupById } from "../api/getGroupById";
+import Phase from "../Roles/Student/Dashboard/Phase";
+import MySnackbar from "./MySnackBar";
+import AnteproyectoComponent from "../Roles/Tutor/Dashboard/AnteproyectoComponente";
+import { getGroupById } from "../../api/getGroupById";
 
 const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),

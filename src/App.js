@@ -1,29 +1,29 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import UploadCSVForm from './components/Forms/Uploads/UploadCSV';
+import UploadCSVForm from './components/SharedResources/Uploads/UploadCSV';
 import Header from './components/UI/Header';
 import Footer from './components/UI/Footer';
-import Profile from './components/Profile';
+import Profile from './components/SharedResources/Profile';
 import { Box } from '@mui/material';
-import BackgroundContainer from './components/UI/BackgroundContainer';
+import BackgroundContainer from './components/SharedResources/BackgroundContainer';
 import './App.css'; // Importar los estilos globales
 import { useSelector } from "react-redux";
-import ParentTable from './components/UI/Tables/ParentTable';
-import StudentsTable from './components/UI/Tables/ChildTables/StudentsTable';
-import TopicsTable from './components/UI/Tables/ChildTables/TopicsTable';
-import TutorsTable from './components/UI/Tables/ChildTables/TutorsTable';
-import FormAnswersTable from './components/UI/Tables/ChildTables/FormAnswersTable';
-import GroupsTable from './components/UI/Tables/ChildTables/GroupsTable';
-import ClosedAlert from './components/ClosedAlert';
+import ParentTable from './components/SharedResources/Tables/ParentTable';
+import StudentsTable from './components/Roles/Student/Table/StudentsTable';
+import TopicsTable from './components/SharedResources/Tables/ChildTables/TopicsTable';
+import FormAnswersTable from './components/SharedResources/Tables/ChildTables/FormAnswersTable';
+import GroupsTable from './components/SharedResources/Tables/ChildTables/GroupsTable';
+import ClosedAlert from './components/SharedResources/ClosedAlert';
 import TokenManager from './components/TokenManager';
-import Algorithms from './components/Algorithms/Algorithms';
-import ProtectedRoute from './components/ProtectedRoute';
+import Algorithms from './components/Roles/Admin/Algorithms/Algorithms';
+import ProtectedRoute from './components/SharedResources/Navigation/ProtectedRoute';
 import TutorDashboardView from './views/Tutor/TutorDashboardView';
 import UploadView from './views/UploadView';
-import CuatrimestreConfig from './components/UI/CuatrimestreConfig';
+import CuatrimestreConfig from './components/Roles/Admin/CuatrimestreConfig';
 import HomeView from './views/HomeView';
 import LoginView from './views/LoginView';
 import DashboardView from './views/Admin/DashboardView'
+import TutorsTable from './components/Roles/Tutor/Table/TutorsTable';
 
 const App = () => {
   const user = useSelector((state) => state.user);

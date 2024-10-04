@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';  
 import {Navigate } from 'react-router-dom';
 
-import ProtectedRoute from '../components/ProtectedRoute';
+import ProtectedRoute from '../components/SharedResources/Navigation/ProtectedRoute';
 import StudentHomeView from './Student/StudentHomeView';
 import TutorHomeView from './Tutor/TutorHomeView';
 import AdminDashboard from './Admin/AdminHomeView';

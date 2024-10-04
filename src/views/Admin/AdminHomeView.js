@@ -5,7 +5,7 @@ import { styled } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCuatrimestres, addCuatrimestre } from '../../api/handlePeriods'
-import MySnackbar from '../../components/UI/MySnackBar';
+import MySnackbar from '../../components/SharedResources/MySnackBar';
 import { setPeriod } from '../../redux/slices/periodSlice';
 
 const Root = styled(Container)(({ theme }) => ({

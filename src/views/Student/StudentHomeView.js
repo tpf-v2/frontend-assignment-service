@@ -2,10 +2,10 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { Container, Box, Typography, CircularProgress } from "@mui/material"; // Importar CircularProgress
-import MySnackbar from "../../components/UI/MySnackBar";
-import SubmitButton from "../../components/UI/SubmitButton";
-import StudentInfo from "../../components/UI/Dashboards/Student/StudentInfo";
-import Phase from "../../components/UI/Dashboards/Student/Phase";
+import MySnackbar from "../../components/SharedResources/MySnackBar";
+import SubmitButton from "../../components/SharedResources/SubmitButton";
+import StudentInfo from "../../components/Roles/Student/Dashboard/StudentInfo";
+import Phase from "../../components/Roles/Student/Dashboard/Phase";
 import { getStudentInfo } from "../../api/getStudentInfo";
 import { getGroupById } from "../../api/getGroupById";
 

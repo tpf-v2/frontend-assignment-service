@@ -1,7 +1,7 @@
 import React from "react";
 import { Paper, Typography } from "@mui/material";
 import { Container, styled } from "@mui/system";
-import GroupDataTable from "../../../Algorithms/GroupDataTable";
+import GroupDataTable from "../Algorithms/GroupDataTable";
 
 const GroupsTable = () => {
   const title = "Grupos";

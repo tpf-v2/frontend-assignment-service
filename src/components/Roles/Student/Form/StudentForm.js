@@ -19,11 +19,11 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import { sendGroupForm } from "../../api/sendGroupForm";
-import { getStudents } from "../../api/getStudents";
-import { getTopics } from "../../api/getTopics";
+import { sendGroupForm } from "../../../../api/sendGroupForm";
+import { getStudents } from "../../../../api/getStudents";
+import { getTopics } from "../../../../api/getTopics";
 import { useSelector } from "react-redux";
-import MySnackbar from "../UI/MySnackBar";
+import MySnackbar from "../../UI/MySnackBar";
 import { NumericFormat } from "react-number-format";
 
 const Root = styled(Paper)(({ theme }) => ({
