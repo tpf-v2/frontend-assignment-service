@@ -1,9 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import Home from './components/Home';
 import FormSelection from './components/Forms/FormSelection';
 import TutorForm from './components/Forms/TutorForm';
-import AdminDashboard from './components/UI/Dashboards/Periods/AdminDashboard';
 import AddTopicForm from './components/Forms/AddTopicForm';
 import AddTutorForm from './components/Forms/AddTutorForm';
 import UploadCSVForm from './components/Forms/UploadCSVForm';
@@ -14,7 +12,6 @@ import { Box } from '@mui/material';
 import BackgroundContainer from './components/UI/BackgroundContainer';
 import './App.css'; // Importar los estilos globales
 import { useSelector } from "react-redux";
-import Dashboard from './components/UI/Dashboards/AdminStats/Dashboard';
 import ParentTable from './components/UI/Tables/ParentTable';
 import StudentsTable from './components/UI/Tables/ChildTables/StudentsTable';
 import TopicsTable from './components/UI/Tables/ChildTables/TopicsTable';
@@ -26,11 +23,12 @@ import TokenManager from './components/TokenManager';
 import Algorithms from './components/Algorithms/Algorithms';
 
 import ProtectedRoute from './components/ProtectedRoute';
-import LearningPath from './components/UI/Dashboards/Student/LearningPath';
-import TutorDashboard from './components/UI/Dashboards/Tutor/TutorDashboard';
-import TutorCuatrimestre from './components/UI/Dashboards/Tutor/TutorCuatrimestre';
+import TutorDashboardView from './views/Tutor/TutorDashboardView';
 import UploadView from './views/UploadView';
 import CuatrimestreConfig from './components/UI/CuatrimestreConfig';
+import HomeView from './views/HomeView';
+import LoginView from './views/LoginView';
+import DashboardView from './views/Admin/DashboardView'
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -62,10 +60,10 @@ const App = () => {
         <BackgroundContainer/>
         <Box className="content-container">
           <Routes>
-            <Route path="/" element={<Home/>} />
-            <Route path="/learning-path" element={<ProtectedRoute><LearningPath /></ProtectedRoute>} />
+            <Route path="/" element={<LoginView />} />
+            <Route path="/home" element={<HomeView/>} />
             <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} />
-            <Route path="/dashboard/:cuatrimestre" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/dashboard/:cuatrimestre" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />
             <Route path="/table-view" element={<ProtectedRoute><ParentTable /></ProtectedRoute>} />
             <Route path="dashboard/:cuatrimestre/students" element={<ProtectedRoute><StudentsTable /></ProtectedRoute>} />
             <Route path="dashboard/:cuatrimestre/topics" element={<ProtectedRoute><TopicsTable /></ProtectedRoute>} />
@@ -78,9 +76,7 @@ const App = () => {
             <Route path="/initial-project" element={<UploadView />} />
             {/* <Route path="/student-form" element={<StudentForm />} /> */}
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
-            <Route path="/tutor-cuatrimestre" element={<ProtectedRoute><TutorCuatrimestre /></ProtectedRoute>} />
-            <Route path="/tutor-cuatrimestre/:cuatrimestre" element={<ProtectedRoute><TutorDashboard /></ProtectedRoute>} />
-            <Route path="/admin" element={<ProtectedRoute>{user.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/tutor-cuatrimestre/:cuatrimestre" element={<ProtectedRoute><TutorDashboardView /></ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />
             <Route path="/admin-add-corrector" element={<ProtectedRoute><AddTutorForm /></ProtectedRoute>} />
             <Route path="/upload-students/:cuatrimestre" element={<ProtectedRoute>{user.role === 'admin' ? <UploadCSVForm formType="students" /> : <Navigate to="/" />}</ProtectedRoute>} />

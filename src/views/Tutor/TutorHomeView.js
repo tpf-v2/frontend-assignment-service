@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCuatrimestres, addCuatrimestre, getTutorCuatrimestre } from '../../../../api/handlePeriods'
-import MySnackbar from '../../MySnackBar';
-import { setPeriod } from '../../../../redux/slices/periodSlice';
+import { fetchCuatrimestres, addCuatrimestre, getTutorCuatrimestre } from '../../api/handlePeriods'
+import MySnackbar from '../../components/UI/MySnackBar';
+import { setPeriod } from '../../redux/slices/periodSlice';
 
 const Root = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -68,7 +68,7 @@ const Title = styled(Typography)(({ theme }) => ({
 }));
 
 
-const TutorCuatrimestre = () => {
+const TutorHomeView = () => {
   const user = useSelector((state) => state.user);
   const [cuatrimestres, setCuatrimestres] = useState([]);
   const navigate = useNavigate();
@@ -130,4 +130,4 @@ const TutorCuatrimestre = () => {
   );
 };
 
-export default TutorCuatrimestre;
+export default TutorHomeView;

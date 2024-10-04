@@ -7,7 +7,7 @@ import {
   Container,
   Box,
 } from "@mui/material";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import fiubaLogo from "../../assets/Logo-fiuba_big_face.png";
 import { useDispatch } from "react-redux";
 import { clearUser } from "../../redux/slices/userSlice";
@@ -23,13 +23,7 @@ const Header = ({ user, color, handleHomeClick }) => {
 
   const handleLogoClick = () => {
     handleHomeClick(); // Llamar la función para restablecer el estado
-    if (user.role === "admin") {
-      navigate("/admin");
-    } else if (user.role === "student") {
-      navigate("/learning-path");
-    } else {
-      navigate("/tutor-cuatrimestre");
-    }
+    navigate("/home");
   };
 
   const handleLogout = () => {
@@ -77,7 +71,7 @@ const Header = ({ user, color, handleHomeClick }) => {
                   color="inherit"
                   onClick={() => navigate(`/dashboard/${cuatrimestre}`)}
                 >
-                  Dashboard
+                  INICIO
                 </Button>
               )}
               <Button color="inherit" onClick={() => navigate("/profile")}>

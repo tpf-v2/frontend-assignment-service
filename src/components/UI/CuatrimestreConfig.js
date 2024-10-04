@@ -10,8 +10,6 @@ import {
   TableRow,
   Switch,
   Paper,
-  Box,
-  Button,
   Divider,
 } from "@mui/material";
 import { styled } from "@mui/system";
@@ -65,14 +63,15 @@ const CuatrimestreConfig = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <StyledTableCell>Configuración</StyledTableCell>
-              <StyledTableCell align="right"></StyledTableCell>
+            <StyledTableCell align="left">Entregas de Grupos</StyledTableCell> {/* Left title */}
+            <StyledTableCell align="right">Deshabilitar/Habilitar</StyledTableCell>   
             </TableRow>
           </TableHead>
+
           <TableBody>
             {/* Mapea los campos del estado y crea una fila por cada uno */}
             <TableRow>
-              <TableCell>Formulario de inscripción de grupos</TableCell>
+              <TableCell>Formulario de Preferencia de Temas</TableCell>
               <TableCell align="right">
                 <Switch
                   checked={settings.form_active}

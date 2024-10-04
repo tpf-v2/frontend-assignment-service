@@ -2,14 +2,14 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { Container, Box, Typography, CircularProgress } from "@mui/material"; // Importar CircularProgress
-import MySnackbar from "../../MySnackBar";
-import SubmitButton from "../../SubmitButton";
-import StudentInfo from "./StudentInfo";
-import Phase from "./Phase";
-import { getStudentInfo } from "../../../../api/getStudentInfo";
-import { getGroupById } from "../../../../api/getGroupById";
+import MySnackbar from "../../components/UI/MySnackBar";
+import SubmitButton from "../../components/UI/SubmitButton";
+import StudentInfo from "../../components/UI/Dashboards/Student/StudentInfo";
+import Phase from "../../components/UI/Dashboards/Student/Phase";
+import { getStudentInfo } from "../../api/getStudentInfo";
+import { getGroupById } from "../../api/getGroupById";
 
-const LearningPath = () => {
+const StudentHomeView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const cuatrimestre = useSelector((state) => state.user.period_id);
@@ -55,6 +55,32 @@ const LearningPath = () => {
               { title: "Revisión del tutor", completed: group.pre_report_approved },
             ],
           },
+          {
+            phase: "Entrega Intermedia",
+            tasks: [
+              {
+                title: "Entregado",
+                completed: group.intermediate_assigment_date !== null ? true : false,
+              },
+              {
+                title: "Aprobado",
+                completed: group.intermediate_assigment_approved,
+              },
+            ],
+          },
+          {
+            phase: "Entrega Final",
+            tasks: [
+              {
+                title: "Entregado",
+                completed: group.final_report_date !== null ? true : false,
+              },
+              {
+                title: "Aprobado",
+                completed: group.final_report_approved,
+              },
+            ],
+          },
         ]);
       } catch (error) {
         console.error("Error al obtener las respuestas", error);
@@ -70,8 +96,10 @@ const LearningPath = () => {
     <Container maxWidth="lg" sx={{ display: "flex", mt: 5 }}>
       <Box sx={{ flex: 1, mr: 8, mt: 8 }}>
         <StudentInfo />
-        <SubmitButton url="/student-form" title="Enviar Formulario de Grupo" />
-        <SubmitButton url="/initial-project" title="Enviar Anteproyecto" />
+        <SubmitButton url="/student-form" title="Enviar Formulario de Grupo" disabled={!milestones[0]?.tasks[0].completed}/>
+        <SubmitButton url="/initial-project" title="Enviar Anteproyecto" disabled={!milestones[1]?.tasks[0].completed}/>
+        <SubmitButton url="/initial-project" title="Enviar Entrega Intermedia" disabled={!milestones[2]?.tasks[0].completed}/>
+        <SubmitButton url="/initial-project" title="Enviar Entrega Final" disabled={!milestones[3]?.tasks[0].completed}/>
       </Box>
       <Box sx={{ flex: 2 }}>
         <Typography variant="h4" align="center" gutterBottom>
@@ -99,4 +127,4 @@ const LearningPath = () => {
   );
 };
 
-export default LearningPath;
+export default StudentHomeView;

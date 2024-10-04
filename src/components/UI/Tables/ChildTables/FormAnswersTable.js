@@ -5,7 +5,7 @@ import { TableCell } from '@mui/material';
 const FormAnswersTable = () => {
   const endpoint = '/forms/answers'; // Replace with your endpoint
   const title = 'Respuestas';
-  const columns = ['Fecha de envio', 'Estudiantes', 'Temas']; // Specify your column names here
+  const columns = ['Fecha de envio', 'Alumnos', 'Temas']; // Specify your column names here
 
   const renderRow = (item) => (
     <>

@@ -16,16 +16,16 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
   },
 }));
 
-const ContentGeneral = ({ navigate, cuatrimestre }) => {
+const ContentInicio = ({ navigate, cuatrimestre }) => {
   return (
     <>
       <Box display="flex" justifyContent="space-between" width="100%">
-        <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/students`)}>VER ESTUDIANTES</ButtonStyled>
-        <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/tutors`)}>VER TUTORES</ButtonStyled>
+        <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/students`)}> ALUMNOS</ButtonStyled>
+        <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/tutors`)}> TUTORES</ButtonStyled>
       </Box>
       <Box display="flex" justifyContent="space-between" width="100%">
-        <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/topics`)}>VER TEMAS</ButtonStyled>
-        <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/groups`)}>VER GRUPOS</ButtonStyled>
+        <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/topics`)}> TEMAS</ButtonStyled>
+        <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/groups`)}> GRUPOS</ButtonStyled>
       </Box>
       <CuatrimestreConfig />
 
@@ -33,4 +33,4 @@ const ContentGeneral = ({ navigate, cuatrimestre }) => {
   );
 };
 
-export default ContentGeneral;
+export default ContentInicio;

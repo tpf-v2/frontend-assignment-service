@@ -15,7 +15,6 @@ const UploadView = () => {
 
   const [isActive, setIsActive] = useState(false);
 
-  // Efecto para habilitar/deshabilitar etapas del learning path
     useEffect(() => {
       const fetchData = async () => {
         try {
