@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
 
-import DateRangeSelector from "../../components/DateRangeSelector";
+import DateTimeSelector from "../../components/DateTimeSelector";
+import DatePickerInput from "../../components/DatePickerInput"
 
 const DatePickerView = () => {
     const [startDate, setStartDate] = useState(null);
@@ -14,11 +15,12 @@ const DatePickerView = () => {
     
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-            <DateRangeSelector
+            <DateTimeSelector
                 title="Elegir un rango de fechas de presentación"
                 fromLabel="Desde"
                 toLabel="Hasta"
                 onDateRangeChange={handleDateRangeChange}
+                Component={DatePickerInput}
             />
         </Box>
       );

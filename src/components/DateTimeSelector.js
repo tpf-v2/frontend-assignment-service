@@ -1,8 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import DatePickerInput from './DatePickerInput';
 
-const DateRangeSelector = ({ title, fromLabel, toLabel, onDateRangeChange }) => {
+const DateTimeSelector = ({ title, fromLabel, toLabel, onDateRangeChange, Component }) => {
     const [fromDate, setFromDate] = React.useState(null);
     const [toDate, setToDate] = React.useState(null);
 
@@ -15,16 +14,19 @@ const DateRangeSelector = ({ title, fromLabel, toLabel, onDateRangeChange }) => 
             <Typography variant="h6" gutterBottom>
             {title}
             </Typography>
-            <DatePickerInput
+
+            <Component
                 label={fromLabel}
                 value={fromDate}
                 onChange={(newValue) => setFromDate(newValue)} />
-            <DatePickerInput
+
+            <Component
                 label={toLabel}
                 value={toDate}
-                onChange={(newValue) => setToDate(newValue)} />
+                onChange={(newValue) => setToDate(newValue)} 
+            />
         </Box>
   );
 };
 
-export default DateRangeSelector;
+export default DateTimeSelector;
