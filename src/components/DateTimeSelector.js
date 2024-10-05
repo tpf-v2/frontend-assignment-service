@@ -1,13 +1,13 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 
-const DateTimeSelector = ({ title, fromLabel, toLabel, onDateRangeChange, Component }) => {
-    const [fromDate, setFromDate] = React.useState(null);
-    const [toDate, setToDate] = React.useState(null);
+const DateTimeSelector = ({ title, fromLabel, toLabel, onRangeChange, Component, rangeKey }) => {
+    const [from, setFrom] = React.useState(null);
+    const [to, setTo] = React.useState(null);
 
     React.useEffect(() => {
-        onDateRangeChange(fromDate, toDate); 
-    }, [fromDate, toDate, onDateRangeChange]);
+        onRangeChange(rangeKey, from, to); 
+    }, [from, to]);
         
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2}}>
@@ -16,12 +16,12 @@ const DateTimeSelector = ({ title, fromLabel, toLabel, onDateRangeChange, Compon
             </Typography>
             <Component
                 label={fromLabel}
-                value={fromDate}
-                onChange={(newValue) => setFromDate(newValue)} />
+                value={from}
+                onChange={(newValue) => setFrom(newValue)} />
             <Component
                 label={toLabel}
-                value={toDate}
-                onChange={(newValue) => setToDate(newValue)} 
+                value={to}
+                onChange={(newValue) => setTo(newValue)} 
             />
         </Box>
   );

@@ -113,7 +113,7 @@ const LearningPath = ({ group_id, group }) => {
   const handleAnteproyectoClick = () => {
     setSelectedPhase("anteproyecto");
   };
-
+  
   return (
     <Container maxWidth="lg">
       {loading ? (
