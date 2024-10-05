@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Box, Divider } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 
 import DateTimeSelector from "../../components/DateTimeSelector";
-import DatePickerInput from "../../components/DatePickerInput"
+import DatePickerInput from "../../components/DatePickerInput";
 import TimePickerInput from '../../components/TimePickerInput';
 
 const DatePickerView = () => {
@@ -15,16 +15,18 @@ const DatePickerView = () => {
     };
     
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+        <div>
+            <Typography variant="h5" gutterBottom> Seleccionar Fechas</Typography>
             <DateTimeSelector
-                title="Elegir un rango de fechas de presentación"
+                title=""
                 fromLabel="Desde"
                 toLabel="Hasta"
                 onDateRangeChange={handleDateRangeChange}
                 Component={DatePickerInput}
             />
-            <Divider sx={{ mb: 3 }} />
-            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 2, padding: 3, border: "1px solid grey" }}>
+            <Divider sx={{ margin: 5 }} />
+            <Typography variant="h5" gutterBottom>Seleccionar Horarios</Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 2, padding: 3}}>
                 <DateTimeSelector
                     title="Mañana"
                     fromLabel="Desde"
@@ -40,9 +42,8 @@ const DatePickerView = () => {
                     Component={TimePickerInput}
                 />
             </Box>
-        </Box>
-      );
-  };
+        </div>
+    );
+};
   
-  export default DatePickerView;
-  
+export default DatePickerView;
