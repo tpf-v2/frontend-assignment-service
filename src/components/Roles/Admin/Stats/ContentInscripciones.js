@@ -1,8 +1,8 @@
 import React from "react";
 import { Box, Button, Grid } from "@mui/material";
-import StatCard from "./StatCard"; // Asegúrate de tener este componente
-import BarChartComponent from "./BarChart"; // Asegúrate de tener este componente
-import UploadCSVForm from "../../../../SharedResources/Uploads/UploadCSV"; // Asegúrate de tener este componente
+import StatCard from "./StatCard"; 
+import BarChartComponent from "./BarChart"; 
+import UploadCSVForm from "../../../SharedResources/Uploads/UploadCSV";
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 

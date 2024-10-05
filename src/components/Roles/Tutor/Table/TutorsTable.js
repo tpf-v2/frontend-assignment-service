@@ -1,5 +1,5 @@
 import React from 'react';
-import ParentTable from '../ParentTable';
+import ParentTable from '../../../SharedResources/Tables/ParentTable';
 import { TableCell } from '@mui/material';
 import { useParams } from 'react-router';
 

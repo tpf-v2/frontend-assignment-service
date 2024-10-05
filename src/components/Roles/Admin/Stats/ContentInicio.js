@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button } from "@mui/material";
 import { styled } from "@mui/system";
-import CuatrimestreConfig from "../../../CuatrimestreConfig";
+import CuatrimestreConfig from "../CuatrimestreConfig";
 
 const ButtonStyled = styled(Button)(({ theme }) => ({
   margin: theme.spacing(2),

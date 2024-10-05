@@ -14,10 +14,10 @@ import {
   Grid,
   Paper
 } from "@mui/material";
-import Sidebar from "../../components/Sidebar";
-import ContentInicio from "../../components/UI/Dashboards/AdminStats/Components/ContentInicio";
-import ContentInscripciones from "../../components/UI/Dashboards/AdminStats/Components/ContentInscripciones";
-import ContentAnteproyecto from "../../components/UI/Dashboards/AdminStats/Components/ContentAnteproyecto";
+import Sidebar from "../../components/Sidebar"
+import ContentInicio from "../../components/Roles/Admin/Stats/ContentInicio"
+import ContentInscripciones from "../../components/Roles/Admin/Stats/ContentInscripciones";
+import ContentAnteproyecto from "../../components/Roles/Admin/Stats/ContentAnteproyecto";
 import Algorithms from "../../components/Roles/Admin/Algorithms/Algorithms";
 
 // Estilos

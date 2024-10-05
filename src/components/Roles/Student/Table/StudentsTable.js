@@ -1,6 +1,6 @@
 import React from 'react';
 import { TableCell } from '@mui/material';
-import ParentTable from '../ParentTable';
+import ParentTable from '../../../SharedResources/Tables/ParentTable';
 
 const StudentsTable = () => {
   const endpoint = '/students/'; // Replace with your endpoint
