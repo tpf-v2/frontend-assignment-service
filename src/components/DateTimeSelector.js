@@ -10,16 +10,14 @@ const DateTimeSelector = ({ title, fromLabel, toLabel, onDateRangeChange, Compon
     }, [fromDate, toDate, onDateRangeChange]);
         
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2}}>
             <Typography variant="h6" gutterBottom>
             {title}
             </Typography>
-
             <Component
                 label={fromLabel}
                 value={fromDate}
                 onChange={(newValue) => setFromDate(newValue)} />
-
             <Component
                 label={toLabel}
                 value={toDate}
