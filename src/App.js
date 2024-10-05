@@ -9,7 +9,7 @@ import BackgroundContainer from './components/SharedResources/BackgroundContaine
 import './App.css'; // Importar los estilos globales
 import { useSelector } from "react-redux";
 import ParentTable from './components/SharedResources/Tables/ParentTable';
-import StudentsTable from './components/Roles/Student/Table/StudentsTable';
+import StudentsTable from './components/Roles/Admin/Table/StudentsTable';
 import TopicsTable from './components/SharedResources/Tables/ChildTables/TopicsTable';
 import FormAnswersTable from './components/SharedResources/Tables/ChildTables/FormAnswersTable';
 import GroupsTable from './components/SharedResources/Tables/ChildTables/GroupsTable';
@@ -23,7 +23,7 @@ import CuatrimestreConfig from './components/Roles/Admin/CuatrimestreConfig';
 import HomeView from './views/HomeView';
 import LoginView from './views/LoginView';
 import DashboardView from './views/Admin/DashboardView'
-import TutorsTable from './components/Roles/Tutor/Table/TutorsTable';
+import TutorsTable from './components/Roles/Admin/Table/TutorsTable';
 
 const App = () => {
   const user = useSelector((state) => state.user);
