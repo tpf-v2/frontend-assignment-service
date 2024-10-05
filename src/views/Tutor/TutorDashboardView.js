@@ -20,11 +20,7 @@ import { getMyGroups } from "../../api/getMyGroups";
 import LearningPath from "../../components/LearningPath";
 import Inicio from "../../components/UI/Dashboards/Tutor/Inicio";
 import GroupReview from "../../components/UI/Dashboards/Tutor/GroupReview";
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-
-const localizer = momentLocalizer(moment);
+import AvailabilityCalendar from "../../components/WIP/AvailabilityCalendar";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -110,32 +106,11 @@ const TutorDashboardView = () => {
     "Seleccionar Disponibilidad": (
       <AvailabilityContainer>
         <Typography variant="h6" gutterBottom>
-          Marca tu Disponibilidad
+          Selecciona tu disponibilidad
         </Typography>
-        <Calendar
-          localizer={localizer}
+        <AvailabilityCalendar
           events={events}
-          selectable
-          onSelectSlot={handleSelectSlot}
-          views={['week', 'day']}
-          defaultView="week"
-          step={60}
-          showMultiDayTimes
-          defaultDate={new Date()}
-          style={{ height: '500px', margin: '50px' }}
-          min={new Date(0, 0, 0, 9, 0, 0)} // Comienza a las 9 AM
-          max={new Date(0, 0, 0, 21, 0, 0)} // Termina a las 9 PM
-          components={{
-            month: {
-              header: () => null, // Para no mostrar la cabecera
-            },
-          }}
-          onNavigation={date => {
-            const day = date.getDay();
-            if (day === 0 || day === 6) { // Bloquear selección de sábado y domingo
-              return false;
-            }
-          }}
+          handleSelectSlot={handleSelectSlot}
         />
       </AvailabilityContainer>
     ),
