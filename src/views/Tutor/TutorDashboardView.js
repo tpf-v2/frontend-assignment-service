@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material/styles";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -20,8 +20,11 @@ import { getMyGroups } from "../../api/getMyGroups";
 import LearningPath from "../../components/LearningPath";
 import Inicio from "../../components/UI/Dashboards/Tutor/Inicio";
 import GroupReview from "../../components/UI/Dashboards/Tutor/GroupReview";
-import DatePicker from "react-datepicker"; // Importa el DatePicker
-import "react-datepicker/dist/react-datepicker.css"; // Estilos por defecto
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+const localizer = momentLocalizer(moment);
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -65,17 +68,14 @@ const AvailabilityContainer = styled(Box)(({ theme }) => ({
   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
 }));
 
-
 const TutorDashboardView = () => {
   const { cuatrimestre } = useParams();
-
   const user = useSelector((state) => state.user);
-
   const [userGroups, setUserGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("Inicio");
-  const [selectedGroup, setSelectedGroup] = useState(null); // Campo para el grupo seleccionado
-  const [availability, setAvailability] = useState([]); // Estado para bloques de disponibilidad
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [events, setEvents] = useState([]);
 
   useEffect(() => {
     const getGroups = async () => {
@@ -90,9 +90,17 @@ const TutorDashboardView = () => {
     setLoading(false);
   }, [loading]);
 
-  const handleDateChange = (date) => {
-    if (date) {
-      setAvailability((prev) => [...prev, date]); // Agrega el bloque de disponibilidad
+  const handleSelectSlot = ({ start, end }) => {
+    const title = window.prompt("Nuevo Bloque de Disponibilidad");
+    if (title) {
+      setEvents([
+        ...events,
+        {
+          start,
+          end,
+          title,
+        },
+      ]);
     }
   };
 
@@ -102,27 +110,33 @@ const TutorDashboardView = () => {
     "Seleccionar Disponibilidad": (
       <AvailabilityContainer>
         <Typography variant="h6" gutterBottom>
-          Selecciona tu Disponibilidad
+          Marca tu Disponibilidad
         </Typography>
-        <DatePicker
-          selected={null}
-          onChange={handleDateChange}
-          showTimeSelect
-          timeFormat="HH:mm"
-          timeIntervals={30}
-          dateFormat="MMMM d, yyyy h:mm aa"
-          inline // Esto mostrará el calendario directamente
+        <Calendar
+          localizer={localizer}
+          events={events}
+          selectable
+          onSelectSlot={handleSelectSlot}
+          views={['week', 'day']}
+          defaultView="week"
+          step={60}
+          showMultiDayTimes
+          defaultDate={new Date()}
+          style={{ height: '500px', margin: '50px' }}
+          min={new Date(0, 0, 0, 9, 0, 0)} // Comienza a las 9 AM
+          max={new Date(0, 0, 0, 21, 0, 0)} // Termina a las 9 PM
+          components={{
+            month: {
+              header: () => null, // Para no mostrar la cabecera
+            },
+          }}
+          onNavigation={date => {
+            const day = date.getDay();
+            if (day === 0 || day === 6) { // Bloquear selección de sábado y domingo
+              return false;
+            }
+          }}
         />
-        <Box>
-          {availability.length > 0 && (
-            <Typography variant="body1">
-              Bloques seleccionados:{" "}
-              {availability.map((date, index) => (
-                <div key={index}>{date.toString()}</div>
-              ))}
-            </Typography>
-          )}
-        </Box>
       </AvailabilityContainer>
     ),
     "Fechas de presentaciones": <div>Contenido para Fechas de Presentación</div>,
