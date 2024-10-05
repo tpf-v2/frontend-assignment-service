@@ -14,6 +14,12 @@ const DatePickerView = () => {
         setStartDate(newStartDate);
         setEndDate(newEndDate);
     };
+
+    const [isFlagActive, setIsFlagActive] = useState(false); // Estado del flag
+
+    const handleFlagChange = () => {
+        setIsFlagActive(prev => !prev); // Alternar el estado del flag
+    };
     
     return (
         <div>
@@ -25,8 +31,22 @@ const DatePickerView = () => {
                 onDateRangeChange={handleDateRangeChange}
                 Component={DatePickerInput}
             />
+            { isFlagActive &&
+                <DateTimeSelector
+                title=""
+                fromLabel="Desde"
+                toLabel="Hasta"
+                onDateRangeChange={handleDateRangeChange}
+                Component={DatePickerInput}
+            />
+            }
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 2, padding: 3}}>
-                <AddButton />
+                <AddButton
+                    onFlagChange={handleFlagChange} 
+                    isFlagActive={isFlagActive}
+                    infoActive="Eliminar nuevo intervalo de fechas"
+                    infoNotActive="Agregar nuevo intervalo de fechas"
+                />
             </Box>
             <Divider sx={{ margin: 5 }} />
             <Typography variant="h5" gutterBottom>Seleccionar Horarios</Typography>
