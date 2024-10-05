@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Typography, Box, Button, Container, Paper, MenuItem, FormControl, InputLabel, Select, Chip } from '@mui/material';
 import { styled } from '@mui/system';
-import { useTheme } from '@mui/material/styles';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
