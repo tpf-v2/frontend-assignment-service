@@ -4,6 +4,7 @@ import { Box, Divider, Typography } from '@mui/material';
 import DateTimeSelector from "../../components/DateTimeSelector";
 import DatePickerInput from "../../components/DatePickerInput";
 import TimePickerInput from '../../components/TimePickerInput';
+import AddButton from '../../components/AddButton';
 
 const DatePickerView = () => {
     const [startDate, setStartDate] = useState(null);
@@ -24,6 +25,9 @@ const DatePickerView = () => {
                 onDateRangeChange={handleDateRangeChange}
                 Component={DatePickerInput}
             />
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 2, padding: 3}}>
+                <AddButton />
+            </Box>
             <Divider sx={{ margin: 5 }} />
             <Typography variant="h5" gutterBottom>Seleccionar Horarios</Typography>
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 2, padding: 3}}>
