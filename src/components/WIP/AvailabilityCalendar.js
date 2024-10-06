@@ -9,6 +9,7 @@ import EventModal from "../../components/EventModal";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import { sendAvailability } from "../../api/sendAvailability";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // Localizador de momento
 const localizer = momentLocalizer(moment);
@@ -45,6 +46,7 @@ const CalendarStyled = styled(Calendar)(({ theme }) => ({
     justifyContent: "center", // Centrar contenidos de toolbar
     padding: "16px", // Espaciado entre el borde y los botones
     backgroundColor: "#E1F3F8", // Color de fondo claro para la barra de herramientas
+    paddingRight: "120px"
   },
   "& .rbc-toolbar button": {
     backgroundColor: "#0072C6", // Color de fondo de los botones
@@ -88,6 +90,7 @@ const AvailabilityCalendar = () => {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
   const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
   const handleSnackbarOpen = (message, status = "info") => {
     setSnackbarMessage(message);
@@ -95,7 +98,7 @@ const AvailabilityCalendar = () => {
     setSnackbarOpen(true);
   };
 
-  const handleSnackbarClose = (event, reason) => {
+  const handleSnackbarClose = (reason) => {
     if (reason === "clickaway") {
       return;
     }
@@ -159,6 +162,9 @@ const AvailabilityCalendar = () => {
     try {
       await sendAvailability(user, events);
       handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
+      setTimeout(() => {
+        navigate("/home"); 
+      }, 1500); 
     } catch (error) {
       handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
     }

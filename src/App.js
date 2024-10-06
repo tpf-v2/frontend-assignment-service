@@ -29,6 +29,8 @@ import CuatrimestreConfig from './components/UI/CuatrimestreConfig';
 import HomeView from './views/HomeView';
 import LoginView from './views/LoginView';
 import DashboardView from './views/Admin/DashboardView'
+import AvailabilityCalendar from './components/WIP/AvailabilityCalendar';
+import StudentAvailabilityView from './views/Student/StudentAvailabilityView';
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -84,6 +86,7 @@ const App = () => {
             <Route path="/upload-tutors/:cuatrimestre" element={<ProtectedRoute>{user.role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile user={user} /></ProtectedRoute>} />
             <Route path="/algorithms/:cuatrimestre" element={<ProtectedRoute>{user.role === 'admin' ? <Algorithms user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/availability-view" element={<ProtectedRoute><StudentAvailabilityView></StudentAvailabilityView></ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Box>
