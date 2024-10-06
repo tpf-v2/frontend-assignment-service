@@ -40,38 +40,55 @@ const DatePickerView = () => {
         }));
     };
 
-    function extractDateInfo(date) {
-        if (!date) return null;
-        date = date.toDate();
-        return {
-          year: date.getFullYear(),
-          month: date.getMonth() + 1,
-          day: date.getDate(),
-        };
-    }
-    
-    function extractTimeInfo(time) {
-        if (!time) return null;
-        time = time.toDate();
-        return {
-          hour: time.getHours(),
-        }
+    function formatInfo(info) {
+        if (!info) return null;
+        return info.toDate()
     }
 
-    function getAvailableDates(ranges, startKey, endKey) {
+    function getDatesBetween(startDate, endDate) {
         const dates = [];
+        let currentDate = new Date(startDate);
+    
+        if (currentDate > endDate) {
+            console.log(`Start Date: ${currentDate} greater than End Date: ${currentDate}`)
+            return dates;
+        }
+    
+        while (currentDate <= endDate) {
+            const day = currentDate.getDay();
+            if (day !== 0 && day !== 6) { // filter weekends
+                console.log(`week date: ${currentDate}`)
+                dates.push(new Date(currentDate));
+            }
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+        return dates;
+    }
+
+    function formatRanges(ranges, startKey, endKey) {
+        let result = [];
         Object.entries(ranges).forEach(([key, range]) => {
-            if(range[`${startKey}`])dates.push(extractDateInfo(range[`${startKey}`]))
-            if(range[`${endKey}`])dates.push(extractDateInfo(range[`${endKey}`]))
+            if (startKey === "startDate" && endKey === "endDate") {
+                const daysInBetween = getDatesBetween(range["startDate"], range["endDate"])
+                result = result.concat(daysInBetween);
+                console.log("result + days in between: ", result)
+            } else {
+                if(range[`${startKey}`])result.push(formatInfo(range[`${startKey}`]))
+                if(range[`${endKey}`])result.push(formatInfo(range[`${endKey}`]))
+            }
           }
         )
-        return dates;
+
+        return result;
     }
 
     const handleSubmit = () => {
         console.log("Submit available dates", dateRanges, timeRanges)
-        const availableDates = getAvailableDates(dateRanges, "startDate", "endDate", extractDateInfo)
-        console.log('availableDates:', availableDates);
+        const formattedDates = formatRanges(dateRanges, "startDate", "endDate")
+        formattedDates.pop()
+        const formattedTimes = formatRanges(timeRanges, "startTime", "endTime")
+        console.log('formattedDates:', formattedDates);
+        console.log('formattedTimes:', formattedTimes);
     };
 
     return (
