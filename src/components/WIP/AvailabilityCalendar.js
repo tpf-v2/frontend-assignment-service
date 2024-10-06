@@ -1,10 +1,14 @@
-// AvailabilityCalendar.js
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { styled } from "@mui/material/styles";
 import { Box, Typography, Button } from "@mui/material";
+import MySnackbar from "../../components/UI/MySnackBar";
+import EventModal from "../../components/EventModal";
+import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
+import { sendAvailability } from "../../api/sendAvailability";
+import { useSelector } from "react-redux";
 
 // Localizador de momento
 const localizer = momentLocalizer(moment);
@@ -64,7 +68,7 @@ const AvailabilityContainer = styled(Box)(({ theme }) => ({
 const ButtonContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   justifyContent: "flex-end",
-  marginRight: theme.spacing(6)
+  marginRight: theme.spacing(6),
 }));
 
 const DescriptionBox = styled(Box)(({ theme }) => ({
@@ -74,12 +78,92 @@ const DescriptionBox = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(3),
 }));
 
-const AvailabilityCalendar = ({
-  events,
-  handleSelectSlot,
-  handleSelectEvent,
-  onSubmitEvents,
-}) => {
+const AvailabilityCalendar = () => {
+  const [events, setEvents] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarStatus, setSnackbarStatus] = useState("info");
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState(null);
+  const user = useSelector((state) => state.user);
+
+  const handleSnackbarOpen = (message, status = "info") => {
+    setSnackbarMessage(message);
+    setSnackbarStatus(status);
+    setSnackbarOpen(true);
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+
+  const handleSelectSlot = ({ start, end }) => {
+    const isEventOverlap = events.some(
+      (event) => start < event.end && end > event.start
+    );
+
+    if (isEventOverlap) {
+      handleSnackbarOpen(
+        "El evento se solapa con otro existente. Por favor, selecciona un intervalo diferente.",
+        "error"
+      );
+      return;
+    }
+
+    setSelectedSlot({ start, end });
+    setModalOpen(true);
+  };
+
+  const handleConfirmEvent = () => {
+    if (selectedSlot) {
+      setEvents((prevEvents) => [
+        ...prevEvents,
+        { start: selectedSlot.start, end: selectedSlot.end },
+      ]);
+      handleSnackbarOpen(
+        "Bloque de disponibilidad creado exitosamente.",
+        "success"
+      );
+      setModalOpen(false);
+    }
+  };
+
+  const handleSelectEvent = (event) => {
+    setEventToDelete(event);
+    setConfirmDeleteOpen(true);
+  };
+
+  const handleDeleteEvent = () => {
+    if (eventToDelete) {
+      setEvents((prevEvents) =>
+        prevEvents.filter(
+          (event) =>
+            event.start !== eventToDelete.start ||
+            event.end !== eventToDelete.end
+        )
+      );
+      handleSnackbarOpen(
+        "Bloque de disponibilidad eliminado exitosamente.",
+        "success"
+      );
+    }
+    setConfirmDeleteOpen(false);
+  };
+
+  const onSubmitEvents = async () => {
+    try {
+      await sendAvailability(user, events);
+      handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
+    } catch (error) {
+      handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
+    }
+  };
+
   return (
     <AvailabilityContainer>
       <Typography variant="h4" align="center" gutterBottom>
@@ -131,14 +215,29 @@ const AvailabilityCalendar = ({
         }}
       />
       <ButtonContainer>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={onSubmitEvents} // Llama a la función para enviar eventos
-        >
+        <Button variant="contained" color="primary" onClick={onSubmitEvents}>
           Enviar
         </Button>
       </ButtonContainer>
+
+      <EventModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onConfirm={handleConfirmEvent}
+      />
+
+      <ConfirmDeleteModal
+        open={confirmDeleteOpen}
+        onClose={() => setConfirmDeleteOpen(false)}
+        onConfirm={handleDeleteEvent}
+      />
+
+      <MySnackbar
+        message={snackbarMessage}
+        status={snackbarStatus}
+        open={snackbarOpen}
+        handleClose={handleSnackbarClose}
+      />
     </AvailabilityContainer>
   );
 };

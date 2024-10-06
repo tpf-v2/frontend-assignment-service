@@ -21,10 +21,6 @@ import LearningPath from "../../components/LearningPath";
 import Inicio from "../../components/UI/Dashboards/Tutor/Inicio";
 import GroupReview from "../../components/UI/Dashboards/Tutor/GroupReview";
 import AvailabilityCalendar from "../../components/WIP/AvailabilityCalendar";
-import MySnackbar from "../../components/UI/MySnackBar";
-import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
-import EventModal from "../../components/EventModal";
-import { sendAvailability } from "../../api/sendAvailability";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -68,14 +64,6 @@ const TutorDashboardView = () => {
   const [loading, setLoading] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("Inicio");
   const [selectedGroup, setSelectedGroup] = useState(null);
-  const [events, setEvents] = useState([]);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarStatus, setSnackbarStatus] = useState("info");
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedSlot, setSelectedSlot] = useState({ start: null, end: null });
-  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-  const [eventToDelete, setEventToDelete] = useState(null);
 
   useEffect(() => {
     const getGroups = async () => {
@@ -90,87 +78,10 @@ const TutorDashboardView = () => {
     setLoading(false);
   }, [loading]);
 
-  const handleSnackbarOpen = (message, status = "info") => {
-    setSnackbarMessage(message);
-    setSnackbarStatus(status);
-    setSnackbarOpen(true);
-  };
-
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setSnackbarOpen(false);
-  };
-
-  const handleSelectSlot = ({ start, end }) => {
-    const isEventOverlap = events.some(
-      (event) => start < event.end && end > event.start
-    );
-
-    if (isEventOverlap) {
-      handleSnackbarOpen(
-        "El evento se solapa con otro existente. Por favor, selecciona un intervalo diferente.",
-        "error"
-      );
-      return;
-    }
-
-    // Abrir el modal
-    setSelectedSlot({ start, end });
-    setModalOpen(true);
-  };
-
-  const onSubmitEvents = async () => {
-    try {
-      await sendAvailability(user,events);
-      handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
-    } catch (error) {
-      handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
-    }
-  };
-
-  const handleConfirmEvent = () => {
-    setEvents((prevEvents) => [
-      ...prevEvents,
-      {
-        start: selectedSlot.start,
-        end: selectedSlot.end
-      },
-    ]);
-    handleSnackbarOpen(
-      "Bloque de disponibilidad creado exitosamente.",
-      "success"
-    );
-    setModalOpen(false);
-  };
-
-  const handleSelectEvent = (event) => {
-    setEventToDelete(event); // Guarda el evento a eliminar
-    setConfirmDeleteOpen(true); // Abre el modal de confirmación
-  };
-
-  const handleDeleteEvent = () => {
-    if (eventToDelete) {
-      setEvents((prevEvents) => 
-        prevEvents.filter(event => event.start !== eventToDelete.start || event.end !== eventToDelete.end)
-      );
-      handleSnackbarOpen("Bloque de disponibilidad eliminado exitosamente.", "success");
-    }
-    setConfirmDeleteOpen(false); // Cierra el modal
-  };
-
   const contentMap = {
     Inicio: <Inicio />,
     "Mis Grupos": <div>Contenido del Formulario de Fechas</div>,
-    "Seleccionar Disponibilidad": (
-      <AvailabilityCalendar
-        events={events}
-        handleSelectSlot={handleSelectSlot}
-        handleSelectEvent={handleSelectEvent}
-        onSubmitEvents={onSubmitEvents}
-      />
-    ),
+    "Seleccionar Disponibilidad": <AvailabilityCalendar />,
     "Fechas de presentaciones": (
       <div>Contenido para Fechas de Presentación</div>
     ),
@@ -263,25 +174,6 @@ const TutorDashboardView = () => {
             {renderContent()}
           </Grid>
         </Grid>
-
-        <EventModal
-          open={modalOpen}
-          onClose={() => setModalOpen(false)}
-          onConfirm={handleConfirmEvent}
-        />
-
-        <ConfirmDeleteModal
-          open={confirmDeleteOpen}
-          onClose={() => setConfirmDeleteOpen(false)}
-          onConfirm={handleDeleteEvent}
-        />
-
-        <MySnackbar
-          message={snackbarMessage}
-          status={snackbarStatus}
-          open={snackbarOpen}
-          handleClose={handleSnackbarClose}
-        />
       </Root>
     </Container>
   );
