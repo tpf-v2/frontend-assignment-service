@@ -57,13 +57,6 @@ const Title = styled(Typography)(({ theme }) => ({
   flexGrow: 1,
 }));
 
-const AvailabilityContainer = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2),
-  borderRadius: "8px",
-  backgroundColor: "#f1f1f1",
-  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-}));
-
 const TutorDashboardView = () => {
   const { cuatrimestre } = useParams();
   const user = useSelector((state) => state.user);
@@ -101,20 +94,13 @@ const TutorDashboardView = () => {
   };
 
   const contentMap = {
-    "Inicio": <Inicio />,
+    Inicio: <Inicio />,
     "Mis Grupos": <div>Contenido del Formulario de Fechas</div>,
-    "Seleccionar Disponibilidad": (
-      <AvailabilityContainer>
-        <Typography variant="h6" gutterBottom>
-          Selecciona tu disponibilidad
-        </Typography>
-        <AvailabilityCalendar
-          events={events}
-          handleSelectSlot={handleSelectSlot}
-        />
-      </AvailabilityContainer>
+    "Seleccionar Disponibilidad":
+        <AvailabilityCalendar events={events} handleSelectSlot={handleSelectSlot}/>,
+    "Fechas de presentaciones": (
+      <div>Contenido para Fechas de Presentación</div>
     ),
-    "Fechas de presentaciones": <div>Contenido para Fechas de Presentación</div>,
     Revisiones: selectedGroup ? (
       <GroupReview
         groupId={selectedGroup}
