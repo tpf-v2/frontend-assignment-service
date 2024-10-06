@@ -93,11 +93,18 @@ const TutorDashboardView = () => {
     }
   };
 
+  const handleDeleteEvent = (eventToDelete) => {
+    const confirmDelete = window.confirm(`¿Estás seguro de que quieres eliminar el evento "${eventToDelete.title}"?`);
+    if (confirmDelete) {
+      setEvents((prevEvents) => prevEvents.filter(event => event.start !== eventToDelete.start && event.end !== eventToDelete.end));
+    }
+  };
+
   const contentMap = {
     Inicio: <Inicio />,
     "Mis Grupos": <div>Contenido del Formulario de Fechas</div>,
     "Seleccionar Disponibilidad":
-        <AvailabilityCalendar events={events} handleSelectSlot={handleSelectSlot}/>,
+        <AvailabilityCalendar events={events} handleSelectSlot={handleSelectSlot} handleDelete={handleDeleteEvent}/>,
     "Fechas de presentaciones": (
       <div>Contenido para Fechas de Presentación</div>
     ),
