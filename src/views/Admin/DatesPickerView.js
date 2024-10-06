@@ -40,10 +40,38 @@ const DatePickerView = () => {
         }));
     };
 
+    function extractDateInfo(date) {
+        if (!date) return null;
+        date = date.toDate();
+        return {
+          year: date.getFullYear(),
+          month: date.getMonth() + 1,
+          day: date.getDate(),
+        };
+    }
+    
+    function extractTimeInfo(time) {
+        if (!time) return null;
+        time = time.toDate();
+        return {
+          hour: time.getHours(),
+        }
+    }
+
+    function getAvailableDates(ranges, startKey, endKey) {
+        const dates = [];
+        Object.entries(ranges).forEach(([key, range]) => {
+            if(range[`${startKey}`])dates.push(extractDateInfo(range[`${startKey}`]))
+            if(range[`${endKey}`])dates.push(extractDateInfo(range[`${endKey}`]))
+          }
+        )
+        return dates;
+    }
+
     const handleSubmit = () => {
-        console.log("Submit available dates")
-        console.log("date ranges: ", dateRanges)
-        console.log("time ranges: ", timeRanges)
+        console.log("Submit available dates", dateRanges, timeRanges)
+        const availableDates = getAvailableDates(dateRanges, "startDate", "endDate", extractDateInfo)
+        console.log('availableDates:', availableDates);
     };
 
     return (

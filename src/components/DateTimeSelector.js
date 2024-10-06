@@ -6,8 +6,12 @@ const DateTimeSelector = ({ title, fromLabel, toLabel, onRangeChange, Component,
     const [to, setTo] = React.useState(null);
 
     React.useEffect(() => {
-        onRangeChange(rangeKey, from, to); 
-    }, [from, to]);
+        if (from && to && from > to) {
+            console.error("La fecha de inicio no puede ser posterior a la fecha de finalización.");
+        } else {
+            onRangeChange(rangeKey, from, to); 
+        }
+    }, [from, to, rangeKey]);
         
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2}}>
