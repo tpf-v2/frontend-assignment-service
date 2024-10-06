@@ -61,12 +61,34 @@ const AvailabilityContainer = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(5),
 }));
 
-const AvailabilityCalendar = ({ events, handleSelectSlot, handleSelectEvent }) => {
+const DescriptionBox = styled(Box)(({ theme }) => ({
+  width: '100%', // Hacer que tenga el mismo ancho que el calendario
+  maxWidth: '800px', // Ajustar el ancho máximo si es necesario
+  margin: '0 auto', // Centrar el contenido
+  paddingTop: theme.spacing(3)
+}));
+
+const AvailabilityCalendar = ({
+  events,
+  handleSelectSlot,
+  handleSelectEvent,
+}) => {
   return (
     <AvailabilityContainer>
       <Typography variant="h4" align="center" gutterBottom>
         Selecciona tu disponibilidad
       </Typography>
+
+      {/* Descripción del Calendario */}
+      <DescriptionBox>
+        <Typography variant="body1" align="justify" gutterBottom>
+          En este calendario, podrás seleccionar los bloques de tiempo que 
+          estás disponible para presentar. Haz clic en cualquier espacio 
+          en blanco para agregar un bloque de disponibilidad. 
+          Si necesitas eliminar un bloque existente, simplemente selecciónalo de nuevo.
+        </Typography>
+      </DescriptionBox>
+
       <CalendarStyled
         localizer={localizer}
         events={events}

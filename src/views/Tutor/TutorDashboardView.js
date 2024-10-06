@@ -125,8 +125,7 @@ const TutorDashboardView = () => {
       ...prevEvents,
       {
         start: selectedSlot.start,
-        end: selectedSlot.end,
-        title: "Bloque de Disponibilidad", // Título predeterminado
+        end: selectedSlot.end
       },
     ]);
     handleSnackbarOpen(
