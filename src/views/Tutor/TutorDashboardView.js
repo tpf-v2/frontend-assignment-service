@@ -80,10 +80,19 @@ const TutorDashboardView = () => {
   }, [loading]);
 
   const handleSelectSlot = ({ start, end }) => {
+    const isEventOverlap = events.some(event => 
+      (start < event.end && end > event.start) // Verificar si hay solapamiento
+    );
+  
+    if (isEventOverlap) {
+      alert("El evento se solapa con otro existente. Por favor, selecciona un intervalo diferente.");
+      return;
+    }
+  
     const title = window.prompt("Nuevo Bloque de Disponibilidad");
     if (title) {
-      setEvents([
-        ...events,
+      setEvents(prevEvents => [
+        ...prevEvents,
         {
           start,
           end,
