@@ -21,6 +21,7 @@ import ContentAnteproyecto from "../../components/UI/Dashboards/AdminStats/Compo
 import Algorithms from "../../components/Algorithms/Algorithms";
 import { setGroups } from "../../redux/slices/groupsSlice";
 import IncompleteGroups from "../../components/Algorithms/IncompleteGroups";
+import TopicTutor from "../../components/Algorithms/TopicTutor";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -123,7 +124,7 @@ const DashboardView = () => {
         // return <Algorithms user={user} />;
         return <IncompleteGroups/>;
       case "Temas - Tutores - Grupos":
-        return <div>Contenido de Temas - tutores</div>;
+        return <TopicTutor/>;
       case "Intermedia":
         return <div>Contenido de entrega Intermedia</div>;
       case "Final":
