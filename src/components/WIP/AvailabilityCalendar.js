@@ -61,7 +61,7 @@ const AvailabilityContainer = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(5),
 }));
 
-const AvailabilityCalendar = ({ events, handleSelectSlot, handleDelete }) => {
+const AvailabilityCalendar = ({ events, handleSelectSlot, handleSelectEvent }) => {
   return (
     <AvailabilityContainer>
       <Typography variant="h4" align="center" gutterBottom>
@@ -72,7 +72,7 @@ const AvailabilityCalendar = ({ events, handleSelectSlot, handleDelete }) => {
         events={events}
         selectable
         onSelectSlot={handleSelectSlot}
-        onSelectEvent={handleDelete}
+        onSelectEvent={handleSelectEvent}
         views={["week"]}
         defaultView="week"
         step={60}
