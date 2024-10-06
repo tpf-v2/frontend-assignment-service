@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Box, TextField, Button } from "@mui/material";
 import { styled } from "@mui/system";
-import { downloadAnteproyecto, fetchAnteproyectoPdf } from "../../../../../api/downloadAnteproyecto";
+import { downloadAnteproyecto, fetchAnteproyectoPdf } from "../../../../api/downloadAnteproyecto";
 import { useSelector } from "react-redux";
 
 // Estilos

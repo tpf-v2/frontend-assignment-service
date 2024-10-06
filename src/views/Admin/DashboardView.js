@@ -20,6 +20,7 @@ import ContentInscripciones from "../../components/UI/Dashboards/AdminStats/Comp
 import ContentAnteproyecto from "../../components/UI/Dashboards/AdminStats/Components/ContentAnteproyecto";
 import Algorithms from "../../components/Algorithms/Algorithms";
 import { setGroups } from "../../redux/slices/groupsSlice";
+import IncompleteGroups from "../../components/Algorithms/IncompleteGroups";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -30,7 +31,7 @@ const Root = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[3],
 }));
 
-const Dashboard = () => {
+const DashboardView = () => {
   const navigate = useNavigate();
   const { cuatrimestre } = useParams();
   const dispatch = useDispatch();
@@ -119,7 +120,10 @@ const Dashboard = () => {
           />
         );
       case "Grupos":
-        return <Algorithms user={user} />;
+        // return <Algorithms user={user} />;
+        return <IncompleteGroups/>;
+      case "Temas - Tutores - Grupos":
+        return <div>Contenido de Temas - tutores</div>;
       case "Intermedia":
         return <div>Contenido de entrega Intermedia</div>;
       case "Final":
@@ -158,4 +162,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardView;
