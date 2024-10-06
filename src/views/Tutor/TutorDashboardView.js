@@ -24,6 +24,7 @@ import AvailabilityCalendar from "../../components/WIP/AvailabilityCalendar";
 import MySnackbar from "../../components/UI/MySnackBar";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import EventModal from "../../components/EventModal";
+import { sendAvailability } from "../../api/sendAvailability";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -120,6 +121,15 @@ const TutorDashboardView = () => {
     setModalOpen(true);
   };
 
+  const onSubmitEvents = async () => {
+    try {
+      await sendAvailability(user,events);
+      handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
+    } catch (error) {
+      handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
+    }
+  };
+
   const handleConfirmEvent = () => {
     setEvents((prevEvents) => [
       ...prevEvents,
@@ -157,7 +167,8 @@ const TutorDashboardView = () => {
       <AvailabilityCalendar
         events={events}
         handleSelectSlot={handleSelectSlot}
-        handleSelectEvent={handleSelectEvent} // Agregar el manejo para seleccionar eventos
+        handleSelectEvent={handleSelectEvent}
+        onSubmitEvents={onSubmitEvents}
       />
     ),
     "Fechas de presentaciones": (

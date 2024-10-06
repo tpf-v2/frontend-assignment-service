@@ -4,7 +4,7 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { styled } from "@mui/material/styles";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 
 // Localizador de momento
 const localizer = momentLocalizer(moment);
@@ -61,17 +61,24 @@ const AvailabilityContainer = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(5),
 }));
 
+const ButtonContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "flex-end",
+  marginRight: theme.spacing(6)
+}));
+
 const DescriptionBox = styled(Box)(({ theme }) => ({
-  width: '100%', // Hacer que tenga el mismo ancho que el calendario
-  maxWidth: '800px', // Ajustar el ancho máximo si es necesario
-  margin: '0 auto', // Centrar el contenido
-  paddingTop: theme.spacing(3)
+  width: "100%", // Hacer que tenga el mismo ancho que el calendario
+  maxWidth: "800px", // Ajustar el ancho máximo si es necesario
+  margin: "0 auto", // Centrar el contenido
+  paddingTop: theme.spacing(3),
 }));
 
 const AvailabilityCalendar = ({
   events,
   handleSelectSlot,
   handleSelectEvent,
+  onSubmitEvents,
 }) => {
   return (
     <AvailabilityContainer>
@@ -82,10 +89,10 @@ const AvailabilityCalendar = ({
       {/* Descripción del Calendario */}
       <DescriptionBox>
         <Typography variant="body1" align="justify" gutterBottom>
-          En este calendario, podrás seleccionar los bloques de tiempo que 
-          estás disponible para presentar. Haz clic en cualquier espacio 
-          en blanco para agregar un bloque de disponibilidad. 
-          Si necesitas eliminar un bloque existente, simplemente selecciónalo de nuevo.
+          En este calendario, podrás seleccionar los bloques de tiempo que estás
+          disponible para presentar. Haz clic en cualquier espacio en blanco
+          para agregar un bloque de disponibilidad. Si necesitas eliminar un
+          bloque existente, simplemente selecciónalo de nuevo.
         </Typography>
       </DescriptionBox>
 
@@ -123,6 +130,15 @@ const AvailabilityCalendar = ({
           }
         }}
       />
+      <ButtonContainer>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={onSubmitEvents} // Llama a la función para enviar eventos
+        >
+          Enviar
+        </Button>
+      </ButtonContainer>
     </AvailabilityContainer>
   );
 };
