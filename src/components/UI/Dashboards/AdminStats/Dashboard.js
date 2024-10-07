@@ -44,7 +44,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [loadingAnteproyectos, setLoadingAnteproyectos] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("General");
-  const [groups, setGroups] = useState(null);
+  const [groupsData, setGroupsData] = useState(null);
   const [deliveries, setDeliveries] = useState(null);
   const [showUploadCSV, setShowUploadCSV] = useState(false);
   const [uploadType, setUploadType] = useState("");
@@ -60,7 +60,7 @@ const Dashboard = () => {
         const endpoint = `/groups/?period=${cuatrimestre}`;
         const groupsData = await getTableData(endpoint, user);
         dispatch(setGroups(groupsData));
-        setGroups(groupsData);
+        setGroupsData(groupsData);
       } catch (error) {
         console.error("Error al obtener datos del dashboard:", error);
       } finally {
@@ -116,7 +116,7 @@ const Dashboard = () => {
           <ContentAnteproyecto
             loadingAnteproyectos={loadingAnteproyectos}
             deliveries={deliveries}
-            groups={groups}
+            groups={groupsData}
             downloadFile={downloadFile}
           />
         );

@@ -25,9 +25,16 @@ const ContentAnteproyecto = ({
   groups,
   downloadFile,
 }) => {
-  const groupsData =  Object.values(useSelector((state) => state.groups));
-  const tutors = Object.values(useSelector((state) => state.tutors)); // Asume que el slice de Redux tiene los topics
-  const topics = Object.values(useSelector((state) => state.topics)); // Asume que el slice de Redux tiene los topics
+  const groupsData = Object.values(useSelector((state) => state.groups))
+    .sort((a, b) => a.id - b.id)
+    .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
+    .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
+  const tutors = Object.values(useSelector((state) => state.tutors))
+    .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
+    .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
+  const topics = Object.values(useSelector((state) => state.topics))
+    .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
+    .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
   
   const [selectedReviewers, setSelectedReviewers] = useState({});
 
@@ -123,8 +130,8 @@ const ContentAnteproyecto = ({
               deliveries.map((entrega, index) => (
                 <TableRow key={index}>
                   <TableCell>{getGroup(entrega.name)}</TableCell>
-                  <TableCell>{getTutorNameById(groupsData.find((g) => parseInt(getGroup(entrega.name)) === g.id).tutor_period_id)}</TableCell>
-                  <TableCell>{getTopicNameById(groupsData.find((g) => parseInt(getGroup(entrega.name)) === g.id).topic_id)}</TableCell>
+                  <TableCell>{getTutorNameById(groupsData.find((g) => parseInt(getGroup(entrega.name)) === g.id)?.tutor_period_id)}</TableCell>
+                  <TableCell>{groupsData.find((g) => parseInt(getGroup(entrega.name)) === g.id)?.pre_report_title}</TableCell>
 
                   <TableCell>{formatDate(entrega.last_modified)}</TableCell>
                   <TableCell>
