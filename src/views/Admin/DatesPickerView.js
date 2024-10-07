@@ -82,13 +82,38 @@ const DatePickerView = () => {
         return result;
     }
 
+    function getContinuosHours(times, startHour, endHour) {
+        console.log("times: ", times)
+        let hours = []
+        times.forEach((hour, index) => {
+            let slot_hour = startHour + index;
+            if (slot_hour <= endHour) {
+                slot_hour.setHours(slot_hour);
+                console.log("slot_hour: ", slot_hour)
+                hours.push(slot_hour);
+            }
+        });
+
+        return hours;
+    }
+
+    function getAvailableHours(times) {
+        const AmRange = getContinuosHours(times, times[0].getHours(), times[1].getHours());
+        console.log("AmRange: ", AmRange)
+        const PmRange = getContinuosHours(times, times[2].getHours(), times[3].getHours());
+        console.log("PmRange: ", PmRange)
+        
+        return AmRange.concat(PmRange);
+    }
+
     const handleSubmit = () => {
-        console.log("Submit available dates", dateRanges, timeRanges)
-        const formattedDates = formatRanges(dateRanges, "startDate", "endDate")
-        formattedDates.pop()
+        const availableDates = formatRanges(dateRanges, "startDate", "endDate")
+        availableDates.pop()
+        console.log('availableDates:', availableDates);
+
         const formattedTimes = formatRanges(timeRanges, "startTime", "endTime")
-        console.log('formattedDates:', formattedDates);
-        console.log('formattedTimes:', formattedTimes);
+        const availableHours = getAvailableHours(formattedTimes)
+        console.log('availableHours:', availableHours);
     };
 
     return (
