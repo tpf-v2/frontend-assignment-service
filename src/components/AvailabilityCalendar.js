@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -26,6 +26,7 @@ const AvailabilityCalendar = () => {
   const [eventToDelete, setEventToDelete] = useState(null);
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const { cuatrimestre } = useParams();
 
   const handleSnackbarOpen = (message, status = "info") => {
     setSnackbarMessage(message);
@@ -98,7 +99,7 @@ const AvailabilityCalendar = () => {
       await sendAvailability(user, events);
       handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
       setTimeout(() => {
-        navigate("/home"); 
+        navigate(`/dashboard/${cuatrimestre}`); 
       }, 1500); 
     } catch (error) {
       handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
