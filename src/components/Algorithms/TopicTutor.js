@@ -39,7 +39,7 @@ const TopicTutor = () => {
   const [maxDifference, setMaxDifference] = useState("");
   const [assignments, setAssignments] = useState([]);
   const [showResults, setShowResults] = useState(false);
-  const [running, setRunning] = useState(false); 
+  const [running, setRunning] = useState(false);
 
   const getGroupById = (id) => {
     const group = groups.find((g) => g.id === id);
@@ -77,6 +77,12 @@ const TopicTutor = () => {
     } finally {
       setRunning(false);
     }
+  };
+
+  const handleRerunAlgorithm = () => {
+    setShowResults(false); // Cierra el diálogo de resultados
+    setMaxDifference(""); // Reinicia el valor del límite máximo
+    handleRun(); // Abre el diálogo para seleccionar el límite máximo
   };
 
   return (
@@ -157,10 +163,23 @@ const TopicTutor = () => {
       </Dialog>
 
       {/* Popup de Carga */}
-      <Dialog open={running} onClose={() => setRunning(false)} fullWidth maxWidth="lg"> 
-        <DialogContent sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <Dialog
+        open={running}
+        onClose={() => setRunning(false)}
+        fullWidth
+        maxWidth="lg"
+      >
+        <DialogContent
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
           <CircularProgress />
-          <Typography sx={{ marginTop: 2 }}>Asignando tema y tutor a cada grupo...</Typography>
+          <Typography sx={{ marginTop: 2 }}>
+            Asignando tema y tutor a cada grupo...
+          </Typography>
         </DialogContent>
       </Dialog>
 
@@ -222,13 +241,19 @@ const TopicTutor = () => {
                           : "No asignado"}
                       </TableCell>
                       <TableCell align="center">
-                        {getTopicNameById(getGroupById(assignment.id).preferred_topics[0])}
+                        {getTopicNameById(
+                          getGroupById(assignment.id).preferred_topics[0]
+                        )}
                       </TableCell>
                       <TableCell align="center">
-                        {getTopicNameById(getGroupById(assignment.id).preferred_topics[1])}
+                        {getTopicNameById(
+                          getGroupById(assignment.id).preferred_topics[1]
+                        )}
                       </TableCell>
                       <TableCell align="center">
-                        {getTopicNameById(getGroupById(assignment.id).preferred_topics[2])}
+                        {getTopicNameById(
+                          getGroupById(assignment.id).preferred_topics[2]
+                        )}
                       </TableCell>
                     </TableRow>
                   ))
@@ -248,7 +273,7 @@ const TopicTutor = () => {
           <Button variant="outlined" color="primary">
             Editar resultado
           </Button>
-          <Button variant="outlined" color="secondary">
+          <Button variant="outlined" color="secondary" onClick={handleRerunAlgorithm}>
             Volver a correr algoritmo
           </Button>
           <Button variant="contained" color="success">
