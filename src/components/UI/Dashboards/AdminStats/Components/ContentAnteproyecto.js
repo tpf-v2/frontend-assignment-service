@@ -123,8 +123,8 @@ const ContentAnteproyecto = ({
               deliveries.map((entrega, index) => (
                 <TableRow key={index}>
                   <TableCell>{getGroup(entrega.name)}</TableCell>
-                  <TableCell>{getTutorNameById(groupsData.find((g) => parseInt(getGroup(entrega.name)) === g.id).tutor_period_id)}</TableCell>
-                  <TableCell>{getTopicNameById(groupsData.find((g) => parseInt(getGroup(entrega.name)) === g.id).topic_id)}</TableCell>
+                  <TableCell>{getTutorNameById(groupsData.find((g) => parseInt(getGroup(entrega.name)) === g.id)?.tutor_period_id)}</TableCell>
+                  <TableCell>{getTopicNameById(groupsData.find((g) => parseInt(getGroup(entrega.name)) === g.id)?.topic_id)}</TableCell>
 
                   <TableCell>{formatDate(entrega.last_modified)}</TableCell>
                   <TableCell>

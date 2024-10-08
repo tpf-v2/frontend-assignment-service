@@ -100,7 +100,7 @@ const IncompleteGroups = () => {
   };
 
   return (
-    <Box sx={{ padding: 4 }}>
+    <Box sx={{ padding: 3 }}>
       <Grid container spacing={2}>
         {/* Descripción */}
         <Grid item xs={12} md={12} sx={{ display: "flex" }}>
@@ -110,7 +110,7 @@ const IncompleteGroups = () => {
           </Typography>
         </Grid>
         <Grid item xs={12} md={12} sx={{ display: "flex" }}>
-          <Typography variant="body1">
+          <Typography variant="body1" sx={{ textAlign: "justify" }}>
             Este algoritmo utiliza programación lineal para formar grupos de
             estudiantes incompletos (con menos de 4 miembros) a partir de grupos
             existentes. El objetivo es combinar grupos incompletos para formar
@@ -140,7 +140,6 @@ const IncompleteGroups = () => {
               padding: "6px 26px", // Tamaño más grande del botón
               boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)", // Sombra para darle protagonismo
               transition: "all 0.3s ease", // Suavizar la transición al hover
-              marginRight: "16px",
             }}
           >
             Correr

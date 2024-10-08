@@ -139,7 +139,7 @@ const DashboardView = () => {
   return (
     <Container maxWidth={false} 
     sx={{ 
-      width: "90%", // Ajusta el ancho al 90% del viewport
+      width: "100%", // Ajusta el ancho al 90% del viewport
       height: "100vh", // Ocupa el 100% de la altura de la pantalla
       maxWidth: "none", // Para que el maxWidth no limite el tamaño
     }}>
