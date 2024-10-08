@@ -19,7 +19,7 @@ import ContentInicio from "../../components/UI/Dashboards/AdminStats/Components/
 import ContentInscripciones from "../../components/UI/Dashboards/AdminStats/Components/ContentInscripciones";
 import ContentAnteproyecto from "../../components/UI/Dashboards/AdminStats/Components/ContentAnteproyecto";
 import Algorithms from "../../components/Algorithms/Algorithms";
-import DatePickerView from "./DatesPickerView";
+import AvailabilityCalendar from "../../components/AvailabilityCalendar";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -124,7 +124,7 @@ const Dashboard = () => {
       case "Final":
         return <div>Contenido de entrega Final</div>;
       case "Fechas de presentación":
-        return <DatePickerView />;
+        return <AvailabilityCalendar />;
       default:
         return null;
     }
