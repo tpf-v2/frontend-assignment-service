@@ -15,7 +15,8 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  IconButton, // Importa IconButton
+  IconButton,
+  CircularProgress, // Importa IconButton
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close"; // Importa el ícono Close
 import { Box } from "@mui/system";
@@ -34,11 +35,11 @@ const TopicTutor = () => {
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
 
-  const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [maxDifference, setMaxDifference] = useState("");
   const [assignments, setAssignments] = useState([]);
   const [showResults, setShowResults] = useState(false);
+  const [running, setRunning] = useState(false); 
 
   const getGroupById = (id) => {
     const group = groups.find((g) => g.id === id);
@@ -64,7 +65,7 @@ const TopicTutor = () => {
 
   const handleRunAlgorithm = async () => {
     try {
-      setLoading(true);
+      setRunning(true);
       setOpenDialog(false);
       setShowResults(false);
       const response = await groupsTopicTutor(user, period, maxDifference);
@@ -74,7 +75,7 @@ const TopicTutor = () => {
     } catch (error) {
       console.error("Error running algorithm:", error);
     } finally {
-      setLoading(false);
+      setRunning(false);
     }
   };
 
@@ -153,6 +154,14 @@ const TopicTutor = () => {
             Correr
           </Button>
         </DialogActions>
+      </Dialog>
+
+      {/* Popup de Carga */}
+      <Dialog open={running} onClose={() => setRunning(false)} fullWidth maxWidth="lg"> 
+        <DialogContent sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <CircularProgress />
+          <Typography sx={{ marginTop: 2 }}>Asignando tema y tutor a cada grupo...</Typography>
+        </DialogContent>
       </Dialog>
 
       <Dialog
