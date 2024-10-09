@@ -24,8 +24,12 @@ import {
 import CloseIcon from "@mui/icons-material/Close"; // Importa el ícono Close
 import { Box } from "@mui/system";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { groupsTopicTutor } from "../../api/assignments";
+import { confirmGroups } from "../../api/updateGroups";
+import { setGroups } from "../../redux/slices/groupsSlice";
+import { togglePeriodSetting } from "../../redux/slices/periodSlice";
+import updatePeriod from "../../api/updatePeriod";
 
 const TopicTutor = () => {
   const period = useSelector((state) => state.period);
@@ -40,14 +44,17 @@ const TopicTutor = () => {
   const tutors = Object.values(useSelector((state) => state.tutors))
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
-  console.log(tutors);
-  const [openDialog, setOpenDialog] = useState(false);
+
+    const [openDialog, setOpenDialog] = useState(false);
   const [maxDifference, setMaxDifference] = useState("");
   const [assignments, setAssignments] = useState([]);
   const [showResults, setShowResults] = useState(false);
   const [running, setRunning] = useState(false);
   const [isEditing, setIsEditing] = useState(null); // Almacena el id del grupo que está siendo editado
   const [originalAssignments, setOriginalAssignments] = useState([]); // Copia de assignments para restaurar si se cancela
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false); // Dialogo para confirmar resultados
+
+  const dispatch = useDispatch();
 
   const getGroupById = (id) => {
     const group = groups.find((g) => g.id === id);
@@ -153,6 +160,44 @@ const TopicTutor = () => {
     handleRun(); // Abre el diálogo para seleccionar el límite máximo
   };
 
+    // Manejo del popup de confirmación
+    const handleConfirmResults = () => {
+      setOpenConfirmDialog(true); // Abrir el popup de confirmación
+    };
+  
+    const handleCloseConfirmDialog = () => {
+      setOpenConfirmDialog(false); // Cerrar el popup de confirmación
+    };
+
+    const handleAcceptResults = async () => {
+      // Aquí es donde se llama al backend para confirmar los resultados
+      console.log("Confirmando resultados...");
+      console.log(assignments)
+      console.log(groups)
+      const response = await confirmGroups(user, period, assignments, groups);
+      console.log(response)
+      dispatch(setGroups(response));
+
+      // Alterna la configuración de 'groups_assignment_completed' si es necesario
+      dispatch(togglePeriodSetting({ field: "topics_tutors_assignment_completed" }));
+
+      // Crea el objeto de configuración actualizado
+      const updatedSettings = {
+        id: period.id,
+        ...period,
+        topics_tutors_assignment_completed: true, // Actualización directa
+      };
+
+      // Llama a la función de actualización del período
+      const result = await updatePeriod(updatedSettings, user);
+      console.log("Updated successfully:", result);
+
+
+      setOpenConfirmDialog(false); // Cierra el popup
+      setShowResults(false);
+      // Lógica adicional para confirmar los resultados
+    };
+
   return (
     <Box sx={{ padding: 4 }}>
       <Grid container spacing={2}>
@@ -206,6 +251,26 @@ const TopicTutor = () => {
           </Button>
         </Grid>
       </Grid>
+
+
+      {/* Popup de Confirmación */}
+      <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>
+        <DialogTitle>Confirmar Resultados</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            Importante: Al confirmar los resultados no podrá volver a correr el
+            algoritmo.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmDialog} color="secondary">
+            Cancelar
+          </Button>
+          <Button onClick={handleAcceptResults} color="primary">
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Seleccione el límite máximo</DialogTitle>
@@ -446,7 +511,7 @@ const TopicTutor = () => {
             </Button>
           )}
           {!isEditing && (
-            <Button variant="contained" color="success">
+            <Button variant="contained" color="success"  onClick={handleConfirmResults}>
               Confirmar resultados
             </Button>
           )}
