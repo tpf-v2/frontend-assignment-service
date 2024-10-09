@@ -30,6 +30,7 @@ import { confirmGroups } from "../../api/updateGroups";
 import { setGroups } from "../../redux/slices/groupsSlice";
 import { togglePeriodSetting } from "../../redux/slices/periodSlice";
 import updatePeriod from "../../api/updatePeriod";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const TopicTutor = () => {
   const period = useSelector((state) => state.period);
@@ -45,7 +46,7 @@ const TopicTutor = () => {
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
 
-    const [openDialog, setOpenDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [maxDifference, setMaxDifference] = useState("");
   const [assignments, setAssignments] = useState([]);
   const [showResults, setShowResults] = useState(false);
@@ -55,6 +56,7 @@ const TopicTutor = () => {
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false); // Dialogo para confirmar resultados
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const getGroupById = (id) => {
     const group = groups.find((g) => g.id === id);
@@ -70,6 +72,14 @@ const TopicTutor = () => {
     const tutor = tutors.find((t) => t.id === tutorId);
     return tutor ? tutor.tutor_periods[0]?.topics.map((t) => t.name) : [];
   };
+
+    // Función para obtener el nombre del tutor por su id
+    const getTutorNameById = (id) => {
+      const tutor = tutors.find(
+        (t) => t.tutor_periods && t.tutor_periods[0].id === id
+      );
+      return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el topic, mostrar 'Sin asignar'
+    };
 
   const handleRun = () => {
     setOpenDialog(true);
@@ -160,46 +170,40 @@ const TopicTutor = () => {
     handleRun(); // Abre el diálogo para seleccionar el límite máximo
   };
 
-    // Manejo del popup de confirmación
-    const handleConfirmResults = () => {
-      setOpenConfirmDialog(true); // Abrir el popup de confirmación
+  // Manejo del popup de confirmación
+  const handleConfirmResults = () => {
+    setOpenConfirmDialog(true); // Abrir el popup de confirmación
+  };
+
+  const handleCloseConfirmDialog = () => {
+    setOpenConfirmDialog(false); // Cerrar el popup de confirmación
+  };
+
+  const handleAcceptResults = async () => {
+    const response = await confirmGroups(user, period, assignments, groups);
+    dispatch(setGroups(response));
+    dispatch(
+      togglePeriodSetting({ field: "topics_tutors_assignment_completed" })
+    );
+
+    // Crea el objeto de configuración actualizado
+    const updatedSettings = {
+      id: period.id,
+      ...period,
+      topics_tutors_assignment_completed: true, // Actualización directa
     };
-  
-    const handleCloseConfirmDialog = () => {
-      setOpenConfirmDialog(false); // Cerrar el popup de confirmación
-    };
 
-    const handleAcceptResults = async () => {
-      // Aquí es donde se llama al backend para confirmar los resultados
-      console.log("Confirmando resultados...");
-      console.log(assignments)
-      console.log(groups)
-      const response = await confirmGroups(user, period, assignments, groups);
-      console.log(response)
-      dispatch(setGroups(response));
+    // Llama a la función de actualización del período
+    const result = await updatePeriod(updatedSettings, user);
+    console.log("Updated successfully:", result);
 
-      // Alterna la configuración de 'groups_assignment_completed' si es necesario
-      dispatch(togglePeriodSetting({ field: "topics_tutors_assignment_completed" }));
-
-      // Crea el objeto de configuración actualizado
-      const updatedSettings = {
-        id: period.id,
-        ...period,
-        topics_tutors_assignment_completed: true, // Actualización directa
-      };
-
-      // Llama a la función de actualización del período
-      const result = await updatePeriod(updatedSettings, user);
-      console.log("Updated successfully:", result);
-
-
-      setOpenConfirmDialog(false); // Cierra el popup
-      setShowResults(false);
-      // Lógica adicional para confirmar los resultados
-    };
+    setOpenConfirmDialog(false); // Cierra el popup
+    setShowResults(false);
+    // Lógica adicional para confirmar los resultados
+  };
 
   return (
-    <Box sx={{ padding: 4 }}>
+    <Box sx={{ padding: 2 }}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={12} sx={{ display: "flex" }}>
           <Typography variant="h5" sx={{ fontWeight: "bold" }}>
@@ -250,8 +254,122 @@ const TopicTutor = () => {
             Correr
           </Button>
         </Grid>
-      </Grid>
 
+        {period.topics_tutors_assignment_completed && (
+          <>
+          <Grid item xs={12}>
+        <Divider sx={{ my: 2 }} />
+      </Grid>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+              Resultados
+            </Typography>
+
+            <Button
+              variant="outlined"
+              onClick={() => navigate(`/dashboard/${period.id}/groups`)}
+              sx={{
+                padding: "6px 16px",
+                textTransform: "none", // Evitar que el texto esté en mayúsculas
+              }}
+            >
+              Ver más información de los grupos
+            </Button>
+          </Grid>
+          <Grid
+        item
+        xs={12}
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+        }}
+      >
+        <TableContainer
+          component={Paper}
+          style={{ maxHeight: "300px", flexGrow: 1 }}
+        >
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontWeight: "bold" }}>Grupo</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>
+                Tutor Asignado
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>
+                Tema Asignado
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Preferencia 1</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Preferencia 2</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Preferencia 3</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+                {groups?.length > 0 ? (
+                  groups.filter(
+                    (group) =>
+                      group.preferred_topics &&
+                      group.preferred_topics.length > 0
+                  ).map((group) => (
+                    <TableRow key={group.id}>
+                      <TableCell align="center">{group.id}</TableCell>
+
+                      <TableCell>
+                        {group.tutor_period_id ? (
+                          `${getTutorNameById(group.tutor_period_id)}`
+                        ) : (
+                          "Sin asignar"
+                        )}
+                      </TableCell>
+
+                      <TableCell>
+                        {group.topic ? (
+                          group.topic.name
+                        ) : (
+                          "Sin asignar"
+                        )}
+                      </TableCell>
+
+                      {/* Preferencias no editables */}
+                      <TableCell align="center">
+                        {getTopicNameById(
+                          getGroupById(group.id).preferred_topics[0]
+                        )}
+                      </TableCell>
+                      <TableCell align="center">
+                        {getTopicNameById(
+                          getGroupById(group.id).preferred_topics[1]
+                        )}
+                      </TableCell>
+                      <TableCell align="center">
+                        {getTopicNameById(
+                          getGroupById(group.id).preferred_topics[2]
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center">
+                      No hay resultados disponibles
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+</>
+        )}
+      </Grid>
 
       {/* Popup de Confirmación */}
       <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>
@@ -511,7 +629,11 @@ const TopicTutor = () => {
             </Button>
           )}
           {!isEditing && (
-            <Button variant="contained" color="success"  onClick={handleConfirmResults}>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleConfirmResults}
+            >
               Confirmar resultados
             </Button>
           )}
