@@ -96,7 +96,7 @@ const AvailabilityCalendar = () => {
 
   const onSubmitEvents = async () => {
     try {
-      await sendAvailability(user, events);
+      await sendAvailability(user, events, cuatrimestre);
       handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
       setTimeout(() => {
         navigate(`/dashboard/${cuatrimestre}`); 
