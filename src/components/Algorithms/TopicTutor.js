@@ -77,22 +77,35 @@ const TopicTutor = () => {
   };
 
   // Función para manejar el comienzo de la edición
-const handleStartEditing = () => {
-  setOriginalAssignments([...assignments]); // Guarda una copia de assignments antes de empezar a editar
-  setIsEditing(true);
-};
+  const handleStartEditing = () => {
+    setOriginalAssignments([...assignments]); // Guarda una copia de assignments antes de empezar a editar
+    setIsEditing(true);
+  };
 
-// Función para cancelar la edición y restaurar la copia original
-const handleCancelEditing = () => {
-  setAssignments(originalAssignments); // Restaura la copia original
-  setIsEditing(false); // Sale del modo de edición
-};
+  // Función para cancelar la edición y restaurar la copia original
+  const handleCancelEditing = () => {
+    setAssignments(originalAssignments); // Restaura la copia original
+    setIsEditing(false); // Sale del modo de edición
+  };
 
-// Función para manejar la acción de guardar cambios
-const handleSaveChanges = () => {
-  setIsEditing(false); // Sale del modo de edición
-  setOriginalAssignments([]); // Limpia la copia original ya que se guardaron los cambios
-};
+  const handleSaveChanges = () => {
+    const unassignedTopics = assignments.some(
+      (assignment) => !assignment.topic
+    );
+    if (unassignedTopics) {
+      alert(
+        "No puedes guardar los cambios. Asegúrate de que todos los grupos tengan un tema asignado."
+      );
+      return;
+    }
+
+    setIsEditing(false); // Sale del modo de edición
+    setOriginalAssignments([]); // Limpia la copia original ya que se guardaron los cambios
+  };
+
+  const canSaveChanges = () => {
+    return !assignments.some((assignment) => !assignment.topic);
+  };
 
   const handleChangeTutor = (groupId, tutorId) => {
     setAssignments((prevAssignments) =>
@@ -398,8 +411,8 @@ const handleSaveChanges = () => {
             <Button
               variant="outlined"
               color="primary"
-              onClick={handleStartEditing} // Comienza el modo de edición            
-              >
+              onClick={handleStartEditing} // Comienza el modo de edición
+            >
               Editar resultado
             </Button>
           )}
@@ -408,16 +421,17 @@ const handleSaveChanges = () => {
               variant="outlined"
               color="primary"
               onClick={handleCancelEditing} // Cancela la edición y restaura la copia original
-              >
+            >
               Cancelar
             </Button>
           )}
           {isEditing && (
             <Button
-              variant="contained"
+              onClick={handleSaveChanges}
               color="primary"
-              onClick={handleSaveChanges} // Guarda los cambios en assignments
-              >
+              variant="contained"
+              disabled={!canSaveChanges()} // Desactiva el botón si no se pueden guardar los cambios
+            >
               Guardar cambios
             </Button>
           )}
