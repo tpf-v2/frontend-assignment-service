@@ -16,7 +16,10 @@ import {
   DialogTitle,
   TextField,
   IconButton,
-  CircularProgress, // Importa IconButton
+  CircularProgress,
+  Select,
+  MenuItem,
+  FormControl, // Importa IconButton
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close"; // Importa el ícono Close
 import { Box } from "@mui/system";
@@ -34,12 +37,17 @@ const TopicTutor = () => {
   const topics = Object.values(useSelector((state) => state.topics))
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
-
+  const tutors = Object.values(useSelector((state) => state.tutors))
+    .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
+    .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
+  console.log(tutors);
   const [openDialog, setOpenDialog] = useState(false);
   const [maxDifference, setMaxDifference] = useState("");
   const [assignments, setAssignments] = useState([]);
   const [showResults, setShowResults] = useState(false);
   const [running, setRunning] = useState(false);
+  const [isEditing, setIsEditing] = useState(null); // Almacena el id del grupo que está siendo editado
+  const [originalAssignments, setOriginalAssignments] = useState([]); // Copia de assignments para restaurar si se cancela
 
   const getGroupById = (id) => {
     const group = groups.find((g) => g.id === id);
@@ -49,6 +57,11 @@ const TopicTutor = () => {
   const getTopicNameById = (id) => {
     const topic = topics.find((t) => t.id === id);
     return topic ? topic.name : ""; // Si no encuentra el topic, mostrar 'Desconocido'
+  };
+
+  const getTopicsForTutor = (tutorId) => {
+    const tutor = tutors.find((t) => t.id === tutorId);
+    return tutor ? tutor.tutor_periods[0]?.topics.map((t) => t.name) : [];
   };
 
   const handleRun = () => {
@@ -61,6 +74,48 @@ const TopicTutor = () => {
 
   const handleCloseResults = () => {
     setShowResults(false);
+  };
+
+  // Función para manejar el comienzo de la edición
+const handleStartEditing = () => {
+  setOriginalAssignments([...assignments]); // Guarda una copia de assignments antes de empezar a editar
+  setIsEditing(true);
+};
+
+// Función para cancelar la edición y restaurar la copia original
+const handleCancelEditing = () => {
+  setAssignments(originalAssignments); // Restaura la copia original
+  setIsEditing(false); // Sale del modo de edición
+};
+
+// Función para manejar la acción de guardar cambios
+const handleSaveChanges = () => {
+  setIsEditing(false); // Sale del modo de edición
+  setOriginalAssignments([]); // Limpia la copia original ya que se guardaron los cambios
+};
+
+  const handleChangeTutor = (groupId, tutorId) => {
+    setAssignments((prevAssignments) =>
+      prevAssignments.map((assignment) =>
+        assignment.id === groupId
+          ? {
+              ...assignment,
+              tutor: tutors.find((t) => t.id === tutorId),
+              topic: null, // Resetea el tema al cambiar el tutor
+            }
+          : assignment
+      )
+    );
+  };
+
+  const handleChangeTopic = (groupId, topicName) => {
+    setAssignments((prevAssignments) =>
+      prevAssignments.map((assignment) =>
+        assignment.id === groupId
+          ? { ...assignment, topic: topics.find((t) => t.name === topicName) }
+          : assignment
+      )
+    );
   };
 
   const handleRunAlgorithm = async () => {
@@ -230,16 +285,85 @@ const TopicTutor = () => {
                   assignments.map((assignment) => (
                     <TableRow key={assignment.id}>
                       <TableCell align="center">{assignment.id}</TableCell>
-                      <TableCell align="center">
-                        {assignment.tutor
-                          ? `${assignment.tutor.name} ${assignment.tutor.last_name}`
-                          : "Sin asignar"}
+
+                      <TableCell>
+                        {isEditing ? (
+                          <FormControl sx={{ m: 1, minWidth: 120 }}>
+                            <Select
+                              sx={{
+                                fontSize: 14,
+                                whiteSpace: "normal",
+                                overflowWrap: "break-word",
+                                maxWidth: "100%",
+                              }}
+                              value={assignment.tutor?.id || ""}
+                              onChange={(e) => {
+                                const newTutorId = e.target.value;
+                                handleChangeTutor(assignment.id, newTutorId);
+                              }}
+                            >
+                              {tutors.map((tutor) => (
+                                <MenuItem
+                                  key={tutor.id}
+                                  value={tutor.id}
+                                  sx={{ padding: "4px 8px" }}
+                                >
+                                  {`${tutor.name} ${tutor.last_name}`}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        ) : assignment.tutor ? (
+                          `${assignment.tutor.name} ${assignment.tutor.last_name}`
+                        ) : (
+                          "Sin asignar"
+                        )}
                       </TableCell>
-                      <TableCell align="center">
-                        {assignment.topic
-                          ? assignment.topic.name
-                          : "No asignado"}
+
+                      <TableCell>
+                        {isEditing ? (
+                          <FormControl
+                            sx={{ m: 1, minWidth: 120, maxWidth: 300 }}
+                          >
+                            <Select
+                              sx={{
+                                fontSize: 14,
+                                whiteSpace: "normal",
+                                overflowWrap: "break-word",
+                                maxWidth: "100%",
+                              }}
+                              value={assignment.topic?.name || ""}
+                              onChange={(e) =>
+                                handleChangeTopic(assignment.id, e.target.value)
+                              }
+                              displayEmpty
+                              renderValue={(selected) => {
+                                // Si no hay un tema seleccionado, muestra "Seleccionar tema"
+                                return selected ? selected : "Seleccionar tema";
+                              }}
+                            >
+                              {/* Filtrar los topics basados en el tutor seleccionado */}
+                              {getTopicsForTutor(assignment.tutor?.id).map(
+                                (topicName, index) => (
+                                  <MenuItem
+                                    key={index}
+                                    value={topicName}
+                                    sx={{ padding: "4px 8px" }}
+                                  >
+                                    {topicName}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
+                        ) : assignment.topic ? (
+                          assignment.topic.name
+                        ) : (
+                          "Sin asignar"
+                        )}
                       </TableCell>
+
+                      {/* Preferencias no editables */}
                       <TableCell align="center">
                         {getTopicNameById(
                           getGroupById(assignment.id).preferred_topics[0]
@@ -270,15 +394,48 @@ const TopicTutor = () => {
         </DialogContent>
 
         <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
-          <Button variant="outlined" color="primary">
-            Editar resultado
-          </Button>
-          <Button variant="outlined" color="secondary" onClick={handleRerunAlgorithm}>
-            Volver a correr algoritmo
-          </Button>
-          <Button variant="contained" color="success">
-            Confirmar resultados
-          </Button>
+          {!isEditing && (
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleStartEditing} // Comienza el modo de edición            
+              >
+              Editar resultado
+            </Button>
+          )}
+          {isEditing && (
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleCancelEditing} // Cancela la edición y restaura la copia original
+              >
+              Cancelar
+            </Button>
+          )}
+          {isEditing && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSaveChanges} // Guarda los cambios en assignments
+              >
+              Guardar cambios
+            </Button>
+          )}
+
+          {!isEditing && (
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleRerunAlgorithm}
+            >
+              Volver a correr algoritmo
+            </Button>
+          )}
+          {!isEditing && (
+            <Button variant="contained" color="success">
+              Confirmar resultados
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </Box>
