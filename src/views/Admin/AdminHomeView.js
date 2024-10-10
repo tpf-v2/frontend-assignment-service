@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCuatrimestres, addCuatrimestre } from '../../../../api/handlePeriods'
-import MySnackbar from '../../MySnackBar';
-import { setPeriod } from '../../../../redux/slices/periodSlice';
+import { fetchCuatrimestres, addCuatrimestre } from '../../api/handlePeriods'
+import MySnackbar from '../../components/UI/MySnackBar';
+import { setPeriod } from '../../redux/slices/periodSlice';
 
 const Root = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -70,7 +70,7 @@ const Title = styled(Typography)(({ theme }) => ({
 const years = ['2024', '2025', '2026', '2027'];
 const terms = ['1', '2'];
 
-const AdminDashboard = () => {
+const AdminHomeView = () => {
   const user = useSelector((state) => state.user);
   const [cuatrimestres, setCuatrimestres] = useState([]);
   const [open, setOpen] = useState(false);
@@ -207,4 +207,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default AdminHomeView;

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Container, TextField, Button, Typography, Box, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
-import BackgroundContainer from './UI/BackgroundContainer.js';
+import BackgroundContainer from '../components/UI/BackgroundContainer.js';
 import { authenticateUser } from '../api/auth.js'; // Importa las funciones desde auth.js
 import { useDispatch, useSelector } from "react-redux";
-import MySnackbar from './UI/MySnackBar.js';
+import MySnackbar from '../components/UI/MySnackBar.js';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -22,7 +22,7 @@ const Title = styled(Typography)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-const Home = () => {
+const LoginView = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setloading] = useState(false)
@@ -35,21 +35,6 @@ const Home = () => {
     status: "",
   });
 
-  const user = useSelector((state) => state.user);
-
-  useEffect(() => {
-    if (user.token) {
-      if (user.role === "admin") {
-        navigate("/admin");
-      } else if(user.role === "student") {
-        navigate("/learning-path");
-      }
-      else {
-        navigate("/form-selection");
-      }
-    }
-  }, []);
-
   const handleSnackbarClose = () => {
     setNotification({ ...notification, open: false });
   };
@@ -60,18 +45,10 @@ const Home = () => {
 
     if (email && password) {
       try {
-        const data = await dispatch(authenticateUser(email, password));
-        if(data.role === 'admin'){
-          navigate('/admin')
-        }
-        else if(data.role === "student") {
-          navigate("/learning-path");
-        }
-        else{
-          navigate('/tutor-cuatrimestre');
-        }
+        await dispatch(authenticateUser(email, password));
+        navigate('/home')
       } catch (error) {
-        console.error("Error al intentar loguear el usuario", error);
+        console.error("Error when logging in", error);
         setNotification({
           open: true,
           message: "Nombre de usuario o contraseña incorrectos",
@@ -128,4 +105,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default LoginView;

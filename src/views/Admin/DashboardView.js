@@ -2,27 +2,23 @@ import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setTopics } from "../../../../redux/slices/topicsSlice";
-import { setTutors } from "../../../../redux/slices/tutorsSlice";
-import { getTableData } from "../../../../api/handleTableData";
-import { setGroups } from "../../../../redux/slices/groupsSlice";
-import { getAnteproyectos } from "../../../../api/getAnteproyectos";
-import { downloadAnteproyecto } from "../../../../api/downloadAnteproyecto";
-import { getDashboardData } from "../../../../api/dashboardStats";
+import { setTopics } from "../../redux/slices/topicsSlice";
+import { setTutors } from "../../redux/slices/tutorsSlice";
+import { getTableData } from "../../api/handleTableData";
+import { getAnteproyectos } from "../../api/getAnteproyectos";
+import { downloadAnteproyecto } from "../../api/downloadAnteproyecto";
+import { getDashboardData } from "../../api/dashboardStats";
 import {
   Container,
   Box,
   Grid,
-  Paper,
-  CircularProgress,
-  Divider,
+  Paper
 } from "@mui/material";
-import Sidebar from "./Components/Sidebar";
-import ContentGeneral from "./Components/ContentGeneral";
-import ContentInscripciones from "./Components/ContentInscripciones";
-import ContentAnteproyecto from "./Components/ContentAnteproyecto";
-import CuatrimestreConfig from "../../CuatrimestreConfig";
-import Algorithms from "../../../Algorithms/Algorithms";
+import Sidebar from "../../components/Sidebar";
+import ContentInicio from "../../components/UI/Dashboards/AdminStats/Components/ContentInicio";
+import ContentInscripciones from "../../components/UI/Dashboards/AdminStats/Components/ContentInscripciones";
+import ContentAnteproyecto from "../../components/UI/Dashboards/AdminStats/Components/ContentAnteproyecto";
+import Algorithms from "../../components/Algorithms/Algorithms";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -33,7 +29,7 @@ const Root = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[3],
 }));
 
-const Dashboard = () => {
+const DashboardView = () => {
   const navigate = useNavigate();
   const { cuatrimestre } = useParams();
   const dispatch = useDispatch();
@@ -59,7 +55,7 @@ const Dashboard = () => {
 
         const endpoint = `/groups/?period=${cuatrimestre}`;
         const groupsData = await getTableData(endpoint, user);
-        dispatch(setGroups(groupsData));
+        dispatch(setGroupsData(groupsData));
         setGroupsData(groupsData);
       } catch (error) {
         console.error("Error al obtener datos del dashboard:", error);
@@ -95,9 +91,9 @@ const Dashboard = () => {
 
   const renderContent = () => {
     switch (selectedMenu) {
-      case "General":
+      case "Inicio":
         return (
-          <ContentGeneral navigate={navigate} cuatrimestre={cuatrimestre} />
+          <ContentInicio navigate={navigate} cuatrimestre={cuatrimestre} />
         );
       case "Inscripciones":
         return (
@@ -120,7 +116,7 @@ const Dashboard = () => {
             downloadFile={downloadFile}
           />
         );
-      case "Algoritmos":
+      case "Grupos":
         return <Algorithms user={user} />;
       case "Intermedia":
         return <div>Contenido de entrega Intermedia</div>;
@@ -155,4 +151,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardView;

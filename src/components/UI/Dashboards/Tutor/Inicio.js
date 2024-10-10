@@ -1,15 +1,13 @@
 import React from "react";
 import { Box, Typography, Container } from "@mui/material";
-import { useSelector } from "react-redux";
 
-const General = () => {
-  const user = useSelector((state) => state.user);
+const Inicio = () => {
 
   return (
     <Container maxWidth="lg" sx={{ display: "flex", mt: 5 }}>
       <Box sx={{ flex: 2 }}>
         <Typography variant="h4" align="center" gutterBottom>
-          Información General
+          Información Inicio
         </Typography>
 
         <Box mt={4}>
@@ -31,7 +29,7 @@ const General = () => {
 
           <ul>
             <li>
-              <strong>General:</strong> Esta opción te lleva de regreso a esta
+              <strong>Inicio:</strong> Esta opción te lleva de regreso a esta
               página, donde puedes ver información general y orientaciones sobre
               el uso del dashboard.
             </li>
@@ -65,4 +63,4 @@ const General = () => {
   );
 };
 
-export default General;
+export default Inicio;

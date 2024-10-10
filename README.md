@@ -6,14 +6,14 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 Don't forget to run `yarn add env-cmd` beforehand in case you don't have env-cmd installed.
 In the project directory, you can run:
 
-### `npm start:dev`
+### `npm run start:dev`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will use the host [http://127.0.0.1:5000](http://127.0.0.1:5000) as the backend service.
 
-### `npm start:prod`
+### `npm run start:prod`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.

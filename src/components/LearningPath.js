@@ -7,28 +7,16 @@ import {
   Grid,
   Card,
   CardContent,
-  Avatar,
   Button,
   CircularProgress,
 } from "@mui/material";
-import Phase from "../../Student/Phase";
-import MySnackbar from "../../../MySnackBar";
 import { styled } from "@mui/system";
 import { useDispatch, useSelector } from "react-redux";
-import { getGroupById } from "../../../../../api/getGroupById";
-import AnteproyectoComponent from "./AnteproyectoComponente";
 
-// Estilos
-const ContainerStyled = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(3),
-  border: "1px solid #ccc",
-  borderRadius: "8px",
-  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-  backgroundColor: "#ffffff",
-  marginTop: theme.spacing(5),
-  width: "100%",
-  height: "100%",
-}));
+import Phase from "./UI/Dashboards/Student/Phase";
+import MySnackbar from "./UI/MySnackBar";
+import AnteproyectoComponent from "./UI/Dashboards/Tutor/AnteproyectoComponente";
+import { getGroupById } from "../api/getGroupById";
 
 const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),
@@ -49,7 +37,7 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
   },
 }));
 
-const TutorGroupLearningPath = ({ group_id, group }) => {
+const LearningPath = ({ group_id, group }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
@@ -86,16 +74,28 @@ const TutorGroupLearningPath = ({ group_id, group }) => {
             ],
           },
           {
-            phase: "Entrega intermedia",
+            phase: "Entrega Intermedia",
             tasks: [
               {
                 title: "Entregado",
-                completed:
-                  group.intermediate_assigment_date !== null ? true : false,
+                completed: group.intermediate_assigment_date !== null ? true : false,
               },
               {
                 title: "Aprobado",
                 completed: group.intermediate_assigment_approved,
+              },
+            ],
+          },
+          {
+            phase: "Entrega Final",
+            tasks: [
+              {
+                title: "Entregado",
+                completed: group.final_report_date !== null ? true : false,
+              },
+              {
+                title: "Aprobado",
+                completed: group.final_report_approved,
               },
             ],
           },
@@ -145,7 +145,7 @@ const TutorGroupLearningPath = ({ group_id, group }) => {
                   <Grid container spacing={2}>
                     <Grid item xs={12} md={8}>
                       <Typography variant="h6" gutterBottom>
-                        Estudiantes
+                        Alumnos
                       </Typography>
                       {group?.students.map((student) => (
                         <Box key={student.id} marginBottom={1}>
@@ -229,4 +229,4 @@ const TutorGroupLearningPath = ({ group_id, group }) => {
   );
 };
 
-export default TutorGroupLearningPath;
+export default LearningPath;
