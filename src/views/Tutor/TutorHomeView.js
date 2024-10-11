@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Container, Box, Card, CardContent, Typography} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
-import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCuatrimestres, addCuatrimestre, getTutorCuatrimestre } from '../../api/handlePeriods'
+import {getTutorCuatrimestre } from '../../api/handlePeriods'
 import MySnackbar from '../../components/SharedResources/MySnackBar';
 import { setPeriod } from '../../redux/slices/periodSlice';
 
@@ -37,24 +36,6 @@ const CardStyled = styled(Card)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[3],
   backgroundColor: '#FFFFFF',
-  cursor: 'pointer',
-  transition: 'transform 0.3s',
-  '&:hover': {
-    transform: 'scale(1.05)',
-  },
-}));
-
-const AddCardStyled = styled(Card)(({ theme }) => ({
-  width: '200px',
-  height: '150px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  textAlign: 'center',
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[3],
-  border: '2px dashed #bbb',
-  backgroundColor: '#f8f8f8',
   cursor: 'pointer',
   transition: 'transform 0.3s',
   '&:hover': {

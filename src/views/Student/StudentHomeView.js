@@ -8,6 +8,7 @@ import StudentInfo from "../../components/Roles/Student/Dashboard/StudentInfo";
 import Phase from "../../components/Roles/Student/Dashboard/Phase";
 import { getStudentInfo } from "../../api/getStudentInfo";
 import { getGroupById } from "../../api/getGroupById";
+import { useNavigate } from "react-router-dom";
 
 const StudentHomeView = () => {
   const dispatch = useDispatch();
@@ -92,14 +93,19 @@ const StudentHomeView = () => {
     fetchGroupAnswer();
   }, [dispatch, user]);
 
+  const navigate = useNavigate();
+  const handleNavigation = (url) => {
+    navigate(url);
+  };
+
   return (
     <Container maxWidth="lg" sx={{ display: "flex", mt: 5 }}>
       <Box sx={{ flex: 1, mr: 8, mt: 8 }}>
         <StudentInfo />
-        <SubmitButton url="/student-form" title="Enviar Formulario de Grupo" disabled={!milestones[0]?.tasks[0].completed}/>
-        <SubmitButton url="/initial-project" title="Enviar Anteproyecto" disabled={!milestones[1]?.tasks[0].completed}/>
-        <SubmitButton url="/initial-project" title="Enviar Entrega Intermedia" disabled={!milestones[2]?.tasks[0].completed}/>
-        <SubmitButton url="/initial-project" title="Enviar Entrega Final" disabled={!milestones[3]?.tasks[0].completed}/>
+        <SubmitButton url="/student-form" title="Enviar Formulario de Grupo" width="100%" handleSubmit={handleNavigation} disabled={!milestones[0]?.tasks[0].completed}/>
+        <SubmitButton url="/initial-project" title="Enviar Anteproyecto" width="100%" handleSubmit={handleNavigation} disabled={!milestones[1]?.tasks[0].completed}/>
+        <SubmitButton url="/initial-project" title="Enviar Entrega Intermedia" width="100%" handleSubmit={handleNavigation} disabled={!milestones[2]?.tasks[0].completed}/>
+        <SubmitButton url="/initial-project" title="Enviar Entrega Final" width="100%" handleSubmit={handleNavigation} disabled={!milestones[3]?.tasks[0].completed}/>
       </Box>
       <Box sx={{ flex: 2 }}>
         <Typography variant="h4" align="center" gutterBottom>

@@ -13,6 +13,8 @@ import { useDispatch } from "react-redux";
 import { clearUser } from "../../redux/slices/userSlice";
 import { clearTopics } from "../../redux/slices/topicsSlice";
 import { clearTutors } from "../../redux/slices/tutorsSlice";
+import { clearGroups } from "../../redux/slices/groupsSlice";
+import { clearPeriod } from "../../redux/slices/periodSlice";
 
 const Header = ({ user, color, handleHomeClick }) => {
   const dispatch = useDispatch();
@@ -28,6 +30,8 @@ const Header = ({ user, color, handleHomeClick }) => {
     dispatch(clearUser());
     dispatch(clearTopics());
     dispatch(clearTutors());
+    dispatch(clearGroups());
+    dispatch(clearPeriod());
     navigate("/");
   };
 
