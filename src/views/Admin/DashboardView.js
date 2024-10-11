@@ -19,6 +19,9 @@ import ContentInicio from "../../components/UI/Dashboards/AdminStats/Components/
 import ContentInscripciones from "../../components/UI/Dashboards/AdminStats/Components/ContentInscripciones";
 import ContentAnteproyecto from "../../components/UI/Dashboards/AdminStats/Components/ContentAnteproyecto";
 import Algorithms from "../../components/Algorithms/Algorithms";
+import { setGroups } from "../../redux/slices/groupsSlice";
+import IncompleteGroups from "../../components/Algorithms/IncompleteGroups";
+import TopicTutor from "../../components/Algorithms/TopicTutor";
 import AvailabilityCalendar from "../../components/AvailabilityCalendar";
 
 // Estilos
@@ -30,7 +33,7 @@ const Root = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[3],
 }));
 
-const Dashboard = () => {
+const DashboardView = () => {
   const navigate = useNavigate();
   const { cuatrimestre } = useParams();
   const dispatch = useDispatch();
@@ -40,8 +43,8 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadingAnteproyectos, setLoadingAnteproyectos] = useState(true);
-  const [selectedMenu, setSelectedMenu] = useState("Inicio");
-  const [groups, setGroups] = useState(null);
+  const [selectedMenu, setSelectedMenu] = useState("General");
+  const [groupsData, setGroupsData] = useState(null);
   const [deliveries, setDeliveries] = useState(null);
   const [showUploadCSV, setShowUploadCSV] = useState(false);
   const [uploadType, setUploadType] = useState("");
@@ -56,8 +59,9 @@ const Dashboard = () => {
 
         const endpoint = `/groups/?period=${cuatrimestre}`;
         const groupsData = await getTableData(endpoint, user);
+        console.log(groupsData)
         dispatch(setGroups(groupsData));
-        setGroups(groupsData);
+        setGroupsData(groupsData);
       } catch (error) {
         console.error("Error al obtener datos del dashboard:", error);
       } finally {
@@ -65,7 +69,7 @@ const Dashboard = () => {
       }
     };
     getData();
-  }, [cuatrimestre, user, dispatch]);
+  }, []);
 
   const handleNavigation = async (menu) => {
     setSelectedMenu(menu);
@@ -113,12 +117,15 @@ const Dashboard = () => {
           <ContentAnteproyecto
             loadingAnteproyectos={loadingAnteproyectos}
             deliveries={deliveries}
-            groups={groups}
+            groups={groupsData}
             downloadFile={downloadFile}
           />
         );
       case "Grupos":
-        return <Algorithms user={user} />;
+        // return <Algorithms user={user} />;
+        return <IncompleteGroups/>;
+      case "Temas - Tutores - Grupos":
+        return <TopicTutor/>;
       case "Intermedia":
         return <div>Contenido de entrega Intermedia</div>;
       case "Final":
@@ -131,7 +138,12 @@ const Dashboard = () => {
   };
 
   return (
-    <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>
+    <Container maxWidth={false} 
+    sx={{ 
+      width: "100%", // Ajusta el ancho al 90% del viewport
+      height: "100vh", // Ocupa el 100% de la altura de la pantalla
+      maxWidth: "none", // Para que el maxWidth no limite el tamaño
+    }}>
       <Root>
         <Grid container spacing={3}>
           {/* Sidebar */}
@@ -152,4 +164,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardView;

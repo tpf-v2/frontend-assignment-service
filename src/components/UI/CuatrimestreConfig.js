@@ -34,10 +34,11 @@ const CuatrimestreConfig = () => {
   const user = useSelector((state) => state.user);
 
   const handleToggle = async (field) => {
+    console.log(field)
     dispatch(togglePeriodSetting({ field }));
     // Prepara el payload con el campo modificado
     const updatedSettings = {
-      id: "2C2024",
+      id: settings.id,
       ...settings,
       [field]: !settings[field],
     };
