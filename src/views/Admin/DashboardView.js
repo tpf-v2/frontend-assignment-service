@@ -22,6 +22,7 @@ import Algorithms from "../../components/Algorithms/Algorithms";
 import { setGroups } from "../../redux/slices/groupsSlice";
 import IncompleteGroups from "../../components/Algorithms/IncompleteGroups";
 import TopicTutor from "../../components/Algorithms/TopicTutor";
+import AvailabilityCalendar from "../../components/AvailabilityCalendar";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -130,7 +131,7 @@ const DashboardView = () => {
       case "Final":
         return <div>Contenido de entrega Final</div>;
       case "Fechas de presentación":
-        return <div>Contenido del Formulario de Fechas</div>;
+        return <AvailabilityCalendar />;
       default:
         return null;
     }

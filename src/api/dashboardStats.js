@@ -48,7 +48,7 @@ export const getDashboardData = async (cuatrimestre, user) => {
         { name: "1 Integrantes", cantidad: null },
         { name: "2 Integrantes", cantidad: null },
         { name: "3 Integrantes", cantidad: null },
-        { name: "4 Integrante", cantidad: null },
+        { name: "4 Integrantes", cantidad: null },
       ],
       topics: null,
       tutors: null
