@@ -10,6 +10,8 @@ import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import { sendAvailability } from "../../api/sendAvailability";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { getPeriodAvailability } from "../../api/getPeriodAvailability";
+import { useDispatch } from "react-redux";
 
 // Localizador de momento
 const localizer = momentLocalizer(moment);
@@ -91,6 +93,41 @@ const AvailabilityCalendar = () => {
   const [eventToDelete, setEventToDelete] = useState(null);
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const [availableDates, setPeriodAvailability] = useState(new Set());
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true); // Estado para manejar la carga
+
+  useEffect(() => {
+    const periodAvailability = async () => {
+      if (!user) {
+        console.error("El usuario no está definido.");
+        setLoading(false);
+        return;
+      }
+  
+      try {
+        const availability = await getPeriodAvailability(user);
+        const availabilitySet = new Set(availability.map(item => {
+          // Asegurarse de que el item tenga la propiedad slot
+          if (item.slot) {
+            return moment(item.slot).toISOString();
+          } else {
+            console.error("El elemento no contiene la propiedad 'slot':", item);
+            return null; // Puede tomar decisiones sobre slots no válidos aquí
+          }
+        }).filter(Boolean)); // Filtrar valores nulos
+  
+        setPeriodAvailability(availabilitySet); // Establecer el conjunto de disponibilidad
+        console.log(availabilitySet)
+      } catch (error) {
+        console.error("Error al obtener la disponibilidad", error);
+      } finally {
+        setLoading(false); // Finalizar la carga de datos
+      }
+    };
+  
+    periodAvailability();
+  }, [dispatch, user]);
 
   const handleSnackbarOpen = (message, status = "info") => {
     setSnackbarMessage(message);
@@ -106,18 +143,27 @@ const AvailabilityCalendar = () => {
   };
 
   const handleSelectSlot = ({ start, end }) => {
+    const startIsoString = start.toISOString();
+    const endIsoString = end.toISOString();
+
+    console.log("available dates are:", availableDates)
+    console.log("start date is", startIsoString)
+    console.log("end date is", endIsoString)
+  
+    if (!availableDates.has(startIsoString)) {
+      handleSnackbarOpen("Esta hora no está disponible para selección.", "error");
+      return;
+    }
+  
     const isEventOverlap = events.some(
       (event) => start < event.end && end > event.start
     );
-
+  
     if (isEventOverlap) {
-      handleSnackbarOpen(
-        "El evento se solapa con otro existente. Por favor, selecciona un intervalo diferente.",
-        "error"
-      );
+      handleSnackbarOpen("El evento se solapa con otro existente. Por favor, selecciona un intervalo diferente.", "error");
       return;
     }
-
+  
     setSelectedSlot({ start, end });
     setModalOpen(true);
   };
@@ -175,6 +221,20 @@ const AvailabilityCalendar = () => {
     }
   };
 
+  const slotPropGetter = (date) => {
+    const isoString = date.toISOString();
+    
+    if (!availableDates.has(isoString)) {
+      return {
+        style: {
+          backgroundColor: "#f0f0f0", // Gray background for disabled slots
+          pointerEvents: "none", // Disable interaction
+        },
+      };
+    }
+    return {};
+  };
+
   return (
     <AvailabilityContainer>
       <Typography variant="h4" align="center" gutterBottom>
@@ -199,6 +259,7 @@ const AvailabilityCalendar = () => {
         onSelectEvent={handleSelectEvent}
         views={["week"]}
         defaultView="week"
+        timeslots={1}
         step={60}
         showMultiDayTimes
         defaultDate={new Date()}
@@ -216,8 +277,13 @@ const AvailabilityCalendar = () => {
             // sábado y domingo
             return { style: { display: "none" } }; // Ocultar este día
           }
+          const hour = date.getHours();
+          if (hour >= 13 && hour < 15) {
+            return { style: { display: "#f0f0f0" } }; // Gray background for 13:00 to 15:00
+          }
           return {};
         }}
+        slotPropGetter={slotPropGetter} // Apply slot styles here
         onNavigation={(date) => {
           const day = date.getDay();
           if (day === 0 || day === 6) {
