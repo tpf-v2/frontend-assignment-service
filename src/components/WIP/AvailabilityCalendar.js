@@ -46,7 +46,7 @@ const CalendarStyled = styled(Calendar)(({ theme }) => ({
     justifyContent: "center", // Centrar contenidos de toolbar
     padding: "16px", // Espaciado entre el borde y los botones
     backgroundColor: "#E1F3F8", // Color de fondo claro para la barra de herramientas
-    paddingRight: "120px"
+    paddingRight: "120px",
   },
   "& .rbc-toolbar button": {
     backgroundColor: "#0072C6", // Color de fondo de los botones
@@ -160,11 +160,16 @@ const AvailabilityCalendar = () => {
 
   const onSubmitEvents = async () => {
     try {
-      await sendAvailability(user, events);
+      const gmt3Events = events.map((event) => ({
+        start: moment(event.start).subtract(3, "hours").toISOString(), // Ajusto restando 3 horas
+        end: moment(event.end).subtract(3, "hours").toISOString(), // Ajusto restando 3 horas
+      }));
+
+      await sendAvailability(user, gmt3Events);
       handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
       setTimeout(() => {
-        navigate("/home"); 
-      }, 1500); 
+        navigate("/home");
+      }, 1500);
     } catch (error) {
       handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
     }

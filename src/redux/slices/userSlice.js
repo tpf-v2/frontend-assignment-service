@@ -37,10 +37,13 @@ export const userSlice = createSlice({
       state.topic = action.payload.topic;
       state.teammates = action.payload.teammates;
       state.period_id = action.payload.period_id
+    },
+    setPeriodId: (state,action) => {
+      state.period_id = action.payload.period_id
     }
   },
 });
 
-export const { setUser, setToken, clearUser, setUserInfo } = userSlice.actions;
+export const { setUser, setToken, clearUser, setUserInfo, setPeriodId } = userSlice.actions;
 
 export default userSlice.reducer;

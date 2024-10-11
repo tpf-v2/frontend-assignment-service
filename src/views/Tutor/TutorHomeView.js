@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Container, Box, Card, CardContent, Typography} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
-import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCuatrimestres, addCuatrimestre, getTutorCuatrimestre } from '../../api/handlePeriods'
+import {getTutorCuatrimestre } from '../../api/handlePeriods'
 import MySnackbar from '../../components/UI/MySnackBar';
 import { setPeriod } from '../../redux/slices/periodSlice';
+import { setPeriodId } from '../../redux/slices/userSlice';
 
 const Root = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -104,6 +104,7 @@ const TutorHomeView = () => {
 
   const handleCardClick = (cuatrimestre) => {
     dispatch(setPeriod(cuatrimestre))
+    dispatch(setPeriodId(cuatrimestre))
     navigate(`/tutor-cuatrimestre/${cuatrimestre.period_id}`);
   };
 
