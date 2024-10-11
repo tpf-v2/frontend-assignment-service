@@ -4,7 +4,6 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { styled, useMediaQuery, useTheme } from "@mui/system";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 const StepBlock = ({ title, onRun, isRunDisabled }) => (
   <Box
@@ -52,9 +51,8 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
 }));
 
 const Algorithms = () => {
-  const period = useSelector((state) => state.period);
   const navigate = useNavigate();
-  const { cuatrimestre } = useParams();
+  const { period } = useParams();
 
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -67,7 +65,7 @@ const Algorithms = () => {
 
     setTimeout(() => {
       setLoading(false);
-      navigate(`/dashboard/${cuatrimestre}/groups`);
+      navigate(`/dashboard/${period}/groups`);
     }, 2000);
   };
 

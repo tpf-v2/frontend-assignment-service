@@ -11,7 +11,7 @@ const BASE_URL = process.env.REACT_APP_API_URL;
 const UploadView = () => {
 
   const user = useSelector((state) => state.user);
-  const cuatrimestre = useSelector((state) => state.user.period_id);
+  const period = useSelector((state) => state.user.period_id);
 
   const [isActive, setIsActive] = useState(false);
 
@@ -23,7 +23,7 @@ const UploadView = () => {
               Authorization: `Bearer ${user.token}`,
             },
           };
-          const response = await axios.get(`${BASE_URL}/api/periods/${cuatrimestre}`, config);
+          const response = await axios.get(`${BASE_URL}/api/periods/${period}`, config);
           setIsActive(response.data["initial_project_active"]
           )
         } catch (err) {

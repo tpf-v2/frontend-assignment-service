@@ -32,10 +32,9 @@ const Root = styled(Paper)(({ theme }) => ({
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { cuatrimestre } = useParams();
+  const { period } = useParams();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const period = useSelector((state) => state.period);
 
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -49,12 +48,12 @@ const Dashboard = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const data = await getDashboardData(cuatrimestre, user);
+        const data = await getDashboardData(period, user);
         dispatch(setTopics(data.topics));
         dispatch(setTutors(data.tutors));
         setDashboardData(data);
 
-        const endpoint = `/groups/?period=${cuatrimestre}`;
+        const endpoint = `/groups/?period=${period}`;
         const groupsData = await getTableData(endpoint, user);
         dispatch(setGroups(groupsData));
         setGroups(groupsData);
@@ -65,7 +64,7 @@ const Dashboard = () => {
       }
     };
     getData();
-  }, [cuatrimestre, user, dispatch]);
+  }, [period, user, dispatch]);
 
   const handleNavigation = async (menu) => {
     setSelectedMenu(menu);
@@ -94,7 +93,7 @@ const Dashboard = () => {
     switch (selectedMenu) {
       case "Inicio":
         return (
-          <ContentInicio navigate={navigate} cuatrimestre={cuatrimestre} />
+          <ContentInicio navigate={navigate} period={period} />
         );
       case "Inscripciones":
         return (
@@ -105,7 +104,7 @@ const Dashboard = () => {
             setUploadType={setUploadType}
             dashboardData={dashboardData}
             loading={loading}
-            cuatrimestre={cuatrimestre}
+            period={period}
           />
         );
       case "Anteproyecto":
@@ -139,7 +138,7 @@ const Dashboard = () => {
             <Sidebar
               selectedMenu={selectedMenu}
               handleNavigation={handleNavigation}
-              cuatrimestre={cuatrimestre}
+              period={period}
             />
           </Grid>
           {/* Contenido */}

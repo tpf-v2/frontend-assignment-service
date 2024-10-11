@@ -19,11 +19,11 @@ const countResponsesByStudentLength = (responses) => {
   return countMap;
 };
 
-export const getDashboardData = async (cuatrimestre, user) => {
+export const getDashboardData = async (period, user) => {
   const studentEndpoint = "/students/";
   const answersEndpoint = "/forms/answers";
   const topicsEndpoint = "/topics/";
-  const tutorsEndpoint = `/tutors/periods/${cuatrimestre}`;
+  const tutorsEndpoint = `/tutors/periods/${period}`;
 
   const config = {
     headers: {

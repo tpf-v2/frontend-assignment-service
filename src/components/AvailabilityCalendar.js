@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import MySnackbar from "./UI/MySnackBar";
 import EventModal from "./EventModal";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
-import { sendAvailability } from "../api/sendAvailability";
+import { sendAvailability, fetchAvailability } from "../api/handleAvailability";
 import { CalendarStyled, AvailabilityContainer, ButtonContainer, DescriptionBox } from "../styles/AvailabilityCalendarStyle";
 
 // Localizador de momento
@@ -26,7 +26,7 @@ const AvailabilityCalendar = () => {
   const [eventToDelete, setEventToDelete] = useState(null);
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const { cuatrimestre } = useParams();
+  const { period } = useParams();
 
   const handleSnackbarOpen = (message, status = "info") => {
     setSnackbarMessage(message);
@@ -65,7 +65,7 @@ const AvailabilityCalendar = () => {
         { start: selectedSlot.start, end: selectedSlot.end },
       ]);
       handleSnackbarOpen(
-        "Bloque de disponibilidad creado exitosamente.",
+        "Intervalo de disponibilidad creado exitosamente.",
         "success"
       );
       setModalOpen(false);
@@ -87,7 +87,7 @@ const AvailabilityCalendar = () => {
         )
       );
       handleSnackbarOpen(
-        "Bloque de disponibilidad eliminado exitosamente.",
+        "Intervalo de disponibilidad eliminado exitosamente.",
         "success"
       );
     }
@@ -96,13 +96,22 @@ const AvailabilityCalendar = () => {
 
   const onSubmitEvents = async () => {
     try {
-      await sendAvailability(user, events, cuatrimestre);
+      await sendAvailability(user, events, period);
       handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
       setTimeout(() => {
-        navigate(`/dashboard/${cuatrimestre}`); 
+        navigate(`/dashboard/${period}`); 
       }, 1500); 
     } catch (error) {
       handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
+    }
+  };
+
+  const fetchAvailability = async () => {
+    try {
+      const slots = await fetchAvailability(user, period);
+      setEvents(slots)
+    } catch (error) {
+      console.error("Error when fetching dates")
     }
   };
 

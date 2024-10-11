@@ -51,7 +51,7 @@ const UploadCSVForm = ({ formType }) => {
   const [openDialog, setOpenDialog] = useState(false); // Estado para controlar el diálogo
   const navigate = useNavigate();
 
-  const { cuatrimestre } = useParams(); // Captura del cuatrimestre
+  const { period } = useParams(); // Captura del period
 
   const user = useSelector((state) => state.user);
 
@@ -90,7 +90,7 @@ const UploadCSVForm = ({ formType }) => {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
-    const apiUrl = `${BASE_URL}/${formType}/upload?period=${cuatrimestre}`;
+    const apiUrl = `${BASE_URL}/${formType}/upload?period=${period}`;
     try {
       const response = await axios.post(apiUrl, formData, {
         headers: {

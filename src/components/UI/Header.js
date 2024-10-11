@@ -34,12 +34,12 @@ const Header = ({ user, color, handleHomeClick }) => {
   // Expresión regular que busca el patrón numeroCnumeronumeronumeronumero (ej. 3C1234)
   const regex = /\dC\d{4}/;
 
-  // Extraer el cuatrimestre del pathname
-  const cuatrimestreMatch = location.pathname.match(regex);
-  const cuatrimestre = cuatrimestreMatch ? cuatrimestreMatch[0] : null;
+  // Extraer el period del pathname
+  const periodMatch = location.pathname.match(regex);
+  const period = periodMatch ? periodMatch[0] : null;
 
-  // Condición para mostrar el botón solo si el cuatrimestre fue encontrado y el usuario es admin
-  const showButton = cuatrimestre && user.role === "admin";
+  // Condición para mostrar el botón solo si el period fue encontrado y el usuario es admin
+  const showButton = period && user.role === "admin";
 
   return (
     <AppBar position="static" style={{ backgroundColor: color }}>
@@ -65,7 +65,7 @@ const Header = ({ user, color, handleHomeClick }) => {
               {showButton && (
                 <Button
                   color="inherit"
-                  onClick={() => navigate(`/dashboard/${cuatrimestre}`)}
+                  onClick={() => navigate(`/dashboard/${period}`)}
                 >
                   INICIO
                 </Button>

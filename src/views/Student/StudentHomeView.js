@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 const StudentHomeView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const cuatrimestre = useSelector((state) => state.user.period_id);
+  const period = useSelector((state) => state.user.period_id);
 
   const [milestones, setMilestones] = useState([]);
   const [loading, setLoading] = useState(true); // Estado para manejar la carga
@@ -109,7 +109,7 @@ const StudentHomeView = () => {
       </Box>
       <Box sx={{ flex: 2 }}>
         <Typography variant="h4" align="center" gutterBottom>
-          {cuatrimestre || "2C2024"}
+          {period || "2C2024"}
         </Typography>
         <Box>
           {loading ? ( // Mostrar CircularProgress si está cargando

@@ -37,7 +37,7 @@ const Title = styled(Typography)(({ theme }) => ({
 }));
 
 const FormSelection = () => {
-  const { cuatrimestre } = useParams(); // Captura del cuatrimestre
+  const { period } = useParams(); // Captura del period
   const navigate = useNavigate(); // Hook para navegación
   const user = useSelector((state) => state.user); // Obtener el usuario desde Redux
   const [groupCount, setGroupAnswer] = useState([]);
@@ -64,7 +64,7 @@ const FormSelection = () => {
     <Container maxWidth="sm">
       <Root>
         <Title variant="h4" style={{ color: '#555' }}>
-          {cuatrimestre || '2C2024'}
+          {period || '2C2024'}
         </Title>
         {user.role !== 'admin' ? (
           <Title variant="h6">Bienvenido, {user.name}!</Title>

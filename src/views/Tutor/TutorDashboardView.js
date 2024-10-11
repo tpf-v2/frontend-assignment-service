@@ -67,7 +67,7 @@ const AvailabilityContainer = styled(Box)(({ theme }) => ({
 
 
 const TutorDashboardView = () => {
-  const { cuatrimestre } = useParams();
+  const { period } = useParams();
 
   const user = useSelector((state) => state.user);
 
@@ -80,7 +80,7 @@ const TutorDashboardView = () => {
   useEffect(() => {
     const getGroups = async () => {
       try {
-        const groups = await getMyGroups(user, cuatrimestre);
+        const groups = await getMyGroups(user, period);
         setUserGroups(groups.sort((a, b) => a.id - b.id));
       } catch (error) {
         console.error("Error when getting my groups: ", error);
@@ -152,7 +152,7 @@ const TutorDashboardView = () => {
           {/* Sidebar */}
           <Grid item xs={3}>
             <SidebarContainer>
-              <Title variant="h4">{cuatrimestre}</Title>
+              <Title variant="h4">{period}</Title>
               <SidebarList>
                 <ListItemStyled
                   button

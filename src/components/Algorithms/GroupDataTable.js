@@ -33,14 +33,14 @@ const GroupDataTable = () => {
     return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el topic, mostrar 'Sin asignar'
   };
 
-  const { cuatrimestre } = useParams(); // Captura del cuatrimestre
+  const { period } = useParams(); // Captura del period
   const user = useSelector((state) => state.user);
   const [groups, setGroups] = useState([]);
 
   const fetchData = async () => {
     try {
       setLoading(true)
-      const endpoint = `/groups/?period=${cuatrimestre}`;
+      const endpoint = `/groups/?period=${period}`;
       const responseData = await getTableData(endpoint, user);
       console.log(responseData);
       const sortedGroups = responseData.sort((a, b) => a.id - b.id);
