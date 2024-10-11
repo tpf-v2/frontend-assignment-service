@@ -16,11 +16,11 @@ import { styled, useMediaQuery, useTheme } from "@mui/system";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { incompleteGroups } from "../../api/assignments";
-import { getGroups } from "../../api/getGroups";
-import { setGroups } from "../../redux/slices/groupsSlice";
-import { togglePeriodSetting } from "../../redux/slices/periodSlice";
-import updatePeriod from "../../api/updatePeriod";
+import { incompleteGroups } from "../../../../api/assignments";
+import { getGroups } from "../../../../api/getGroups";
+import { setGroups } from "../../../../redux/slices/groupsSlice";
+import { togglePeriodSetting } from "../../../../redux/slices/periodSlice";
+import updatePeriod from "../../../../api/updatePeriod";
 
 const StepBlock = ({ title, onRun, isRunDisabled }) => (
   <Box

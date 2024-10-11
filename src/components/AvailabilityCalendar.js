@@ -6,7 +6,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Typography, Button } from "@mui/material";
 import { useSelector } from "react-redux";
 
-import MySnackbar from "./UI/MySnackBar";
+import MySnackbar from "./SharedResources/MySnackBar";
 import EventModal from "./EventModal";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import { sendAvailability } from "../api/sendAvailability";

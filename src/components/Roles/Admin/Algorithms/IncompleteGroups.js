@@ -17,12 +17,12 @@ import {
   DialogTitle,
   DialogContent,
 } from "@mui/material";
-import { incompleteGroups } from "../../api/assignments";
+import { incompleteGroups } from "../../../../api/assignments";
 import { useDispatch, useSelector } from "react-redux";
-import { getGroups } from "../../api/getGroups";
-import { setGroups } from "../../redux/slices/groupsSlice";
-import { togglePeriodSetting } from "../../redux/slices/periodSlice";
-import updatePeriod from "../../api/updatePeriod";
+import { getGroups } from "../../../../api/getGroups";
+import { setGroups } from "../../../../redux/slices/groupsSlice";
+import { togglePeriodSetting } from "../../../../redux/slices/periodSlice";
+import updatePeriod from "../../../../api/updatePeriod";
 import { useNavigate } from "react-router-dom";
 
 const IncompleteGroups = () => {

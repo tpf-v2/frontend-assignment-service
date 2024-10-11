@@ -25,11 +25,11 @@ import CloseIcon from "@mui/icons-material/Close"; // Importa el ícono Close
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { groupsTopicTutor } from "../../api/assignments";
-import { confirmGroups } from "../../api/updateGroups";
-import { setGroups } from "../../redux/slices/groupsSlice";
-import { togglePeriodSetting } from "../../redux/slices/periodSlice";
-import updatePeriod from "../../api/updatePeriod";
+import { groupsTopicTutor } from "../../../../api/assignments";
+import { confirmGroups } from "../../../../api/updateGroups";
+import { setGroups } from "../../../../redux/slices/groupsSlice";
+import { togglePeriodSetting } from "../../../../redux/slices/periodSlice";
+import updatePeriod from "../../../../api/updatePeriod";
 import { Navigate, useNavigate } from "react-router-dom";
 
 const TopicTutor = () => {

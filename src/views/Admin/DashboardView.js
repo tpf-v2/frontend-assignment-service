@@ -20,8 +20,8 @@ import ContentInscripciones from "../../components/Roles/Admin/Stats/ContentInsc
 import ContentAnteproyecto from "../../components/Roles/Admin/Stats/ContentAnteproyecto";
 import AvailabilityCalendar from "../../components/AvailabilityCalendar";
 import { setGroups } from "../../redux/slices/groupsSlice";
-import IncompleteGroups from "../../components/Algorithms/IncompleteGroups";
-import TopicTutor from "../../components/Algorithms/TopicTutor";
+import IncompleteGroups from "../../components/Roles/Admin/Algorithms/IncompleteGroups";
+import TopicTutor from "../../components/Roles/Admin/Algorithms/TopicTutor";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
