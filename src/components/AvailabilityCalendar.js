@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { momentLocalizer } from "react-big-calendar";
 import moment from "moment";
@@ -106,14 +106,17 @@ const AvailabilityCalendar = () => {
     }
   };
 
-  const fetchAvailability = async () => {
-    try {
-      const slots = await fetchAvailability(user, period);
-      setEvents(slots)
-    } catch (error) {
-      console.error("Error when fetching dates")
-    }
-  };
+  useEffect(() => {
+    const initiialAvailability = async () => {
+      try {
+        const slots = await fetchAvailability(user, period);
+        setEvents(slots)
+      } catch (error) {
+        console.error("Error when fetching dates")
+      }
+    };
+    initiialAvailability();
+  }, []); // El array vacío [] asegura que solo se ejecuta una vez
 
   return (
     <AvailabilityContainer>
