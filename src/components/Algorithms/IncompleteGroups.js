@@ -32,9 +32,6 @@ const IncompleteGroups = () => {
     .sort((a, b) => a.id - b.id)
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
-  const tutors = Object.values(useSelector((state) => state.tutors))
-    .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
-    .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
   const topics = Object.values(useSelector((state) => state.topics))
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
@@ -83,14 +80,6 @@ const IncompleteGroups = () => {
       setLoading(false);
       setOpenDialog(false);
     }
-  };
-
-  // Función para obtener el nombre del tutor por su id
-  const getTutorNameById = (id) => {
-    const tutor = tutors.find(
-      (t) => t.tutor_periods && t.tutor_periods[0].id === id
-    );
-    return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el topic, mostrar 'Sin asignar'
   };
 
   // Función para obtener el nombre del topic por su id

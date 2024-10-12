@@ -8,10 +8,8 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
-import { getTableData } from "../../api/handleTableData";
-import { useParams } from "react-router-dom";
 import { Box } from "@mui/system";
 
 // Componente para la tabla de grupos
@@ -30,7 +28,7 @@ const groups = Object.values(useSelector((state) => state.groups))
   .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
   .filter(item => Object.keys(item).length > 0); // Elimina objetos vacíos
 
-  const [loading, setLoading] = useState(false);
+  const loading = false;
 
   // Función para obtener el nombre del topic por su id
   const getTopicNameById = (id) => {
