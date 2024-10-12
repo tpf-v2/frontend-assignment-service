@@ -3,7 +3,6 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  Button,
   Container,
   Box,
   IconButton,
@@ -11,7 +10,7 @@ import {
   MenuItem,
   Avatar,
 } from "@mui/material";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import fiubaLogo from "../../assets/Logo-fiuba_big_face.png";
 import { useDispatch } from "react-redux";
 import { clearUser } from "../../redux/slices/userSlice";
@@ -23,7 +22,6 @@ import { setTemporalRole } from "../../redux/slices/userSlice";
 
 const Header = ({ user, color, handleHomeClick }) => {
   const dispatch = useDispatch();
-  const location = useLocation();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
 

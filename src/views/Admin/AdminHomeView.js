@@ -101,9 +101,7 @@ const AdminHomeView = () => {
         console.error(error.message);
       }
     };
-
     fetchData();
-    console.log(cuatrimestres)
   }, []);
 
   const handleAddCuatrimestre = async () => {
