@@ -54,9 +54,8 @@ const Header = ({ user, color, handleHomeClick }) => {
   };
 
   const handleChangeView = () => {
-    console.log(user)
-    const newRole = user.temporal_role === "admin" ? "tutor" : "admin"
-    handleChangeRole(newRole)
+    const newRole = user.temporal_role === "admin" ? "tutor" : "admin";
+    handleChangeRole(newRole);
     navigate("/home");
     handleCloseMenu();
   };
@@ -112,9 +111,9 @@ const Header = ({ user, color, handleHomeClick }) => {
                 >
                   Ver Perfil
                 </MenuItem>
-                {user.temporal_role === "admin" && (
+                {user.role === "admin" && (
                   <MenuItem onClick={handleChangeView}>
-                    Cambiar a vista de tutor
+                    Cambiar a vista de {user.temporal_role === "admin" ? "tutor" : "admin"}
                   </MenuItem>
                 )}
                 <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
