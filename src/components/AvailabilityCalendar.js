@@ -107,6 +107,19 @@ const AvailabilityCalendar = () => {
     }
   };
 
+    useEffect(() => {
+    const initialAvailability = async () => {
+      try {
+        const slots = await fetchAvailability(user, period);
+        const formattedSlots = transformSlotsToIntervals(slots);
+        setEvents(formattedSlots)
+      } catch (error) {
+        console.error("Error when fetching dates")
+      }
+    };
+    initialAvailability();
+  }, []); // El array vacío [] asegura que solo se ejecuta una vez
+
   return (
     <AvailabilityContainer>
       <Typography variant="h4" align="center" gutterBottom>

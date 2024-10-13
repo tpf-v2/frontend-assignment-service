@@ -78,7 +78,6 @@ const TutorHomeView = () => {
     };
 
     fetchData();
-    console.log(periods)
   }, []);
 
   const dispatch = useDispatch();

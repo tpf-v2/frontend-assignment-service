@@ -44,8 +44,7 @@ const CuatrimestreConfig = () => {
 
     try {
       // Llama a la función separada que realiza la petición
-      const result = await updatePeriod(updatedSettings, user);
-      console.log("Updated successfully:", result);
+      await updatePeriod(updatedSettings, user);
     } catch (error) {
       console.error("Error in update:", error);
     }

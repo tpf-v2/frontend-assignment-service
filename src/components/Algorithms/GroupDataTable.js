@@ -42,7 +42,6 @@ const GroupDataTable = () => {
       setLoading(true)
       const endpoint = `/groups/?period=${period}`;
       const responseData = await getTableData(endpoint, user);
-      console.log(responseData);
       const sortedGroups = responseData.sort((a, b) => a.id - b.id);
       setGroups(sortedGroups); // Actualiza los datos de los grupos
     } catch (error) {

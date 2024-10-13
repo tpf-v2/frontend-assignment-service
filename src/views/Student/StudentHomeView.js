@@ -31,7 +31,6 @@ const StudentHomeView = () => {
     const fetchGroupAnswer = async () => {
       try {
         const userData = await dispatch(getStudentInfo(user));
-        console.log(userData);
         
         let group = {};
         if (userData.group_id !== 0) {

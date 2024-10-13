@@ -103,7 +103,6 @@ const AdminHomeView = () => {
     };
 
     fetchData();
-    console.log(periods)
   }, []);
 
   const handleAddCuatrimestre = async () => {
