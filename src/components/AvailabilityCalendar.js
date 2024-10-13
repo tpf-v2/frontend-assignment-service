@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { momentLocalizer } from "react-big-calendar";
-import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Typography, Button } from "@mui/material";
 import { useSelector } from "react-redux";
+import moment from "moment-timezone";
 
 import MySnackbar from "./UI/MySnackBar";
 import EventModal from "./EventModal";
@@ -97,7 +97,12 @@ const AvailabilityCalendar = () => {
 
   const onSubmitEvents = async () => {
     try {
-      await sendAvailability(user, events, period);
+      const formattedEvents = events.map((event) => ({
+        // Resta 3 horas (180 minutos) a cada fecha
+        start: moment(event.start).subtract(3, "hours").utc().format(),
+        end: moment(event.end).subtract(3, "hours").utc().format(),
+      }));
+      await sendAvailability(user, formattedEvents, period);
       handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
       setTimeout(() => {
         navigate(`/dashboard/${period}`); 
