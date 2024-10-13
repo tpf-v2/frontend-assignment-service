@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Typography, Button } from "@mui/material";
@@ -25,8 +25,9 @@ const AvailabilityCalendar = () => {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
+  const [availabilitySent, setAvailabilitySent] = useState(false);
+
   const user = useSelector((state) => state.user);
-  const navigate = useNavigate();
   const { period } = useParams();
 
   const handleSnackbarOpen = (message, status = "info") => {
@@ -103,10 +104,8 @@ const AvailabilityCalendar = () => {
         end: moment(event.end).subtract(3, "hours").utc().format(),
       }));
       await sendAvailability(user, formattedEvents, period);
+      setAvailabilitySent(true)
       handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
-      setTimeout(() => {
-        navigate(`/dashboard/${period}`); 
-      }, 1500); 
     } catch (error) {
       handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
     }
@@ -124,6 +123,14 @@ const AvailabilityCalendar = () => {
     };
     initialAvailability();
   }, []); // El array vacío [] asegura que solo se ejecuta una vez
+
+  const onEditEvents = async () => {
+    try {
+      handleSnackbarOpen("Disponibilidad editada exitosamente.", "success");
+    } catch (error) {
+      handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
+    }
+  };
 
   return (
     <AvailabilityContainer>
@@ -177,14 +184,20 @@ const AvailabilityCalendar = () => {
           }
         }}
         />
-      { events.length === 0 && (
+      { !availabilitySent ? (
           <ButtonContainer>
               <Button variant="contained" color="primary" onClick={onSubmitEvents}>
                   Enviar
               </Button>
           </ButtonContainer>
+      ) : (
+        <ButtonContainer>
+              <Button variant="contained" color="primary" onClick={onEditEvents}>
+                  Editar
+              </Button>
+          </ButtonContainer>
       )}
-
+ 
       <EventModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
