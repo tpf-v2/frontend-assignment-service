@@ -176,12 +176,14 @@ const AvailabilityCalendar = () => {
             return false;
           }
         }}
-      />
-      <ButtonContainer>
-        <Button variant="contained" color="primary" onClick={onSubmitEvents}>
-          Enviar
-        </Button>
-      </ButtonContainer>
+        />
+      { events.length === 0 && (
+          <ButtonContainer>
+              <Button variant="contained" color="primary" onClick={onSubmitEvents}>
+                  Enviar
+              </Button>
+          </ButtonContainer>
+      )}
 
       <EventModal
         open={modalOpen}
