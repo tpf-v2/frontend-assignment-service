@@ -11,6 +11,7 @@ import EventModal from "./EventModal";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import { sendAvailability, fetchAvailability } from "../api/handleAvailability";
 import { CalendarStyled, AvailabilityContainer, ButtonContainer, DescriptionBox } from "../styles/AvailabilityCalendarStyle";
+import { transformSlotsToIntervals } from "../utils/TransformSlotsToIntervals";
 
 // Localizador de momento
 const localizer = momentLocalizer(moment);
@@ -96,6 +97,7 @@ const AvailabilityCalendar = () => {
 
   const onSubmitEvents = async () => {
     try {
+      console.log("slots send: ", events)
       await sendAvailability(user, events, period);
       handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
       setTimeout(() => {
@@ -107,15 +109,19 @@ const AvailabilityCalendar = () => {
   };
 
   useEffect(() => {
-    const initiialAvailability = async () => {
+    const initialAvailability = async () => {
       try {
         const slots = await fetchAvailability(user, period);
-        setEvents(slots)
+        console.log("slots received: ", slots)
+        const formattedSlots = transformSlotsToIntervals(slots);
+        console.log("slots formatted: ", formattedSlots)
+        // setEvents(formattedSlots)
+        // setEvents(slots)
       } catch (error) {
         console.error("Error when fetching dates")
       }
     };
-    initiialAvailability();
+    initialAvailability();
   }, []); // El array vacío [] asegura que solo se ejecuta una vez
 
   return (

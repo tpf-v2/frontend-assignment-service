@@ -33,9 +33,10 @@ export const fetchAvailability = async (user, period_id) => {
   
     try {
       const url = `${BASE_URL}/dates`;
-      const response = await axios.post(url, config);
+      const response = await axios.get(url, config);
       return response.data;
     } catch (error) {
       throw new Error(error);
     }
 };
+
