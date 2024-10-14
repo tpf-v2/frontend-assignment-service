@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Container,
   Box,
-  Paper,
   Typography,
   Button,
   DialogTitle,
@@ -45,16 +44,6 @@ const StepBlock = ({ title, onRun, isRunDisabled }) => (
     </ButtonStyled>
   </Box>
 );
-
-
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  padding: theme.spacing(2),
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: "#ffffff",
-  boxShadow: theme.shadows[3],
-  width: "100%", // Ancho completo del contenedor padre
-}));
 
 const Title = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(3),

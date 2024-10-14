@@ -18,7 +18,6 @@ import Sidebar from "../../components/Sidebar";
 import ContentInicio from "../../components/UI/Dashboards/AdminStats/Components/ContentInicio";
 import ContentInscripciones from "../../components/UI/Dashboards/AdminStats/Components/ContentInscripciones";
 import ContentAnteproyecto from "../../components/UI/Dashboards/AdminStats/Components/ContentAnteproyecto";
-import Algorithms from "../../components/Algorithms/Algorithms";
 import { setGroups } from "../../redux/slices/groupsSlice";
 import IncompleteGroups from "../../components/Algorithms/IncompleteGroups";
 import TopicTutor from "../../components/Algorithms/TopicTutor";
@@ -140,7 +139,7 @@ const DashboardView = () => {
     <Container maxWidth={false} 
     sx={{ 
       width: "100%", // Ajusta el ancho al 90% del viewport
-      height: "100vh", // Ocupa el 100% de la altura de la pantalla
+      height: "120vh", // Ocupa el 100% de la altura de la pantalla
       maxWidth: "none", // Para que el maxWidth no limite el tamaño
     }}>
       <Root>

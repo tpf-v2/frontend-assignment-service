@@ -30,7 +30,7 @@ import { confirmGroups } from "../../api/updateGroups";
 import { setGroups } from "../../redux/slices/groupsSlice";
 import { togglePeriodSetting } from "../../redux/slices/periodSlice";
 import updatePeriod from "../../api/updatePeriod";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const TopicTutor = () => {
   const period = useSelector((state) => state.period);
