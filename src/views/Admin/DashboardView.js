@@ -19,6 +19,10 @@ import ContentInicio from "../../components/UI/Dashboards/AdminStats/Components/
 import ContentInscripciones from "../../components/UI/Dashboards/AdminStats/Components/ContentInscripciones";
 import ContentAnteproyecto from "../../components/UI/Dashboards/AdminStats/Components/ContentAnteproyecto";
 import Algorithms from "../../components/Algorithms/Algorithms";
+import { setGroups } from "../../redux/slices/groupsSlice";
+import IncompleteGroups from "../../components/Algorithms/IncompleteGroups";
+import TopicTutor from "../../components/Algorithms/TopicTutor";
+import AvailabilityCalendar from "../../components/AvailabilityCalendar";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -64,7 +68,7 @@ const DashboardView = () => {
       }
     };
     getData();
-  }, [cuatrimestre, user, dispatch]);
+  }, []);
 
   const handleNavigation = async (menu) => {
     setSelectedMenu(menu);
@@ -117,20 +121,28 @@ const DashboardView = () => {
           />
         );
       case "Grupos":
-        return <Algorithms user={user} />;
+        // return <Algorithms user={user} />;
+        return <IncompleteGroups/>;
+      case "Temas - Tutores - Grupos":
+        return <TopicTutor/>;
       case "Intermedia":
         return <div>Contenido de entrega Intermedia</div>;
       case "Final":
         return <div>Contenido de entrega Final</div>;
       case "Fechas de presentación":
-        return <div>Contenido del Formulario de Fechas</div>;
+        return <AvailabilityCalendar />;
       default:
         return null;
     }
   };
 
   return (
-    <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>
+    <Container maxWidth={false} 
+    sx={{ 
+      width: "100%", // Ajusta el ancho al 90% del viewport
+      height: "100vh", // Ocupa el 100% de la altura de la pantalla
+      maxWidth: "none", // Para que el maxWidth no limite el tamaño
+    }}>
       <Root>
         <Grid container spacing={3}>
           {/* Sidebar */}

@@ -65,8 +65,7 @@ const AvailabilityContainer = styled(Box)(({ theme }) => ({
   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
 }));
 
-
-const TutorDashboardView = () => {
+const TutorDashboard = () => {
   const { cuatrimestre } = useParams();
 
   const user = useSelector((state) => state.user);
@@ -246,4 +245,4 @@ const TutorDashboardView = () => {
   );
 };
 
-export default TutorDashboardView;
+export default TutorDashboard;
