@@ -59,7 +59,7 @@ const DashboardView = () => {
 
         const endpoint = `/groups/?period=${cuatrimestre}`;
         const groupsData = await getTableData(endpoint, user);
-        dispatch(setGroupsData(groupsData));
+        dispatch(setGroups(groupsData));
         setGroupsData(groupsData);
       } catch (error) {
         console.error("Error al obtener datos del dashboard:", error);
