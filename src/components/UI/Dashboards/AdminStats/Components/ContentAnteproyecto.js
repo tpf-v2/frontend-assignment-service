@@ -17,6 +17,7 @@ import {
 import StatCard from "./StatCard";
 import DownloadIcon from "@mui/icons-material/Download";
 import { useSelector } from "react-redux";
+import { confirmGroups, updateGroup } from "../../../../../api/updateGroups";
 
 const ContentAnteproyecto = ({
   loadingAnteproyectos,
@@ -34,38 +35,59 @@ const ContentAnteproyecto = ({
   const topics = Object.values(useSelector((state) => state.topics))
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
-  
+  const user = useSelector((state) => state.user);
+  const period = useSelector((state) => state.period);
   const [selectedReviewers, setSelectedReviewers] = useState({});
 
   if (loadingAnteproyectos) {
     return <CircularProgress />;
   }
 
+  const getGroupById = (id) => {
+    console.log(groups);
+    const group = groups.find((g) => g.id === id);
+    console.log(group);
+    return group ? group : null;
+  };
   const handleReviewerChange = (deliveryId, reviewerId) => {
     //TODO: Enviar al back el revisor asignado
-    console.log(selectedReviewers)
+    console.log(selectedReviewers);
+    console.log(deliveryId, reviewerId);
     setSelectedReviewers({
       ...selectedReviewers,
       [deliveryId]: reviewerId,
     });
+    // Obtener el grupo y crear una copia modificable
+    const group = { ...getGroupById(parseInt(deliveryId, 10)) };
+
+    // Asignar el reviewerId a la copia del grupo
+    group.reviewer_id = reviewerId;
+
+    // Llamar a updateGroup con el grupo modificado
+    updateGroup(user, period, group);
   };
 
   // Función para obtener el nombre del tutor por su id
   const getTutorNameById = (id) => {
-    const tutor = tutors.find((t) => t.tutor_periods && t.tutor_periods.length > 0 && t.tutor_periods[0].id === id);
+    const tutor = tutors.find(
+      (t) =>
+        t.tutor_periods &&
+        t.tutor_periods.length > 0 &&
+        t.tutor_periods[0].id === id
+    );
     return tutor ? `${tutor.name} ${tutor.last_name}` : "Sin asignar";
-  };  
+  };
 
   function getGroup(path) {
     const parts = path.split("/");
     return parts[1]; // Devuelve el grupo
   }
 
-    // Función para obtener el nombre del topic por su id
-    const getTopicNameById = (id) => {
-      const topic = topics.find((t) => t.id === id);
-      return topic ? topic.name : "Desconocido"; // Si no encuentra el topic, mostrar 'Desconocido'
-    };
+  // Función para obtener el nombre del topic por su id
+  const getTopicNameById = (id) => {
+    const topic = topics.find((t) => t.id === id);
+    return topic ? topic.name : "Desconocido"; // Si no encuentra el topic, mostrar 'Desconocido'
+  };
 
   function formatDate(dateString) {
     const date = new Date(dateString);
@@ -130,26 +152,43 @@ const ContentAnteproyecto = ({
               deliveries.map((entrega, index) => (
                 <TableRow key={index}>
                   <TableCell>{getGroup(entrega.name)}</TableCell>
-                  <TableCell>{getTutorNameById(groupsData.find((g) => parseInt(getGroup(entrega.name)) === g.id)?.tutor_period_id)}</TableCell>
-                  <TableCell>{groupsData.find((g) => parseInt(getGroup(entrega.name)) === g.id)?.pre_report_title}</TableCell>
+                  <TableCell>
+                    {getTutorNameById(
+                      groupsData.find(
+                        (g) => parseInt(getGroup(entrega.name)) === g.id
+                      )?.tutor_period_id
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {
+                      groupsData.find(
+                        (g) => parseInt(getGroup(entrega.name)) === g.id
+                      )?.pre_report_title
+                    }
+                  </TableCell>
 
                   <TableCell>{formatDate(entrega.last_modified)}</TableCell>
                   <TableCell>
-                      <Select
-                        value={selectedReviewers[getGroup(entrega.name)] || ""}
-                        onChange={(e) => handleReviewerChange(getGroup(entrega.name), e.target.value)}
-                        displayEmpty
-                      >
-                        <MenuItem value="" disabled>
-                          Seleccionar Revisor
+                    <Select
+                      value={getGroupById(parseInt(getGroup(entrega.name), 10))?.reviewer_id || ""}
+                      onChange={(e) =>
+                        handleReviewerChange(
+                          getGroup(entrega.name),
+                          e.target.value
+                        )
+                      }
+                      displayEmpty
+                    >
+                      <MenuItem value="" disabled>
+                        Seleccionar Revisor
+                      </MenuItem>
+                      {tutors.map((tutor) => (
+                        <MenuItem key={tutor.id} value={tutor.id}>
+                          {tutor.name} {tutor.last_name}
                         </MenuItem>
-                        {tutors.map((tutor) => (
-                          <MenuItem key={tutor.id} value={tutor.id}>
-                            {tutor.name} {tutor.last_name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </TableCell>
+                      ))}
+                    </Select>
+                  </TableCell>
                   <TableCell>
                     <IconButton
                       onClick={() => downloadFile(getGroup(entrega.name))}
