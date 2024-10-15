@@ -9,6 +9,8 @@ import Phase from "../../components/UI/Dashboards/Student/Phase";
 import { getStudentInfo } from "../../api/getStudentInfo";
 import { getGroupById } from "../../api/getGroupById";
 import { useNavigate } from "react-router-dom";
+import { fetchCuatrimestres, getCuatrimestre } from "../../api/handlePeriods";
+import { setPeriod } from "../../redux/slices/periodSlice";
 
 const StudentHomeView = () => {
   const dispatch = useDispatch();
@@ -26,6 +28,21 @@ const StudentHomeView = () => {
   const handleSnackbarClose = () => {
     setNotification({ ...notification, open: false });
   };
+
+  useEffect(() => {
+    const fetchCuatrimestre = async () => {
+      if (user && user.id) { // Verificar que user esté disponible y que tenga un id
+        try {
+          const period = await getCuatrimestre(user);
+          dispatch(setPeriod(period));
+        } catch (error) {
+          console.error("Error al obtener el cuatrimestre", error);
+        }
+      }
+    };
+  
+    fetchCuatrimestre();
+  }, [user, dispatch]); // Agregar user como dependencia para que se ejecute cuando cambie  
 
   useEffect(() => {
     const fetchGroupAnswer = async () => {
@@ -102,14 +119,14 @@ const StudentHomeView = () => {
     <Container maxWidth="lg" sx={{ display: "flex", mt: 5 }}>
       <Box sx={{ flex: 1, mr: 8, mt: 8 }}>
         <StudentInfo />
-        <SubmitButton url="/student-form" title="Enviar Formulario de Grupo" width="100%" handleSubmit={handleNavigation} disabled={!milestones[0]?.tasks[0].completed}/>
-        <SubmitButton url="/initial-project" title="Enviar Anteproyecto" width="100%" handleSubmit={handleNavigation} disabled={!milestones[1]?.tasks[0].completed}/>
-        <SubmitButton url="/initial-project" title="Enviar Entrega Intermedia" width="100%" handleSubmit={handleNavigation} disabled={!milestones[2]?.tasks[0].completed}/>
-        <SubmitButton url="/initial-project" title="Enviar Entrega Final" width="100%" handleSubmit={handleNavigation} disabled={!milestones[3]?.tasks[0].completed}/>
+        <SubmitButton url="/student-form" title="Enviar Formulario de Grupo" width="100%" handleSubmit={() => handleNavigation("/student-form")} disabled={!milestones[0]?.tasks[0].completed}/>
+        <SubmitButton url="/initial-project" title="Enviar Anteproyecto" width="100%" handleSubmit={() => handleNavigation("/initial-project")} disabled={!milestones[1]?.tasks[0].completed}/>
+        <SubmitButton url="/initial-project" title="Enviar Entrega Intermedia" width="100%" handleSubmit={() => handleNavigation("/initial-project")} disabled={!milestones[2]?.tasks[0].completed}/>
+        <SubmitButton url="/initial-project" title="Enviar Entrega Final" width="100%" handleSubmit={() => handleNavigation("/initial-project")} disabled={!milestones[3]?.tasks[0].completed}/>
       </Box>
       <Box sx={{ flex: 2 }}>
         <Typography variant="h4" align="center" gutterBottom>
-          {cuatrimestre || "2C2024"}
+          {cuatrimestre}
         </Typography>
         <Box>
           {loading ? ( // Mostrar CircularProgress si está cargando

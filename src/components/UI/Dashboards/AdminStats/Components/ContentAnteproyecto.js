@@ -43,6 +43,7 @@ const ContentAnteproyecto = ({
 
   const handleReviewerChange = (deliveryId, reviewerId) => {
     //TODO: Enviar al back el revisor asignado
+    console.log(selectedReviewers)
     setSelectedReviewers({
       ...selectedReviewers,
       [deliveryId]: reviewerId,

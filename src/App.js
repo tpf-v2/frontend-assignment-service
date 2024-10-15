@@ -73,7 +73,7 @@ const App = () => {
             <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />            
             <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
             <Route path="/student-form" element={<ProtectedRoute><ClosedAlert message="No se aceptan mas respuestas al formulario de grupos."/></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente 
-            <Route path="/initial-project" element={<UploadView />} />
+            <Route path="/initial-project" element={<ProtectedRoute><UploadView /></ProtectedRoute>} />
             {/* <Route path="/student-form" element={<StudentForm />} /> */}
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
             <Route path="/tutor-cuatrimestre/:cuatrimestre" element={<ProtectedRoute><TutorDashboardView /></ProtectedRoute>} />
