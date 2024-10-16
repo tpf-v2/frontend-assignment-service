@@ -32,9 +32,6 @@ const ContentAnteproyecto = ({
   const tutors = Object.values(useSelector((state) => state.tutors))
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
-  const topics = Object.values(useSelector((state) => state.topics))
-    .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
-    .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
   const [selectedReviewers, setSelectedReviewers] = useState({});
