@@ -16,16 +16,16 @@ import {
 } from "@mui/material";
 import StatCard from "./StatCard";
 import DownloadIcon from "@mui/icons-material/Download";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { confirmGroups, updateGroup } from "../../../../../api/updateGroups";
+import { setGroups } from "../../../../../redux/slices/groupsSlice";
 
 const ContentAnteproyecto = ({
   loadingAnteproyectos,
   deliveries,
-  groups,
   downloadFile,
 }) => {
-  const groupsData = Object.values(useSelector((state) => state.groups))
+  let groupsData = Object.values(useSelector((state) => state.groups))
     .sort((a, b) => a.id - b.id)
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
@@ -38,18 +38,28 @@ const ContentAnteproyecto = ({
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
   const [selectedReviewers, setSelectedReviewers] = useState({});
+  const dispatch = useDispatch();
 
-  if (loadingAnteproyectos) {
-    return <CircularProgress />;
+  if (loadingAnteproyectos || groupsData.length === 0) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100%"
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   const getGroupById = (id) => {
-    console.log(groups);
-    const group = groups.find((g) => g.id === id);
+    console.log(groupsData);
+    const group = groupsData?.find((g) => g.id === id);
     console.log(group);
     return group ? group : null;
   };
-  const handleReviewerChange = (deliveryId, reviewerId) => {
+  const handleReviewerChange = async (deliveryId, reviewerId) => {
     //TODO: Enviar al back el revisor asignado
     console.log(selectedReviewers);
     console.log(deliveryId, reviewerId);
@@ -58,13 +68,23 @@ const ContentAnteproyecto = ({
       [deliveryId]: reviewerId,
     });
     // Obtener el grupo y crear una copia modificable
-    const group = { ...getGroupById(parseInt(deliveryId, 10)) };
+    const updatedGroup = { ...getGroupById(parseInt(deliveryId, 10)) };
 
-    // Asignar el reviewerId a la copia del grupo
-    group.reviewer_id = reviewerId;
+    if (updatedGroup) {
+      // Asignar el reviewerId a la copia del grupo
+      updatedGroup.reviewer_id = reviewerId;
 
-    // Llamar a updateGroup con el grupo modificado
-    updateGroup(user, period, group);
+      // Llamar al backend para actualizar el grupo
+      await updateGroup(user, period, updatedGroup);
+
+      // Crear una nueva lista de grupos actualizados
+      const updatedGroups = groupsData.map((group) =>
+        group.id === updatedGroup.id ? updatedGroup : group
+      );
+
+      // Despachar la actualización solo del grupo modificado en Redux
+      dispatch(setGroups(updatedGroups));
+    }
   };
 
   // Función para obtener el nombre del tutor por su id
@@ -100,7 +120,7 @@ const ContentAnteproyecto = ({
 
   return (
     <div>
-      {groups && (
+      {groupsData && (
         <Box mt={4}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={4}>
@@ -113,14 +133,16 @@ const ContentAnteproyecto = ({
               <StatCard
                 title="Grupos que faltan entregar"
                 value={
-                  loadingAnteproyectos ? -1 : groups.length - deliveries.length
+                  loadingAnteproyectos
+                    ? -1
+                    : groupsData.length - deliveries.length
                 }
               />
             </Grid>
             <Grid item xs={12} sm={4}>
               <StatCard
                 title="Total de grupos"
-                value={loadingAnteproyectos ? -1 : groups.length}
+                value={loadingAnteproyectos ? -1 : groupsData.length}
               />
             </Grid>
           </Grid>
@@ -170,7 +192,15 @@ const ContentAnteproyecto = ({
                   <TableCell>{formatDate(entrega.last_modified)}</TableCell>
                   <TableCell>
                     <Select
-                      value={getGroupById(parseInt(getGroup(entrega.name), 10))?.reviewer_id || ""}
+                      value={
+                        selectedReviewers[getGroup(entrega.name)]
+                          ? selectedReviewers[getGroup(entrega.name)]
+                          : getGroupById(parseInt(getGroup(entrega.name), 10))
+                              ?.reviewer_id === 0
+                          ? ""
+                          : getGroupById(parseInt(getGroup(entrega.name), 10))
+                              ?.reviewer_id
+                      }
                       onChange={(e) =>
                         handleReviewerChange(
                           getGroup(entrega.name),

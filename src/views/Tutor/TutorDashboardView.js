@@ -22,6 +22,7 @@ import Inicio from "../../components/UI/Dashboards/Tutor/Inicio";
 import GroupReview from "../../components/UI/Dashboards/Tutor/GroupReview";
 import DatePicker from "react-datepicker"; // Importa el DatePicker
 import "react-datepicker/dist/react-datepicker.css"; // Estilos por defecto
+import { getMyGroupsToReview } from "../../api/getMyGroupsToReview";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -71,6 +72,8 @@ const TutorDashboard = () => {
   const user = useSelector((state) => state.user);
 
   const [userGroups, setUserGroups] = useState([]);
+  const [userGroupsToReview, setUserGroupsToReview] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("Inicio");
   const [selectedGroup, setSelectedGroup] = useState(null); // Campo para el grupo seleccionado
@@ -88,6 +91,17 @@ const TutorDashboard = () => {
       }
     };
     //TODO: traer grupos a revisar por el tutor
+
+    const getGroupsToReview = async () => {
+      try {
+        const groups = await getMyGroupsToReview(user, cuatrimestre);
+        setUserGroupsToReview(groups.sort((a, b) => a.id - b.id));
+      } catch (error) {
+        console.error("Error al obtener los grupos: ", error);
+      }
+    };
+
+    getGroupsToReview();
     getGroups();
     setLoading(false);
   }, [loading]);
@@ -190,7 +204,7 @@ const TutorDashboard = () => {
                     Revisiones
                   </AccordionSummary>
                   <AccordionDetails>
-                    {userGroups.map((group) => (
+                    {userGroupsToReview.map((group) => (
                       <ListItemStyled
                         key={group.id}
                         button
