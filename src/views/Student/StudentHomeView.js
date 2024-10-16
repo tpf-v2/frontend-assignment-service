@@ -9,7 +9,7 @@ import Phase from "../../components/UI/Dashboards/Student/Phase";
 import { getStudentInfo } from "../../api/getStudentInfo";
 import { getGroupById } from "../../api/getGroupById";
 import { useNavigate } from "react-router-dom";
-import { fetchCuatrimestres, getCuatrimestre } from "../../api/handlePeriods";
+import { getCuatrimestre } from "../../api/handlePeriods";
 import { setPeriod } from "../../redux/slices/periodSlice";
 
 const StudentHomeView = () => {

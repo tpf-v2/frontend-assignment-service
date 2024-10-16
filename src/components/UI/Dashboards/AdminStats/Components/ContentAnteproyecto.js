@@ -17,7 +17,7 @@ import {
 import StatCard from "./StatCard";
 import DownloadIcon from "@mui/icons-material/Download";
 import { useDispatch, useSelector } from "react-redux";
-import { confirmGroups, updateGroup } from "../../../../../api/updateGroups";
+import { updateGroup } from "../../../../../api/updateGroups";
 import { setGroups } from "../../../../../redux/slices/groupsSlice";
 
 const ContentAnteproyecto = ({

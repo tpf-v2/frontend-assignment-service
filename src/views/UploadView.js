@@ -1,10 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import UploadFile from "../components/UploadFile";
 import ClosedAlert from "../components/ClosedAlert";
-import { useEffect, useState } from "react";
-import { getCuatrimestre } from "../api/handlePeriods";
-import { setPeriod } from "../redux/slices/periodSlice";
 
 const UploadView = () => {
   // const dispatch = useDispatch();
