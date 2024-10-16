@@ -161,8 +161,12 @@ const TutorDashboard = () => {
   };
 
   return (
-    <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>
-      <Root>
+<Container maxWidth={false} 
+    sx={{ 
+      width: "95%", // Ajusta el ancho al 90% del viewport
+      height: "120vh", // Ocupa el 100% de la altura de la pantalla
+      maxWidth: "none", // Para que el maxWidth no limite el tamaño
+    }}>      <Root>
         <Grid container spacing={3}>
           {/* Sidebar */}
           <Grid item xs={3}>
