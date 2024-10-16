@@ -103,12 +103,6 @@ const ContentAnteproyecto = ({
     return parts[1]; // Devuelve el grupo
   }
 
-  // Función para obtener el nombre del topic por su id
-  const getTopicNameById = (id) => {
-    const topic = topics.find((t) => t.id === id);
-    return topic ? topic.name : "Desconocido"; // Si no encuentra el topic, mostrar 'Desconocido'
-  };
-
   function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString("es-ES", {
