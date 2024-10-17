@@ -40,3 +40,21 @@ export const fetchAvailability = async (user, period_id) => {
     }
 };
 
+export const putAvailability = async (user, slots, period_id) => {
+  const config = {
+      params: {
+        period: period_id,
+      },
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+  
+    try {
+      const url = `${BASE_URL}/dates`;
+      const response = await axios.put(url, slots, config);
+      return response.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+};

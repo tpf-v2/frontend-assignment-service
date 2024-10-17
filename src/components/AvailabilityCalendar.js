@@ -9,7 +9,7 @@ import moment from "moment-timezone";
 import MySnackbar from "./UI/MySnackBar";
 import EventModal from "./EventModal";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
-import { sendAvailability, fetchAvailability } from "../api/handleAvailability";
+import { sendAvailability, fetchAvailability, putAvailability } from "../api/handleAvailability";
 import { CalendarStyled, AvailabilityContainer, ButtonContainer, DescriptionBox } from "../styles/AvailabilityCalendarStyle";
 import { transformSlotsToIntervals } from "../utils/TransformSlotsToIntervals";
 
@@ -105,7 +105,7 @@ const AvailabilityCalendar = () => {
       }));
       await sendAvailability(user, formattedEvents, period);
       setAvailabilitySent(true)
-      handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
+      handleSnackbarOpen("Disponibilidad enviada éxitosamente.", "success");
     } catch (error) {
       handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
     }
@@ -117,15 +117,24 @@ const AvailabilityCalendar = () => {
         const slots = await fetchAvailability(user, period);
         const formattedSlots = transformSlotsToIntervals(slots);
         setEvents(formattedSlots)
+        if (slots.length > 0) {
+          setAvailabilitySent(true)
+        }
       } catch (error) {
         console.error("Error when fetching dates")
       }
     };
     initialAvailability();
-  }, []); // El array vacío [] asegura que solo se ejecuta una vez
+  }, [availabilitySent]); // El array vacío [] asegura que solo se ejecuta una vez
 
   const onEditEvents = async () => {
     try {
+      const formattedEvents = events.map((event) => ({
+        // Resta 3 horas (180 minutos) a cada fecha
+        start: moment(event.start).subtract(3, "hours").utc().format(),
+        end: moment(event.end).subtract(3, "hours").utc().format(),
+      }));
+      await putAvailability(user, formattedEvents, period);
       handleSnackbarOpen("Disponibilidad editada exitosamente.", "success");
     } catch (error) {
       handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
