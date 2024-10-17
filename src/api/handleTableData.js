@@ -9,6 +9,9 @@ export const getTableData = async (endpoint, user) => {
     headers: {
       Authorization: `Bearer ${user.token}`,
     },
+    params: {
+      cache_bust: new Date().getTime(), // add params to avoid caching
+    },
   };
   try {
     const response = await axios.get(`${BASE_URL}${endpoint}`, config);

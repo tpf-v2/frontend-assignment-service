@@ -101,7 +101,6 @@ const AdminHomeView = () => {
         console.error(error.message);
       }
     };
-
     fetchData();
   }, []);
 

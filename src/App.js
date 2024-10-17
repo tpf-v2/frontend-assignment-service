@@ -49,7 +49,7 @@ const App = () => {
     }
   };
 
-  const color = user ? getColorBasedOnRole(user.role) : '#0072C6'; // Color predeterminado para los no logueados
+  const color = user ? getColorBasedOnRole(user.temporal_role) : '#0072C6'; // Color predeterminado para los no logueados
 
   return (
     <Router>
