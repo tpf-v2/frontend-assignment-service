@@ -4,8 +4,7 @@ const initialState = {
   id: "",
   name: "",
   last_name: "",
-  role: "", 
-  temporal_role: "", 
+  role: "",
   email: "",
   token: "",
   expirationTime: null, // Añade el tiempo de expiración
@@ -22,34 +21,26 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      const { role } = action.payload;
-      return { 
-        ...state, 
-        ...action.payload, 
-        temporal_role: role // Inicializar temporal_role con el rol recibido del back 
-      };
+      return { ...state, ...action.payload };
     },
     setToken: (state, action) => {
       state.token = action.payload.token;
-      state.expirationTime = action.payload.expirationTime; 
+      state.expirationTime = action.payload.expirationTime; // Guarda el tiempo de expiración
     },
     clearUser: () => {
       return initialState;
     },
-    setUserInfo: (state, action) => {
+    setUserInfo: (state,action) => {
       state.form_answered = action.payload.form_answered;
       state.tutor = action.payload.tutor;
       state.group_id = action.payload.group_id;
       state.topic = action.payload.topic;
       state.teammates = action.payload.teammates;
-      state.period_id = action.payload.period_id;
-    },
-    setTemporalRole: (state, action) => {
-      state.temporal_role = action.payload; 
+      state.period_id = action.payload.period_id
     }
   },
 });
 
-export const { setUser, setToken, clearUser, setUserInfo, setTemporalRole } = userSlice.actions;
+export const { setUser, setToken, clearUser, setUserInfo } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Typography, Box, TextField, Button } from "@mui/material";
 import { styled } from "@mui/system";
-import { downloadAnteproyecto, fetchAnteproyectoPdf } from "../../../../api/downloadAnteproyecto";
-import { useSelector } from "react-redux";
 
 // Estilos
 const GroupReviewContainer = styled(Box)(({ theme }) => ({
@@ -11,16 +9,16 @@ const GroupReviewContainer = styled(Box)(({ theme }) => ({
   alignItems: "center",
   marginTop: theme.spacing(2),
   padding: theme.spacing(3),
-  // border: "1px solid #ccc",
+  border: "1px solid #ccc",
   borderRadius: "8px",
-  // boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
   backgroundColor: "#ffffff",
   width: "100%",
 }));
 
 const PdfPreviewBox = styled(Box)(({ theme }) => ({
   width: "100%",
-  height: "500px", // Mantén altura fija
+  height: "300px", // Mantén altura fija
   border: "1px solid #ccc",
   borderRadius: "4px",
   display: "flex",
@@ -41,23 +39,11 @@ const DownloadButton = styled(Button)(({ theme }) => ({
   borderRadius: "4px",
 }));
 
-const GroupReview = ({ groupId }) => {
+const GroupReview = ({ groupId, pdfUrl }) => {
   const [comment, setComment] = useState("");
-  const [pdfUrl, setPdfUrl] = useState(null);
-  const period = useSelector((state) => state.period);
-  const user = useSelector((state) => state.user);
 
   const handleCommentChange = (event) => {
     setComment(event.target.value);
-  };
-
-  const downloadFile = async () => {
-    try {
-      console.log(period);
-      await downloadAnteproyecto(groupId, user, period.period_id);
-    } catch (error) {
-      console.error("Error al descargar el archivo:", error);
-    }
   };
 
   const handleSubmit = () => {
@@ -65,47 +51,24 @@ const GroupReview = ({ groupId }) => {
     setComment("");
   };
 
-    // Función para cargar el PDF en la previsualización
-    const loadPdfPreview = async () => {
-      try {
-        const url = await fetchAnteproyectoPdf(groupId, user, period.period_id);
-        setPdfUrl(url); // Guarda la URL en el estado
-      } catch (error) {
-        console.error("Error al cargar la previsualización del PDF:", error);
-      }
-    };
-  
-    useEffect(() => {
-      loadPdfPreview();
-    }, [groupId, user, period]);
-
   return (
     <GroupReviewContainer>
       <Typography variant="h4" align="center" gutterBottom>
-        Anteproyecto
+        Grupo {groupId}
       </Typography>
-
-      <PdfPreviewBox>
-      {pdfUrl ? (
-          <iframe
-            src={pdfUrl}
-            title="Previsualización del PDF"
-            width="100%"
-            height="100%"
-            style={{ border: "none" }}
-          />
-        ) : (
-          <Typography>Cargando ...</Typography>
-        )}
-      </PdfPreviewBox>
 
       {/* Botón para descargar el PDF */}
       <DownloadButton 
         variant="contained" 
-        onClick={downloadFile}
+        href={pdfUrl} 
+        download
       >
         Descargar PDF
       </DownloadButton>
+
+      <PdfPreviewBox>
+        <Typography>Previsualización de PDF</Typography>
+      </PdfPreviewBox>
 
       <Box
         sx={{

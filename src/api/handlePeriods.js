@@ -45,20 +45,9 @@ export const getTutorCuatrimestre = async (user) => {
     },
   };
   try {
-    var url = ""
-    if(user.role === 'admin' ){
-      url = `${BASE_URL}/api/periods/`;
-    }
-    else {
-      url = `${BASE_URL}/api/tutors/${user.id}/periods`;
-    }
+    const url = `${BASE_URL}/api/tutors/${user.id}/periods`;
     const response = await axios.get(url, config);
-    
-    const periods = response.data.tutor_periods ? response.data.tutor_periods : response.data.map(item => {
-      const { id, ...rest } = item;
-      return { period_id: id, ...rest };
-  });
-    return periods;
+    return response.data.tutor_periods;
   } catch (error) {
     throw new Error('Error fetching periods: ' + error.message);
   }

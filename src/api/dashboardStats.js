@@ -29,9 +29,6 @@ export const getDashboardData = async (period, user) => {
     headers: {
       Authorization: `Bearer ${user.token}`,
     },
-    params: {
-      cache_bust: new Date().getTime(), // add params to avoid caching
-    },
   };
 
   try {

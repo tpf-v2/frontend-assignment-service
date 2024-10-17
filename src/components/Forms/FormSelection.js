@@ -66,21 +66,21 @@ const FormSelection = () => {
         <Title variant="h4" style={{ color: '#555' }}>
           {period || '2C2024'}
         </Title>
-        {user.temporal_role !== 'admin' ? (
+        {user.role !== 'admin' ? (
           <Title variant="h6">Bienvenido, {user.name}!</Title>
         ) : null}
-        {user.temporal_role === 'student' && (
+        {user.role === 'student' && (
             <Typography variant="h6">
               Tu padrón se registró en {groupCount} respuesta{groupCount !== 1 ? 's' : ''}
             </Typography>
         )}
         <Box textAlign="center">
-          {user.temporal_role === 'student' && (
+          {user.role === 'student' && (
             <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/student-form')}>
               Enviar Formulario de Grupo
             </ButtonStyled>
           )}
-          {user.temporal_role === 'tutor' && (
+          {user.role === 'tutor' && (
             <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/tutor-form')}>
               Enviar Formulario de Temas a Tutorear
             </ButtonStyled>

@@ -65,6 +65,7 @@ const AvailabilityContainer = styled(Box)(({ theme }) => ({
   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
 }));
 
+
 const TutorDashboardView = () => {
   const { period } = useParams();
 
@@ -74,8 +75,6 @@ const TutorDashboardView = () => {
   const [loading, setLoading] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("Inicio");
   const [selectedGroup, setSelectedGroup] = useState(null); // Campo para el grupo seleccionado
-  const [selectedGroupReview, setSelectedGroupReview] = useState(null); // Campo para la revisión seleccionada
-
   const [availability, setAvailability] = useState([]); // Estado para bloques de disponibilidad
 
   useEffect(() => {
@@ -84,10 +83,9 @@ const TutorDashboardView = () => {
         const groups = await getMyGroups(user, period);
         setUserGroups(groups.sort((a, b) => a.id - b.id));
       } catch (error) {
-        console.error("Error al obtener los grupos: ", error);
+        console.error("Error when getting my groups: ", error);
       }
     };
-    //TODO: traer grupos a revisar por el tutor
     getGroups();
     setLoading(false);
   }, [loading]);
@@ -113,7 +111,7 @@ const TutorDashboardView = () => {
           timeFormat="HH:mm"
           timeIntervals={30}
           dateFormat="MMMM d, yyyy h:mm aa"
-          inline
+          inline // Esto mostrará el calendario directamente
         />
         <Box>
           {availability.length > 0 && (
@@ -127,12 +125,13 @@ const TutorDashboardView = () => {
         </Box>
       </AvailabilityContainer>
     ),
-    "Fechas de presentación": <div>Contenido para Fechas de Presentación</div>,
-    Revisiones: selectedGroupReview ? (
-      <GroupReview groupId={selectedGroupReview} />
-    ) : (
-      <div>Selecciona un grupo para ver las revisiones</div>
-    ),
+    "Fechas de presentaciones": <div>Contenido para Fechas de Presentación</div>,
+    Revisiones: selectedGroup ? (
+      <GroupReview
+        groupId={selectedGroup}
+        pdfUrl={`path/to/your/pdf/group-${selectedGroup}.pdf`} // Reemplaza con la URL correcta de tu PDF
+      />
+    ) : null,
   };
 
   const renderContent = () => {
@@ -187,30 +186,6 @@ const TutorDashboardView = () => {
 
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    Revisiones
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    {userGroups.map((group) => (
-                      <ListItemStyled
-                        key={group.id}
-                        button
-                        selected={
-                          selectedGroupReview === group.id &&
-                          selectedMenu === "Revisiones"
-                        }
-                        onClick={() => {
-                          setSelectedGroupReview(group.id);
-                          setSelectedMenu("Revisiones");
-                        }}
-                      >
-                        Grupo {group.id}
-                      </ListItemStyled>
-                    ))}
-                  </AccordionDetails>
-                </Accordion>
-
-                <Accordion defaultExpanded>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     Mis Presentaciones
                   </AccordionSummary>
                   <AccordionDetails>
@@ -245,4 +220,4 @@ const TutorDashboardView = () => {
   );
 };
 
-export default TutorDashboard;
+export default TutorDashboardView;
