@@ -42,8 +42,7 @@ const DashboardView = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadingAnteproyectos, setLoadingAnteproyectos] = useState(true);
-  const [selectedMenu, setSelectedMenu] = useState("General");
-  const [groupsData, setGroupsData] = useState(null);
+  const [selectedMenu, setSelectedMenu] = useState("Inicio");
   const [deliveries, setDeliveries] = useState(null);
   const [showUploadCSV, setShowUploadCSV] = useState(false);
   const [uploadType, setUploadType] = useState("");
@@ -58,9 +57,7 @@ const DashboardView = () => {
 
         const endpoint = `/groups/?period=${cuatrimestre}`;
         const groupsData = await getTableData(endpoint, user);
-        console.log(groupsData)
         dispatch(setGroups(groupsData));
-        setGroupsData(groupsData);
       } catch (error) {
         console.error("Error al obtener datos del dashboard:", error);
       } finally {
@@ -116,7 +113,6 @@ const DashboardView = () => {
           <ContentAnteproyecto
             loadingAnteproyectos={loadingAnteproyectos}
             deliveries={deliveries}
-            groups={groupsData}
             downloadFile={downloadFile}
           />
         );
@@ -139,7 +135,7 @@ const DashboardView = () => {
   return (
     <Container maxWidth={false} 
     sx={{ 
-      width: "100%", // Ajusta el ancho al 90% del viewport
+      width: "95%", // Ajusta el ancho al 90% del viewport
       height: "120vh", // Ocupa el 100% de la altura de la pantalla
       maxWidth: "none", // Para que el maxWidth no limite el tamaño
     }}>

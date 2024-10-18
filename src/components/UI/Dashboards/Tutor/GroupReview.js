@@ -3,6 +3,7 @@ import { Typography, Box, TextField, Button } from "@mui/material";
 import { styled } from "@mui/system";
 import { downloadAnteproyecto, fetchAnteproyectoPdf } from "../../../../api/downloadAnteproyecto";
 import { useSelector } from "react-redux";
+import { notifyGroup } from "../../../../api/notifyGroup";
 
 // Estilos
 const GroupReviewContainer = styled(Box)(({ theme }) => ({
@@ -60,9 +61,15 @@ const GroupReview = ({ groupId }) => {
     }
   };
 
-  const handleSubmit = () => {
-    console.log(`Comentario para Grupo ${groupId}: ${comment}`);
-    setComment("");
+  const handleSubmit = async () => {
+    try {
+      console.log(`Comentario para Grupo ${groupId}: ${comment}`);
+      await notifyGroup(user, comment, groupId)
+    } catch (error) {
+      console.error("Error al enviar feedback:", error);
+    } finally {
+      setComment("");
+    }
   };
 
     // Función para cargar el PDF en la previsualización
