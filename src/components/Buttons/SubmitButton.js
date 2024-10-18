@@ -1,10 +1,9 @@
 import { Button } from "@mui/material";
 import { styled } from "@mui/system";
-import { useNavigate } from "react-router-dom";
 
-const ButtonStyled = styled(Button)(({ theme }) => ({
+const ButtonStyled = styled(Button)(({ theme, width }) => ({
     marginTop: theme.spacing(2),
-    width: "100%",
+    width: width,
     padding: theme.spacing(1),
     fontSize: "1rem",
     "&.MuiButton-containedPrimary": { backgroundColor: "#0072C6" },
@@ -13,15 +12,10 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
     "&:hover.MuiButton-containedSecondary": { backgroundColor: "#7A7A7A" },
 }));
   
-const SubmitButton = ({ url, title }) => {
-    const navigate = useNavigate();
-
-    const handleNavigation = (url) => {
-        navigate(url);
-    };
+const SubmitButton = ({ title, handleSubmit }) => {
 
     return (
-        <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation(url)}>
+        <ButtonStyled variant="contained" color="primary" onClick={handleSubmit}>
             {title}
         </ButtonStyled>
     );

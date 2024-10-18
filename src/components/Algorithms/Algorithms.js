@@ -1,10 +1,25 @@
 import React, { useState } from "react";
-import { Container, Box, Paper, Typography, Button, DialogTitle, DialogContent, CircularProgress, Dialog, IconButton } from "@mui/material";
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  DialogTitle,
+  DialogContent,
+  CircularProgress,
+  Dialog,
+  IconButton,
+} from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { styled, useMediaQuery, useTheme } from "@mui/system";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { incompleteGroups } from "../../api/assignments";
+import { getGroups } from "../../api/getGroups";
+import { setGroups } from "../../redux/slices/groupsSlice";
+import { togglePeriodSetting } from "../../redux/slices/periodSlice";
+import updatePeriod from "../../api/updatePeriod";
 
 const StepBlock = ({ title, onRun, isRunDisabled }) => (
   <Box
@@ -30,15 +45,6 @@ const StepBlock = ({ title, onRun, isRunDisabled }) => (
   </Box>
 );
 
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  padding: theme.spacing(2),
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: "#ffffff",
-  boxShadow: theme.shadows[3],
-  width: '100%', // Ancho completo del contenedor padre
-}));
-
 const Title = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(3),
   color: "#0072C6",
@@ -62,22 +68,54 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
 
 const Algorithms = () => {
   const period = useSelector((state) => state.period);
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const { cuatrimestre } = useParams();
 
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-  const handleRunStep1 = () => {
-    setLoading(true);
-    setOpenDialog(true);
+  const handleRunStep1 = async () => {
+    try {
+      // Inicia la carga y abre el diálogo
+      setLoading(true);
+      setOpenDialog(true);
 
-    setTimeout(() => {
-      setLoading(false);
+      // Obtiene los grupos incompletos
+      const response = await incompleteGroups(user, period);
+      console.log("Incomplete groups response:", response);
+
+      // Obtiene y actualiza los grupos en el estado global
+      const groups = await getGroups(user, period);
+      dispatch(setGroups(groups));
+
+      // Alterna la configuración de 'groups_assignment_completed' si es necesario
+      dispatch(togglePeriodSetting({ field: "groups_assignment_completed" }));
+
+      // Crea el objeto de configuración actualizado
+      const updatedSettings = {
+        id: period.id,
+        ...period,
+        groups_assignment_completed: true, // Actualización directa
+      };
+
+      // Llama a la función de actualización del período
+      const result = await updatePeriod(updatedSettings, user);
+      console.log("Updated successfully:", result);
+
+      // Redirige al usuario después de completar la acción
       navigate(`/dashboard/${cuatrimestre}/groups`);
-    }, 2000);
+    } catch (error) {
+      // Manejo de errores global
+      console.error("Error in handleRunStep1:", error);
+    } finally {
+      // Finaliza la carga independientemente de si hubo un error o no
+      setLoading(false);
+    }
   };
 
   const handleRunStep2 = () => {
@@ -89,38 +127,38 @@ const Algorithms = () => {
   };
 
   return (
-    <Container maxWidth={false} sx={{ overflow: "hidden" }}> 
-        <Title variant="h4">Algoritmos de asignación</Title>
+    <Container maxWidth={false} sx={{ overflow: "hidden" }}>
+      <Title variant="h4">Algoritmos de asignación</Title>
 
-        <Container
-          maxWidth={false}
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            alignItems: "center",
-            justifyContent: "center",
-            mt: 5,
-            // overflowX: "auto", // Permite que el contenido se desplace en pantallas pequeñas
-          }}
-        >
-          <StepBlock
-            title="Armar grupos"
-            onRun={handleRunStep1}
-            isRunDisabled={period.groups_assignment_completed} // Deshabilitar si ya se completó
-          />
-          <ArrowForwardIcon sx={{ fontSize: { xs: 30, md: 50 }, mx: 2 }} />
-          <StepBlock
-            title="Asignar tema y tutor a cada grupo"
-            onRun={handleRunStep2}
-            isRunDisabled={period.topics_tutors_assignment_completed} // Deshabilitar si ya se completó
-          />
-          <ArrowForwardIcon sx={{ fontSize: { xs: 30, md: 50 }, mx: 2 }} />
-          <StepBlock
-            title="Asignar fecha de presentación"
-            onRun={handleRunStep3}
-            isRunDisabled={period.presentation_dates_assignment_completed} // Deshabilitar si ya se completó
-          />
-        </Container>
+      <Container
+        maxWidth={false}
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          alignItems: "center",
+          justifyContent: "center",
+          mt: 5,
+          // overflowX: "auto", // Permite que el contenido se desplace en pantallas pequeñas
+        }}
+      >
+        <StepBlock
+          title="Armar grupos"
+          onRun={handleRunStep1}
+          isRunDisabled={period.groups_assignment_completed} // Deshabilitar si ya se completó
+        />
+        <ArrowForwardIcon sx={{ fontSize: { xs: 30, md: 50 }, mx: 2 }} />
+        <StepBlock
+          title="Asignar tema y tutor a cada grupo"
+          onRun={handleRunStep2}
+          isRunDisabled={period.topics_tutors_assignment_completed} // Deshabilitar si ya se completó
+        />
+        <ArrowForwardIcon sx={{ fontSize: { xs: 30, md: 50 }, mx: 2 }} />
+        <StepBlock
+          title="Asignar fecha de presentación"
+          onRun={handleRunStep3}
+          isRunDisabled={period.presentation_dates_assignment_completed} // Deshabilitar si ya se completó
+        />
+      </Container>
       <Dialog
         open={openDialog}
         onClose={() => setOpenDialog(false)}
@@ -128,8 +166,8 @@ const Algorithms = () => {
         maxWidth="lg"
         fullWidth
         sx={{
-          height: '100%',
-          maxHeight: '100vh',
+          height: "100%",
+          maxHeight: "100vh",
         }}
       >
         <DialogTitle>
@@ -138,7 +176,7 @@ const Algorithms = () => {
             aria-label="close"
             onClick={() => setOpenDialog(false)}
             sx={{
-              position: 'absolute',
+              position: "absolute",
               right: 8,
               top: 8,
               color: (theme) => theme.palette.grey[500],
@@ -149,18 +187,25 @@ const Algorithms = () => {
         </DialogTitle>
         <DialogContent
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100%',
-            minHeight: '300px',
-            maxHeight: '100vh',
-            minWidth: '300px',
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+            minHeight: "300px",
+            maxHeight: "100vh",
+            minWidth: "300px",
           }}
         >
           {loading && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "200px",
+              }}
+            >
               <CircularProgress />
               <Typography sx={{ ml: 2 }}>Armando grupos...</Typography>
             </Box>
@@ -206,9 +251,9 @@ export default Algorithms;
 //         ) : (
 //           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 //             <Typography variant="h6">{steps[activeStep]}</Typography>
-//             <Button 
-//               variant="contained" 
-//               onClick={handleNext} 
+//             <Button
+//               variant="contained"
+//               onClick={handleNext}
 //               sx={{ mt: 2 }}
 //               disabled={activeStep === steps.length - 1}
 //             >
@@ -227,4 +272,3 @@ export default Algorithms;
 // };
 
 // export default Algorithms;
-

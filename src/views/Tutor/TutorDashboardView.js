@@ -21,6 +21,9 @@ import LearningPath from "../../components/LearningPath";
 import Inicio from "../../components/UI/Dashboards/Tutor/Inicio";
 import GroupReview from "../../components/UI/Dashboards/Tutor/GroupReview";
 import AvailabilityCalendar from "../../components/WIP/AvailabilityCalendar";
+import DatePicker from "react-datepicker"; // Importa el DatePicker
+import "react-datepicker/dist/react-datepicker.css"; // Estilos por defecto
+import { getMyGroupsToReview } from "../../api/getMyGroupsToReview";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -57,13 +60,26 @@ const Title = styled(Typography)(({ theme }) => ({
   flexGrow: 1,
 }));
 
+
+const AvailabilityContainer = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(2),
+  borderRadius: "8px",
+  backgroundColor: "#f1f1f1",
+  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+}));
+
 const TutorDashboardView = () => {
   const { cuatrimestre } = useParams();
   const user = useSelector((state) => state.user);
   const [userGroups, setUserGroups] = useState([]);
+  const [userGroupsToReview, setUserGroupsToReview] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("Inicio");
-  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState(null); // Campo para el grupo seleccionado
+  const [selectedGroupReview, setSelectedGroupReview] = useState(null); // Campo para la revisión seleccionada
+
+  const [availability, setAvailability] = useState([]); // Estado para bloques de disponibilidad
 
   useEffect(() => {
     const getGroups = async () => {
@@ -71,9 +87,21 @@ const TutorDashboardView = () => {
         const groups = await getMyGroups(user, cuatrimestre);
         setUserGroups(groups.sort((a, b) => a.id - b.id));
       } catch (error) {
-        console.error("Error when getting my groups: ", error);
+        console.error("Error al obtener los grupos: ", error);
       }
     };
+    //TODO: traer grupos a revisar por el tutor
+
+    const getGroupsToReview = async () => {
+      try {
+        const groups = await getMyGroupsToReview(user, cuatrimestre);
+        setUserGroupsToReview(groups.sort((a, b) => a.id - b.id));
+      } catch (error) {
+        console.error("Error al obtener los grupos: ", error);
+      }
+    };
+
+    getGroupsToReview();
     getGroups();
     setLoading(false);
   }, [loading]);
@@ -82,15 +110,12 @@ const TutorDashboardView = () => {
     Inicio: <Inicio />,
     "Mis Grupos": <div>Contenido del Formulario de Fechas</div>,
     "Seleccionar Disponibilidad": <AvailabilityCalendar />,
-    "Fechas de presentaciones": (
-      <div>Contenido para Fechas de Presentación</div>
+    "Fechas de presentación": <div>Contenido para Fechas de Presentación</div>,
+    Revisiones: selectedGroupReview ? (
+      <GroupReview groupId={selectedGroupReview} />
+    ) : (
+      <div>Selecciona un grupo para ver las revisiones</div>
     ),
-    Revisiones: selectedGroup ? (
-      <GroupReview
-        groupId={selectedGroup}
-        pdfUrl={`path/to/your/pdf/group-${selectedGroup}.pdf`} // Reemplaza con la URL correcta de tu PDF
-      />
-    ) : null,
   };
 
   const renderContent = () => {
@@ -105,8 +130,12 @@ const TutorDashboardView = () => {
   };
 
   return (
-    <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>
-      <Root>
+<Container maxWidth={false} 
+    sx={{ 
+      width: "95%", // Ajusta el ancho al 90% del viewport
+      height: "120vh", // Ocupa el 100% de la altura de la pantalla
+      maxWidth: "none", // Para que el maxWidth no limite el tamaño
+    }}>      <Root>
         <Grid container spacing={3}>
           {/* Sidebar */}
           <Grid item xs={3}>
@@ -135,6 +164,30 @@ const TutorDashboardView = () => {
                         onClick={() => {
                           setSelectedGroup(group.id);
                           setSelectedMenu(`Grupo ${group.id}`);
+                        }}
+                      >
+                        Grupo {group.id}
+                      </ListItemStyled>
+                    ))}
+                  </AccordionDetails>
+                </Accordion>
+
+                <Accordion defaultExpanded>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    Revisiones
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    {userGroupsToReview.map((group) => (
+                      <ListItemStyled
+                        key={group.id}
+                        button
+                        selected={
+                          selectedGroupReview === group.id &&
+                          selectedMenu === "Revisiones"
+                        }
+                        onClick={() => {
+                          setSelectedGroupReview(group.id);
+                          setSelectedMenu("Revisiones");
                         }}
                       >
                         Grupo {group.id}
