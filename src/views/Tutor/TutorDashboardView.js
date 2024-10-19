@@ -21,7 +21,6 @@ import LearningPath from "../../components/LearningPath";
 import Inicio from "../../components/UI/Dashboards/Tutor/Inicio";
 import GroupReview from "../../components/UI/Dashboards/Tutor/GroupReview";
 import AvailabilityCalendar from "../../components/AvailabilityCalendar";
-import DatePicker from "react-datepicker"; // Importa el DatePicker
 import "react-datepicker/dist/react-datepicker.css"; // Estilos por defecto
 import { getMyGroupsToReview } from "../../api/getMyGroupsToReview";
 
@@ -60,14 +59,6 @@ const Title = styled(Typography)(({ theme }) => ({
   flexGrow: 1,
 }));
 
-
-const AvailabilityContainer = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2),
-  borderRadius: "8px",
-  backgroundColor: "#f1f1f1",
-  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-}));
-
 const TutorDashboardView = () => {
   const { cuatrimestre } = useParams();
   const user = useSelector((state) => state.user);
@@ -78,8 +69,6 @@ const TutorDashboardView = () => {
   const [selectedMenu, setSelectedMenu] = useState("Inicio");
   const [selectedGroup, setSelectedGroup] = useState(null); // Campo para el grupo seleccionado
   const [selectedGroupReview, setSelectedGroupReview] = useState(null); // Campo para la revisión seleccionada
-
-  const [availability, setAvailability] = useState([]); // Estado para bloques de disponibilidad
 
   useEffect(() => {
     const getGroups = async () => {

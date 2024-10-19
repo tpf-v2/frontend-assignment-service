@@ -128,7 +128,7 @@ const AvailabilityCalendar = () => {
     };
   
     periodAvailability();
-  }, [dispatch, user]);
+  }, [dispatch, user,loading]);
 
   const handleSnackbarOpen = (message, status = "info") => {
     setSnackbarMessage(message);
@@ -145,11 +145,6 @@ const AvailabilityCalendar = () => {
 
   const handleSelectSlot = ({ start, end }) => {
     const startIsoString = start.toISOString();
-    const endIsoString = end.toISOString();
-
-    console.log("available dates are:", availableDates)
-    console.log("start date is", startIsoString)
-    console.log("end date is", endIsoString)
   
     if (!availableDates.has(startIsoString)) {
       handleSnackbarOpen("Esta hora no está disponible para selección.", "error");

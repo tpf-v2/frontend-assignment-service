@@ -29,7 +29,6 @@ import CuatrimestreConfig from './components/UI/CuatrimestreConfig';
 import HomeView from './views/HomeView';
 import LoginView from './views/LoginView';
 import DashboardView from './views/Admin/DashboardView';
-import AvailabilityCalendar from './components/AvailabilityCalendar';
 import StudentAvailabilityView from './views/Student/StudentAvailabilityView';
 
 const App = () => {
