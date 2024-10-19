@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Paper } from "@mui/material";
-import AvailabilityCalendar from "../../components/WIP/AvailabilityCalendar";
+import AvailabilityCalendar from "../../components/AvailabilityCalendar";
 import { styled } from "@mui/material/styles";
 
 // Estilos
