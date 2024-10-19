@@ -51,7 +51,7 @@ const Title = styled(Typography)(({ theme }) => ({
 
 const TutorHomeView = () => {
   const user = useSelector((state) => state.user);
-  const [periods, setCuatrimestres] = useState([]);
+  const [cuatrimestres, setCuatrimestres] = useState([]);
   const navigate = useNavigate();
 
   const [notification, setNotification] = useState({
@@ -78,13 +78,14 @@ const TutorHomeView = () => {
     };
 
     fetchData();
+    console.log(cuatrimestres)
   }, []);
 
   const dispatch = useDispatch();
 
-  const handleCardClick = (period) => {
-    dispatch(setPeriod(period))
-    navigate(`/tutor-period/${period.period_id}`);
+  const handleCardClick = (cuatrimestre) => {
+    dispatch(setPeriod(cuatrimestre))
+    navigate(`/tutor-cuatrimestre/${cuatrimestre.period_id}`);
   };
 
   return (
@@ -92,10 +93,10 @@ const TutorHomeView = () => {
       <Title variant="h4">Bienvenido, {user.name}!</Title>
       <Typography variant="h5" style={{ color: '#555' }}>Cuatrimestres</Typography>
       <CardContainer>
-        {periods.map((period, index) => (
-          <CardStyled key={index} onClick={() => handleCardClick(period)}>
+        {cuatrimestres.map((cuatrimestre, index) => (
+          <CardStyled key={index} onClick={() => handleCardClick(cuatrimestre)}>
             <CardContent>
-              <Typography variant="h6" style={{ color: '#333' }}>{period.period_id}</Typography>
+              <Typography variant="h6" style={{ color: '#333' }}>{cuatrimestre.period_id}</Typography>
             </CardContent>
           </CardStyled>
         ))}

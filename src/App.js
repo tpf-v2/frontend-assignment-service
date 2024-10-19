@@ -49,7 +49,7 @@ const App = () => {
     }
   };
 
-  const color = user ? getColorBasedOnRole(user.role) : '#0072C6'; // Color predeterminado para los no logueados
+  const color = user ? getColorBasedOnRole(user.temporal_role) : '#0072C6'; // Color predeterminado para los no logueados
 
   return (
     <Router>
@@ -63,27 +63,27 @@ const App = () => {
             <Route path="/" element={<LoginView />} />
             <Route path="/home" element={<HomeView/>} />
             <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} />
-            <Route path="/dashboard/:period" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />
+            <Route path="/dashboard/:cuatrimestre" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />
             <Route path="/table-view" element={<ProtectedRoute><ParentTable /></ProtectedRoute>} />
-            <Route path="dashboard/:period/students" element={<ProtectedRoute><StudentsTable /></ProtectedRoute>} />
-            <Route path="dashboard/:period/topics" element={<ProtectedRoute><TopicsTable /></ProtectedRoute>} />
-            <Route path="dashboard/:period/tutors" element={<ProtectedRoute><TutorsTable /></ProtectedRoute>} />
-            <Route path="dashboard/:period/form-answers" element={<ProtectedRoute><FormAnswersTable /></ProtectedRoute>} />
-            <Route path="dashboard/:period/groups" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
-            <Route path="/form-selection/:period" element={<FormSelection />} />            
-            <Route path="/period-config" element={<CuatrimestreConfig />} />
+            <Route path="dashboard/:cuatrimestre/students" element={<ProtectedRoute><StudentsTable /></ProtectedRoute>} />
+            <Route path="dashboard/:cuatrimestre/topics" element={<ProtectedRoute><TopicsTable /></ProtectedRoute>} />
+            <Route path="dashboard/:cuatrimestre/tutors" element={<ProtectedRoute><TutorsTable /></ProtectedRoute>} />
+            <Route path="dashboard/:cuatrimestre/form-answers" element={<ProtectedRoute><FormAnswersTable /></ProtectedRoute>} />
+            <Route path="dashboard/:cuatrimestre/groups" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
+            <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />            
+            <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
             <Route path="/student-form" element={<ProtectedRoute><ClosedAlert message="No se aceptan mas respuestas al formulario de grupos."/></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente 
-            <Route path="/initial-project" element={<ProtectedRoute><UploadView /></ProtectedRoute>} />
+            <Route path="/initial-project" element={<UploadView />} />
             {/* <Route path="/student-form" element={<StudentForm />} /> */}
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
-            <Route path="/tutor-period/:period" element={<ProtectedRoute><TutorDashboardView /></ProtectedRoute>} />
+            <Route path="/tutor-cuatrimestre/:cuatrimestre" element={<ProtectedRoute><TutorDashboardView /></ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />
             <Route path="/admin-add-corrector" element={<ProtectedRoute><AddTutorForm /></ProtectedRoute>} />
-            <Route path="/upload-students/:period" element={<ProtectedRoute>{user.role === 'admin' ? <UploadCSVForm formType="students" /> : <Navigate to="/" />}</ProtectedRoute>} />
-            <Route path="/upload-topics/:period" element={<ProtectedRoute>{user.role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />}</ProtectedRoute>} />
-            <Route path="/upload-tutors/:period" element={<ProtectedRoute>{user.role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/upload-students/:cuatrimestre" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="students" /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/upload-topics/:cuatrimestre" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/upload-tutors/:cuatrimestre" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile user={user} /></ProtectedRoute>} />
-            <Route path="/algorithms/:period" element={<ProtectedRoute>{user.role === 'admin' ? <Algorithms user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/algorithms/:cuatrimestre" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <Algorithms user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Box>
