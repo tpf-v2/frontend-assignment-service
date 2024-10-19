@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Typography, Box, TextField, Button } from "@mui/material";
 import { styled } from "@mui/system";
+// import { downloadAnteproyecto, fetchAnteproyectoPdf } from "../../../../api/downloadAnteproyecto";
+import { useSelector } from "react-redux";
+import { notifyGroup } from "../../../../api/notifyGroup";
 
 // Estilos
 const GroupReviewContainer = styled(Box)(({ theme }) => ({
@@ -41,14 +44,30 @@ const DownloadButton = styled(Button)(({ theme }) => ({
 
 const GroupReview = ({ groupId, pdfUrl }) => {
   const [comment, setComment] = useState("");
+  const user = useSelector((state) => state.user);
 
   const handleCommentChange = (event) => {
     setComment(event.target.value);
   };
 
-  const handleSubmit = () => {
-    console.log(`Comentario para Grupo ${groupId}: ${comment}`);
-    setComment("");
+  // const downloadFile = async () => {
+  //   try {
+  //     console.log(period);
+  //     await downloadAnteproyecto(groupId, user, period.period_id);
+  //   } catch (error) {
+  //     console.error("Error al descargar el archivo:", error);
+  //   }
+  // };
+
+  const handleSubmit = async () => {
+    try {
+      console.log(`Comentario para Grupo ${groupId}: ${comment}`);
+      await notifyGroup(user, comment, groupId)
+    } catch (error) {
+      console.error("Error al enviar feedback:", error);
+    } finally {
+      setComment("");
+    }
   };
 
   return (

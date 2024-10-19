@@ -37,7 +37,7 @@ const Title = styled(Typography)(({ theme }) => ({
 }));
 
 const FormSelection = () => {
-  const { period } = useParams(); // Captura del period
+  const { cuatrimestre } = useParams(); // Captura del cuatrimestre
   const navigate = useNavigate(); // Hook para navegación
   const user = useSelector((state) => state.user); // Obtener el usuario desde Redux
   const [groupCount, setGroupAnswer] = useState([]);
@@ -64,23 +64,23 @@ const FormSelection = () => {
     <Container maxWidth="sm">
       <Root>
         <Title variant="h4" style={{ color: '#555' }}>
-          {period || '2C2024'}
+          {cuatrimestre || '2C2024'}
         </Title>
-        {user.role !== 'admin' ? (
+        {user.temporal_role !== 'admin' ? (
           <Title variant="h6">Bienvenido, {user.name}!</Title>
         ) : null}
-        {user.role === 'student' && (
+        {user.temporal_role === 'student' && (
             <Typography variant="h6">
               Tu padrón se registró en {groupCount} respuesta{groupCount !== 1 ? 's' : ''}
             </Typography>
         )}
         <Box textAlign="center">
-          {user.role === 'student' && (
+          {user.temporal_role === 'student' && (
             <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/student-form')}>
               Enviar Formulario de Grupo
             </ButtonStyled>
           )}
-          {user.role === 'tutor' && (
+          {user.temporal_role === 'tutor' && (
             <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/tutor-form')}>
               Enviar Formulario de Temas a Tutorear
             </ButtonStyled>

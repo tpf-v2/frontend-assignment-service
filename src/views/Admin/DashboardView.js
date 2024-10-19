@@ -18,7 +18,9 @@ import Sidebar from "../../components/Sidebar";
 import ContentInicio from "../../components/UI/Dashboards/AdminStats/Components/ContentInicio";
 import ContentInscripciones from "../../components/UI/Dashboards/AdminStats/Components/ContentInscripciones";
 import ContentAnteproyecto from "../../components/UI/Dashboards/AdminStats/Components/ContentAnteproyecto";
-import Algorithms from "../../components/Algorithms/Algorithms";
+import { setGroups } from "../../redux/slices/groupsSlice";
+import IncompleteGroups from "../../components/Algorithms/IncompleteGroups";
+import TopicTutor from "../../components/Algorithms/TopicTutor";
 import AvailabilityCalendar from "../../components/AvailabilityCalendar";
 
 // Estilos
@@ -30,17 +32,17 @@ const Root = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[3],
 }));
 
-const Dashboard = () => {
+const DashboardView = () => {
   const navigate = useNavigate();
-  const { period } = useParams();
+  const { cuatrimestre } = useParams();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const period = useSelector((state) => state.period);
 
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadingAnteproyectos, setLoadingAnteproyectos] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("Inicio");
-  const [groups, setGroups] = useState(null);
   const [deliveries, setDeliveries] = useState(null);
   const [showUploadCSV, setShowUploadCSV] = useState(false);
   const [uploadType, setUploadType] = useState("");
@@ -48,15 +50,14 @@ const Dashboard = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const data = await getDashboardData(period, user);
+        const data = await getDashboardData(cuatrimestre, user);
         dispatch(setTopics(data.topics));
         dispatch(setTutors(data.tutors));
         setDashboardData(data);
 
-        const endpoint = `/groups/?period=${period}`;
+        const endpoint = `/groups/?period=${cuatrimestre}`;
         const groupsData = await getTableData(endpoint, user);
         dispatch(setGroups(groupsData));
-        setGroups(groupsData);
       } catch (error) {
         console.error("Error al obtener datos del dashboard:", error);
       } finally {
@@ -64,7 +65,7 @@ const Dashboard = () => {
       }
     };
     getData();
-  }, [period, user, dispatch]);
+  }, []);
 
   const handleNavigation = async (menu) => {
     setSelectedMenu(menu);
@@ -93,7 +94,7 @@ const Dashboard = () => {
     switch (selectedMenu) {
       case "Inicio":
         return (
-          <ContentInicio navigate={navigate} period={period} />
+          <ContentInicio navigate={navigate} cuatrimestre={cuatrimestre} />
         );
       case "Inscripciones":
         return (
@@ -104,7 +105,7 @@ const Dashboard = () => {
             setUploadType={setUploadType}
             dashboardData={dashboardData}
             loading={loading}
-            period={period}
+            cuatrimestre={cuatrimestre}
           />
         );
       case "Anteproyecto":
@@ -112,12 +113,14 @@ const Dashboard = () => {
           <ContentAnteproyecto
             loadingAnteproyectos={loadingAnteproyectos}
             deliveries={deliveries}
-            groups={groups}
             downloadFile={downloadFile}
           />
         );
       case "Grupos":
-        return <Algorithms user={user} />;
+        // return <Algorithms user={user} />;
+        return <IncompleteGroups/>;
+      case "Temas - Tutores - Grupos":
+        return <TopicTutor/>;
       case "Intermedia":
         return <div>Contenido de entrega Intermedia</div>;
       case "Final":
@@ -130,7 +133,12 @@ const Dashboard = () => {
   };
 
   return (
-    <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>
+    <Container maxWidth={false} 
+    sx={{ 
+      width: "95%", // Ajusta el ancho al 90% del viewport
+      height: "120vh", // Ocupa el 100% de la altura de la pantalla
+      maxWidth: "none", // Para que el maxWidth no limite el tamaño
+    }}>
       <Root>
         <Grid container spacing={3}>
           {/* Sidebar */}
@@ -138,7 +146,7 @@ const Dashboard = () => {
             <Sidebar
               selectedMenu={selectedMenu}
               handleNavigation={handleNavigation}
-              period={period}
+              cuatrimestre={cuatrimestre}
             />
           </Grid>
           {/* Contenido */}
@@ -151,4 +159,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardView;

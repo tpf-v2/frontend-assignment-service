@@ -8,9 +8,9 @@ import AdminDashboard from './Admin/AdminHomeView';
 
 const HomeView = () => {
   const user = useSelector((state) => state.user); // Selecciona el estado del usuario desde Redux
-  const isAdmin = user?.role === 'admin';
-  const isStudent = user?.role === 'student';
-  const isTutor = user?.role === 'tutor';
+  const isAdmin = user?.temporal_role === 'admin';
+  const isStudent = user?.temporal_role === 'student';
+  const isTutor = user?.temporal_role === 'tutor';
 
   return (
     <>
