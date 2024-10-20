@@ -84,8 +84,8 @@ const TutorHomeView = () => {
 
   const dispatch = useDispatch();
 
-  const handleCardClick = (cuatrimestre) => {
-    const tutorPeriod = getCuatrimestre(user,cuatrimestre.period_id)
+  const handleCardClick = async (cuatrimestre) => {
+    const tutorPeriod = await getCuatrimestre(user,cuatrimestre.period_id)
     dispatch(setPeriod(tutorPeriod))
     navigate(`/tutor-cuatrimestre/${cuatrimestre.period_id}`);
   };
