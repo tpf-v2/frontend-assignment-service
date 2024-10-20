@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material/styles";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -20,7 +20,7 @@ import { getMyGroups } from "../../api/getMyGroups";
 import LearningPath from "../../components/LearningPath";
 import Inicio from "../../components/UI/Dashboards/Tutor/Inicio";
 import GroupReview from "../../components/UI/Dashboards/Tutor/GroupReview";
-import DatePicker from "react-datepicker"; // Importa el DatePicker
+import AvailabilityCalendar from "../../components/AvailabilityCalendar";
 import "react-datepicker/dist/react-datepicker.css"; // Estilos por defecto
 import { getMyGroupsToReview } from "../../api/getMyGroupsToReview";
 
@@ -59,18 +59,9 @@ const Title = styled(Typography)(({ theme }) => ({
   flexGrow: 1,
 }));
 
-const AvailabilityContainer = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2),
-  borderRadius: "8px",
-  backgroundColor: "#f1f1f1",
-  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-}));
-
-const TutorDashboard = () => {
+const TutorDashboardView = () => {
   const { cuatrimestre } = useParams();
-
   const user = useSelector((state) => state.user);
-
   const [userGroups, setUserGroups] = useState([]);
   const [userGroupsToReview, setUserGroupsToReview] = useState([]);
 
@@ -78,8 +69,6 @@ const TutorDashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState("Inicio");
   const [selectedGroup, setSelectedGroup] = useState(null); // Campo para el grupo seleccionado
   const [selectedGroupReview, setSelectedGroupReview] = useState(null); // Campo para la revisión seleccionada
-
-  const [availability, setAvailability] = useState([]); // Estado para bloques de disponibilidad
 
   useEffect(() => {
     const getGroups = async () => {
@@ -106,41 +95,10 @@ const TutorDashboard = () => {
     setLoading(false);
   }, [loading]);
 
-  const handleDateChange = (date) => {
-    if (date) {
-      setAvailability((prev) => [...prev, date]); // Agrega el bloque de disponibilidad
-    }
-  };
-
   const contentMap = {
-    "Inicio": <Inicio />,
+    Inicio: <Inicio />,
     "Mis Grupos": <div>Contenido del Formulario de Fechas</div>,
-    "Seleccionar Disponibilidad": (
-      <AvailabilityContainer>
-        <Typography variant="h6" gutterBottom>
-          Selecciona tu Disponibilidad
-        </Typography>
-        <DatePicker
-          selected={null}
-          onChange={handleDateChange}
-          showTimeSelect
-          timeFormat="HH:mm"
-          timeIntervals={30}
-          dateFormat="MMMM d, yyyy h:mm aa"
-          inline
-        />
-        <Box>
-          {availability.length > 0 && (
-            <Typography variant="body1">
-              Bloques seleccionados:{" "}
-              {availability.map((date, index) => (
-                <div key={index}>{date.toString()}</div>
-              ))}
-            </Typography>
-          )}
-        </Box>
-      </AvailabilityContainer>
-    ),
+    "Seleccionar Disponibilidad": <AvailabilityCalendar />,
     "Fechas de presentación": <div>Contenido para Fechas de Presentación</div>,
     Revisiones: selectedGroupReview ? (
       <GroupReview groupId={selectedGroupReview} />
@@ -263,4 +221,4 @@ const TutorDashboard = () => {
   );
 };
 
-export default TutorDashboard;
+export default TutorDashboardView;

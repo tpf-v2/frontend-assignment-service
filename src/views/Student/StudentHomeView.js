@@ -122,6 +122,7 @@ const StudentHomeView = () => {
         <SubmitButton url="/student-form" title="Enviar Formulario de Grupo" width="100%" handleSubmit={() => handleNavigation("/student-form")} disabled={!milestones[0]?.tasks[0].completed}/>
         <SubmitButton url="/initial-project" title="Enviar Anteproyecto" width="100%" handleSubmit={() => handleNavigation("/initial-project")} disabled={!milestones[1]?.tasks[0].completed}/>
         <SubmitButton url="/initial-project" title="Enviar Entrega Intermedia" width="100%" handleSubmit={() => handleNavigation("/initial-project")} disabled={!milestones[2]?.tasks[0].completed}/>
+        <SubmitButton url="/availability-view" title="Disponibilidades de Exposición" width="100%" handleSubmit={() => handleNavigation("/availability-view")}/>
         <SubmitButton url="/initial-project" title="Enviar Entrega Final" width="100%" handleSubmit={() => handleNavigation("/initial-project")} disabled={!milestones[3]?.tasks[0].completed}/>
       </Box>
       <Box sx={{ flex: 2 }}>
