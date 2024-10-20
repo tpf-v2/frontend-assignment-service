@@ -29,6 +29,7 @@ import CuatrimestreConfig from './components/UI/CuatrimestreConfig';
 import HomeView from './views/HomeView';
 import LoginView from './views/LoginView';
 import DashboardView from './views/Admin/DashboardView'
+import ChangePasswordView from './views/ChangePasswordView';
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -83,6 +84,7 @@ const App = () => {
             <Route path="/upload-topics/:cuatrimestre" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/upload-tutors/:cuatrimestre" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile user={user} /></ProtectedRoute>} />
+            <Route path="/change-password" element={<ProtectedRoute><ChangePasswordView /></ProtectedRoute>} />
             <Route path="/algorithms/:cuatrimestre" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <Algorithms user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
