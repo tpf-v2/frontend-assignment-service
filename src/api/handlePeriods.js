@@ -64,7 +64,7 @@ export const getTutorCuatrimestre = async (user) => {
   }
 };
 
-export const getCuatrimestre = async (user,periodId=undefined) => {
+export const getCuatrimestre = async (user) => {
   console.log("API", user.period_id)
   try {
     const config = {
@@ -72,11 +72,11 @@ export const getCuatrimestre = async (user,periodId=undefined) => {
         Authorization: `Bearer ${user.token}`,
       },
     };
-    const periodRequest = periodId? periodId : user.period_id
     const response = await axios.get(
-      `${BASE_URL}/api/periods/${periodRequest}`,
+      `${BASE_URL}/api/periods/${user.period_id}`,
       config
     );
+    console.log(response)
     return response.data;
   } catch (error) {
     throw new Error("Error fetching cuatrimestre: " + error.message);
