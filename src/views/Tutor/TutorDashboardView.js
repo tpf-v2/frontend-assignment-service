@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
-import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
@@ -68,9 +67,9 @@ const AvailabilityContainer = styled(Box)(({ theme }) => ({
 
 
 const TutorDashboardView = () => {
-  const { period } = useParams();
 
   const user = useSelector((state) => state.user);
+  const period = useSelector((state) => state.period);
 
   const [userGroups, setUserGroups] = useState([]);
   const [userGroupsToReview, setUserGroupsToReview] = useState([]);
@@ -84,17 +83,16 @@ const TutorDashboardView = () => {
   useEffect(() => {
     const getGroups = async () => {
       try {
-        const groups = await getMyGroups(user, period);
+        const groups = await getMyGroups(user, period.period_id);
         setUserGroups(groups.sort((a, b) => a.id - b.id));
       } catch (error) {
         console.error("Error when getting my groups: ", error);
       }
     };
-    //TODO: traer grupos a revisar por el tutor
 
     const getGroupsToReview = async () => {
       try {
-        const groups = await getMyGroupsToReview(user, period);
+        const groups = await getMyGroupsToReview(user, period.period_id);
         setUserGroupsToReview(groups.sort((a, b) => a.id - b.id));
       } catch (error) {
         console.error("Error al obtener los grupos: ", error);
@@ -142,12 +140,11 @@ const TutorDashboardView = () => {
       </AvailabilityContainer>
     ),
     "Fechas de presentaciones": <div>Contenido para Fechas de Presentación</div>,
-    Revisiones: selectedGroup ? (
-      <GroupReview
-        groupId={selectedGroup}
-        pdfUrl={`path/to/your/pdf/group-${selectedGroup}.pdf`} // Reemplaza con la URL correcta de tu PDF
-      />
-    ) : null,
+    Revisiones: selectedGroupReview ? (
+      <GroupReview groupId={selectedGroupReview} />
+    ) : (
+      <div>Selecciona un grupo para ver las revisiones</div>
+    ),
   };
 
   const renderContent = () => {
@@ -172,7 +169,7 @@ const TutorDashboardView = () => {
           {/* Sidebar */}
           <Grid item xs={3}>
             <SidebarContainer>
-              <Title variant="h4">{period}</Title>
+              <Title variant="h4">{period.period_id}</Title>
               <SidebarList>
                 <ListItemStyled
                   button

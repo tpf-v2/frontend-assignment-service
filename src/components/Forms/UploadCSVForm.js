@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/system';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -51,7 +51,7 @@ const UploadCSVForm = ({ formType }) => {
   const [openDialog, setOpenDialog] = useState(false); // Estado para controlar el diálogo
   const navigate = useNavigate();
 
-  const { period } = useParams(); // Captura del period
+  const period = useSelector((state) => state.period);
 
   const user = useSelector((state) => state.user);
 
@@ -90,7 +90,7 @@ const UploadCSVForm = ({ formType }) => {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
-    const apiUrl = `${BASE_URL}/${formType}/upload?period=${period}`;
+    const apiUrl = `${BASE_URL}/${formType}/upload?period=${period.id}`;
     try {
       const response = await axios.post(apiUrl, formData, {
         headers: {

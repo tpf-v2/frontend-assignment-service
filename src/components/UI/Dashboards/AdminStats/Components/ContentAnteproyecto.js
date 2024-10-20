@@ -1,7 +1,19 @@
 import React, { useState } from "react";
 import {
-  Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, CircularProgress, Grid, Paper,
-  IconButton, Select, MenuItem } from "@mui/material";
+  Box,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  CircularProgress,
+  Grid,
+  Paper,
+  IconButton,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import StatCard from "./StatCard";
 import DownloadIcon from "@mui/icons-material/Download";
 import { useDispatch, useSelector } from "react-redux";
@@ -133,10 +145,12 @@ const ContentAnteproyecto = ({
           <TableHead>
             <TableRow>
               <TableCell sx={{ fontWeight: "bold" }}>Grupo</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Archivo</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Tutor</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Titulo</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>
                 Fecha de Entrega
               </TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Revisor</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Descargar</TableCell>
             </TableRow>
           </TableHead>
