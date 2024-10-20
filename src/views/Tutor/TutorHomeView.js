@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getTutorCuatrimestre } from '../../api/handlePeriods'
 import MySnackbar from '../../components/UI/MySnackBar';
 import { setPeriod } from '../../redux/slices/periodSlice';
-import { getCuatrimestre } from '../../api/handlePeriods';
 
 const Root = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -84,9 +83,8 @@ const TutorHomeView = () => {
 
   const dispatch = useDispatch();
 
-  const handleCardClick = async (cuatrimestre) => {
-    const tutorPeriod = await getCuatrimestre(user,cuatrimestre.period_id)
-    dispatch(setPeriod(tutorPeriod))
+  const handleCardClick = (cuatrimestre) => {
+    dispatch(setPeriod(cuatrimestre))
     navigate(`/tutor-cuatrimestre/${cuatrimestre.period_id}`);
   };
 
