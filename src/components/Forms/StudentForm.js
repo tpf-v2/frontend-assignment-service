@@ -9,7 +9,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Box,
   Alert,
   Dialog,
   DialogActions,
@@ -147,12 +146,10 @@ const StudentForm = () => {
 
     try {
       const response = await sendGroupForm(payload, existingGroup, user);
-      console.log(response);
       if (response.status === 201) {
         setSubmitSuccess(true);
         setOpenDialog(false);
       } else {
-        console.log(response);
         setNotification({
           open: true,
           message: response.data.detail,

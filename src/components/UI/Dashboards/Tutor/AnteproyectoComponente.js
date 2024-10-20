@@ -34,7 +34,6 @@ const AnteproyectoComponent = ({ groupId }) => {
 
   const downloadFile = async () => {
     try {
-      console.log(period);
       await downloadAnteproyecto(groupId, user, period.period_id);
     } catch (error) {
       console.error("Error al descargar el archivo:", error);

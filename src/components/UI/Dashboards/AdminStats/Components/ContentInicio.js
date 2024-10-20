@@ -16,16 +16,16 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
   },
 }));
 
-const ContentInicio = ({ navigate, cuatrimestre }) => {
+const ContentInicio = ({ navigate, period }) => {
   return (
     <>
       <Box display="flex" justifyContent="space-between" width="100%">
-        <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/students`)}> ALUMNOS</ButtonStyled>
-        <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/tutors`)}> TUTORES</ButtonStyled>
+        <ButtonStyled onClick={() => navigate(`/dashboard/${period}/students`)}> ALUMNOS</ButtonStyled>
+        <ButtonStyled onClick={() => navigate(`/dashboard/${period}/tutors`)}> TUTORES</ButtonStyled>
       </Box>
       <Box display="flex" justifyContent="space-between" width="100%">
-        <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/topics`)}> TEMAS</ButtonStyled>
-        <ButtonStyled onClick={() => navigate(`/dashboard/${cuatrimestre}/groups`)}> GRUPOS</ButtonStyled>
+        <ButtonStyled onClick={() => navigate(`/dashboard/${period}/topics`)}> TEMAS</ButtonStyled>
+        <ButtonStyled onClick={() => navigate(`/dashboard/${period}/groups`)}> GRUPOS</ButtonStyled>
       </Box>
       <CuatrimestreConfig />
 

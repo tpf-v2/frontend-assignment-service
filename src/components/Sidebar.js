@@ -29,10 +29,10 @@ const SidebarContainer = styled(Box)(({ theme }) => ({
   borderRight: `1px solid ${theme.palette.divider}`,
 }));
 
-const Sidebar = ({ selectedMenu, handleNavigation, cuatrimestre }) => {
+const Sidebar = ({ selectedMenu, handleNavigation, period }) => {
   return (
     <SidebarContainer>
-      <Title variant="h4">{cuatrimestre}</Title>
+      <Title variant="h4">{period}</Title>
       <SidebarList>
         {/* Botón no desplegable */}
         <ListItemStyled

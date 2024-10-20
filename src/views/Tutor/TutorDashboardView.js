@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { styled } from "@mui/material/styles";
-import { useParams } from "react-router-dom";
+import { styled } from "@mui/system";
 import { useSelector } from "react-redux";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
@@ -59,31 +58,41 @@ const Title = styled(Typography)(({ theme }) => ({
   flexGrow: 1,
 }));
 
+const AvailabilityContainer = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(2),
+  borderRadius: "8px",
+  backgroundColor: "#f1f1f1",
+  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+}));
+
+
 const TutorDashboardView = () => {
-  const { cuatrimestre } = useParams();
+
   const user = useSelector((state) => state.user);
+  const period = useSelector((state) => state.period);
+
   const [userGroups, setUserGroups] = useState([]);
   const [userGroupsToReview, setUserGroupsToReview] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("Inicio");
   const [selectedGroup, setSelectedGroup] = useState(null); // Campo para el grupo seleccionado
-  const [selectedGroupReview, setSelectedGroupReview] = useState(null); // Campo para la revisión seleccionada
+  const [selectedGroupReview, setSelectedGroupReview] = useState(null); // Campo para el grupo seleccionado
+  const [availability, setAvailability] = useState([]); // Estado para bloques de disponibilidad
 
   useEffect(() => {
     const getGroups = async () => {
       try {
-        const groups = await getMyGroups(user, cuatrimestre);
+        const groups = await getMyGroups(user, period.period_id);
         setUserGroups(groups.sort((a, b) => a.id - b.id));
       } catch (error) {
-        console.error("Error al obtener los grupos: ", error);
+        console.error("Error when getting my groups: ", error);
       }
     };
-    //TODO: traer grupos a revisar por el tutor
 
     const getGroupsToReview = async () => {
       try {
-        const groups = await getMyGroupsToReview(user, cuatrimestre);
+        const groups = await getMyGroupsToReview(user, period.period_id);
         setUserGroupsToReview(groups.sort((a, b) => a.id - b.id));
       } catch (error) {
         console.error("Error al obtener los grupos: ", error);
@@ -129,7 +138,7 @@ const TutorDashboardView = () => {
           {/* Sidebar */}
           <Grid item xs={3}>
             <SidebarContainer>
-              <Title variant="h4">{cuatrimestre}</Title>
+              <Title variant="h4">{period.period_id}</Title>
               <SidebarList>
                 <ListItemStyled
                   button
