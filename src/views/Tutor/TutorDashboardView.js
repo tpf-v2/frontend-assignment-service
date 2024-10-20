@@ -143,7 +143,7 @@ const TutorDashboard = () => {
     ),
     "Fechas de presentación": <div>Contenido para Fechas de Presentación</div>,
     Revisiones: selectedGroupReview ? (
-      <GroupReview groupId={selectedGroupReview} />
+      <GroupReview group={selectedGroupReview} />
     ) : (
       <div>Selecciona un grupo para ver las revisiones</div>
     ),
@@ -213,11 +213,11 @@ const TutorDashboard = () => {
                         key={group.id}
                         button
                         selected={
-                          selectedGroupReview === group.id &&
+                          selectedGroupReview?.id === group.id &&
                           selectedMenu === "Revisiones"
                         }
                         onClick={() => {
-                          setSelectedGroupReview(group.id);
+                          setSelectedGroupReview(group);
                           setSelectedMenu("Revisiones");
                         }}
                       >

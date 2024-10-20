@@ -72,7 +72,7 @@ const ContentAnteproyecto = ({
       updatedGroup.reviewer_id = reviewerId;
 
       // Llamar al backend para actualizar el grupo
-      await updateGroup(user, period, updatedGroup);
+      await updateGroup(user, period.id, updatedGroup);
 
       // Crear una nueva lista de grupos actualizados
       const updatedGroups = groupsData.map((group) =>

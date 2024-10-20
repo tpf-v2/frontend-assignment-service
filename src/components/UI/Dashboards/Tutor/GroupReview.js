@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Box, TextField, Button } from "@mui/material";
 import { styled } from "@mui/system";
-import { downloadAnteproyecto, fetchAnteproyectoPdf } from "../../../../api/downloadAnteproyecto";
+import {
+  downloadAnteproyecto,
+  fetchAnteproyectoPdf,
+} from "../../../../api/downloadAnteproyecto";
 import { useSelector } from "react-redux";
 import { notifyGroup } from "../../../../api/notifyGroup";
+import { updateGroup } from "../../../../api/updateGroups";
 
 // Estilos
 const GroupReviewContainer = styled(Box)(({ theme }) => ({
@@ -42,7 +46,7 @@ const DownloadButton = styled(Button)(({ theme }) => ({
   borderRadius: "4px",
 }));
 
-const GroupReview = ({ groupId }) => {
+const GroupReview = ({ group }) => {
   const [comment, setComment] = useState("");
   const [pdfUrl, setPdfUrl] = useState(null);
   const period = useSelector((state) => state.period);
@@ -55,7 +59,7 @@ const GroupReview = ({ groupId }) => {
   const downloadFile = async () => {
     try {
       console.log(period);
-      await downloadAnteproyecto(groupId, user, period.period_id);
+      await downloadAnteproyecto(group.id, user, period.period_id);
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }
@@ -63,8 +67,10 @@ const GroupReview = ({ groupId }) => {
 
   const handleSubmit = async () => {
     try {
-      console.log(`Comentario para Grupo ${groupId}: ${comment}`);
-      await notifyGroup(user, comment, groupId)
+      console.log(`Comentario para Grupo ${group.id}: ${comment}`);
+      await notifyGroup(user, comment, group.id);
+      group.pre_report_approved = true;
+      await updateGroup(user, period.period_id, group);
     } catch (error) {
       console.error("Error al enviar feedback:", error);
     } finally {
@@ -72,19 +78,19 @@ const GroupReview = ({ groupId }) => {
     }
   };
 
-    // Función para cargar el PDF en la previsualización
-    const loadPdfPreview = async () => {
-      try {
-        const url = await fetchAnteproyectoPdf(groupId, user, period.period_id);
-        setPdfUrl(url); // Guarda la URL en el estado
-      } catch (error) {
-        console.error("Error al cargar la previsualización del PDF:", error);
-      }
-    };
-  
-    useEffect(() => {
-      loadPdfPreview();
-    }, [groupId, user, period]);
+  // Función para cargar el PDF en la previsualización
+  const loadPdfPreview = async () => {
+    try {
+      const url = await fetchAnteproyectoPdf(group.id, user, period.period_id);
+      setPdfUrl(url); // Guarda la URL en el estado
+    } catch (error) {
+      console.error("Error al cargar la previsualización del PDF:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadPdfPreview();
+  }, [group.id, user, period]);
 
   return (
     <GroupReviewContainer>
@@ -93,7 +99,7 @@ const GroupReview = ({ groupId }) => {
       </Typography>
 
       <PdfPreviewBox>
-      {pdfUrl ? (
+        {pdfUrl ? (
           <iframe
             src={pdfUrl}
             title="Previsualización del PDF"
@@ -107,10 +113,7 @@ const GroupReview = ({ groupId }) => {
       </PdfPreviewBox>
 
       {/* Botón para descargar el PDF */}
-      <DownloadButton 
-        variant="contained" 
-        onClick={downloadFile}
-      >
+      <DownloadButton variant="contained" onClick={downloadFile}>
         Descargar PDF
       </DownloadButton>
 
@@ -132,9 +135,9 @@ const GroupReview = ({ groupId }) => {
           placeholder="Escribe tu comentario aquí..."
           sx={{ mb: 2, width: "100%" }}
         />
-        <Button 
-          variant="contained" 
-          onClick={handleSubmit} 
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
           color="primary"
           sx={{ width: "100%", borderRadius: "4px" }} // Botón de enviar que también ocupa todo el ancho
         >
