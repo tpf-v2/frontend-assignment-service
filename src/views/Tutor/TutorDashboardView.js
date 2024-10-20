@@ -139,7 +139,7 @@ const TutorDashboardView = () => {
         </Box>
       </AvailabilityContainer>
     ),
-    "Fechas de presentaciones": <div>Contenido para Fechas de Presentación</div>,
+    "Fechas de presentación": <div>Contenido para Fechas de Presentación</div>,
     Revisiones: selectedGroupReview ? (
       <GroupReview groupId={selectedGroupReview} />
     ) : (
