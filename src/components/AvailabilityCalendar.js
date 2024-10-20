@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Typography, Button } from "@mui/material";
@@ -28,7 +27,7 @@ const AvailabilityCalendar = () => {
   const [availabilitySent, setAvailabilitySent] = useState(false);
 
   const user = useSelector((state) => state.user);
-  const { period } = useParams();
+  const period = useSelector((state) => state.period);
 
   const handleSnackbarOpen = (message, status = "info") => {
     setSnackbarMessage(message);
@@ -103,7 +102,7 @@ const AvailabilityCalendar = () => {
         start: moment(event.start).subtract(3, "hours").utc().format(),
         end: moment(event.end).subtract(3, "hours").utc().format(),
       }));
-      await sendAvailability(user, formattedEvents, period);
+      await sendAvailability(user, formattedEvents, period.id);
       setAvailabilitySent(true)
       handleSnackbarOpen("Disponibilidad enviada éxitosamente.", "success");
     } catch (error) {
@@ -114,7 +113,7 @@ const AvailabilityCalendar = () => {
     useEffect(() => {
     const initialAvailability = async () => {
       try {
-        const slots = await fetchAvailability(user, period);
+        const slots = await fetchAvailability(user, period.id);
         const formattedSlots = transformSlotsToIntervals(slots);
         setEvents(formattedSlots)
         if (slots.length > 0) {
@@ -134,7 +133,7 @@ const AvailabilityCalendar = () => {
         start: moment(event.start).subtract(3, "hours").utc().format(),
         end: moment(event.end).subtract(3, "hours").utc().format(),
       }));
-      await putAvailability(user, formattedEvents, period);
+      await putAvailability(user, formattedEvents, period.id);
       handleSnackbarOpen("Disponibilidad editada exitosamente.", "success");
     } catch (error) {
       handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
