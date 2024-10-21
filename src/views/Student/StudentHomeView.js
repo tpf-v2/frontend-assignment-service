@@ -15,7 +15,7 @@ import { setPeriod } from "../../redux/slices/periodSlice";
 const StudentHomeView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const cuatrimestre = useSelector((state) => state.user.period_id);
+  const period = useSelector((state) => state.user.period_id);
 
   const [milestones, setMilestones] = useState([]);
   const [loading, setLoading] = useState(true); // Estado para manejar la carga
@@ -48,7 +48,6 @@ const StudentHomeView = () => {
     const fetchGroupAnswer = async () => {
       try {
         const userData = await dispatch(getStudentInfo(user));
-        console.log(userData);
         
         let group = {};
         if (userData.group_id !== 0) {
@@ -126,7 +125,7 @@ const StudentHomeView = () => {
       </Box>
       <Box sx={{ flex: 2 }}>
         <Typography variant="h4" align="center" gutterBottom>
-          {cuatrimestre}
+          {period}
         </Typography>
         <Box>
           {loading ? ( // Mostrar CircularProgress si está cargando

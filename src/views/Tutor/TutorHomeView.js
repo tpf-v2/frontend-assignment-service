@@ -3,7 +3,7 @@ import { Container, Box, Card, CardContent, Typography} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTutorCuatrimestre } from '../../api/handlePeriods'
+import {getTutorCuatrimestre } from '../../api/handlePeriods'
 import MySnackbar from '../../components/UI/MySnackBar';
 import { setPeriod } from '../../redux/slices/periodSlice';
 

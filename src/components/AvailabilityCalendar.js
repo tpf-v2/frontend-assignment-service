@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import { momentLocalizer } from "react-big-calendar";
-import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Typography, Button } from "@mui/material";
 import { useSelector } from "react-redux";
+import moment from "moment-timezone";
 
 import MySnackbar from "./UI/MySnackBar";
 import EventModal from "./EventModal";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
-import { sendAvailability } from "../api/sendAvailability";
+import { sendAvailability, fetchAvailability, putAvailability } from "../api/handleAvailability";
 import { CalendarStyled, AvailabilityContainer, ButtonContainer, DescriptionBox } from "../styles/AvailabilityCalendarStyle";
+import { transformSlotsToIntervals } from "../utils/TransformSlotsToIntervals";
 
 // Localizador de momento
 const localizer = momentLocalizer(moment);
@@ -24,9 +24,10 @@ const AvailabilityCalendar = () => {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
+  const [availabilitySent, setAvailabilitySent] = useState(false);
+
   const user = useSelector((state) => state.user);
-  const navigate = useNavigate();
-  const { cuatrimestre } = useParams();
+  const period = useSelector((state) => state.period);
 
   const handleSnackbarOpen = (message, status = "info") => {
     setSnackbarMessage(message);
@@ -65,7 +66,7 @@ const AvailabilityCalendar = () => {
         { start: selectedSlot.start, end: selectedSlot.end },
       ]);
       handleSnackbarOpen(
-        "Bloque de disponibilidad creado exitosamente.",
+        "Intervalo de disponibilidad creado exitosamente.",
         "success"
       );
       setModalOpen(false);
@@ -87,7 +88,7 @@ const AvailabilityCalendar = () => {
         )
       );
       handleSnackbarOpen(
-        "Bloque de disponibilidad eliminado exitosamente.",
+        "Intervalo de disponibilidad eliminado exitosamente.",
         "success"
       );
     }
@@ -96,11 +97,44 @@ const AvailabilityCalendar = () => {
 
   const onSubmitEvents = async () => {
     try {
-      await sendAvailability(user, events, cuatrimestre);
-      handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
-      setTimeout(() => {
-        navigate(`/dashboard/${cuatrimestre}`); 
-      }, 1500); 
+      const formattedEvents = events.map((event) => ({
+        // Resta 3 horas (180 minutos) a cada fecha
+        start: moment(event.start).subtract(3, "hours").utc().format(),
+        end: moment(event.end).subtract(3, "hours").utc().format(),
+      }));
+      await sendAvailability(user, formattedEvents, period.id);
+      setAvailabilitySent(true)
+      handleSnackbarOpen("Disponibilidad enviada éxitosamente.", "success");
+    } catch (error) {
+      handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
+    }
+  };
+
+    useEffect(() => {
+    const initialAvailability = async () => {
+      try {
+        const slots = await fetchAvailability(user, period.id);
+        const formattedSlots = transformSlotsToIntervals(slots);
+        setEvents(formattedSlots)
+        if (slots.length > 0) {
+          setAvailabilitySent(true)
+        }
+      } catch (error) {
+        console.error("Error when fetching dates")
+      }
+    };
+    initialAvailability();
+  }, [availabilitySent]); // El array vacío [] asegura que solo se ejecuta una vez
+
+  const onEditEvents = async () => {
+    try {
+      const formattedEvents = events.map((event) => ({
+        // Resta 3 horas (180 minutos) a cada fecha
+        start: moment(event.start).subtract(3, "hours").utc().format(),
+        end: moment(event.end).subtract(3, "hours").utc().format(),
+      }));
+      await putAvailability(user, formattedEvents, period.id);
+      handleSnackbarOpen("Disponibilidad editada exitosamente.", "success");
     } catch (error) {
       handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
     }
@@ -157,13 +191,21 @@ const AvailabilityCalendar = () => {
             return false;
           }
         }}
-      />
-      <ButtonContainer>
-        <Button variant="contained" color="primary" onClick={onSubmitEvents}>
-          Enviar
-        </Button>
-      </ButtonContainer>
-
+        />
+      { !availabilitySent ? (
+          <ButtonContainer>
+              <Button variant="contained" color="primary" onClick={onSubmitEvents}>
+                  Enviar
+              </Button>
+          </ButtonContainer>
+      ) : (
+        <ButtonContainer>
+              <Button variant="contained" color="primary" onClick={onEditEvents}>
+                  Editar
+              </Button>
+          </ButtonContainer>
+      )}
+ 
       <EventModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}

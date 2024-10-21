@@ -34,19 +34,17 @@ const CuatrimestreConfig = () => {
   const user = useSelector((state) => state.user);
 
   const handleToggle = async (field) => {
-    console.log(field)
     dispatch(togglePeriodSetting({ field }));
     // Prepara el payload con el campo modificado
     const updatedSettings = {
-      id: settings.id,
+      id: "2C2024",
       ...settings,
       [field]: !settings[field],
     };
 
     try {
       // Llama a la función separada que realiza la petición
-      const result = await updatePeriod(updatedSettings, user);
-      console.log("Updated successfully:", result);
+      await updatePeriod(updatedSettings, user);
     } catch (error) {
       console.error("Error in update:", error);
     }

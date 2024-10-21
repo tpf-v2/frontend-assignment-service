@@ -13,6 +13,6 @@ export const getMyGroups = async (user,period) => {
       const response = await axios.get(url, config);
       return response.data;
     } catch (error) {
-      throw new Error('Error fetching cuatrimestres: ' + error.message);
+      throw new Error('Error fetching periods: ' + error.message);
     }
 };
