@@ -15,13 +15,14 @@ import {
   AccordionSummary,
   AccordionDetails,
   Divider,
+  CircularProgress,
 } from "@mui/material";
 import { getMyGroups } from "../../api/getMyGroups";
 import LearningPath from "../../components/LearningPath";
 import Inicio from "../../components/UI/Dashboards/Tutor/Inicio";
 import GroupReview from "../../components/UI/Dashboards/Tutor/GroupReview";
-import DatePicker from "react-datepicker"; // Importa el DatePicker
-import "react-datepicker/dist/react-datepicker.css"; // Estilos por defecto
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { getMyGroupsToReview } from "../../api/getMyGroupsToReview";
 
 // Estilos
@@ -66,6 +67,63 @@ const AvailabilityContainer = styled(Box)(({ theme }) => ({
   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
 }));
 
+// Loader de puntos animados
+const DotsLoader = styled("div")({
+  display: "inline-block",
+  position: "relative",
+  width: "60px",
+  height: "10px",
+  "& div": {
+    position: "absolute",
+    top: "0",
+    width: "10px",
+    height: "10px",
+    borderRadius: "50%",
+    background: "#0072C6",
+    animationTimingFunction: "cubic-bezier(0, 1, 1, 0)",
+  },
+  "& div:nth-of-type(1)": {
+    left: "8px",
+    animation: "dots1 0.6s infinite",
+  },
+  "& div:nth-of-type(2)": {
+    left: "24px",
+    animation: "dots2 0.6s infinite",
+  },
+  "& div:nth-of-type(3)": {
+    left: "40px",
+    animation: "dots2 0.6s infinite",
+  },
+  "& div:nth-of-type(4)": {
+    left: "56px",
+    animation: "dots3 0.6s infinite",
+  },
+  "@keyframes dots1": {
+    "0%": {
+      transform: "scale(0)",
+    },
+    "100%": {
+      transform: "scale(1)",
+    },
+  },
+  "@keyframes dots3": {
+    "0%": {
+      transform: "scale(1)",
+    },
+    "100%": {
+      transform: "scale(0)",
+    },
+  },
+  "@keyframes dots2": {
+    "0%": {
+      transform: "translate(0, 0)",
+    },
+    "100%": {
+      transform: "translate(16px, 0)",
+    },
+  },
+});
+
 const TutorDashboard = () => {
   const { cuatrimestre } = useParams();
 
@@ -74,41 +132,100 @@ const TutorDashboard = () => {
   const [userGroups, setUserGroups] = useState([]);
   const [userGroupsToReview, setUserGroupsToReview] = useState([]);
 
-  const [loading, setLoading] = useState(true);
-  const [selectedMenu, setSelectedMenu] = useState("Inicio");
-  const [selectedGroup, setSelectedGroup] = useState(null); // Campo para el grupo seleccionado
-  const [selectedGroupReview, setSelectedGroupReview] = useState(null); // Campo para la revisión seleccionada
+  const [loadingGroups, setLoadingGroups] = useState(true);
+  const [loadingReviews, setLoadingReviews] = useState(true);
 
-  const [availability, setAvailability] = useState([]); // Estado para bloques de disponibilidad
+  const [selectedMenu, setSelectedMenu] = useState("Inicio");
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [selectedGroupReview, setSelectedGroupReview] = useState(null);
+
+  const [availability, setAvailability] = useState([]);
 
   useEffect(() => {
     const getGroups = async () => {
+      setLoadingGroups(true);
       try {
         const groups = await getMyGroups(user, cuatrimestre);
         setUserGroups(groups.sort((a, b) => a.id - b.id));
       } catch (error) {
         console.error("Error al obtener los grupos: ", error);
+      } finally {
+        setLoadingGroups(false);
       }
     };
 
     const getGroupsToReview = async () => {
+      setLoadingReviews(true);
       try {
         const groups = await getMyGroupsToReview(user, cuatrimestre);
         setUserGroupsToReview(groups.sort((a, b) => a.id - b.id));
       } catch (error) {
-        console.error("Error al obtener los grupos: ", error);
+        console.error("Error al obtener los grupos de revisión: ", error);
+      } finally {
+        setLoadingReviews(false);
       }
     };
 
-    getGroupsToReview();
     getGroups();
-    setLoading(false);
-  }, [loading]);
+    getGroupsToReview();
+  }, [user, cuatrimestre]);
 
   const handleDateChange = (date) => {
     if (date) {
-      setAvailability((prev) => [...prev, date]); // Agrega el bloque de disponibilidad
+      setAvailability((prev) => [...prev, date]);
     }
+  };
+
+  const renderGroups = () => {
+    if (loadingGroups) {
+      return <DotsLoader>
+                <div></div><div></div><div></div><div></div>
+             </DotsLoader>;
+    }
+
+    if (userGroups.length === 0) {
+      return <Typography>No hay grupos.</Typography>;
+    }
+
+    return userGroups.map((group) => (
+      <ListItemStyled
+        key={group.id}
+        button
+        selected={selectedMenu === `Grupo ${group.id}`}
+        onClick={() => {
+          setSelectedGroup(group.id);
+          setSelectedMenu(`Grupo ${group.id}`);
+        }}
+      >
+        Grupo {group.id}
+      </ListItemStyled>
+    ));
+  };
+
+  const renderGroupsToReview = () => {
+    if (loadingReviews) {
+      return <DotsLoader>
+      <div></div><div></div><div></div><div></div>
+   </DotsLoader>;
+    }
+
+    if (userGroupsToReview.length === 0) {
+      return <Typography>No hay grupos.</Typography>;
+    }
+
+    return userGroupsToReview.map((group) => (
+      <ListItemStyled
+        key={group.id}
+        button
+        selected={selectedGroupReview?.id === group.id && selectedMenu === "Revisiones"}
+        onClick={() => {
+          setSelectedGroupReview(group);
+          setSelectedMenu("Revisiones");
+        }}
+      >
+        Grupo {group.id}
+      </ListItemStyled>
+    ));
   };
 
   const contentMap = {
@@ -160,12 +277,15 @@ const TutorDashboard = () => {
   };
 
   return (
-<Container maxWidth={false} 
-    sx={{ 
-      width: "95%", // Ajusta el ancho al 90% del viewport
-      height: "120vh", // Ocupa el 100% de la altura de la pantalla
-      maxWidth: "none", // Para que el maxWidth no limite el tamaño
-    }}>      <Root>
+    <Container
+      maxWidth={false}
+      sx={{
+        width: "95%",
+        height: "120vh",
+        maxWidth: "none",
+      }}
+    >
+      <Root>
         <Grid container spacing={3}>
           {/* Sidebar */}
           <Grid item xs={3}>
@@ -186,19 +306,7 @@ const TutorDashboard = () => {
                     Mis Grupos
                   </AccordionSummary>
                   <AccordionDetails>
-                    {userGroups.map((group) => (
-                      <ListItemStyled
-                        key={group.id}
-                        button
-                        selected={selectedMenu === `Grupo ${group.id}`}
-                        onClick={() => {
-                          setSelectedGroup(group.id);
-                          setSelectedMenu(`Grupo ${group.id}`);
-                        }}
-                      >
-                        Grupo {group.id}
-                      </ListItemStyled>
-                    ))}
+                    {renderGroups()}
                   </AccordionDetails>
                 </Accordion>
 
@@ -207,22 +315,7 @@ const TutorDashboard = () => {
                     Revisiones
                   </AccordionSummary>
                   <AccordionDetails>
-                    {userGroupsToReview.map((group) => (
-                      <ListItemStyled
-                        key={group.id}
-                        button
-                        selected={
-                          selectedGroupReview?.id === group.id &&
-                          selectedMenu === "Revisiones"
-                        }
-                        onClick={() => {
-                          setSelectedGroupReview(group);
-                          setSelectedMenu("Revisiones");
-                        }}
-                      >
-                        Grupo {group.id}
-                      </ListItemStyled>
-                    ))}
+                    {renderGroupsToReview()}
                   </AccordionDetails>
                 </Accordion>
 
@@ -234,9 +327,7 @@ const TutorDashboard = () => {
                     <ListItemStyled
                       button
                       selected={selectedMenu === "Seleccionar Disponibilidad"}
-                      onClick={() =>
-                        setSelectedMenu("Seleccionar Disponibilidad")
-                      }
+                      onClick={() => setSelectedMenu("Seleccionar Disponibilidad")}
                     >
                       Seleccionar Disponibilidad
                     </ListItemStyled>
