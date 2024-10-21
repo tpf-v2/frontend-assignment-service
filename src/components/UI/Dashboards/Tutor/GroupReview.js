@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Box, TextField, Button } from "@mui/material";
 import { styled } from "@mui/system";
-import {
-  downloadAnteproyecto,
-  fetchAnteproyectoPdf,
-} from "../../../../api/downloadAnteproyecto";
 import { useSelector } from "react-redux";
 import { notifyGroup } from "../../../../api/notifyGroup";
 import { updateGroup } from "../../../../api/updateGroups";
+import { downloadProject, fetchProjectPdf } from "../../../../api/handleProjects";
 
 // Estilos
 const GroupReviewContainer = styled(Box)(({ theme }) => ({
@@ -59,7 +56,7 @@ const GroupReview = ({ group }) => {
   const downloadFile = async () => {
     try {
       console.log(period);
-      await downloadAnteproyecto(group.id, user, period.period_id);
+      await downloadProject(group.id, user, period.period_id, 'initial');
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }
@@ -81,7 +78,7 @@ const GroupReview = ({ group }) => {
   // Función para cargar el PDF en la previsualización
   const loadPdfPreview = async () => {
     try {
-      const url = await fetchAnteproyectoPdf(group.id, user, period.period_id);
+      const url = await fetchProjectPdf(group.id, user, period.period_id, 'initial');
       setPdfUrl(url); // Guarda la URL en el estado
     } catch (error) {
       console.error("Error al cargar la previsualización del PDF:", error);

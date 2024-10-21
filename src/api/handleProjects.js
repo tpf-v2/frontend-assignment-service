@@ -2,7 +2,10 @@ import axios from "axios";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
-export const downloadAnteproyecto = async (groupId, user, period_id) => {
+export const downloadProject = async (groupId, user, period_id, projectType) => {
+  const projectName = projectType === 'final' ? 'final-project' : 'initial-project';
+  const fileName = projectType === 'final' ? `Grupo-${groupId}-final.pdf` : `Grupo-${groupId}-anteproyecto.pdf`;
+
   try {
     const config = {
       params: {
@@ -15,7 +18,7 @@ export const downloadAnteproyecto = async (groupId, user, period_id) => {
     };
 
     // Realiza la solicitud GET para obtener el archivo
-    const response = await axios.get(`${BASE_URL}/groups/${groupId}/initial-project`, config);
+    const response = await axios.get(`${BASE_URL}/groups/${groupId}/${projectName}`, config);
 
     // Crea un blob a partir de la respuesta
     const blob = new Blob([response.data], { type: response.headers['content-type'] });
@@ -26,7 +29,7 @@ export const downloadAnteproyecto = async (groupId, user, period_id) => {
     // Crea un enlace temporal
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `Grupo-${groupId}-anteproyecto.pdf`); // Puedes cambiar el nombre del archivo aquí
+    link.setAttribute('download', fileName); // Puedes cambiar el nombre del archivo aquí
     document.body.appendChild(link);
 
     // Dispara el clic para descargar el archivo
@@ -35,13 +38,15 @@ export const downloadAnteproyecto = async (groupId, user, period_id) => {
     // Limpia el DOM eliminando el enlace temporal
     document.body.removeChild(link);
   } catch (error) {
-    console.error("Error al descargar el anteproyecto:", error);
+    console.error(`Error al descargar la entrega ${projectType}:`, error);
     throw error;
   }
 };
 
+// Función genérica para obtener el PDF como URL (final o inicial)
+export const fetchProjectPdf = async (groupId, user, period_id, projectType) => {
+  const projectName = projectType === 'final' ? 'final-project' : 'initial-project';
 
-export const fetchAnteproyectoPdf = async (groupId, user, period_id) => {
   try {
     const config = {
       params: {
@@ -54,7 +59,7 @@ export const fetchAnteproyectoPdf = async (groupId, user, period_id) => {
     };
 
     // Realiza la solicitud GET para obtener el archivo
-    const response = await axios.get(`${BASE_URL}/groups/${groupId}/initial-project`, config);
+    const response = await axios.get(`${BASE_URL}/groups/${groupId}/${projectName}`, config);
 
     // Crea un blob a partir de la respuesta
     const blob = new Blob([response.data], { type: response.headers['content-type'] });
@@ -64,7 +69,7 @@ export const fetchAnteproyectoPdf = async (groupId, user, period_id) => {
     
     return url; // Devuelve la URL del blob
   } catch (error) {
-    console.error("Error al obtener el PDF del anteproyecto:", error);
+    console.error(`Error al obtener el PDF de la entrega ${projectType}:`, error);
     throw error;
   }
 };

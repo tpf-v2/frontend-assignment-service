@@ -90,7 +90,6 @@ const TutorDashboard = () => {
         console.error("Error al obtener los grupos: ", error);
       }
     };
-    //TODO: traer grupos a revisar por el tutor
 
     const getGroupsToReview = async () => {
       try {

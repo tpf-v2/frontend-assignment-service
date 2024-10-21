@@ -6,14 +6,8 @@ import { setTopics } from "../../redux/slices/topicsSlice";
 import { setTutors } from "../../redux/slices/tutorsSlice";
 import { getTableData } from "../../api/handleTableData";
 import { getAnteproyectos } from "../../api/getAnteproyectos";
-import { downloadAnteproyecto } from "../../api/downloadAnteproyecto";
 import { getDashboardData } from "../../api/dashboardStats";
-import {
-  Container,
-  Box,
-  Grid,
-  Paper
-} from "@mui/material";
+import { Container, Box, Grid, Paper } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
 import ContentInicio from "../../components/UI/Dashboards/AdminStats/Components/ContentInicio";
 import ContentInscripciones from "../../components/UI/Dashboards/AdminStats/Components/ContentInscripciones";
@@ -22,6 +16,9 @@ import { setGroups } from "../../redux/slices/groupsSlice";
 import IncompleteGroups from "../../components/Algorithms/IncompleteGroups";
 import TopicTutor from "../../components/Algorithms/TopicTutor";
 import AvailabilityCalendar from "../../components/AvailabilityCalendar";
+import ContentIntermediateProject from "../../components/UI/Dashboards/AdminStats/Components/ContentIntermediateProject";
+import { getIntermediateProjects } from "../../api/intermeadiateProjects";
+import { downloadProject } from "../../api/handleProjects";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -42,6 +39,9 @@ const DashboardView = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadingAnteproyectos, setLoadingAnteproyectos] = useState(true);
+  const [loadingIntermediateProjects, setLoadingIntermediateProjects] =
+    useState(true);
+
   const [selectedMenu, setSelectedMenu] = useState("Inicio");
   const [deliveries, setDeliveries] = useState(null);
   const [showUploadCSV, setShowUploadCSV] = useState(false);
@@ -79,12 +79,23 @@ const DashboardView = () => {
         console.error("No se encontraron datos de anteproyectos");
       }
       setLoadingAnteproyectos(false);
+    } else if (menu === "Intermedia") {
+      setLoadingIntermediateProjects(true);
+      const intermeadiateProjectsData = await getIntermediateProjects(
+        user,
+        period
+      );
+      if (intermeadiateProjectsData) {
+        setDeliveries(intermeadiateProjectsData);
+      } else {
+        console.error("No se encontraron datos de entregas intermedias");
+      }
     }
   };
 
   const downloadFile = async (groupId) => {
     try {
-      await downloadAnteproyecto(groupId, user, period.id);
+      await downloadProject(groupId, user, period.id, 'initial');
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }
@@ -118,11 +129,16 @@ const DashboardView = () => {
         );
       case "Grupos":
         // return <Algorithms user={user} />;
-        return <IncompleteGroups/>;
+        return <IncompleteGroups />;
       case "Temas - Tutores - Grupos":
-        return <TopicTutor/>;
+        return <TopicTutor />;
       case "Intermedia":
-        return <div>Contenido de entrega Intermedia</div>;
+        return (
+          <ContentIntermediateProject
+            loadingIntermediateProjects={loadingIntermediateProjects}
+            deliveries={deliveries}
+          />
+        );
       case "Final":
         return <div>Contenido de entrega Final</div>;
       case "Fechas de presentación":
@@ -133,12 +149,14 @@ const DashboardView = () => {
   };
 
   return (
-    <Container maxWidth={false} 
-    sx={{ 
-      width: "95%", // Ajusta el ancho al 90% del viewport
-      height: "120vh", // Ocupa el 100% de la altura de la pantalla
-      maxWidth: "none", // Para que el maxWidth no limite el tamaño
-    }}>
+    <Container
+      maxWidth={false}
+      sx={{
+        width: "95%", // Ajusta el ancho al 90% del viewport
+        height: "120vh", // Ocupa el 100% de la altura de la pantalla
+        maxWidth: "none", // Para que el maxWidth no limite el tamaño
+      }}
+    >
       <Root>
         <Grid container spacing={3}>
           {/* Sidebar */}
