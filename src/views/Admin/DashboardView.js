@@ -5,20 +5,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTopics } from "../../redux/slices/topicsSlice";
 import { setTutors } from "../../redux/slices/tutorsSlice";
 import { getTableData } from "../../api/handleTableData";
-import { getAnteproyectos } from "../../api/getAnteproyectos";
 import { getDashboardData } from "../../api/dashboardStats";
 import { Container, Box, Grid, Paper } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
 import ContentInicio from "../../components/UI/Dashboards/AdminStats/Components/ContentInicio";
 import ContentInscripciones from "../../components/UI/Dashboards/AdminStats/Components/ContentInscripciones";
-import ContentAnteproyecto from "../../components/UI/Dashboards/AdminStats/Components/ContentAnteproyecto";
+import ContentPdfProjects from "../../components/UI/Dashboards/AdminStats/Components/ContentAnteproyecto";
 import { setGroups } from "../../redux/slices/groupsSlice";
 import IncompleteGroups from "../../components/Algorithms/IncompleteGroups";
 import TopicTutor from "../../components/Algorithms/TopicTutor";
 import AvailabilityCalendar from "../../components/AvailabilityCalendar";
 import ContentIntermediateProject from "../../components/UI/Dashboards/AdminStats/Components/ContentIntermediateProject";
 import { getIntermediateProjects } from "../../api/intermeadiateProjects";
-import { downloadProject } from "../../api/handleProjects";
+import { downloadProject, getProjects } from "../../api/handleProjects";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -39,6 +38,8 @@ const DashboardView = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadingAnteproyectos, setLoadingAnteproyectos] = useState(true);
+  const [loadingFinalProjects, setLoadingFinalProjects] = useState(true);
+
   const [loadingIntermediateProjects, setLoadingIntermediateProjects] =
     useState(true);
 
@@ -72,7 +73,7 @@ const DashboardView = () => {
     setShowUploadCSV(false);
     if (menu === "Anteproyecto") {
       setLoadingAnteproyectos(true);
-      const anteproyectosData = await getAnteproyectos(user, period);
+      const anteproyectosData = await getProjects(user, period.id, 'initial');
       if (anteproyectosData) {
         setDeliveries(anteproyectosData);
       } else {
@@ -90,12 +91,32 @@ const DashboardView = () => {
       } else {
         console.error("No se encontraron datos de entregas intermedias");
       }
+    } else if (menu === "Final") {
+      setLoadingFinalProjects(true);
+      const finalProjectsData = await getProjects(
+        user,
+        period.id,
+        'final'
+      );
+      if (finalProjectsData) {
+        setDeliveries(finalProjectsData);
+      } else {
+        console.error("No se encontraron datos de entregas finales");
+      }
     }
   };
 
-  const downloadFile = async (groupId) => {
+  const downloadInitialFile = async (groupId) => {
     try {
-      await downloadProject(groupId, user, period.id, 'initial');
+      await downloadProject(groupId, user, period.id, "initial");
+    } catch (error) {
+      console.error("Error al descargar el archivo:", error);
+    }
+  };
+
+  const downloadFinalFile = async (groupId) => {
+    try {
+      await downloadProject(groupId, user, period.id, "final");
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }
@@ -121,10 +142,10 @@ const DashboardView = () => {
         );
       case "Anteproyecto":
         return (
-          <ContentAnteproyecto
-            loadingAnteproyectos={loadingAnteproyectos}
+          <ContentPdfProjects
+            loadingProjects={loadingAnteproyectos}
             deliveries={deliveries}
-            downloadFile={downloadFile}
+            downloadFile={downloadInitialFile}
           />
         );
       case "Grupos":
@@ -140,7 +161,13 @@ const DashboardView = () => {
           />
         );
       case "Final":
-        return <div>Contenido de entrega Final</div>;
+        return (
+          <ContentPdfProjects
+            loadingProjects={loadingFinalProjects}
+            deliveries={deliveries}
+            downloadFile={downloadFinalFile}
+          />
+        );
       case "Fechas de presentación":
         return <AvailabilityCalendar />;
       default:

@@ -20,8 +20,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateGroup } from "../../../../../api/updateGroups";
 import { setGroups } from "../../../../../redux/slices/groupsSlice";
 
-const ContentAnteproyecto = ({
-  loadingAnteproyectos,
+const ContentPdfProjects = ({
+  loadingProjects,
   deliveries,
   downloadFile,
 }) => {
@@ -37,7 +37,7 @@ const ContentAnteproyecto = ({
   const [selectedReviewers, setSelectedReviewers] = useState({});
   const dispatch = useDispatch();
 
-  if (loadingAnteproyectos || groupsData.length === 0) {
+  if (loadingProjects || groupsData.length === 0) {
     return (
       <Box
         display="flex"
@@ -116,14 +116,14 @@ const ContentAnteproyecto = ({
             <Grid item xs={12} sm={4}>
               <StatCard
                 title="Grupos que entregaron"
-                value={loadingAnteproyectos ? -1 : deliveries.length}
+                value={loadingProjects ? -1 : deliveries.length}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
               <StatCard
                 title="Grupos que faltan entregar"
                 value={
-                  loadingAnteproyectos
+                  loadingProjects
                     ? -1
                     : groupsData.length - deliveries.length
                 }
@@ -132,7 +132,7 @@ const ContentAnteproyecto = ({
             <Grid item xs={12} sm={4}>
               <StatCard
                 title="Total de grupos"
-                value={loadingAnteproyectos ? -1 : groupsData.length}
+                value={loadingProjects ? -1 : groupsData.length}
               />
             </Grid>
           </Grid>
@@ -154,7 +154,7 @@ const ContentAnteproyecto = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {loadingAnteproyectos ? (
+            {loadingProjects ? (
               <TableRow>
                 <TableCell colSpan={4} align="center">
                   <CircularProgress />
@@ -226,4 +226,4 @@ const ContentAnteproyecto = ({
   );
 };
 
-export default ContentAnteproyecto;
+export default ContentPdfProjects;

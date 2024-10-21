@@ -73,3 +73,21 @@ export const fetchProjectPdf = async (groupId, user, period_id, projectType) => 
     throw error;
   }
 };
+
+export const getProjects = async (user, period_id, projectType) => {
+    const projectName = projectType === 'final' ? 'final-project' : 'initial-project';
+
+    const config = {
+      params: {
+          period: period_id
+      },
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+  
+    // Realiza la solicitud GET con los parámetros de consulta dinámicos
+    const response = await axios.get(`${BASE_URL}/groups/${projectName}`, config);
+  
+    return response.data;
+  };
