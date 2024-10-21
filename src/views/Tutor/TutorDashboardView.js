@@ -15,7 +15,6 @@ import {
   AccordionSummary,
   AccordionDetails,
   Divider,
-  CircularProgress,
 } from "@mui/material";
 import { getMyGroups } from "../../api/getMyGroups";
 import LearningPath from "../../components/LearningPath";
@@ -178,9 +177,14 @@ const TutorDashboard = () => {
 
   const renderGroups = () => {
     if (loadingGroups) {
-      return <DotsLoader>
-                <div></div><div></div><div></div><div></div>
-             </DotsLoader>;
+      return (
+        <DotsLoader>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </DotsLoader>
+      );
     }
 
     if (userGroups.length === 0) {
@@ -204,9 +208,14 @@ const TutorDashboard = () => {
 
   const renderGroupsToReview = () => {
     if (loadingReviews) {
-      return <DotsLoader>
-      <div></div><div></div><div></div><div></div>
-   </DotsLoader>;
+      return (
+        <DotsLoader>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </DotsLoader>
+      );
     }
 
     if (userGroupsToReview.length === 0) {
@@ -217,7 +226,9 @@ const TutorDashboard = () => {
       <ListItemStyled
         key={group.id}
         button
-        selected={selectedGroupReview?.id === group.id && selectedMenu === "Revisiones"}
+        selected={
+          selectedGroupReview?.id === group.id && selectedMenu === "Revisiones"
+        }
         onClick={() => {
           setSelectedGroupReview(group);
           setSelectedMenu("Revisiones");
@@ -229,7 +240,7 @@ const TutorDashboard = () => {
   };
 
   const contentMap = {
-    "Inicio": <Inicio />,
+    Inicio: <Inicio />,
     "Mis Grupos": <div>Contenido del Formulario de Fechas</div>,
     "Seleccionar Disponibilidad": (
       <AvailabilityContainer>
@@ -305,18 +316,14 @@ const TutorDashboard = () => {
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     Mis Grupos
                   </AccordionSummary>
-                  <AccordionDetails>
-                    {renderGroups()}
-                  </AccordionDetails>
+                  <AccordionDetails>{renderGroups()}</AccordionDetails>
                 </Accordion>
 
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     Revisiones
                   </AccordionSummary>
-                  <AccordionDetails>
-                    {renderGroupsToReview()}
-                  </AccordionDetails>
+                  <AccordionDetails>{renderGroupsToReview()}</AccordionDetails>
                 </Accordion>
 
                 <Accordion defaultExpanded>
@@ -327,7 +334,9 @@ const TutorDashboard = () => {
                     <ListItemStyled
                       button
                       selected={selectedMenu === "Seleccionar Disponibilidad"}
-                      onClick={() => setSelectedMenu("Seleccionar Disponibilidad")}
+                      onClick={() =>
+                        setSelectedMenu("Seleccionar Disponibilidad")
+                      }
                     >
                       Seleccionar Disponibilidad
                     </ListItemStyled>

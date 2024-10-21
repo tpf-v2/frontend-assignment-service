@@ -18,7 +18,6 @@ import TopicsTable from './components/UI/Tables/ChildTables/TopicsTable';
 import TutorsTable from './components/UI/Tables/ChildTables/TutorsTable';
 import FormAnswersTable from './components/UI/Tables/ChildTables/FormAnswersTable';
 import GroupsTable from './components/UI/Tables/ChildTables/GroupsTable';
-import ClosedAlert from './components/ClosedAlert';
 import TokenManager from './components/TokenManager';
 import Algorithms from './components/Algorithms/Algorithms';
 
@@ -29,6 +28,7 @@ import CuatrimestreConfig from './components/UI/CuatrimestreConfig';
 import HomeView from './views/HomeView';
 import LoginView from './views/LoginView';
 import DashboardView from './views/Admin/DashboardView'
+import StudentForm from './components/Forms/StudentForm';
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -72,9 +72,8 @@ const App = () => {
             <Route path="dashboard/:cuatrimestre/groups" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
             <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />            
             <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
-            <Route path="/student-form" element={<ProtectedRoute><ClosedAlert message="No se aceptan mas respuestas al formulario de grupos."/></ProtectedRoute>} /> TODO: Formulario de alumnos se deshabilita manualmente 
             <Route path="/upload/:projectType" element={<ProtectedRoute><UploadView /></ProtectedRoute>} />
-            {/* <Route path="/student-form" element={<StudentForm />} /> */}
+            <Route path="/student-form" element={<ProtectedRoute><StudentForm /></ProtectedRoute>} />
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
             <Route path="/tutor-cuatrimestre/:cuatrimestre" element={<ProtectedRoute><TutorDashboardView /></ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />

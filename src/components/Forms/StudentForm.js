@@ -9,7 +9,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Box,
   Alert,
   Dialog,
   DialogActions,
@@ -24,9 +23,9 @@ import { sendGroupForm } from "../../api/sendGroupForm";
 import { getStudents } from "../../api/getStudents";
 import { getTopics } from "../../api/getTopics";
 import { useSelector } from "react-redux";
-import { getAllStudents } from "../../api/getStudents";
 import MySnackbar from "../UI/MySnackBar";
 import { NumericFormat } from "react-number-format";
+import ClosedAlert from "../ClosedAlert";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -45,6 +44,7 @@ const Title = styled(Typography)(({ theme }) => ({
 
 const StudentForm = () => {
   const user = useSelector((state) => state.user);
+  const period = useSelector((state) => state.period);
 
   const [formData, setFormData] = useState({
     uid: user.id,
@@ -190,206 +190,210 @@ const StudentForm = () => {
 
   return (
     <Container maxWidth="sm">
-      <Root>
-        <Title variant="h5">Formulario del Grupo</Title>
-        {submitSuccess && (
-          <Alert severity="success">
-            Gracias por enviar el formulario de grupo.
-          </Alert>
-        )}
-        {!submitSuccess && (
-          <form onSubmit={handleSubmit}>
-            <NumericFormat
-              allowNegative={false}
-              fullWidth
-              label="Padrón"
-              name="uid"
-              customInput={TextField}
-              margin="normal"
-              variant="outlined"
-              value={formData.uid}
-              onChange={handleChange}
-              InputProps={{
-                readOnly: true,
-              }}
-              required
-            />
-            <NumericFormat
-              allowNegative={false}
-              customInput={TextField}
-              label="Padrón integrante 2"
-              name="uid2"
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              value={formData.uid2}
-              onChange={handleChange}
-            />
-            <NumericFormat
-              allowNegative={false}
-              customInput={TextField}
-              label="Padrón integrante 3"
-              name="uid3"
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              value={formData.uid3}
-              onChange={handleChange}
-            />
-            <NumericFormat
-              allowNegative={false}
-              customInput={TextField}
-              label="Padrón integrante 4"
-              name="uid4"
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              value={formData.uid4}
-              onChange={handleChange}
-            />
-
-            <Typography variant="h6" style={{ marginTop: "20px" }}>
-              Seleccionar opción
-            </Typography>
-            <RadioGroup
-              value={formData.selectedOption}
-              onChange={handleOptionChange}
-            >
-              <FormControlLabel
-                value="selection"
-                control={<Radio />}
-                label="Seleccionar 3 temas"
+      {period.form_active ? (
+        <Root>
+          <Title variant="h5">Formulario del Grupo</Title>
+          {submitSuccess && (
+            <Alert severity="success">
+              Gracias por enviar el formulario de grupo.
+            </Alert>
+          )}
+          {!submitSuccess && (
+            <form onSubmit={handleSubmit}>
+              <NumericFormat
+                allowNegative={false}
+                fullWidth
+                label="Padrón"
+                name="uid"
+                customInput={TextField}
+                margin="normal"
+                variant="outlined"
+                value={formData.uid}
+                onChange={handleChange}
+                InputProps={{
+                  readOnly: true,
+                }}
+                required
               />
-              <FormControlLabel
-                value="existing"
-                control={<Radio />}
-                label="Ya tengo tema y tutor"
+              <NumericFormat
+                allowNegative={false}
+                customInput={TextField}
+                label="Padrón integrante 2"
+                name="uid2"
+                fullWidth
+                margin="normal"
+                variant="outlined"
+                value={formData.uid2}
+                onChange={handleChange}
               />
-            </RadioGroup>
-
-            {formData.selectedOption === "selection" && (
-              <>
-                <FormControl fullWidth variant="outlined" margin="normal">
-                  <InputLabel>Tema 1</InputLabel>
-                  <Select
-                    name="topic1"
-                    value={formData.topic1}
-                    onChange={handleChange}
-                    label="Tema 1"
-                    required
-                  >
-                    {topics.map((topic) => (
-                      <MenuItem
-                        key={topic.name}
-                        value={topic.name}
-                        disabled={isTopicDisabled(topic.name)}
-                      >
-                        {topic.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <FormControl fullWidth variant="outlined" margin="normal">
-                  <InputLabel>Tema 2</InputLabel>
-                  <Select
-                    name="topic2"
-                    value={formData.topic2}
-                    onChange={handleChange}
-                    label="Tema 2"
-                    required
-                  >
-                    {topics.map((topic) => (
-                      <MenuItem
-                        key={topic.name}
-                        value={topic.name}
-                        disabled={
-                          isTopicDisabled(topic.name) ||
-                          formData.topic1 === topic.name
-                        }
-                      >
-                        {topic.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <FormControl fullWidth variant="outlined" margin="normal">
-                  <InputLabel>Tema 3</InputLabel>
-                  <Select
-                    name="topic3"
-                    value={formData.topic3}
-                    onChange={handleChange}
-                    label="Tema 3"
-                    required
-                  >
-                    {topics.map((topic) => (
-                      <MenuItem
-                        key={topic.name}
-                        value={topic.name}
-                        disabled={
-                          isTopicDisabled(topic.name) ||
-                          formData.topic1 === topic.name ||
-                          formData.topic2 === topic.name
-                        }
-                      >
-                        {topic.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </>
-            )}
-
-            {formData.selectedOption === "existing" && (
-              <>
-                <TextField
-                  label="Tema"
-                  name="specificTopic"
-                  fullWidth
-                  margin="normal"
-                  variant="outlined"
-                  value={formData.specificTopic}
-                  onChange={handleChange}
-                  required
+              <NumericFormat
+                allowNegative={false}
+                customInput={TextField}
+                label="Padrón integrante 3"
+                name="uid3"
+                fullWidth
+                margin="normal"
+                variant="outlined"
+                value={formData.uid3}
+                onChange={handleChange}
+              />
+              <NumericFormat
+                allowNegative={false}
+                customInput={TextField}
+                label="Padrón integrante 4"
+                name="uid4"
+                fullWidth
+                margin="normal"
+                variant="outlined"
+                value={formData.uid4}
+                onChange={handleChange}
+              />
+  
+              <Typography variant="h6" style={{ marginTop: "20px" }}>
+                Seleccionar opción
+              </Typography>
+              <RadioGroup
+                value={formData.selectedOption}
+                onChange={handleOptionChange}
+              >
+                <FormControlLabel
+                  value="selection"
+                  control={<Radio />}
+                  label="Seleccionar 3 temas"
                 />
-                <TextField
-                  label="Email del Tutor"
-                  name="tutorEmail"
-                  type="email"
-                  fullWidth
-                  margin="normal"
-                  variant="outlined"
-                  value={formData.tutorEmail}
-                  onChange={handleChange}
-                  required
+                <FormControlLabel
+                  value="existing"
+                  control={<Radio />}
+                  label="Ya tengo tema y tutor"
                 />
-              </>
-            )}
-
-            <ButtonStyled variant="contained" color="primary" type="submit">
-              Enviar Formulario
-            </ButtonStyled>
-          </form>
-        )}
-
-        {/* Diálogo de Confirmación */}
-        <Dialog open={openDialog} onClose={handleCloseDialog}>
-          <DialogTitle>Confirmar Envío</DialogTitle>
-          <DialogContent>
-            <Typography variant="body1">
-              ¿Estás seguro que quieres crear un grupo con los estudiantes:{" "}
-              {studentNames.map((s) => `${s.name} ${s.last_name}`).join(", ")}?
-            </Typography>
-          </DialogContent>
-          <DialogActions>
-            <Button disabled={loading} onClick={handleCloseDialog} color="primary">
-              Seguir Editando
-            </Button>
-            <Button disabled={loading} onClick={handleConfirm} color="primary">
-              Confirmar
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Root>
+              </RadioGroup>
+  
+              {formData.selectedOption === "selection" && (
+                <>
+                  <FormControl fullWidth variant="outlined" margin="normal">
+                    <InputLabel>Tema 1</InputLabel>
+                    <Select
+                      name="topic1"
+                      value={formData.topic1}
+                      onChange={handleChange}
+                      label="Tema 1"
+                      required
+                    >
+                      {topics.map((topic) => (
+                        <MenuItem
+                          key={topic.name}
+                          value={topic.name}
+                          disabled={isTopicDisabled(topic.name)}
+                        >
+                          {topic.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl fullWidth variant="outlined" margin="normal">
+                    <InputLabel>Tema 2</InputLabel>
+                    <Select
+                      name="topic2"
+                      value={formData.topic2}
+                      onChange={handleChange}
+                      label="Tema 2"
+                      required
+                    >
+                      {topics.map((topic) => (
+                        <MenuItem
+                          key={topic.name}
+                          value={topic.name}
+                          disabled={
+                            isTopicDisabled(topic.name) ||
+                            formData.topic1 === topic.name
+                          }
+                        >
+                          {topic.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl fullWidth variant="outlined" margin="normal">
+                    <InputLabel>Tema 3</InputLabel>
+                    <Select
+                      name="topic3"
+                      value={formData.topic3}
+                      onChange={handleChange}
+                      label="Tema 3"
+                      required
+                    >
+                      {topics.map((topic) => (
+                        <MenuItem
+                          key={topic.name}
+                          value={topic.name}
+                          disabled={
+                            isTopicDisabled(topic.name) ||
+                            formData.topic1 === topic.name ||
+                            formData.topic2 === topic.name
+                          }
+                        >
+                          {topic.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </>
+              )}
+  
+              {formData.selectedOption === "existing" && (
+                <>
+                  <TextField
+                    label="Tema"
+                    name="specificTopic"
+                    fullWidth
+                    margin="normal"
+                    variant="outlined"
+                    value={formData.specificTopic}
+                    onChange={handleChange}
+                    required
+                  />
+                  <TextField
+                    label="Email del Tutor"
+                    name="tutorEmail"
+                    type="email"
+                    fullWidth
+                    margin="normal"
+                    variant="outlined"
+                    value={formData.tutorEmail}
+                    onChange={handleChange}
+                    required
+                  />
+                </>
+              )}
+  
+              <ButtonStyled variant="contained" color="primary" type="submit">
+                Enviar Formulario
+              </ButtonStyled>
+            </form>
+          )}
+  
+          {/* Diálogo de Confirmación */}
+          <Dialog open={openDialog} onClose={handleCloseDialog}>
+            <DialogTitle>Confirmar Envío</DialogTitle>
+            <DialogContent>
+              <Typography variant="body1">
+                ¿Estás seguro que quieres crear un grupo con los estudiantes:{" "}
+                {studentNames.map((s) => `${s.name} ${s.last_name}`).join(", ")}?
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button disabled={loading} onClick={handleCloseDialog} color="primary">
+                Seguir Editando
+              </Button>
+              <Button disabled={loading} onClick={handleConfirm} color="primary">
+                Confirmar
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Root>
+      ) : (
+        <ClosedAlert message="No se aceptan respuestas al formulario de grupos." />
+      )}
       <MySnackbar
         open={notification.open}
         handleClose={handleSnackbarClose}
@@ -398,6 +402,7 @@ const StudentForm = () => {
       />
     </Container>
   );
+  
 };
 
 export default StudentForm;
