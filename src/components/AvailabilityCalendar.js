@@ -238,10 +238,6 @@ const AvailabilityCalendar = () => {
             // sábado y domingo
             return { style: { display: "none" } }; // Ocultar este día
           }
-          const hour = date.getHours();
-          if (hour >= 13 && hour < 15) {
-            return { style: { display: "#f0f0f0" } }; // Gray background for 13:00 to 15:00
-          }
           return {};
         }}
         slotPropGetter={slotPropGetter} // Apply slot styles here

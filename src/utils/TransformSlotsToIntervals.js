@@ -16,20 +16,20 @@ export const transformSlotsToIntervals = (slots) => {
 
     // Si hay una discontinuidad, significa que terminó el intervalo anterior
     if (!currentStart.isSame(previousEnd.add(1, "hours"))) {
-      // Agregar el intervalo actual con el último slot como "end"
+      // Agregar el intervalo actual con el último slot como "end", sumando una hora
       intervals.push({
         start: start,
-        end: previousSlot
+        end: moment(previousSlot).add(1, "hours").toDate() // Sumar una hora al final
       });
 
       start = currentSlot;
     }
   }
 
-  // Asegurar agregar el último intervalo
+  // Asegurar agregar el último intervalo, sumando también una hora
   intervals.push({
     start: start,
-    end: new Date(slots[slots.length - 1].slot)
+    end: moment(new Date(slots[slots.length - 1].slot)).add(1, "hours").toDate()
   });
 
   return intervals;
