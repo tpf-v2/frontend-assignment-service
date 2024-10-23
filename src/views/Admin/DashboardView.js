@@ -126,7 +126,10 @@ const DashboardView = () => {
       case "Final":
         return <div>Contenido de entrega Final</div>;
       case "Fechas de presentación":
+        return <div>Fechas de presentación</div>;
+      case "Disponibilidad fechas de Presentación":
         return <AvailabilityCalendarAdmin />;
+
       default:
         return null;
     }

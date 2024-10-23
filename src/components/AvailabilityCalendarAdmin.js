@@ -78,18 +78,19 @@ const AvailabilityCalendarAdmin = () => {
       setModalOpen(false); // Cerrar el modal después de confirmar
 
       try {
-        const formattedEvents = [{ 
-          start: moment(newEvent.start).subtract(3, "hours").utc().format(), 
-          end: moment(newEvent.end).subtract(3, "hours").utc().format() 
-        }];
-        
+        const formattedEvents = [
+          {
+            start: moment(newEvent.start).subtract(3, "hours").utc().format(),
+            end: moment(newEvent.end).subtract(3, "hours").utc().format(),
+          },
+        ];
+
         await sendAvailability(user, formattedEvents, period.id);
         setAvailabilitySent(true);
         handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
       } catch (error) {
         handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
       }
-      
     }
   };
 
@@ -102,8 +103,7 @@ const AvailabilityCalendarAdmin = () => {
     if (eventToDelete) {
       const updatedEvents = events.filter(
         (event) =>
-          event.start !== eventToDelete.start ||
-          event.end !== eventToDelete.end
+          event.start !== eventToDelete.start || event.end !== eventToDelete.end
       );
       setConfirmDeleteOpen(false); // Cerrar el modal de confirmación
 
@@ -112,18 +112,21 @@ const AvailabilityCalendarAdmin = () => {
           start: moment(event.start).subtract(3, "hours").utc().format(),
           end: moment(event.end).subtract(3, "hours").utc().format(),
         }));
-  
+
         // Envía la lista actualizada de eventos al backend
         await putAvailability(user, formattedEvents, period.id);
 
         setEvents(updatedEvents); // Actualiza el estado local
-        handleSnackbarOpen("Intervalo de disponibilidad eliminado exitosamente.", "success");
+        handleSnackbarOpen(
+          "Intervalo de disponibilidad eliminado exitosamente.",
+          "success"
+        );
       } catch (error) {
         handleSnackbarOpen("Error al actualizar la disponibilidad.", "error");
       }
     }
   };
-  
+
   useEffect(() => {
     const initialAvailability = async () => {
       try {
@@ -167,6 +170,7 @@ const AvailabilityCalendarAdmin = () => {
         onSelectEvent={handleSelectEvent}
         views={["week"]}
         defaultView="week"
+        timeslots={1}
         step={60}
         showMultiDayTimes
         defaultDate={new Date()}

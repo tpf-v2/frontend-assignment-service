@@ -6,20 +6,34 @@ import { Typography, Button } from "@mui/material";
 import MySnackbar from "./UI/MySnackBar";
 import EventModal from "./EventModal";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
-import { sendAvailability, fetchAvailability, putAvailability } from "../api/handleAvailability";
-import { CalendarStyled, AvailabilityContainer, ButtonContainer, DescriptionBox } from "../styles/AvailabilityCalendarStyle";
+import {
+  sendAvailability,
+  fetchAvailability,
+  putAvailability,
+  fetchStudentAvailability,
+  sendStudentAvailability,
+  putStudentAvailability,
+  fetchTutorAvailability,
+  sendTutorAvailability,
+  putTutorAvailability,
+} from "../api/handleAvailability";
+import {
+  CalendarStyled,
+  AvailabilityContainer,
+  ButtonContainer,
+  DescriptionBox,
+} from "../styles/AvailabilityCalendarStyle";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getPeriodAvailability } from "../api/getPeriodAvailability";
 import { useDispatch } from "react-redux";
 import { transformSlotsToIntervals } from "../utils/TransformSlotsToIntervals";
 
-
 // Localizador de momento
 const localizer = momentLocalizer(moment);
 
 const AvailabilityCalendar = () => {
-  const [events, setEvents] = useState([]);
+  const [userAvailability, setUserAvailability] = useState([]); // Fechas seleccionadas por el estudiante
   const [modalOpen, setModalOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -27,59 +41,71 @@ const AvailabilityCalendar = () => {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [availabilitySent, setAvailabilitySent] = useState(false);
+
   const [eventToDelete, setEventToDelete] = useState(null);
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
-  const navigate = useNavigate();
-  const [availableDates, setPeriodAvailability] = useState(new Set());
+  // const navigate = useNavigate();
+  const [availableDates, setAvailableDates] = useState(new Set()); // Mantener como un Set
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true); // Estado para manejar la carga
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const periodAvailability = async () => {
+    const fetchData = async () => {
       if (!user) {
         console.error("El usuario no está definido.");
         setLoading(false);
         return;
       }
-  
+
       try {
-        console.log(period)
-        const availability = await getPeriodAvailability(user,period);
-        const availabilitySet = new Set(availability.map(item => {
-          // Asegurarse de que el item tenga la propiedad slot
-          if (item.slot) {
-            return moment(item.slot).toISOString();
-          } else {
-            console.error("El elemento no contiene la propiedad 'slot':", item);
-            return null; // Puede tomar decisiones sobre slots no válidos aquí
-          }
-        }).filter(Boolean)); // Filtrar valores nulos
-  
-        const initialAvailability = async () => {
-          try {
-            const slots = await fetchAvailability(user, period.id);
-            const formattedSlots = transformSlotsToIntervals(slots);
-            setEvents(formattedSlots)
-            if (slots.length > 0) {
-              setAvailabilitySent(true)
-            }
-          } catch (error) {
-            console.error("Error when fetching dates")
-          }
-        };
-        initialAvailability();
-        setPeriodAvailability(availabilitySet); // Establecer el conjunto de disponibilidad
-        console.log(availabilitySet)
+        // Fechas disponibles para seleccionar
+        const slots = await fetchAvailability(user, period.id);
+
+        // Actualizar el Set de fechas disponibles
+        const availableDatesSet = new Set(
+          slots
+            .map((item) => {
+              // Asegurarse de que el item tenga la propiedad slot
+              if (item.slot) {
+                return moment(item.slot).toISOString();
+              } else {
+                console.error(
+                  "El elemento no contiene la propiedad 'slot':",
+                  item
+                );
+                return null; // Puede tomar decisiones sobre slots no válidos aquí
+              }
+            })
+            .filter(Boolean)
+        ); // Filtrar valores nulos
+
+        setAvailableDates(availableDatesSet); // Establecer el conjunto de fechas disponibles
+
+        // Fechas ya seleccionadas por el estudiante
+        const userAvailability = user.role === "student" ? await fetchStudentAvailability(
+          user,
+          user.group_id
+        ) : await fetchTutorAvailability(
+          user,
+          user.id,
+          period.id
+        );
+        const formattedUserAvailability =
+          transformSlotsToIntervals(userAvailability);
+        setUserAvailability(formattedUserAvailability);
+        if (userAvailability.length > 0) {
+          setAvailabilitySent(true);
+        }
       } catch (error) {
-        console.error("Error al obtener la disponibilidad", error);
+        console.error("Error fetching availability", error);
       } finally {
-        setLoading(false); // Finalizar la carga de datos
+        setLoading(false);
       }
     };
-  
-    periodAvailability();
-  }, [dispatch, user,loading]);
+
+    fetchData();
+  }, [dispatch, user, loading, period]);
 
   const handleSnackbarOpen = (message, status = "info") => {
     setSnackbarMessage(message);
@@ -96,36 +122,60 @@ const AvailabilityCalendar = () => {
 
   const handleSelectSlot = ({ start, end }) => {
     const startIsoString = start.toISOString();
-  
-    if (!availableDates.has(startIsoString)) {
-      handleSnackbarOpen("Esta hora no está disponible para selección.", "error");
+    const endIsoString = end.toISOString();
+
+    if (
+      !availableDates.has(startIsoString) ||
+      !availableDates.has(endIsoString)
+    ) {
+      // Aquí se utiliza correctamente el Set
+      handleSnackbarOpen(
+        "Esta hora no está disponible para selección.",
+        "error"
+      );
       return;
     }
-  
-    const isEventOverlap = events.some(
+
+    const isEventOverlap = userAvailability.some(
       (event) => start < event.end && end > event.start
     );
-  
+
     if (isEventOverlap) {
-      handleSnackbarOpen("El evento se solapa con otro existente. Por favor, selecciona un intervalo diferente.", "error");
+      handleSnackbarOpen(
+        "El evento se solapa con otro existente. Por favor, selecciona un intervalo diferente.",
+        "error"
+      );
       return;
     }
-  
+
     setSelectedSlot({ start, end });
     setModalOpen(true);
   };
 
-  const handleConfirmEvent = () => {
+  const handleConfirmEvent = async () => {
     if (selectedSlot) {
-      setEvents((prevEvents) => [
-        ...prevEvents,
-        { start: selectedSlot.start, end: selectedSlot.end },
-      ]);
-      handleSnackbarOpen(
-        "Bloque de disponibilidad creado exitosamente.",
-        "success"
-      );
+      const newEvent = { start: selectedSlot.start, end: selectedSlot.end };
+      setUserAvailability((prevEvents) => [...prevEvents, newEvent]);
+      // handleSnackbarOpen(
+      //   "Bloque de disponibilidad creado exitosamente.",
+      //   "success"
+      // );
       setModalOpen(false);
+
+      try {
+        const formattedEvents = [
+          {
+            start: moment(newEvent.start).subtract(3, "hours").utc().format(),
+            end: moment(newEvent.end).subtract(3, "hours").utc().format(),
+          },
+        ];
+
+        user.role === "student" ? await sendStudentAvailability(user, formattedEvents, user.group_id) : await sendTutorAvailability(user, formattedEvents, user.id, period.id);
+        setAvailabilitySent(true);
+        handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
+      } catch (error) {
+        handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
+      }
     }
   };
 
@@ -134,44 +184,44 @@ const AvailabilityCalendar = () => {
     setConfirmDeleteOpen(true);
   };
 
-  const handleDeleteEvent = () => {
+  const handleDeleteEvent = async () => {
     if (eventToDelete) {
-      setEvents((prevEvents) =>
-        prevEvents.filter(
-          (event) =>
-            event.start !== eventToDelete.start ||
-            event.end !== eventToDelete.end
-        )
+      const updatedEvents = userAvailability.filter(
+        (event) =>
+          event.start !== eventToDelete.start || event.end !== eventToDelete.end
       );
-      handleSnackbarOpen(
-        "Bloque de disponibilidad eliminado exitosamente.",
-        "success"
-      );
+  
+      setConfirmDeleteOpen(false);
+  
+      try {
+        const formattedEvents = updatedEvents.map((event) => ({
+          start: moment(event.start).subtract(3, "hours").utc().format(),
+          end: moment(event.end).subtract(3, "hours").utc().format(),
+        }));
+  
+        // Envía la lista actualizada de eventos al backend
+        if (user.role === "student") {
+          await putStudentAvailability(user, formattedEvents, user.group_id);
+        } else {
+          await putTutorAvailability(user, formattedEvents, user.id, period.id);
+        }
+  
+        setUserAvailability(updatedEvents); // Actualiza el estado local
+        handleSnackbarOpen(
+          "Intervalo de disponibilidad eliminado exitosamente.",
+          "success"
+        );
+      } catch (error) {
+        handleSnackbarOpen("Error al actualizar la disponibilidad.", "error");
+      }
     }
-    setConfirmDeleteOpen(false);
-  };
-
-  const onSubmitEvents = async () => {
-    try {
-      const gmt3Events = events.map((event) => ({
-        start: moment(event.start).subtract(3, "hours").toISOString(), // Ajusto restando 3 horas
-        end: moment(event.end).subtract(3, "hours").toISOString(), // Ajusto restando 3 horas
-      }));
-
-      await sendAvailability(user, period, gmt3Events);
-      handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
-      setTimeout(() => {
-        navigate("/home");
-      }, 1500);
-    } catch (error) {
-      handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
-    }
-  };
+  };  
 
   const slotPropGetter = (date) => {
     const isoString = date.toISOString();
-    
+    console.log(availableDates);
     if (!availableDates.has(isoString)) {
+      // Aquí se utiliza correctamente el Set
       return {
         style: {
           backgroundColor: "#f0f0f0", // Gray background for disabled slots
@@ -184,12 +234,12 @@ const AvailabilityCalendar = () => {
 
   const onEditEvents = async () => {
     try {
-      const formattedEvents = events.map((event) => ({
+      const formattedEvents = userAvailability.map((event) => ({
         // Resta 3 horas (180 minutos) a cada fecha
         start: moment(event.start).subtract(3, "hours").utc().format(),
         end: moment(event.end).subtract(3, "hours").utc().format(),
       }));
-      await putAvailability(user, formattedEvents, period.id);
+      await putStudentAvailability(user, formattedEvents, user.group_id);
       handleSnackbarOpen("Disponibilidad editada exitosamente.", "success");
     } catch (error) {
       handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
@@ -211,13 +261,12 @@ const AvailabilityCalendar = () => {
           bloque existente, simplemente selecciónalo de nuevo.
         </Typography>
       </DescriptionBox>
-
       <CalendarStyled
         localizer={localizer}
-        events={events}
+        events={userAvailability} // Fechas seleccionadas por el estudiante
         selectable
-        onSelectSlot={handleSelectSlot}
-        onSelectEvent={handleSelectEvent}
+        onSelectSlot={handleSelectSlot} // Fechas seleccionables
+        onSelectEvent={handleSelectEvent} // Fechas seleccionadas
         views={["week"]}
         defaultView="week"
         timeslots={1}
@@ -240,7 +289,7 @@ const AvailabilityCalendar = () => {
           }
           return {};
         }}
-        slotPropGetter={slotPropGetter} // Apply slot styles here
+        slotPropGetter={slotPropGetter}
         onNavigation={(date) => {
           const day = date.getDay();
           if (day === 0 || day === 6) {
@@ -248,19 +297,6 @@ const AvailabilityCalendar = () => {
           }
         }}
       />
-      { !availabilitySent ? (
-          <ButtonContainer>
-              <Button variant="contained" color="primary" onClick={onSubmitEvents}>
-                  Enviar
-              </Button>
-          </ButtonContainer>
-      ) : (
-        <ButtonContainer>
-              <Button variant="contained" color="primary" onClick={onEditEvents}>
-                  Editar
-              </Button>
-          </ButtonContainer>
-      )}
 
       <EventModal
         open={modalOpen}
@@ -273,7 +309,6 @@ const AvailabilityCalendar = () => {
         onClose={() => setConfirmDeleteOpen(false)}
         onConfirm={handleDeleteEvent}
       />
-
       <MySnackbar
         message={snackbarMessage}
         status={snackbarStatus}
