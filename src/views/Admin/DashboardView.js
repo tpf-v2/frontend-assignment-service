@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setTopics } from "../../redux/slices/topicsSlice";
 import { setTutors } from "../../redux/slices/tutorsSlice";
@@ -14,10 +14,10 @@ import ContentPdfProjects from "../../components/UI/Dashboards/AdminStats/Compon
 import { setGroups } from "../../redux/slices/groupsSlice";
 import IncompleteGroups from "../../components/Algorithms/IncompleteGroups";
 import TopicTutor from "../../components/Algorithms/TopicTutor";
-import AvailabilityCalendar from "../../components/AvailabilityCalendar";
 import ContentIntermediateProject from "../../components/UI/Dashboards/AdminStats/Components/ContentIntermediateProject";
 import { getIntermediateProjects } from "../../api/intermeadiateProjects";
 import { downloadProject, getProjects } from "../../api/handleProjects";
+import AvailabilityCalendarAdmin from "../../components/AvailabilityCalendarAdmin";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -30,7 +30,6 @@ const Root = styled(Paper)(({ theme }) => ({
 
 const DashboardView = () => {
   const navigate = useNavigate();
-  const { cuatrimestre } = useParams();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
@@ -51,12 +50,12 @@ const DashboardView = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const data = await getDashboardData(cuatrimestre, user);
+        const data = await getDashboardData(period.id, user);
         dispatch(setTopics(data.topics));
         dispatch(setTutors(data.tutors));
         setDashboardData(data);
 
-        const endpoint = `/groups/?period=${cuatrimestre}`;
+        const endpoint = `/groups/?period=${period.id}`;
         const groupsData = await getTableData(endpoint, user);
         dispatch(setGroups(groupsData));
       } catch (error) {
@@ -126,7 +125,7 @@ const DashboardView = () => {
     switch (selectedMenu) {
       case "Inicio":
         return (
-          <ContentInicio navigate={navigate} cuatrimestre={cuatrimestre} />
+          <ContentInicio navigate={navigate} period={period.id} />
         );
       case "Inscripciones":
         return (
@@ -137,7 +136,7 @@ const DashboardView = () => {
             setUploadType={setUploadType}
             dashboardData={dashboardData}
             loading={loading}
-            cuatrimestre={cuatrimestre}
+            period={period.id}
           />
         );
       case "Anteproyecto":
@@ -169,7 +168,10 @@ const DashboardView = () => {
           />
         );
       case "Fechas de presentación":
-        return <AvailabilityCalendar />;
+        return <div>Fechas de presentación</div>;
+      case "Disponibilidad fechas de Presentación":
+        return <AvailabilityCalendarAdmin />;
+
       default:
         return null;
     }
@@ -191,7 +193,7 @@ const DashboardView = () => {
             <Sidebar
               selectedMenu={selectedMenu}
               handleNavigation={handleNavigation}
-              cuatrimestre={cuatrimestre}
+              period={period.id}
             />
           </Grid>
           {/* Contenido */}

@@ -15,11 +15,11 @@ export const fetchCuatrimestres = async (user) => {
     const response = await axios.get(url, config);
     return response.data;
   } catch (error) {
-    throw new Error("Error fetching cuatrimestres: " + error.message);
+    throw new Error('Error fetching periods: ' + error.message);
   }
 };
 
-// Add a new cuatrimestre
+// Add a new period
 export const addCuatrimestre = async (newEntry, user) => {
   const config = {
     headers: {
@@ -64,7 +64,7 @@ export const getTutorCuatrimestre = async (user) => {
   }
 };
 
-export const getCuatrimestre = async (user) => {
+export const getCuatrimestre = async (user,periodId=undefined) => {
   console.log("API", user.period_id)
   try {
     const config = {
@@ -72,11 +72,11 @@ export const getCuatrimestre = async (user) => {
         Authorization: `Bearer ${user.token}`,
       },
     };
+    const periodRequest = periodId? periodId : user.period_id
     const response = await axios.get(
-      `${BASE_URL}/api/periods/${user.period_id}`,
+      `${BASE_URL}/api/periods/${periodRequest}`,
       config
     );
-    console.log(response)
     return response.data;
   } catch (error) {
     throw new Error("Error fetching cuatrimestre: " + error.message);

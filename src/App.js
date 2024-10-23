@@ -10,7 +10,7 @@ import Footer from './components/UI/Footer';
 import Profile from './components/Profile';
 import { Box } from '@mui/material';
 import BackgroundContainer from './components/UI/BackgroundContainer';
-import './App.css'; // Importar los estilos globales
+import './App.css'; // Import global styles
 import { useSelector } from "react-redux";
 import ParentTable from './components/UI/Tables/ParentTable';
 import StudentsTable from './components/UI/Tables/ChildTables/StudentsTable';
@@ -19,7 +19,6 @@ import TutorsTable from './components/UI/Tables/ChildTables/TutorsTable';
 import FormAnswersTable from './components/UI/Tables/ChildTables/FormAnswersTable';
 import GroupsTable from './components/UI/Tables/ChildTables/GroupsTable';
 import TokenManager from './components/TokenManager';
-import Algorithms from './components/Algorithms/Algorithms';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import TutorDashboardView from './views/Tutor/TutorDashboardView';
@@ -29,6 +28,7 @@ import HomeView from './views/HomeView';
 import LoginView from './views/LoginView';
 import DashboardView from './views/Admin/DashboardView'
 import StudentForm from './components/Forms/StudentForm';
+import StudentAvailabilityView from './views/Student/StudentAvailabilityView';
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -49,40 +49,57 @@ const App = () => {
     }
   };
 
-  const color = user ? getColorBasedOnRole(user.temporal_role) : '#0072C6'; // Color predeterminado para los no logueados
+  const color = user ? getColorBasedOnRole(user.temporal_role) : '#0072C6'; // Default color
 
   return (
     <Router>
       <TokenManager />
-      <Box className="main-container">
-        {/* Mostrar Header solo si el usuario está logueado */}
-        {user.token && <Header user={user} color={color} handleHomeClick={resetUser} />}
-        <BackgroundContainer/>
-        <Box className="content-container">
+      <Box
+        className="main-container"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
+        }}
+      >
+        {user.token && (
+          <Header user={user} color={color} handleHomeClick={resetUser} />
+        )}
+        <BackgroundContainer />
+        <Box
+          className="content-container"
+          sx={{
+            flex: '1',
+            minHeight: '1000px',
+            overflowY: 'auto', // Add scrolling if content exceeds
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
           <Routes>
             <Route path="/" element={<LoginView />} />
-            <Route path="/home" element={<HomeView/>} />
+            <Route path="/home" element={<HomeView />} />
             <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} />
-            <Route path="/dashboard/:cuatrimestre" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />
+            <Route path="/dashboard/:period" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />
             <Route path="/table-view" element={<ProtectedRoute><ParentTable /></ProtectedRoute>} />
-            <Route path="dashboard/:cuatrimestre/students" element={<ProtectedRoute><StudentsTable /></ProtectedRoute>} />
-            <Route path="dashboard/:cuatrimestre/topics" element={<ProtectedRoute><TopicsTable /></ProtectedRoute>} />
-            <Route path="dashboard/:cuatrimestre/tutors" element={<ProtectedRoute><TutorsTable /></ProtectedRoute>} />
-            <Route path="dashboard/:cuatrimestre/form-answers" element={<ProtectedRoute><FormAnswersTable /></ProtectedRoute>} />
-            <Route path="dashboard/:cuatrimestre/groups" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
-            <Route path="/form-selection/:cuatrimestre" element={<FormSelection />} />            
+            <Route path="dashboard/:period/students" element={<ProtectedRoute><StudentsTable /></ProtectedRoute>} />
+            <Route path="dashboard/:period/topics" element={<ProtectedRoute><TopicsTable /></ProtectedRoute>} />
+            <Route path="dashboard/:period/tutors" element={<ProtectedRoute><TutorsTable /></ProtectedRoute>} />
+            <Route path="dashboard/:period/form-answers" element={<ProtectedRoute><FormAnswersTable /></ProtectedRoute>} />
+            <Route path="dashboard/:period/groups" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
+            <Route path="/form-selection/:period" element={<FormSelection />} />            
             <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
             <Route path="/upload/:projectType" element={<ProtectedRoute><UploadView /></ProtectedRoute>} />
             <Route path="/student-form" element={<ProtectedRoute><StudentForm /></ProtectedRoute>} />
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
-            <Route path="/tutor-cuatrimestre/:cuatrimestre" element={<ProtectedRoute><TutorDashboardView /></ProtectedRoute>} />
+            <Route path="/tutor-cuatrimestre/:period" element={<ProtectedRoute><TutorDashboardView /></ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />
             <Route path="/admin-add-corrector" element={<ProtectedRoute><AddTutorForm /></ProtectedRoute>} />
-            <Route path="/upload-students/:cuatrimestre" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="students" /> : <Navigate to="/" />}</ProtectedRoute>} />
-            <Route path="/upload-topics/:cuatrimestre" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />}</ProtectedRoute>} />
-            <Route path="/upload-tutors/:cuatrimestre" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/upload-students/:period" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="students" /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/upload-topics/:period" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/upload-tutors/:period" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile user={user} /></ProtectedRoute>} />
-            <Route path="/algorithms/:cuatrimestre" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <Algorithms user={user} /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/availability-view" element={<ProtectedRoute><StudentAvailabilityView /></ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Box>

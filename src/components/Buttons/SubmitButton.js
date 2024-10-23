@@ -12,10 +12,10 @@ const ButtonStyled = styled(Button)(({ theme, width }) => ({
     "&:hover.MuiButton-containedSecondary": { backgroundColor: "#7A7A7A" },
 }));
   
-const SubmitButton = ({ title, handleSubmit }) => {
+const SubmitButton = ({ title, handleSubmit, width }) => {
 
     return (
-        <ButtonStyled variant="contained" color="primary" onClick={handleSubmit}>
+        <ButtonStyled variant="contained" color="primary" width={width} onClick={handleSubmit}>
             {title}
         </ButtonStyled>
     );

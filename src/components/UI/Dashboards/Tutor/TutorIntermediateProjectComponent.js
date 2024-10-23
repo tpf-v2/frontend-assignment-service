@@ -16,7 +16,7 @@ const TutorIntermediateProjectComponent = ({ groupId }) => {
       const response = await getIntermediateProject(
         groupId,
         user,
-        period.period_id
+        period.id
       );
       setVideoUrl(response.intermediate_assigment); // Guarda la URL en el estado
     } catch (error) {

@@ -47,7 +47,7 @@ const ProjectPdfComponent = ({ groupId, projectType }) => {
   const loadPdfPreview = async () => {
     try {
       const projectKey = projectType === "Anteproyecto" ? 'initial' : 'final';
-      const url = await fetchProjectPdf(groupId, user, period.period_id, projectKey);
+      const url = await fetchProjectPdf(groupId, user, period.id, projectKey);
       setPdfUrl(url); // Guarda la URL en el estado
     } catch (error) {
       console.error("Error al cargar la previsualización del PDF:", error);

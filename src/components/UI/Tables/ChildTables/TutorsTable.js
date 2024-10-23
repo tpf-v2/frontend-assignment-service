@@ -4,8 +4,8 @@ import { TableCell } from '@mui/material';
 import { useParams } from 'react-router';
 
 const TutorsTable = () => {
-  const { cuatrimestre } = useParams(); // Captura del cuatrimestre
-  const endpoint = `/tutors/periods/${cuatrimestre}`;
+  const { period } = useParams(); // Captura del period
+  const endpoint = `/tutors/periods/${period}`;
   const title = 'Tutores';
   const columns = ['ID', 'Nombre', 'Apellido', 'Email'];
 

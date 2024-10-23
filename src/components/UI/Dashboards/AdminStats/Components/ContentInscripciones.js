@@ -26,7 +26,7 @@ const ContentInscripciones = ({
   setUploadType,
   dashboardData,
   loading,
-  cuatrimestre,
+  period,
 }) => {
   const navigate = useNavigate();
 
@@ -91,7 +91,7 @@ const ContentInscripciones = ({
           <Box mt={4} display="flex" justifyContent="center">
             <ButtonStyled 
               onClick={() =>
-                navigate(`/dashboard/${cuatrimestre}/form-answers`)
+                navigate(`/dashboard/${period}/form-answers`)
               }
             >
                RESPUESTAS

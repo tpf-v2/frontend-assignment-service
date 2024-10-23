@@ -78,7 +78,7 @@ const GroupReview = ({ group }) => {
   // Función para cargar el PDF en la previsualización
   const loadPdfPreview = async () => {
     try {
-      const url = await fetchProjectPdf(group.id, user, period.period_id, 'initial');
+      const url = await fetchProjectPdf(group.id, user, period.id, 'initial');
       setPdfUrl(url); // Guarda la URL en el estado
     } catch (error) {
       console.error("Error al cargar la previsualización del PDF:", error);

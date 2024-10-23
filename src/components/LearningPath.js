@@ -59,8 +59,6 @@ const LearningPath = ({ group_id, group }) => {
   useEffect(() => {
     const fetchGroupAnswer = async () => {
       try {
-        console.log("user: ", user);
-        console.log("group_id: ", group_id);
         const group = await dispatch(getGroupById(user, group_id));
 
         setMilestones([

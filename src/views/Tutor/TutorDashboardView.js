@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
-import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
@@ -20,8 +19,8 @@ import { getMyGroups } from "../../api/getMyGroups";
 import LearningPath from "../../components/LearningPath";
 import Inicio from "../../components/UI/Dashboards/Tutor/Inicio";
 import GroupReview from "../../components/UI/Dashboards/Tutor/GroupReview";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import AvailabilityCalendar from "../../components/AvailabilityCalendar";
+import "react-datepicker/dist/react-datepicker.css"; // Estilos por defecto
 import { getMyGroupsToReview } from "../../api/getMyGroupsToReview";
 
 // Estilos
@@ -57,13 +56,6 @@ const Title = styled(Typography)(({ theme }) => ({
   fontSize: "2rem",
   fontWeight: "bold",
   flexGrow: 1,
-}));
-
-const AvailabilityContainer = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2),
-  borderRadius: "8px",
-  backgroundColor: "#f1f1f1",
-  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
 }));
 
 // Loader de puntos animados
@@ -123,10 +115,10 @@ const DotsLoader = styled("div")({
   },
 });
 
-const TutorDashboard = () => {
-  const { cuatrimestre } = useParams();
+const TutorDashboardView = () => {
 
   const user = useSelector((state) => state.user);
+  const period = useSelector((state) => state.period);
 
   const [userGroups, setUserGroups] = useState([]);
   const [userGroupsToReview, setUserGroupsToReview] = useState([]);
@@ -137,17 +129,15 @@ const TutorDashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState("Inicio");
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedGroupReview, setSelectedGroupReview] = useState(null);
-
-  const [availability, setAvailability] = useState([]);
-
+  
   useEffect(() => {
     const getGroups = async () => {
       setLoadingGroups(true);
       try {
-        const groups = await getMyGroups(user, cuatrimestre);
+        const groups = await getMyGroups(user, period.id);
         setUserGroups(groups.sort((a, b) => a.id - b.id));
       } catch (error) {
-        console.error("Error al obtener los grupos: ", error);
+        console.error("Error when getting my groups: ", error);
       } finally {
         setLoadingGroups(false);
       }
@@ -155,11 +145,12 @@ const TutorDashboard = () => {
 
     const getGroupsToReview = async () => {
       setLoadingReviews(true);
+
       try {
-        const groups = await getMyGroupsToReview(user, cuatrimestre);
+        const groups = await getMyGroupsToReview(user, period.id);
         setUserGroupsToReview(groups.sort((a, b) => a.id - b.id));
       } catch (error) {
-        console.error("Error al obtener los grupos de revisión: ", error);
+        console.error("Error al obtener los grupos: ", error);
       } finally {
         setLoadingReviews(false);
       }
@@ -167,13 +158,7 @@ const TutorDashboard = () => {
 
     getGroups();
     getGroupsToReview();
-  }, [user, cuatrimestre]);
-
-  const handleDateChange = (date) => {
-    if (date) {
-      setAvailability((prev) => [...prev, date]);
-    }
-  };
+  }, [user]);
 
   const renderGroups = () => {
     if (loadingGroups) {
@@ -242,32 +227,7 @@ const TutorDashboard = () => {
   const contentMap = {
     Inicio: <Inicio />,
     "Mis Grupos": <div>Contenido del Formulario de Fechas</div>,
-    "Seleccionar Disponibilidad": (
-      <AvailabilityContainer>
-        <Typography variant="h6" gutterBottom>
-          Selecciona tu Disponibilidad
-        </Typography>
-        <DatePicker
-          selected={null}
-          onChange={handleDateChange}
-          showTimeSelect
-          timeFormat="HH:mm"
-          timeIntervals={30}
-          dateFormat="MMMM d, yyyy h:mm aa"
-          inline
-        />
-        <Box>
-          {availability.length > 0 && (
-            <Typography variant="body1">
-              Bloques seleccionados:{" "}
-              {availability.map((date, index) => (
-                <div key={index}>{date.toString()}</div>
-              ))}
-            </Typography>
-          )}
-        </Box>
-      </AvailabilityContainer>
-    ),
+    "Seleccionar Disponibilidad": <AvailabilityCalendar />,
     "Fechas de presentación": <div>Contenido para Fechas de Presentación</div>,
     Revisiones: selectedGroupReview ? (
       <GroupReview group={selectedGroupReview} />
@@ -301,7 +261,7 @@ const TutorDashboard = () => {
           {/* Sidebar */}
           <Grid item xs={3}>
             <SidebarContainer>
-              <Title variant="h4">{cuatrimestre}</Title>
+              <Title variant="h4">{period.period_id}</Title>
               <SidebarList>
                 <ListItemStyled
                   button
@@ -362,4 +322,4 @@ const TutorDashboard = () => {
   );
 };
 
-export default TutorDashboard;
+export default TutorDashboardView;

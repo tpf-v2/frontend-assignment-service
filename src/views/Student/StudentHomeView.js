@@ -15,7 +15,7 @@ import { setPeriod } from "../../redux/slices/periodSlice";
 const StudentHomeView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const cuatrimestre = useSelector((state) => state.user.period_id);
+  const period = useSelector((state) => state.user.period_id);
 
   const [milestones, setMilestones] = useState([]);
   const [loading, setLoading] = useState(true); // Estado para manejar la carga
@@ -42,7 +42,7 @@ const StudentHomeView = () => {
     };
 
     fetchCuatrimestre();
-  }, [user, dispatch]); 
+  }, [user, dispatch]);
 
   useEffect(() => {
     const fetchGroupAnswer = async () => {
@@ -156,6 +156,12 @@ const StudentHomeView = () => {
               disabled={!milestones[2]?.tasks[0].completed}
             />
             <SubmitButton
+              url="/availability-view"
+              title="Disponibilidades de Exposición"
+              width="100%"
+              handleSubmit={() => handleNavigation("/availability-view")}
+            />
+            <SubmitButton
               url="/upload/final-project"
               title="Enviar Entrega Final"
               width="100%"
@@ -167,7 +173,7 @@ const StudentHomeView = () => {
       </Box>
       <Box sx={{ flex: 2 }}>
         <Typography variant="h4" align="center" gutterBottom>
-          {cuatrimestre}
+          {period}
         </Typography>
         <Box>
           {loading ? ( // Mostrar CircularProgress si está cargando
