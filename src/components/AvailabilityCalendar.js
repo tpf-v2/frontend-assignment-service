@@ -122,13 +122,17 @@ const AvailabilityCalendar = () => {
 
   const handleSelectSlot = ({ start, end }) => {
     const startIsoString = start.toISOString();
-    const endIsoString = end.toISOString();
-
-    if (
-      !availableDates.has(startIsoString) ||
-      !availableDates.has(endIsoString)
-    ) {
-      // Aquí se utiliza correctamente el Set
+    
+    // Crear una nueva fecha a partir de 'end' y restarle una hora solo para la verificación
+    const adjustedEnd = new Date(end);
+    adjustedEnd.setHours(adjustedEnd.getHours() - 1);
+    const adjustedEndIsoString = adjustedEnd.toISOString(); // Usar la fecha ajustada solo para el chequeo
+  
+    // Verificar si el intervalo seleccionado está completamente dentro de las fechas disponibles
+    const isStartAvailable = availableDates.has(startIsoString);
+    const isEndAvailable = availableDates.has(adjustedEndIsoString); // Verificar con la fecha ajustada
+  
+    if (!isStartAvailable || !isEndAvailable) {
       handleSnackbarOpen(
         "Esta hora no está disponible para selección.",
         "error"
@@ -136,10 +140,11 @@ const AvailabilityCalendar = () => {
       return;
     }
 
+    // Verificación de solapamiento de eventos
     const isEventOverlap = userAvailability.some(
       (event) => start < event.end && end > event.start
     );
-
+  
     if (isEventOverlap) {
       handleSnackbarOpen(
         "El evento se solapa con otro existente. Por favor, selecciona un intervalo diferente.",
@@ -147,8 +152,8 @@ const AvailabilityCalendar = () => {
       );
       return;
     }
-
-    setSelectedSlot({ start, end });
+  
+    setSelectedSlot({ start, end }); // Guardar 'end' original
     setModalOpen(true);
   };
 
@@ -219,7 +224,6 @@ const AvailabilityCalendar = () => {
 
   const slotPropGetter = (date) => {
     const isoString = date.toISOString();
-    console.log(availableDates);
     if (!availableDates.has(isoString)) {
       // Aquí se utiliza correctamente el Set
       return {
