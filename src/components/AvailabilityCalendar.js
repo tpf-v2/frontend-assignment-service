@@ -226,20 +226,6 @@ const AvailabilityCalendar = () => {
     return {};
   };
 
-  const onEditEvents = async () => {
-    try {
-      const formattedEvents = userAvailability.map((event) => ({
-        // Resta 3 horas (180 minutos) a cada fecha
-        start: moment(event.start).subtract(3, "hours").utc().format(),
-        end: moment(event.end).subtract(3, "hours").utc().format(),
-      }));
-      await putStudentAvailability(user, formattedEvents, user.group_id);
-      handleSnackbarOpen("Disponibilidad editada exitosamente.", "success");
-    } catch (error) {
-      handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
-    }
-  };
-
   return (
     <AvailabilityContainer>
       <Typography variant="h4" align="center" gutterBottom>

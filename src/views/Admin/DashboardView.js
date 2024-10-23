@@ -21,7 +21,6 @@ import ContentAnteproyecto from "../../components/UI/Dashboards/AdminStats/Compo
 import { setGroups } from "../../redux/slices/groupsSlice";
 import IncompleteGroups from "../../components/Algorithms/IncompleteGroups";
 import TopicTutor from "../../components/Algorithms/TopicTutor";
-import AvailabilityCalendar from "../../components/AvailabilityCalendar";
 import AvailabilityCalendarAdmin from "../../components/AvailabilityCalendarAdmin";
 
 // Estilos
