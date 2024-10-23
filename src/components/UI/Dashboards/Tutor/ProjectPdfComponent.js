@@ -37,7 +37,7 @@ const ProjectPdfComponent = ({ groupId, projectType }) => {
       console.log(period);
       // Llama a la función genérica para descargar el proyecto (inicial o final)
       const projectKey = projectType === "Anteproyecto" ? 'initial' : 'final';
-      await downloadProject(groupId, user, period.period_id, projectKey);
+      await downloadProject(groupId, user, period.id, projectKey);
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }

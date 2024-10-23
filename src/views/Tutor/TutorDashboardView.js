@@ -261,7 +261,7 @@ const TutorDashboardView = () => {
           {/* Sidebar */}
           <Grid item xs={3}>
             <SidebarContainer>
-              <Title variant="h4">{period.period_id}</Title>
+              <Title variant="h4">{period.id}</Title>
               <SidebarList>
                 <ListItemStyled
                   button

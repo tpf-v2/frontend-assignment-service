@@ -56,7 +56,7 @@ const GroupReview = ({ group }) => {
   const downloadFile = async () => {
     try {
       console.log(period);
-      await downloadProject(group.id, user, period.period_id, 'initial');
+      await downloadProject(group.id, user, period.id, 'initial');
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }
@@ -67,7 +67,7 @@ const GroupReview = ({ group }) => {
       console.log(`Comentario para Grupo ${group.id}: ${comment}`);
       await notifyGroup(user, comment, group.id);
       group.pre_report_approved = true;
-      await updateGroup(user, period.period_id, group);
+      await updateGroup(user, period.id, group);
     } catch (error) {
       console.error("Error al enviar feedback:", error);
     } finally {
