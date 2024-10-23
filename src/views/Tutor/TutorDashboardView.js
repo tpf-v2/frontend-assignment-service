@@ -58,14 +58,6 @@ const Title = styled(Typography)(({ theme }) => ({
   flexGrow: 1,
 }));
 
-const AvailabilityContainer = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2),
-  borderRadius: "8px",
-  backgroundColor: "#f1f1f1",
-  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-}));
-
-
 const TutorDashboardView = () => {
 
   const user = useSelector((state) => state.user);
@@ -78,7 +70,6 @@ const TutorDashboardView = () => {
   const [selectedMenu, setSelectedMenu] = useState("Inicio");
   const [selectedGroup, setSelectedGroup] = useState(null); // Campo para el grupo seleccionado
   const [selectedGroupReview, setSelectedGroupReview] = useState(null); // Campo para el grupo seleccionado
-  const [availability, setAvailability] = useState([]); // Estado para bloques de disponibilidad
 
   useEffect(() => {
     const getGroups = async () => {

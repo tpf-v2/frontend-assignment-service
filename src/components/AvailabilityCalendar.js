@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import { momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Typography, Button } from "@mui/material";
+import { Typography } from "@mui/material";
 import MySnackbar from "./UI/MySnackBar";
 import EventModal from "./EventModal";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import {
-  sendAvailability,
   fetchAvailability,
-  putAvailability,
   fetchStudentAvailability,
   sendStudentAvailability,
   putStudentAvailability,
@@ -20,12 +18,9 @@ import {
 import {
   CalendarStyled,
   AvailabilityContainer,
-  ButtonContainer,
   DescriptionBox,
 } from "../styles/AvailabilityCalendarStyle";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { getPeriodAvailability } from "../api/getPeriodAvailability";
 import { useDispatch } from "react-redux";
 import { transformSlotsToIntervals } from "../utils/TransformSlotsToIntervals";
 
@@ -40,7 +35,6 @@ const AvailabilityCalendar = () => {
   const [snackbarStatus, setSnackbarStatus] = useState("info");
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-  const [availabilitySent, setAvailabilitySent] = useState(false);
 
   const [eventToDelete, setEventToDelete] = useState(null);
   const user = useSelector((state) => state.user);
@@ -94,9 +88,6 @@ const AvailabilityCalendar = () => {
         const formattedUserAvailability =
           transformSlotsToIntervals(userAvailability);
         setUserAvailability(formattedUserAvailability);
-        if (userAvailability.length > 0) {
-          setAvailabilitySent(true);
-        }
       } catch (error) {
         console.error("Error fetching availability", error);
       } finally {
@@ -176,7 +167,6 @@ const AvailabilityCalendar = () => {
         ];
 
         user.role === "student" ? await sendStudentAvailability(user, formattedEvents, user.group_id) : await sendTutorAvailability(user, formattedEvents, user.id, period.id);
-        setAvailabilitySent(true);
         handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
       } catch (error) {
         handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
