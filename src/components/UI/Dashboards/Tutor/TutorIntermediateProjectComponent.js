@@ -13,11 +13,7 @@ const TutorIntermediateProjectComponent = ({ groupId }) => {
     console.log(groupId);
 
     try {
-      const response = await getIntermediateProject(
-        groupId,
-        user,
-        period.id
-      );
+      const response = await getIntermediateProject(groupId, user, period.id);
       setVideoUrl(response.intermediate_assigment); // Guarda la URL en el estado
     } catch (error) {
       console.error("Error al cargar la previsualización del video:", error);

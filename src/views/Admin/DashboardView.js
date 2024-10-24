@@ -15,7 +15,6 @@ import { setGroups } from "../../redux/slices/groupsSlice";
 import IncompleteGroups from "../../components/Algorithms/IncompleteGroups";
 import TopicTutor from "../../components/Algorithms/TopicTutor";
 import ContentIntermediateProject from "../../components/UI/Dashboards/AdminStats/Components/ContentIntermediateProject";
-import { getIntermediateProjects } from "../../api/intermeadiateProjects";
 import { downloadProject, getProjects } from "../../api/handleProjects";
 import AvailabilityCalendarAdmin from "../../components/AvailabilityCalendarAdmin";
 
@@ -38,9 +37,6 @@ const DashboardView = () => {
   const [loading, setLoading] = useState(true);
   const [loadingAnteproyectos, setLoadingAnteproyectos] = useState(true);
   const [loadingFinalProjects, setLoadingFinalProjects] = useState(true);
-
-  const [loadingIntermediateProjects, setLoadingIntermediateProjects] =
-    useState(true);
 
   const [selectedMenu, setSelectedMenu] = useState("Inicio");
   const [deliveries, setDeliveries] = useState(null);
@@ -79,17 +75,6 @@ const DashboardView = () => {
         console.error("No se encontraron datos de anteproyectos");
       }
       setLoadingAnteproyectos(false);
-    } else if (menu === "Intermedia") {
-      setLoadingIntermediateProjects(true);
-      const intermeadiateProjectsData = await getIntermediateProjects(
-        user,
-        period
-      );
-      if (intermeadiateProjectsData) {
-        setDeliveries(intermeadiateProjectsData);
-      } else {
-        console.error("No se encontraron datos de entregas intermedias");
-      }
     } else if (menu === "Final") {
       setLoadingFinalProjects(true);
       const finalProjectsData = await getProjects(
@@ -102,6 +87,8 @@ const DashboardView = () => {
       } else {
         console.error("No se encontraron datos de entregas finales");
       }
+      setLoadingFinalProjects(false);
+
     }
   };
 
@@ -145,6 +132,7 @@ const DashboardView = () => {
             loadingProjects={loadingAnteproyectos}
             deliveries={deliveries}
             downloadFile={downloadInitialFile}
+            projectType={"initial"}
           />
         );
       case "Grupos":
@@ -154,10 +142,7 @@ const DashboardView = () => {
         return <TopicTutor />;
       case "Intermedia":
         return (
-          <ContentIntermediateProject
-            loadingIntermediateProjects={loadingIntermediateProjects}
-            deliveries={deliveries}
-          />
+          <ContentIntermediateProject/>
         );
       case "Final":
         return (
@@ -165,6 +150,7 @@ const DashboardView = () => {
             loadingProjects={loadingFinalProjects}
             deliveries={deliveries}
             downloadFile={downloadFinalFile}
+            projectType={"final"}
           />
         );
       case "Fechas de presentación":

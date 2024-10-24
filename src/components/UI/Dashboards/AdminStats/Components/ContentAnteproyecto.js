@@ -24,6 +24,7 @@ const ContentPdfProjects = ({
   loadingProjects,
   deliveries,
   downloadFile,
+  projectType,
 }) => {
   let groupsData = Object.values(useSelector((state) => state.groups))
     .sort((a, b) => a.id - b.id)
@@ -123,9 +124,7 @@ const ContentPdfProjects = ({
               <StatCard
                 title="Grupos que faltan entregar"
                 value={
-                  loadingProjects
-                    ? -1
-                    : groupsData.length - deliveries.length
+                  loadingProjects ? -1 : groupsData.length - deliveries.length
                 }
               />
             </Grid>
@@ -149,7 +148,9 @@ const ContentPdfProjects = ({
               <TableCell sx={{ fontWeight: "bold" }}>
                 Fecha de Entrega
               </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Revisor</TableCell>
+              {projectType === "inicial" && (
+                <TableCell sx={{ fontWeight: "bold" }}>Revisor</TableCell>
+              )}
               <TableCell sx={{ fontWeight: "bold" }}>Descargar</TableCell>
             </TableRow>
           </TableHead>
@@ -172,43 +173,47 @@ const ContentPdfProjects = ({
                     )}
                   </TableCell>
                   <TableCell>
-                    {
-                      groupsData.find(
-                        (g) => parseInt(getGroup(entrega.name)) === g.id
-                      )?.pre_report_title
-                    }
+                    {projectType === "inicial"
+                      ? groupsData.find(
+                          (g) => parseInt(getGroup(entrega.name)) === g.id
+                        )?.pre_report_title
+                      : groupsData.find(
+                          (g) => parseInt(getGroup(entrega.name)) === g.id
+                        )?.final_report_title}
                   </TableCell>
 
                   <TableCell>{formatDate(entrega.last_modified)}</TableCell>
-                  <TableCell>
-                    <Select
-                      value={
-                        selectedReviewers[getGroup(entrega.name)]
-                          ? selectedReviewers[getGroup(entrega.name)]
-                          : getGroupById(parseInt(getGroup(entrega.name), 10))
-                              ?.reviewer_id === 0
-                          ? ""
-                          : getGroupById(parseInt(getGroup(entrega.name), 10))
-                              ?.reviewer_id
-                      }
-                      onChange={(e) =>
-                        handleReviewerChange(
-                          getGroup(entrega.name),
-                          e.target.value
-                        )
-                      }
-                      displayEmpty
-                    >
-                      <MenuItem value="" disabled>
-                        Seleccionar Revisor
-                      </MenuItem>
-                      {tutors.map((tutor) => (
-                        <MenuItem key={tutor.id} value={tutor.id}>
-                          {tutor.name} {tutor.last_name}
+                  {projectType === "inicial" && (
+                    <TableCell>
+                      <Select
+                        value={
+                          selectedReviewers[getGroup(entrega.name)]
+                            ? selectedReviewers[getGroup(entrega.name)]
+                            : getGroupById(parseInt(getGroup(entrega.name), 10))
+                                ?.reviewer_id === 0
+                            ? ""
+                            : getGroupById(parseInt(getGroup(entrega.name), 10))
+                                ?.reviewer_id
+                        }
+                        onChange={(e) =>
+                          handleReviewerChange(
+                            getGroup(entrega.name),
+                            e.target.value
+                          )
+                        }
+                        displayEmpty
+                      >
+                        <MenuItem value="" disabled>
+                          Seleccionar Revisor
                         </MenuItem>
-                      ))}
-                    </Select>
-                  </TableCell>
+                        {tutors.map((tutor) => (
+                          <MenuItem key={tutor.id} value={tutor.id}>
+                            {tutor.name} {tutor.last_name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </TableCell>
+                  )}
                   <TableCell>
                     <IconButton
                       onClick={() => downloadFile(getGroup(entrega.name))}
