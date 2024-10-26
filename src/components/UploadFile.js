@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
-import { uploadProjects } from "../api/uploadProjects"; 
+import { uploadProjects } from "../api/uploadProjects";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -94,8 +94,16 @@ const UploadFile = ({ projectType }) => {
     }
     setTitleError("");
 
-    if (projectType === "intermediate-project" && !url.trim()) {
-      setUrlError("Por favor ingrese un enlace válido.");
+    const youtubeOrDrivePattern =
+      /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be|drive\.google\.com)\/.+$/;
+
+    if (
+      projectType === "intermediate-project" &&
+      (!url.trim() || !youtubeOrDrivePattern.test(url))
+    ) {
+      setUrlError(
+        "Por favor ingrese un enlace de YouTube o Google Drive válido."
+      );
       return;
     }
 
@@ -109,7 +117,6 @@ const UploadFile = ({ projectType }) => {
       url,
       token: user.token,
     });
-
 
     setResponseMessage(message);
     setIsSuccess(success);
@@ -139,16 +146,28 @@ const UploadFile = ({ projectType }) => {
 
         <form onSubmit={handleSubmit}>
           {projectType === "intermediate-project" ? (
-            <TextField
-              label="Ingrese el enlace del proyecto"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              error={Boolean(urlError)}
-              helperText={urlError}
-            />
+            <>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                style={{ marginBottom: "8px" }}
+                align="center"
+              >
+                El link de la entrega intermedia debe ser un enlace a 
+                YouTube o Google Drive
+              </Typography>
+
+              <TextField
+                label="Ingrese el enlace del proyecto"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                error={Boolean(urlError)}
+                helperText={urlError}
+              />
+            </>
           ) : (
             <>
               <TextField
