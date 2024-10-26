@@ -22,6 +22,7 @@ import GroupReview from "../../components/UI/Dashboards/Tutor/GroupReview";
 import AvailabilityCalendar from "../../components/AvailabilityCalendar";
 import "react-datepicker/dist/react-datepicker.css"; // Estilos por defecto
 import { getMyGroupsToReview } from "../../api/getMyGroupsToReview";
+import TutorEvents from "../../components/UI/Dashboards/Tutor/TutorEvents";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -223,12 +224,20 @@ const TutorDashboardView = () => {
       </ListItemStyled>
     ));
   };
+  const events = [
+    { id: 0, topic: 'Evento que ya paso', date: '2024-08-01T10:00:00', attendanceType: 'Tutor' },
+    { id: 1, topic: 'Inteligencia Artificial', date: '2024-12-01T10:00:00', attendanceType: 'Tutor' },
+    { id: 2, topic: 'Machine Learning', date: '2024-12-02T11:00:00', attendanceType: 'Evaluador' },
+    { id: 3, topic: 'Desarrollo Web', date: '2024-12-03T14:00:00', attendanceType: 'Evaluador' },
+    { id: 4, topic: 'Ciberseguridad', date: '2024-12-05T09:30:00', attendanceType: 'Tutor' },
+    { id: 5, topic: 'Desarrollo Móvil', date: '2024-12-07T15:00:00', attendanceType: 'Evaluador' },
+  ];
 
   const contentMap = {
     Inicio: <Inicio />,
     "Mis Grupos": <div>Contenido del Formulario de Fechas</div>,
     "Seleccionar Disponibilidad": <AvailabilityCalendar />,
-    "Fechas de presentación": <div>Contenido para Fechas de Presentación</div>,
+    "Fechas de presentación": <TutorEvents events={events}></TutorEvents>,
     Revisiones: selectedGroupReview ? (
       <GroupReview group={selectedGroupReview} />
     ) : (
