@@ -67,7 +67,9 @@ const ChangePasswordView = () => {
       });
     }
 
-    
+    setTimeout(() => {
+      navigate(`/home`); 
+    }, 1000); 
 
     setLoading(false);
   };
