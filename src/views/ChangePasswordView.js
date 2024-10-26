@@ -53,6 +53,10 @@ const ChangePasswordView = () => {
           message: "Contraseña cambiada exitosamente",
           status: "success",
         });
+
+        setTimeout(() => {
+          navigate(`/home`); 
+        }, 1000); 
       }
       catch(e){
         setNotification({
@@ -68,11 +72,6 @@ const ChangePasswordView = () => {
         status: "error",
       });
     }
-
-    setTimeout(() => {
-      navigate(`/home`); 
-    }, 1000); 
-
     setLoading(false);
   };
 
