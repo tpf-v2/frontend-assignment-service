@@ -44,7 +44,7 @@ const ChangePasswordView = () => {
     e.preventDefault();
     setLoading(true);
 
-    if (newPassword.length > 8 && newPassword === repeatNewPassword) {
+    if (newPassword.length >= 8 && newPassword === repeatNewPassword) {
       
       try{
         await resetPassword(user, newPassword, currentPassword)
@@ -68,7 +68,7 @@ const ChangePasswordView = () => {
     } else {
       setNotification({
         open: true,
-        message: newPassword.length <= 8 ? "La nueva contraseña debe tener más de 8 caracteres." : "Las contraseñas no coinciden.",
+        message: newPassword.length < 8 ? "La nueva contraseña debe tener más de 8 caracteres." : "Las contraseñas no coinciden.",
         status: "error",
       });
     }
