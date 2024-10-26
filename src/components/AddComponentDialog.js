@@ -1,16 +1,42 @@
 import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, FormControl, Button, TextField } from '@mui/material';
+import MySnackbar from '../components/UI/MySnackBar';
 
 const AddTopicDialog = ({ open, handleClose }) => {
   const [newTopic, setNewTopic] = useState({ name: '', category: '' });
 
   const handleAddTopic = () => {
+    try {
       console.log(`Add new topic ${newTopic.name}, ${newTopic.category}`);
+      setNewTopic({ "name": "", "category": "" })
+      setNotification({
+        open: true,
+        message: "Tema agregado éxitosamente",
+        status: "success",
+      });
       handleClose(true)
-      setNewTopic({"name": "", "category": ""})
+    } catch (err) {
+      setNotification({
+        open: true,
+        message: "El tema que intentas agregar ya existe",
+        status: "error",
+      });
+    }
+
+  };
+
+  const [notification, setNotification] = useState({
+    open: false,
+    message: "",
+    status: "",
+  });
+
+  const handleSnackbarClose = () => {
+    setNotification({ ...notification, open: false });
   };
 
   return (
+    <>
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Agregar Nuevo Tema</DialogTitle>
       <DialogContent>
@@ -44,6 +70,13 @@ const AddTopicDialog = ({ open, handleClose }) => {
         </Button>
       </DialogActions>
     </Dialog>
+    <MySnackbar
+      open={notification.open}
+      handleClose={handleSnackbarClose}
+      message={notification.message}
+      status={notification.status}
+    />
+    </>
   );
 };
 
