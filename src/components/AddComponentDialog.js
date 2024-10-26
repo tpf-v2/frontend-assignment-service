@@ -26,7 +26,7 @@ const AddTopicDialog = ({ open, handleClose }) => {
     } catch (err) {
       setNotification({
         open: true,
-        message: "El tema que intentas agregar ya existe",
+        message: "Error al agregar el tema. Por favor, vuelva a intentar más tarde.",
         status: "error",
       });
     }
