@@ -11,6 +11,7 @@ import { getGroupById } from "../../api/getGroupById";
 import { useNavigate } from "react-router-dom";
 import { getCuatrimestre } from "../../api/handlePeriods";
 import { setPeriod } from "../../redux/slices/periodSlice";
+import PresentationDateCard from "../../components/UI/Dashboards/Student/PresentationDateCard";
 
 const StudentHomeView = () => {
   const dispatch = useDispatch();
@@ -130,6 +131,8 @@ const StudentHomeView = () => {
     <Container maxWidth="lg" sx={{ display: "flex", mt: 5 }}>
       <Box sx={{ flex: 1, mr: 8, mt: 8 }}>
         <StudentInfo />
+        <Box sx={{ mb: 1 }} />
+        <PresentationDateCard />
         {!loading && (
           <>
             <SubmitButton
