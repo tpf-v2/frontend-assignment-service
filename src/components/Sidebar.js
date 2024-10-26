@@ -29,10 +29,10 @@ const SidebarContainer = styled(Box)(({ theme }) => ({
   borderRight: `1px solid ${theme.palette.divider}`,
 }));
 
-const Sidebar = ({ selectedMenu, handleNavigation, cuatrimestre }) => {
+const Sidebar = ({ selectedMenu, handleNavigation, period }) => {
   return (
     <SidebarContainer>
-      <Title variant="h4">{cuatrimestre}</Title>
+      <Title variant="h4">{period}</Title>
       <SidebarList>
         {/* Botón no desplegable */}
         <ListItemStyled
@@ -49,6 +49,14 @@ const Sidebar = ({ selectedMenu, handleNavigation, cuatrimestre }) => {
           onClick={() => handleNavigation("Inscripciones")}
         >
           Inscripciones
+        </ListItemStyled>
+        <Divider />
+        <ListItemStyled
+          button
+          selected={selectedMenu === "Disponibilidad fechas de Presentación"}
+          onClick={() => handleNavigation("Disponibilidad fechas de Presentación")}
+        >
+          Disponibilidad fechas de Presentación
         </ListItemStyled>
         <Divider />
         {/* Asignaciones - Desplegable */}

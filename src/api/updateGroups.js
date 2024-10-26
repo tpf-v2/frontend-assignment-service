@@ -40,7 +40,7 @@ export const confirmGroups = async (user, period, assignments, groups) => {
   }
 };
 
-export const updateGroup = async (user, period, group) => {
+export const updateGroup = async (user, periodId, group) => {
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -60,7 +60,7 @@ export const updateGroup = async (user, period, group) => {
   ];
 
   try {
-    const url = `${BASE_URL}/groups/?period=${period.id}`;
+    const url = `${BASE_URL}/groups/?period=${periodId}`;
     const response = await axios.put(url, body, config); // Enviar el body creado
     return response.data;
   } catch (error) {

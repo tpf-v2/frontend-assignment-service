@@ -72,7 +72,7 @@ const terms = ['1', '2'];
 
 const AdminHomeView = () => {
   const user = useSelector((state) => state.user);
-  const [cuatrimestres, setCuatrimestres] = useState([]);
+  const [periods, setCuatrimestres] = useState([]);
   const [open, setOpen] = useState(false);
   const [newCuatrimestre, setNewCuatrimestre] = useState({ year: '', term: '' });
   const navigate = useNavigate();
@@ -95,12 +95,13 @@ const AdminHomeView = () => {
         // Ordenar los datos por 'id' antes de guardar en el estado
       const sortedData = data.sort((a, b) => a.id - b.id);
       
-      // Guardar solo los cuatrimestres ordenados en el estado
+      // Guardar solo los periods ordenados en el estado
       setCuatrimestres(sortedData);
       } catch (error) {
         console.error(error.message);
       }
     };
+
     fetchData();
   }, []);
 
@@ -109,7 +110,7 @@ const AdminHomeView = () => {
       const newEntry = `${newCuatrimestre.term}C${newCuatrimestre.year}`;
       try {
         const newPeriod = await addCuatrimestre(newEntry, user); // Call the add function
-        setCuatrimestres([...cuatrimestres, newPeriod]);
+        setCuatrimestres([...periods, newPeriod]);
         handleClose();
       } catch (error) {
         setNotification({
@@ -122,9 +123,9 @@ const AdminHomeView = () => {
   };
   const dispatch = useDispatch();
 
-  const handleCardClick = (cuatrimestre) => {
-    dispatch(setPeriod(cuatrimestre))
-    navigate(`/dashboard/${cuatrimestre.id}`);
+  const handleCardClick = (period) => {
+    dispatch(setPeriod(period))
+    navigate(`/dashboard/${period.id}`);
   };
 
   const handleClickOpen = () => {
@@ -141,10 +142,10 @@ const AdminHomeView = () => {
       <Title variant="h4">Bienvenido, Admin!</Title>
       <Typography variant="h5" style={{ color: '#555' }}>Cuatrimestres</Typography>
       <CardContainer>
-        {cuatrimestres.map((cuatrimestre, index) => (
-          <CardStyled key={index} onClick={() => handleCardClick(cuatrimestre)}>
+        {periods.map((period, index) => (
+          <CardStyled key={index} onClick={() => handleCardClick(period)}>
             <CardContent>
-              <Typography variant="h6" style={{ color: '#333' }}>{cuatrimestre.id}</Typography>
+              <Typography variant="h6" style={{ color: '#333' }}>{period.id}</Typography>
             </CardContent>
           </CardStyled>
         ))}

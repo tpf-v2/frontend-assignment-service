@@ -5,6 +5,7 @@ import BackgroundContainer from '../components/UI/BackgroundContainer.js';
 import MySnackbar from '../components/UI/MySnackBar.js';
 import { resetPassword } from '../api/postChangePassword.js';
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -27,6 +28,7 @@ const ChangePasswordView = () => {
   const [repeatNewPassword, setRepeatNewPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
   
   const [notification, setNotification] = useState({
     open: false,

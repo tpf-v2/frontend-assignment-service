@@ -18,7 +18,7 @@ const ConfirmDeleteModal = ({ open, onClose, onConfirm }) => {
           Cancelar
         </Button>
         <Button onClick={handleConfirm} style={{color: 'red' }}>
-          Delete
+          Eliminar
         </Button>
       </DialogActions>
     </Dialog>

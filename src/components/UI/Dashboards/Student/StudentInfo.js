@@ -24,7 +24,7 @@ const StudentInfo = () => {
         </Typography>
         <Typography color="text.primary">
           <Typography component="span" color="text.primary" fontWeight="bold" marginRight={1}>
-            Integrantes:
+            Compañeros:
           </Typography>
           {user.teammates || "Sin asignar aún"}
         </Typography>

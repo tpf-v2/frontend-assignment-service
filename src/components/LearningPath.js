@@ -15,7 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Phase from "./UI/Dashboards/Student/Phase";
 import MySnackbar from "./UI/MySnackBar";
-import AnteproyectoComponent from "./UI/Dashboards/Tutor/AnteproyectoComponente";
+import ProjectPdfComponent from "./UI/Dashboards/Tutor/ProjectPdfComponent";
+import TutorIntermediateProjectComponent from "./UI/Dashboards/Tutor/TutorIntermediateProjectComponent"; // Importar el componente
 import { getGroupById } from "../api/getGroupById";
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -42,7 +43,7 @@ const LearningPath = ({ group_id, group }) => {
   const user = useSelector((state) => state.user);
 
   const [milestones, setMilestones] = useState([]);
-  const [loading, setLoading] = useState(true); // Estado de carga
+  const [loading, setLoading] = useState(true); 
   const [notification, setNotification] = useState({
     open: false,
     message: "",
@@ -58,8 +59,6 @@ const LearningPath = ({ group_id, group }) => {
   useEffect(() => {
     const fetchGroupAnswer = async () => {
       try {
-        console.log("user: ", user);
-        console.log("group_id: ", group_id);
         const group = await dispatch(getGroupById(user, group_id));
 
         setMilestones([
@@ -103,7 +102,7 @@ const LearningPath = ({ group_id, group }) => {
       } catch (error) {
         console.error(`Error when getting group ${group_id} by id: `, error);
       } finally {
-        setLoading(false); // Termina la carga
+        setLoading(false); 
       }
     };
 
@@ -112,6 +111,14 @@ const LearningPath = ({ group_id, group }) => {
 
   const handleAnteproyectoClick = () => {
     setSelectedPhase("anteproyecto");
+  };
+
+  const handleIntermediateProjectClick = () => {
+    setSelectedPhase("intermediate");
+  };
+
+  const handleFinalProjectClick = () => {
+    setSelectedPhase("final");
   };
   
   return (
@@ -128,10 +135,13 @@ const LearningPath = ({ group_id, group }) => {
       ) : (
         <>
           {selectedPhase === "anteproyecto" ? (
-            <AnteproyectoComponent groupId={group_id} />
+            <ProjectPdfComponent groupId={group_id} projectType={"Anteproyecto"} />
+          ) : selectedPhase === "intermediate" ? ( 
+            <TutorIntermediateProjectComponent groupId={group_id} /> 
+          ) : selectedPhase === "final" ? ( 
+            <ProjectPdfComponent groupId={group_id} projectType={"Final"}/> 
           ) : (
             <>
-              {/* Mostrar información del grupo */}
               <Typography
                 variant="h4"
                 align="center"
@@ -183,7 +193,7 @@ const LearningPath = ({ group_id, group }) => {
                   variant="contained"
                   color="primary"
                   onClick={handleAnteproyectoClick}
-                  disabled={!milestones[0]?.tasks[0].completed} // Se deshabilita si no hay pre_report_date
+                  disabled={!milestones[0]?.tasks[0].completed} 
                 >
                   Anteproyecto
                 </ButtonStyled>
@@ -191,14 +201,16 @@ const LearningPath = ({ group_id, group }) => {
                 <ButtonStyled
                   variant="contained"
                   color="primary"
-                  disabled={true}
+                  onClick={handleIntermediateProjectClick} 
+                  disabled={!milestones[1]?.tasks[0].completed} 
                 >
                   Intermedia
                 </ButtonStyled>
                 <ButtonStyled
                   variant="contained"
                   color="primary"
-                  disabled={true}
+                  onClick={handleFinalProjectClick} 
+                  disabled={!milestones[2]?.tasks[0].completed}
                 >
                   Final
                 </ButtonStyled>
