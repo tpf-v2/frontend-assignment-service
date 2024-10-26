@@ -3,33 +3,37 @@ import moment from "moment";
 export const transformSlotsToIntervals = (slots) => {
   if (slots.length === 0) return [];
 
+  // Ordenamos los slots cronológicamente
+  const sortedSlots = slots.sort((a, b) => new Date(a.slot) - new Date(b.slot));
+
   const intervals = [];
-  let start = new Date(slots[0].slot);
+  let start = new Date(sortedSlots[0].slot);
 
-  for (let i = 1; i < slots.length; i++) {
-    const currentSlot = new Date(slots[i].slot);
-    const previousSlot = new Date(slots[i - 1].slot);
+  for (let i = 1; i < sortedSlots.length; i++) {
+    const currentSlot = new Date(sortedSlots[i].slot);
+    const previousSlot = new Date(sortedSlots[i - 1].slot);
 
-    // Verificar si el slot actual es una continuación del anterior (1 hora de diferencia)
-    const previousEnd = moment(previousSlot);
+    // Final del intervalo anterior (1 hora después del anterior slot)
+    const previousEnd = moment(previousSlot).add(1, "hours");
     const currentStart = moment(currentSlot);
 
-    // Si hay una discontinuidad, significa que terminó el intervalo anterior
-    if (!currentStart.isSame(previousEnd.add(1, "hours"))) {
-      // Agregar el intervalo actual con el último slot como "end"
+    // Verificar si la diferencia es exactamente 0 (es decir, que son contiguos)
+    if (currentStart.diff(previousEnd) !== 0) {
+      // Si no son contiguos, terminamos el intervalo anterior
       intervals.push({
         start: start,
-        end: previousSlot
+        end: previousEnd.toDate(), // Añadimos el final del intervalo anterior
       });
 
+      // Reiniciamos el inicio del siguiente intervalo
       start = currentSlot;
     }
   }
 
-  // Asegurar agregar el último intervalo
+  // Aseguramos que se agregue el último intervalo
   intervals.push({
     start: start,
-    end: new Date(slots[slots.length - 1].slot)
+    end: moment(new Date(sortedSlots[sortedSlots.length - 1].slot)).add(1, "hours").toDate(),
   });
 
   return intervals;

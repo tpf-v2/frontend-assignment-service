@@ -19,7 +19,7 @@ import { getMyGroups } from "../../api/getMyGroups";
 import LearningPath from "../../components/LearningPath";
 import Inicio from "../../components/UI/Dashboards/Tutor/Inicio";
 import GroupReview from "../../components/UI/Dashboards/Tutor/GroupReview";
-import DatePicker from "react-datepicker"; // Importa el DatePicker
+import AvailabilityCalendar from "../../components/AvailabilityCalendar";
 import "react-datepicker/dist/react-datepicker.css"; // Estilos por defecto
 import { getMyGroupsToReview } from "../../api/getMyGroupsToReview";
 
@@ -58,13 +58,62 @@ const Title = styled(Typography)(({ theme }) => ({
   flexGrow: 1,
 }));
 
-const AvailabilityContainer = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2),
-  borderRadius: "8px",
-  backgroundColor: "#f1f1f1",
-  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-}));
-
+// Loader de puntos animados
+const DotsLoader = styled("div")({
+  display: "inline-block",
+  position: "relative",
+  width: "60px",
+  height: "10px",
+  "& div": {
+    position: "absolute",
+    top: "0",
+    width: "10px",
+    height: "10px",
+    borderRadius: "50%",
+    background: "#0072C6",
+    animationTimingFunction: "cubic-bezier(0, 1, 1, 0)",
+  },
+  "& div:nth-of-type(1)": {
+    left: "8px",
+    animation: "dots1 0.6s infinite",
+  },
+  "& div:nth-of-type(2)": {
+    left: "24px",
+    animation: "dots2 0.6s infinite",
+  },
+  "& div:nth-of-type(3)": {
+    left: "40px",
+    animation: "dots2 0.6s infinite",
+  },
+  "& div:nth-of-type(4)": {
+    left: "56px",
+    animation: "dots3 0.6s infinite",
+  },
+  "@keyframes dots1": {
+    "0%": {
+      transform: "scale(0)",
+    },
+    "100%": {
+      transform: "scale(1)",
+    },
+  },
+  "@keyframes dots3": {
+    "0%": {
+      transform: "scale(1)",
+    },
+    "100%": {
+      transform: "scale(0)",
+    },
+  },
+  "@keyframes dots2": {
+    "0%": {
+      transform: "translate(0, 0)",
+    },
+    "100%": {
+      transform: "translate(16px, 0)",
+    },
+  },
+});
 
 const TutorDashboardView = () => {
 
@@ -74,74 +123,114 @@ const TutorDashboardView = () => {
   const [userGroups, setUserGroups] = useState([]);
   const [userGroupsToReview, setUserGroupsToReview] = useState([]);
 
-  const [loading, setLoading] = useState(true);
-  const [selectedMenu, setSelectedMenu] = useState("Inicio");
-  const [selectedGroup, setSelectedGroup] = useState(null); // Campo para el grupo seleccionado
-  const [selectedGroupReview, setSelectedGroupReview] = useState(null); // Campo para el grupo seleccionado
-  const [availability, setAvailability] = useState([]); // Estado para bloques de disponibilidad
+  const [loadingGroups, setLoadingGroups] = useState(true);
+  const [loadingReviews, setLoadingReviews] = useState(true);
 
+  const [selectedMenu, setSelectedMenu] = useState("Inicio");
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [selectedGroupReview, setSelectedGroupReview] = useState(null);
+  
   useEffect(() => {
     const getGroups = async () => {
+      setLoadingGroups(true);
       try {
-        const groups = await getMyGroups(user, period.period_id);
+        const groups = await getMyGroups(user, period.id);
         setUserGroups(groups.sort((a, b) => a.id - b.id));
       } catch (error) {
         console.error("Error when getting my groups: ", error);
+      } finally {
+        setLoadingGroups(false);
       }
     };
 
     const getGroupsToReview = async () => {
+      setLoadingReviews(true);
+
       try {
-        const groups = await getMyGroupsToReview(user, period.period_id);
+        const groups = await getMyGroupsToReview(user, period.id);
         setUserGroupsToReview(groups.sort((a, b) => a.id - b.id));
       } catch (error) {
         console.error("Error al obtener los grupos: ", error);
+      } finally {
+        setLoadingReviews(false);
       }
     };
 
-    getGroupsToReview();
     getGroups();
-    setLoading(false);
-  }, [loading]);
+    getGroupsToReview();
+  }, [user]);
 
-  const handleDateChange = (date) => {
-    if (date) {
-      setAvailability((prev) => [...prev, date]); // Agrega el bloque de disponibilidad
+  const renderGroups = () => {
+    if (loadingGroups) {
+      return (
+        <DotsLoader>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </DotsLoader>
+      );
     }
+
+    if (userGroups.length === 0) {
+      return <Typography>No hay grupos.</Typography>;
+    }
+
+    return userGroups.map((group) => (
+      <ListItemStyled
+        key={group.id}
+        button
+        selected={selectedMenu === `Grupo ${group.id}`}
+        onClick={() => {
+          setSelectedGroup(group.id);
+          setSelectedMenu(`Grupo ${group.id}`);
+        }}
+      >
+        Grupo {group.id}
+      </ListItemStyled>
+    ));
+  };
+
+  const renderGroupsToReview = () => {
+    if (loadingReviews) {
+      return (
+        <DotsLoader>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </DotsLoader>
+      );
+    }
+
+    if (userGroupsToReview.length === 0) {
+      return <Typography>No hay grupos.</Typography>;
+    }
+
+    return userGroupsToReview.map((group) => (
+      <ListItemStyled
+        key={group.id}
+        button
+        selected={
+          selectedGroupReview?.id === group.id && selectedMenu === "Revisiones"
+        }
+        onClick={() => {
+          setSelectedGroupReview(group);
+          setSelectedMenu("Revisiones");
+        }}
+      >
+        Grupo {group.id}
+      </ListItemStyled>
+    ));
   };
 
   const contentMap = {
-    "Inicio": <Inicio />,
+    Inicio: <Inicio />,
     "Mis Grupos": <div>Contenido del Formulario de Fechas</div>,
-    "Seleccionar Disponibilidad": (
-      <AvailabilityContainer>
-        <Typography variant="h6" gutterBottom>
-          Selecciona tu Disponibilidad
-        </Typography>
-        <DatePicker
-          selected={null}
-          onChange={handleDateChange}
-          showTimeSelect
-          timeFormat="HH:mm"
-          timeIntervals={30}
-          dateFormat="MMMM d, yyyy h:mm aa"
-          inline // Esto mostrará el calendario directamente
-        />
-        <Box>
-          {availability.length > 0 && (
-            <Typography variant="body1">
-              Bloques seleccionados:{" "}
-              {availability.map((date, index) => (
-                <div key={index}>{date.toString()}</div>
-              ))}
-            </Typography>
-          )}
-        </Box>
-      </AvailabilityContainer>
-    ),
+    "Seleccionar Disponibilidad": <AvailabilityCalendar />,
     "Fechas de presentación": <div>Contenido para Fechas de Presentación</div>,
     Revisiones: selectedGroupReview ? (
-      <GroupReview groupId={selectedGroupReview} />
+      <GroupReview group={selectedGroupReview} />
     ) : (
       <div>Selecciona un grupo para ver las revisiones</div>
     ),
@@ -159,17 +248,20 @@ const TutorDashboardView = () => {
   };
 
   return (
-<Container maxWidth={false} 
-    sx={{ 
-      width: "95%", // Ajusta el ancho al 90% del viewport
-      height: "120vh", // Ocupa el 100% de la altura de la pantalla
-      maxWidth: "none", // Para que el maxWidth no limite el tamaño
-    }}>      <Root>
+    <Container
+      maxWidth={false}
+      sx={{
+        width: "95%",
+        height: "120vh",
+        maxWidth: "none",
+      }}
+    >
+      <Root>
         <Grid container spacing={3}>
           {/* Sidebar */}
           <Grid item xs={3}>
             <SidebarContainer>
-              <Title variant="h4">{period.period_id}</Title>
+              <Title variant="h4">{period.id}</Title>
               <SidebarList>
                 <ListItemStyled
                   button
@@ -184,45 +276,14 @@ const TutorDashboardView = () => {
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     Mis Grupos
                   </AccordionSummary>
-                  <AccordionDetails>
-                    {userGroups.map((group) => (
-                      <ListItemStyled
-                        key={group.id}
-                        button
-                        selected={selectedMenu === `Grupo ${group.id}`}
-                        onClick={() => {
-                          setSelectedGroup(group.id);
-                          setSelectedMenu(`Grupo ${group.id}`);
-                        }}
-                      >
-                        Grupo {group.id}
-                      </ListItemStyled>
-                    ))}
-                  </AccordionDetails>
+                  <AccordionDetails>{renderGroups()}</AccordionDetails>
                 </Accordion>
 
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     Revisiones
                   </AccordionSummary>
-                  <AccordionDetails>
-                    {userGroupsToReview.map((group) => (
-                      <ListItemStyled
-                        key={group.id}
-                        button
-                        selected={
-                          selectedGroupReview === group.id &&
-                          selectedMenu === "Revisiones"
-                        }
-                        onClick={() => {
-                          setSelectedGroupReview(group.id);
-                          setSelectedMenu("Revisiones");
-                        }}
-                      >
-                        Grupo {group.id}
-                      </ListItemStyled>
-                    ))}
-                  </AccordionDetails>
+                  <AccordionDetails>{renderGroupsToReview()}</AccordionDetails>
                 </Accordion>
 
                 <Accordion defaultExpanded>

@@ -51,6 +51,14 @@ const Sidebar = ({ selectedMenu, handleNavigation, period }) => {
           Inscripciones
         </ListItemStyled>
         <Divider />
+        <ListItemStyled
+          button
+          selected={selectedMenu === "Disponibilidad fechas de Presentación"}
+          onClick={() => handleNavigation("Disponibilidad fechas de Presentación")}
+        >
+          Disponibilidad fechas de Presentación
+        </ListItemStyled>
+        <Divider />
         {/* Asignaciones - Desplegable */}
         <Accordion defaultExpanded>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>

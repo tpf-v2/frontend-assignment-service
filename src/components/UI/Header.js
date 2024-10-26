@@ -114,6 +114,14 @@ const Header = ({ user, color, handleHomeClick }) => {
                     Cambiar a vista de {user.temporal_role === "admin" ? "tutor" : "admin"}
                   </MenuItem>
                 )}
+                <MenuItem
+                  onClick={() => {
+                    navigate("/change-password");
+                    handleCloseMenu();
+                  }}
+                >
+                  Cambiar contraseña
+                </MenuItem>
                 <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
               </Menu>
             </Box>

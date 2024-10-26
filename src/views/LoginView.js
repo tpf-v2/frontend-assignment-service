@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, TextField, Button, Typography, Box, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import BackgroundContainer from '../components/UI/BackgroundContainer.js';
 import { authenticateUser } from '../api/auth.js'; // Importa las funciones desde auth.js
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MySnackbar from '../components/UI/MySnackBar.js';
 
 const Root = styled(Paper)(({ theme }) => ({
@@ -28,6 +28,14 @@ const LoginView = () => {
   const [loading, setloading] = useState(false)
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (user?.token) {
+      navigate("/home");
+    }
+  }, [user])
 
   const [notification, setNotification] = useState({
     open: false,
