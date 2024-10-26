@@ -17,6 +17,7 @@ import TopicTutor from "../../components/Algorithms/TopicTutor";
 import ContentIntermediateProject from "../../components/UI/Dashboards/AdminStats/Components/ContentIntermediateProject";
 import { downloadProject, getProjects } from "../../api/handleProjects";
 import AvailabilityCalendarAdmin from "../../components/AvailabilityCalendarAdmin";
+import Dates from "../../components/Algorithms/Dates";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -154,7 +155,7 @@ const DashboardView = () => {
           />
         );
       case "Fechas de presentación":
-        return <div>Fechas de presentación</div>;
+        return <Dates/>;
       case "Disponibilidad fechas de Presentación":
         return <AvailabilityCalendarAdmin />;
 
