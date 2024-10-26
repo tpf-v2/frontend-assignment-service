@@ -17,12 +17,12 @@ const TopicsTable = () => {
   );
 
   return (
-    <Box>
-      <ParentTable title={title} columns={columns} endpoint={endpoint} renderRow={renderRow} />
-      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 2, padding: 3}}>
-        <AddButton />
-      </Box>
-    </Box>
+      <Box>
+        <ParentTable title={title} columns={columns} endpoint={endpoint} renderRow={renderRow} />
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 2, padding: 3 }}>
+          <AddButton />
+        </Box>
+      </Box>  
   );
 };
 

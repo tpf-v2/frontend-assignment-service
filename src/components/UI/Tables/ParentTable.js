@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
+import { Container, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Box } from '@mui/material';
 import { styled } from '@mui/system';
 import { getTableData, deleteRow } from '../../../api/handleTableData';
 import { useSelector } from 'react-redux';
@@ -59,31 +59,32 @@ const ParentTable = ({ title, columns, endpoint, renderRow }) => {
     <Container maxWidth="lg">
       <Root>
         <Title variant="h4">{title}</Title>
-        
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {columns.map((column, index) => (
-                  <TableCell key={index}>{column}</TableCell>
-                ))}
-                <TableCell>Acciones</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((item) => (
-                <TableRow key={item.id}>
-                  {renderRow(item)}
-                  <TableCell>
-                    <Button onClick={() => handleDelete(item.id)} style={{ backgroundColor: 'red', color: 'white' }}>
-                      Eliminar
-                    </Button>
-                  </TableCell>
+        <Box sx={{ overflow: 'auto', maxHeight: '450px' }}>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  {columns.map((column, index) => (
+                    <TableCell key={index}>{column}</TableCell>
+                  ))}
+                  <TableCell>Acciones</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {data.map((item) => (
+                  <TableRow key={item.id}>
+                    {renderRow(item)}
+                    <TableCell>
+                      <Button onClick={() => handleDelete(item.id)} style={{ backgroundColor: 'red', color: 'white' }}>
+                        Eliminar
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
       </Root>
     </Container>
   );
