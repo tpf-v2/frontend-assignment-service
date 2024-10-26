@@ -24,7 +24,8 @@ export const addTopic = async (newTopic, user) => {
         const url = `${BASE_URL}/topics/`;
         const response = await axios.post(url, newTopic, config);
         return response.data;
-    } catch (error) {
-        throw new Error(error);
+    } catch (err) {
+        console.error(`Error when adding new topic: ${err}`)
+        throw new Error(err);
     }
 };

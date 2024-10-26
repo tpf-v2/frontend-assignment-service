@@ -4,19 +4,29 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import MySnackbar from '../components/UI/MySnackBar';
 import { addTopic } from '../api/handleTopics'
-import { addNewTopic } from '../redux/slices/topicsSlice';
+import { setTopics } from '../redux/slices/topicsSlice';
 
 const AddTopicDialog = ({ open, handleClose }) => {
   const [newTopic, setNewTopic] = useState({ name: '', category: '' });
 
   const dispatch = useDispatch()
 
+  const [notification, setNotification] = useState({
+    open: false,
+    message: "",
+    status: "",
+  });
+
   const user = useSelector((state) => state.user);
+  const topics = Object.values(useSelector((state) => state.topics))
+  .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
+  .filter(item => Object.keys(item).length > 0); // Elimina objetos vacíos  console.log(topics)
   const handleAddTopic = async () => {
     try {
-      const response = await addTopic(newTopic, user)
-      dispatch(addNewTopic(response));
-      setNewTopic({ "name": "", "category": "" })
+      const topic = await addTopic(newTopic, user)
+      setTopics([...topics, topic]);
+      dispatch(setTopics(topic));
+      setNewTopic({ name: '', category: '' })
       setNotification({
         open: true,
         message: "Tema agregado éxitosamente",
@@ -24,6 +34,7 @@ const AddTopicDialog = ({ open, handleClose }) => {
       });
       handleClose(true)
     } catch (err) {
+      console.error(`Error when adding new topic: ${err}`)
       setNotification({
         open: true,
         message: "Error al agregar el tema. Por favor, vuelva a intentar más tarde.",
@@ -31,12 +42,6 @@ const AddTopicDialog = ({ open, handleClose }) => {
       });
     }
   };
-
-  const [notification, setNotification] = useState({
-    open: false,
-    message: "",
-    status: "",
-  });
 
   const handleSnackbarClose = () => {
     setNotification({ ...notification, open: false });
