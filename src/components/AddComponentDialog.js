@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, FormControl, Button, TextField } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { TextField, Dialog, DialogActions, DialogContent, DialogTitle, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 
 import MySnackbar from '../components/UI/MySnackBar';
@@ -16,6 +16,25 @@ const AddTopicDialog = ({ open, handleClose }) => {
     message: "",
     status: "",
   });
+
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        let result = [];
+        topics.forEach(topic => {
+          if (!result.includes(topic.category.name)) {
+            result.push(topic.category.name);
+          }
+        });
+        
+        setCategories(result);
+      } catch (error) {
+        console.error("Error when fetching dates");
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const user = useSelector((state) => state.user);
   const topics = Object.values(useSelector((state) => state.topics))
@@ -62,13 +81,18 @@ const AddTopicDialog = ({ open, handleClose }) => {
           />
         </FormControl>
         <FormControl fullWidth margin="normal">
-          <TextField
-            variant="outlined"
-            fullWidth
-            placeholder="Categoría"
-            value={newTopic.category}
-            onChange={(e) => setNewTopic({ ...newTopic, category: e.target.value })}
-          />
+            <InputLabel>Categoria</InputLabel>
+            <Select
+              value={newTopic.category}
+              onChange={(e) => setNewTopic({ ...newTopic, category: e.target.value })}
+              label="Categoria"
+            >
+              {categories.map((category) => (
+                <MenuItem key={category} value={category}>
+                  {category}
+                </MenuItem>
+              ))}
+            </Select>
         </FormControl>
       </DialogContent>
       <DialogActions>
