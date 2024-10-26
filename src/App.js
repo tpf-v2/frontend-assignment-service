@@ -19,7 +19,6 @@ import TutorsTable from './components/UI/Tables/ChildTables/TutorsTable';
 import FormAnswersTable from './components/UI/Tables/ChildTables/FormAnswersTable';
 import GroupsTable from './components/UI/Tables/ChildTables/GroupsTable';
 import TokenManager from './components/TokenManager';
-
 import ProtectedRoute from './components/ProtectedRoute';
 import TutorDashboardView from './views/Tutor/TutorDashboardView';
 import UploadView from './views/UploadView';
@@ -27,6 +26,7 @@ import CuatrimestreConfig from './components/UI/CuatrimestreConfig';
 import HomeView from './views/HomeView';
 import LoginView from './views/LoginView';
 import DashboardView from './views/Admin/DashboardView'
+import ChangePasswordView from './views/ChangePasswordView';
 import StudentForm from './components/Forms/StudentForm';
 import StudentAvailabilityView from './views/Student/StudentAvailabilityView';
 
@@ -99,6 +99,7 @@ const App = () => {
             <Route path="/upload-topics/:period" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/upload-tutors/:period" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile user={user} /></ProtectedRoute>} />
+            <Route path="/change-password" element={<ProtectedRoute><ChangePasswordView /></ProtectedRoute>} />
             <Route path="/availability-view" element={<ProtectedRoute><StudentAvailabilityView /></ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
