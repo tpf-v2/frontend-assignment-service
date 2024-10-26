@@ -1,8 +1,8 @@
 import { Button, Typography } from "@mui/material";
 import { Box, styled } from "@mui/system";
 import React, { useEffect, useState } from "react";
-import { downloadAnteproyecto, fetchAnteproyectoPdf } from "../../../../api/downloadAnteproyecto";
 import { useSelector } from "react-redux";
+import { downloadProject, fetchProjectPdf } from "../../../../api/handleProjects";
 
 const DownloadButton = styled(Button)(({ theme }) => ({
   width: "100%", // Hacer que el botón sea igual de largo
@@ -27,14 +27,17 @@ const PdfPreviewBox = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
 
-const AnteproyectoComponent = ({ groupId }) => {
+const ProjectPdfComponent = ({ groupId, projectType }) => {
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
   const [pdfUrl, setPdfUrl] = useState(null);
 
   const downloadFile = async () => {
     try {
-      await downloadAnteproyecto(groupId, user, period.period_id);
+      console.log(period);
+      // Llama a la función genérica para descargar el proyecto (inicial o final)
+      const projectKey = projectType === "Anteproyecto" ? 'initial' : 'final';
+      await downloadProject(groupId, user, period.id, projectKey);
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }
@@ -43,7 +46,8 @@ const AnteproyectoComponent = ({ groupId }) => {
   // Función para cargar el PDF en la previsualización
   const loadPdfPreview = async () => {
     try {
-      const url = await fetchAnteproyectoPdf(groupId, user, period.period_id);
+      const projectKey = projectType === "Anteproyecto" ? 'initial' : 'final';
+      const url = await fetchProjectPdf(groupId, user, period.id, projectKey);
       setPdfUrl(url); // Guarda la URL en el estado
     } catch (error) {
       console.error("Error al cargar la previsualización del PDF:", error);
@@ -56,8 +60,8 @@ const AnteproyectoComponent = ({ groupId }) => {
 
   return (
     <>
-          <Typography variant="h4" align="center" gutterBottom marginTop={1}>
-        Anteproyecto
+      <Typography variant="h4" align="center" gutterBottom marginTop={1}>
+        {projectType}
       </Typography>
       <PdfPreviewBox>
         {pdfUrl ? (
@@ -80,4 +84,4 @@ const AnteproyectoComponent = ({ groupId }) => {
   );
 };
 
-export default AnteproyectoComponent;
+export default ProjectPdfComponent;
