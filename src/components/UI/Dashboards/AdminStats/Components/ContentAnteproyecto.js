@@ -148,7 +148,7 @@ const ContentPdfProjects = ({
               <TableCell sx={{ fontWeight: "bold" }}>
                 Fecha de Entrega
               </TableCell>
-              {projectType === "inicial" && (
+              {projectType === "initial" && (
                 <TableCell sx={{ fontWeight: "bold" }}>Revisor</TableCell>
               )}
               <TableCell sx={{ fontWeight: "bold" }}>Descargar</TableCell>
@@ -173,7 +173,7 @@ const ContentPdfProjects = ({
                     )}
                   </TableCell>
                   <TableCell>
-                    {projectType === "inicial"
+                    {projectType === "initial"
                       ? groupsData.find(
                           (g) => parseInt(getGroup(entrega.name)) === g.id
                         )?.pre_report_title
@@ -183,7 +183,7 @@ const ContentPdfProjects = ({
                   </TableCell>
 
                   <TableCell>{formatDate(entrega.last_modified)}</TableCell>
-                  {projectType === "inicial" && (
+                  {projectType === "initial" && (
                     <TableCell>
                       <Select
                         value={
