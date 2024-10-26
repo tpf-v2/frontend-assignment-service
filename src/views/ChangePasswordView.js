@@ -3,6 +3,8 @@ import { Container, TextField, Button, Typography, Box, Paper } from '@mui/mater
 import { styled } from '@mui/system';
 import BackgroundContainer from '../components/UI/BackgroundContainer.js';
 import MySnackbar from '../components/UI/MySnackBar.js';
+import { resetPassword } from '../api/postChangePassword.js';
+import { useSelector } from "react-redux";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -24,6 +26,7 @@ const ChangePasswordView = () => {
   const [newPassword, setNewPassword] = useState('');
   const [repeatNewPassword, setRepeatNewPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const user = useSelector((state) => state.user);
   
   const [notification, setNotification] = useState({
     open: false,
@@ -41,13 +44,21 @@ const ChangePasswordView = () => {
 
     if (newPassword.length > 8 && newPassword === repeatNewPassword) {
       
-      //Agregar conexión con el back
-      
-      setNotification({
-        open: true,
-        message: "Contraseña cambiada exitosamente",
-        status: "success",
-      });
+      try{
+        await resetPassword(user, newPassword, currentPassword)
+        setNotification({
+          open: true,
+          message: "Contraseña cambiada exitosamente",
+          status: "success",
+        });
+      }
+      catch(e){
+        setNotification({
+          open: true,
+          message: "La contraseña no pudo cambiarse correctamente. Intentelo nuevamente más tarde",
+          status: "error",
+        });
+      }
     } else {
       setNotification({
         open: true,
@@ -55,6 +66,8 @@ const ChangePasswordView = () => {
         status: "error",
       });
     }
+
+    
 
     setLoading(false);
   };
