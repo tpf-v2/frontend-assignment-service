@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, FormControl, Button, TextField } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
+
 import MySnackbar from '../components/UI/MySnackBar';
+import { addTopic } from '../api/handleTopics'
+import { addNewTopic } from '../redux/slices/topicsSlice';
 
 const AddTopicDialog = ({ open, handleClose }) => {
   const [newTopic, setNewTopic] = useState({ name: '', category: '' });
 
-  const handleAddTopic = () => {
+  const dispatch = useDispatch()
+
+  const user = useSelector((state) => state.user);
+  const handleAddTopic = async () => {
     try {
-      console.log(`Add new topic ${newTopic.name}, ${newTopic.category}`);
+      const response = await addTopic(newTopic, user)
+      dispatch(addNewTopic(response));
       setNewTopic({ "name": "", "category": "" })
       setNotification({
         open: true,
@@ -22,7 +30,6 @@ const AddTopicDialog = ({ open, handleClose }) => {
         status: "error",
       });
     }
-
   };
 
   const [notification, setNotification] = useState({
@@ -42,7 +49,6 @@ const AddTopicDialog = ({ open, handleClose }) => {
       <DialogContent>
         <FormControl fullWidth margin="normal">
           <TextField
-            id="titulo"
             variant="outlined"
             fullWidth
             placeholder="Título"
@@ -52,7 +58,6 @@ const AddTopicDialog = ({ open, handleClose }) => {
         </FormControl>
         <FormControl fullWidth margin="normal">
           <TextField
-            id="categoria"
             variant="outlined"
             fullWidth
             placeholder="Categoría"

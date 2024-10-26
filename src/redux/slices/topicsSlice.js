@@ -16,11 +16,15 @@ export const topicsSlice = createSlice({
     clearTopics: () => {
       return []; // Devolver una lista vacía
     },
+    // Acción para agregar un nuevo tópico
+    addNewTopic: (state, action) => {
+      state.push(action.payload); // Agregar el nuevo tópico a la lista
+    },
   },
 });
 
 // Exportar las acciones
-export const { setTopics, clearTopics } = topicsSlice.actions;
+export const { setTopics, clearTopics, addNewTopic } = topicsSlice.actions;
 
 // Exportar el reducer
 export default topicsSlice.reducer;
