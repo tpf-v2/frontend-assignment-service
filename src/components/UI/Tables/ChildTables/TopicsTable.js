@@ -4,9 +4,9 @@ import { TableCell } from '@mui/material';
 import { useSelector } from 'react-redux';
 
 import AddButton from '../../../Buttons/AddButton';
+import AddItemDialog from '../../../AddItemDialog'
 import { setTopics } from '../../../../redux/slices/topicsSlice';
 import { addTopic } from '../../../../api/handleTopics';
-import AddItemDialog from '../../../AddItemDialog'
 
 const TopicsTable = () => {
   const endpoint = '/topics/'; 

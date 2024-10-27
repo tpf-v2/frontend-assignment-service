@@ -6,7 +6,7 @@ import MySnackbar from "../../components/UI/MySnackBar";
 import SubmitButton from "../../components/Buttons/SubmitButton";
 import StudentInfo from "../../components/UI/Dashboards/Student/StudentInfo";
 import Phase from "../../components/UI/Dashboards/Student/Phase";
-import { getStudentInfo } from "../../api/getStudentInfo";
+import { getStudentInfo } from "../../api/handleStudents";
 import { getGroupById } from "../../api/getGroupById";
 import { useNavigate } from "react-router-dom";
 import { getCuatrimestre } from "../../api/handlePeriods";

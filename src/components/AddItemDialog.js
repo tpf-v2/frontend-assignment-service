@@ -18,22 +18,22 @@ const AddItemDialog = ({ open, handleClose, itemFields, addItemAction, title, it
     
     const handleAddItem = async () => {
         try {
-        const item = await addItemAction(newItem, user);
-        setNewItem(itemFields.reduce((acc, field) => ({ ...acc, [field.name]: '' }), {}));
-        setNotification({
-            open: true,
-            message: `${title} agregado éxitosamente`,
-            status: "success",
-        });
-        dispatch(setItems([...items, item]));
-        handleClose(true);
+            const item = await addItemAction(newItem, user);
+            setNewItem(itemFields.reduce((acc, field) => ({ ...acc, [field.name]: '' }), {}));
+            setNotification({
+                open: true,
+                message: `${title} agregado éxitosamente`,
+                status: "success",
+            });
+            dispatch(setItems([...items, item]));
+            handleClose(true);
         } catch (err) {
-        console.error(`Error when adding new ${title}:`, err);
-        setNotification({
-            open: true,
-            message: `Error al agregar ${title.toLowerCase()}. Por favor, vuelva a intentar más tarde.`,
-            status: "error",
-        });
+            console.error(`Error when adding new ${title}:`, err);
+            setNotification({
+                open: true,
+                message: `Error al agregar ${title.toLowerCase()}. Por favor, vuelva a intentar más tarde.`,
+                status: "error",
+            });
         }
     };
 

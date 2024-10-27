@@ -6,6 +6,7 @@ import userReducer from "./slices/userSlice";
 import topicsReducer from "./slices/topicsSlice"; // Importa el topicsSlice
 import tutorsReducer from "./slices/tutorsSlice"; // Importa el tutorsSlice
 import groupsReducer from "./slices/groupsSlice"; // Importa el tutorsSlice
+import studentsReducer from "./slices/studentsSlice";
 
 const persistUserConfig = {
   key: "user",
@@ -32,11 +33,17 @@ const persistGroupsConfig = {
   storage,
 };
 
+const persistStudentsConfig = {
+  key: "students",
+  storage,
+};
+
 const persistedUserReducer = persistReducer(persistUserConfig, userReducer);
 const persistedPeriodReducer = persistReducer(persistPeriodConfig, periodReducer);
 const persistedTopicsReducer = persistReducer(persistTopicsConfig, topicsReducer);
 const persistedTutorsReducer = persistReducer(persistTutorsConfig, tutorsReducer);
 const persistedGroupsReducer = persistReducer(persistGroupsConfig, groupsReducer);
+const persistedStudentsReducer = persistReducer(persistStudentsConfig, studentsReducer);
 
 export const store = configureStore({
   reducer: {
@@ -44,7 +51,8 @@ export const store = configureStore({
     period: persistedPeriodReducer,
     topics: persistedTopicsReducer,       // Agrega el reducer de tópicos aquí
     tutors: persistedTutorsReducer,
-    groups: persistedGroupsReducer
+    groups: persistedGroupsReducer,
+    students: persistedStudentsReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),
