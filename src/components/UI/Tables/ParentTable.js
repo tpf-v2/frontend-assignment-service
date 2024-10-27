@@ -40,7 +40,7 @@ const ParentTable = ({ title, columns, endpoint, renderRow }) => {
     };
 
     fetchData();
-  }, [endpoint]);
+  }, [endpoint, data]);
 
   const handleDelete = async (id) => {
     try {
