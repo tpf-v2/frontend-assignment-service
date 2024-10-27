@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Fab, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import AddNewTopic from '../AddComponentDialog';
+import AddItemDialog from '../AddItemDialog';
 
-const AddButton = () => {
+const AddButton = ({ itemFields, addItemAction, title, items, setItems}) => {
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
-      setOpen(true);
+        setOpen(true);
     };
 
     const handleClose = () => {
@@ -18,7 +18,15 @@ const AddButton = () => {
             <Fab size="small" color="primary" aria-label="add" onClick={handleClickOpen}>
                 <AddIcon />
             </Fab>
-            <AddNewTopic open={open} handleClose={handleClose} />
+            <AddItemDialog
+                open={open}
+                handleClose={handleClose}
+                itemFields={itemFields}
+                addItemAction={addItemAction}
+                title={title}
+                items={items}
+                setItems={setItems}
+            />
         </Box>
     );
 };
