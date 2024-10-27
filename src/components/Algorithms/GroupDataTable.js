@@ -14,6 +14,8 @@ import { Box } from "@mui/system";
 
 // Componente para la tabla de grupos
 const GroupDataTable = () => {
+  const period = useSelector((state) => state.period);
+
   // Obtener la lista de topics desde Redux
   const topics = Object.values(useSelector((state) => state.topics))
   .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
@@ -37,11 +39,14 @@ const groups = Object.values(useSelector((state) => state.groups))
   };
 
   // Función para obtener el nombre del tutor por su id
-  const getTutorNameById = (id) => {
+  const getTutorNameById = (id, periodId) => {
     const tutor = tutors.find(
-      (t) => t.tutor_periods && t.tutor_periods[0].id === id
+      (t) =>
+        t.tutor_periods &&
+        t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
     );
-    return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el topic, mostrar 'Sin asignar'
+
+    return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
   };
 
   return (
@@ -97,7 +102,7 @@ const groups = Object.values(useSelector((state) => state.groups))
                           rowSpan={group.students.length}
                           align="center"
                         >
-                          {getTutorNameById(group.tutor_period_id) ||
+                          {getTutorNameById(group.tutor_period_id, period.id) ||
                             "Sin asignar"}{" "}
                           {/* Mostrar el tutor del grupo */}
                         </TableCell>

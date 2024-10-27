@@ -4,13 +4,7 @@ import {
   Box,
   Button,
   Typography,
-  Paper,
   Divider,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
   CircularProgress,
   Dialog,
   DialogTitle,
@@ -21,12 +15,18 @@ import {
   ListItemIcon,
   Checkbox,
   ListItemText,
+  Select,
+  MenuItem,
+  TextField,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { CalendarStyled } from "../../styles/AvailabilityCalendarStyle";
 import { momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import MySnackbar from "../UI/MySnackBar";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 const localizer = momentLocalizer(moment);
 
@@ -35,7 +35,10 @@ const Dates = () => {
   const tutors = Object.values(useSelector((state) => state.tutors))
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
-
+  const groups = Object.values(useSelector((state) => state.groups))
+    .sort((a, b) => a.id - b.id)
+    .map(({ version, rehydrated, ...rest }) => rest)
+    .filter((item) => Object.keys(item).length > 0);
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -43,6 +46,16 @@ const Dates = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [openEvaluatorDialog, setOpenEvaluatorDialog] = useState(false);
   const [selectedTutors, setSelectedTutors] = useState([]);
+  const [group, setGroup] = useState("");
+  const [tutor, setTutor] = useState("");
+  const [topic, setTopic] = useState("");
+  const [selectedHour, setSelectedHour] = useState("");
+
+  // Genera las opciones de horas (ej: 9:00, 10:00, ..., 17:00)
+  const hours = Array.from({ length: 13 }, (_, i) => `${9 + i}:00`);
+  const [evaluador, setEvaluador] = useState("");
+  const [assignDateOpenDialog, setAssignDateOpenDialog] = useState(false);
+  const [selectedDateTime, setSelectedDateTime] = useState(dayjs());
 
   useEffect(() => {
     const initialSelectedTutors = tutors
@@ -69,6 +82,10 @@ const Dates = () => {
     setSnackbarOpen(false);
   };
 
+  const handleHourChange = (event) => {
+    setSelectedHour(event.target.value);
+  };
+
   const handleRun = async () => {
     try {
       // Inicia la carga y abre el diálogo
@@ -93,7 +110,21 @@ const Dates = () => {
     setOpenEvaluatorDialog(false);
   };
 
-  const handleAssignDate = () => {};
+  const handleAssignDate = () => {
+    console.log("Fecha y hora asignada:", selectedDateTime);
+    console.log("Hora:", selectedHour);
+    console.log("Grupo", group);
+    console.log("Evaluador", evaluador);
+
+    if (!group || !evaluador || !selectedDateTime || !selectedHour) {
+      handleSnackbarOpen("Por favor completa todos los campos antes de asignar.", "error");
+      return;
+    }
+
+    //TODO: call backend
+
+    setAssignDateOpenDialog(false); // Cerrar el diálogo después de asignar
+  };
 
   const handleToggleTutor = (tutor) => {
     setSelectedTutors((prevSelectedTutors) => {
@@ -107,18 +138,22 @@ const Dates = () => {
     });
   };
 
-  //   const handleSelectSlot = ({ start, end }) => {
-  //     const duration = moment(end).diff(moment(start), "minutes");
+  const getTutorNameById = (id, periodId) => {
+    const tutor = tutors.find(
+      (t) =>
+        t.tutor_periods &&
+        t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
+    );
 
-  //     // Verifica si el slot es de exactamente 1 hora
-  //     if (duration === 60) {
-  //       console.log("Slot de 1 hora seleccionado:", start, end);
-  //       // Aquí puedes agregar la lógica para guardar o manejar el slot seleccionado
-  //     } else {
-  //       handleSnackbarOpen("Por favor selecciona un slot de 1 hora.", "error");
-  //       return;
-  //     }
-  //   };
+    return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
+  };
+
+  const filteredTutors = tutors.filter((tutor) =>
+    tutor.tutor_periods.some(
+      (tutor_period) =>
+        tutor_period.period_id === period.id && tutor_period.is_evaluator
+    )
+  );
 
   return (
     <Box sx={{ padding: 3 }}>
@@ -166,15 +201,16 @@ const Dates = () => {
           <Button
             variant="outlined"
             color="primary"
-            onClick={handleAssignDate}
+            onClick={() => setAssignDateOpenDialog(true)}
             sx={{
               padding: "6px 26px",
               boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.07)",
               transition: "all 0.3s ease",
             }}
           >
-            Asignar fecha a grupo
+            Asignar fecha y hora a grupo
           </Button>
+
           <Button
             variant="contained"
             color="primary"
@@ -394,6 +430,130 @@ const Dates = () => {
             color="primary"
           >
             Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={assignDateOpenDialog}
+        onClose={() => setAssignDateOpenDialog(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Asignar Fecha a Grupo</DialogTitle>
+        <DialogContent>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1">Selecciona un Grupo:</Typography>
+              <Select
+                fullWidth
+                value={group.id}
+                onChange={(e) => {
+                  const selectedGroup = groups.find(
+                    (g) => g.id === e.target.value
+                  );
+                  setGroup(selectedGroup);
+
+                  const selectedTutor = getTutorNameById(
+                    selectedGroup.tutor_period_id,
+                    period.id
+                  ); // Asegúrate de tener el tutor_id.
+                  setTutor(selectedTutor ? selectedTutor : ""); // Ajusta según tu estructura
+                  const selectedTopic = selectedGroup.topic.name; // Asegúrate de que topic exista en el grupo.
+                  setTopic(selectedTopic);
+                }}
+                renderValue={(selected) => {
+                  const selectedGroup = groups.find((g) => g.id === selected); // Encontramos el grupo correspondiente
+                  return selectedGroup ? `Grupo ${selectedGroup.id}` : ""; // Mostramos "Grupo id"
+                }}
+              >
+                {groups.map((group) => (
+                  <MenuItem key={group.id} value={group.id}>
+                    {" "}
+                    {/* Aquí usamos el id como value */}
+                    {"Grupo " + group.id}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                label="Tutor"
+                value={tutor}
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Tema"
+                value={topic}
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1">
+                Selecciona un Evaluador:
+              </Typography>
+              <Select
+                fullWidth
+                value={evaluador}
+                onChange={(e) => setEvaluador(e.target.value)}
+              >
+                {filteredTutors.map((tutor) => (
+                  <MenuItem key={tutor.id} value={tutor.id}>
+                    {tutor.name + " " + tutor.last_name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+            <Grid item xs={5}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  // renderInput={(props) => <TextField {...props} />}
+                  label="Selecciona la Fecha"
+                  value={selectedDateTime}
+                  onChange={(newValue) => setSelectedDateTime(newValue)}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid item xs={5}>
+              <Select
+                value={selectedHour || ""}
+                onChange={handleHourChange}
+                displayEmpty
+                fullWidth
+              >
+                <MenuItem value="" disabled>
+                  Selecciona la Hora
+                </MenuItem>
+                {hours.map((hour) => (
+                  <MenuItem key={hour} value={hour}>
+                    {hour}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setAssignDateOpenDialog(false)}
+            color="primary"
+          >
+            Cancelar
+          </Button>
+          <Button
+            onClick={() => handleAssignDate()}
+            color="primary"
+          >
+            Asignar
           </Button>
         </DialogActions>
       </Dialog>

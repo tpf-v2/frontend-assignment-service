@@ -74,11 +74,14 @@ import {
     };
   
       // Función para obtener el nombre del tutor por su id
-      const getTutorNameById = (id) => {
+      const getTutorNameById = (id, periodId) => {
         const tutor = tutors.find(
-          (t) => t.tutor_periods && t.tutor_periods[0].id === id
+          (t) =>
+            t.tutor_periods &&
+            t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
         );
-        return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el topic, mostrar 'Sin asignar'
+    
+        return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
       };
   
     const handleRun = () => {
@@ -324,7 +327,7 @@ import {
   
                         <TableCell>
                           {group.tutor_period_id ? (
-                            `${getTutorNameById(group.tutor_period_id)}`
+                            `${getTutorNameById(group.tutor_period_id, period.id)}`
                           ) : (
                             "Sin asignar"
                           )}
