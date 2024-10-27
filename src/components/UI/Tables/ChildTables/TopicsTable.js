@@ -10,7 +10,7 @@ import AddItemDialog from '../../../AddItemDialog'
 
 const TopicsTable = () => {
   const endpoint = '/topics/'; 
-  const title = 'Tema';
+  const title = 'Temas';
   const columns = ['ID', 'Tema', 'Categoría'];
   
   const topics = Object.values(useSelector((state) => state.topics))
