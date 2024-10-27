@@ -9,7 +9,7 @@ import Phase from "../../components/UI/Dashboards/Student/Phase";
 import { getStudentInfo } from "../../api/handleStudents";
 import { getGroupById } from "../../api/getGroupById";
 import { useNavigate } from "react-router-dom";
-import { getCuatrimestre } from "../../api/handlePeriods";
+import { getPeriodById } from "../../api/handlePeriods";
 import { setPeriod } from "../../redux/slices/periodSlice";
 
 const StudentHomeView = () => {
@@ -33,7 +33,7 @@ const StudentHomeView = () => {
     const fetchCuatrimestre = async () => {
       if (user && user.id) {
         try {
-          const period = await getCuatrimestre(user);
+          const period = await getPeriodById(user);
           dispatch(setPeriod(period));
         } catch (error) {
           console.error("Error al obtener el cuatrimestre", error);

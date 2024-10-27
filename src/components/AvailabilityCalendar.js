@@ -39,7 +39,6 @@ const AvailabilityCalendar = () => {
   const [eventToDelete, setEventToDelete] = useState(null);
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
-  // const navigate = useNavigate();
   const [availableDates, setAvailableDates] = useState(new Set()); // Mantener como un Set
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);

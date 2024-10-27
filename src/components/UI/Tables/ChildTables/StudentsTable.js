@@ -17,7 +17,6 @@ const StudentsTable = () => {
   .map(({ version, rehydrated, ...rest }) => rest)
   .filter(item => Object.keys(item).length > 0);
 
-
   const itemFields = [
     { name: 'id', label: 'Padron', type: 'text' },
     { name: 'name', label: 'Nombre', type: 'text' },
@@ -48,6 +47,7 @@ const StudentsTable = () => {
       dialogProps={{ items: students, setItems: setStudents }}
     />
   );
+  
   return (
     <ParentTable
       title={title}
