@@ -14,7 +14,7 @@ const AddButton = ({ DialogComponent, dialogProps }) => {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 2, padding: 3 }}>
+    <Box>
       <Fab size="small" color="primary" aria-label="add" onClick={handleClickOpen}>
         <AddIcon />
       </Fab>

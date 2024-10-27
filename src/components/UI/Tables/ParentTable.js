@@ -21,7 +21,7 @@ const Title = styled(Typography)(({ theme }) => ({
   fontWeight: 'bold',
 }));
 
-const ParentTable = ({ title, columns, endpoint, renderRow }) => {
+const ParentTable = ({ title, columns, endpoint, renderRow, AddButtonComponent, items }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -40,7 +40,7 @@ const ParentTable = ({ title, columns, endpoint, renderRow }) => {
     };
 
     fetchData();
-  }, [endpoint, data]);
+  }, [endpoint, items]);
 
   const handleDelete = async (id) => {
     try {
@@ -58,8 +58,11 @@ const ParentTable = ({ title, columns, endpoint, renderRow }) => {
   return (
     <Container maxWidth="lg">
       <Root>
-        <Title variant="h4">{title}</Title>
-        <Box sx={{ overflow: 'auto', maxHeight: '450px' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+        <Title variant="h4" sx={{ flexGrow: 1, textAlign: 'center' }}>{title}</Title>
+          {AddButtonComponent && <AddButtonComponent />}
+        </Box>
+        <Box sx={{ overflow: 'auto'}}>
           <TableContainer component={Paper}>
             <Table>
               <TableHead>

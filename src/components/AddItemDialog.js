@@ -19,13 +19,13 @@ const AddItemDialog = ({ open, handleClose, itemFields, addItemAction, title, it
     const handleAddItem = async () => {
         try {
         const item = await addItemAction(newItem, user);
-        dispatch(setItems([...items, item]));
         setNewItem(itemFields.reduce((acc, field) => ({ ...acc, [field.name]: '' }), {}));
         setNotification({
             open: true,
             message: `${title} agregado éxitosamente`,
             status: "success",
         });
+        dispatch(setItems([...items, item]));
         handleClose(true);
         } catch (err) {
         console.error(`Error when adding new ${title}:`, err);

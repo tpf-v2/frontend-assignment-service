@@ -1,6 +1,6 @@
 import React from 'react';
 import ParentTable from '../ParentTable';
-import { TableCell, Box } from '@mui/material';
+import { TableCell } from '@mui/material';
 import { useSelector } from 'react-redux';
 
 import AddButton from '../../../Buttons/AddButton';
@@ -31,22 +31,30 @@ const TopicsTable = () => {
     </>
   );
 
-  return (
-      <Box>
-        <ParentTable title={title} columns={columns} endpoint={endpoint} renderRow={renderRow} />
-        <AddButton
-          DialogComponent={
-            <AddItemDialog
-              itemFields={itemFields}
-              addItemAction={addTopic}
-              title="Tema"
-              items={topics}
-              setItems={setTopics}
-            />
-          }
-          dialogProps={{ items: topics, setItems: setTopics }}
+  const AddButtonComponent = () => (
+    <AddButton
+      DialogComponent={
+        <AddItemDialog
+          itemFields={itemFields}
+          addItemAction={addTopic}
+          title="Tema"
+          items={topics}
+          setItems={setTopics}
         />
-      </Box>  
+      }
+      dialogProps={{ items: topics, setItems: setTopics }}
+    />
+  );
+
+  return (
+      <ParentTable
+        title={title}
+        columns={columns}
+        endpoint={endpoint}
+        renderRow={renderRow} 
+        AddButtonComponent={AddButtonComponent}
+        items={topics}
+      />
   );
 };
 
