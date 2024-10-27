@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
+import { Container, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Box } from '@mui/material';
 import { styled } from '@mui/system';
 import { getTableData, deleteRow } from '../../../api/handleTableData';
 import { useSelector } from 'react-redux';
@@ -21,7 +21,7 @@ const Title = styled(Typography)(({ theme }) => ({
   fontWeight: 'bold',
 }));
 
-const ParentTable = ({ title, columns, endpoint, renderRow }) => {
+const ParentTable = ({ title, columns, endpoint, renderRow, AddButtonComponent, items }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -40,7 +40,7 @@ const ParentTable = ({ title, columns, endpoint, renderRow }) => {
     };
 
     fetchData();
-  }, [endpoint]);
+  }, [endpoint, items]);
 
   const handleDelete = async (id) => {
     try {
@@ -58,32 +58,36 @@ const ParentTable = ({ title, columns, endpoint, renderRow }) => {
   return (
     <Container maxWidth="lg">
       <Root>
-        <Title variant="h4">{title}</Title>
-        
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {columns.map((column, index) => (
-                  <TableCell key={index}>{column}</TableCell>
-                ))}
-                <TableCell>Acciones</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((item) => (
-                <TableRow key={item.id}>
-                  {renderRow(item)}
-                  <TableCell>
-                    <Button onClick={() => handleDelete(item.id)} style={{ backgroundColor: 'red', color: 'white' }}>
-                      Eliminar
-                    </Button>
-                  </TableCell>
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+        <Title variant="h4" sx={{ flexGrow: 1, textAlign: 'center' }}>{title}</Title>
+          {AddButtonComponent && <AddButtonComponent />}
+        </Box>
+        <Box sx={{ overflow: 'auto'}}>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  {columns.map((column, index) => (
+                    <TableCell key={index}>{column}</TableCell>
+                  ))}
+                  <TableCell>Acciones</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {data.map((item) => (
+                  <TableRow key={item.id}>
+                    {renderRow(item)}
+                    <TableCell>
+                      <Button onClick={() => handleDelete(item.id)} style={{ backgroundColor: 'red', color: 'white' }}>
+                        Eliminar
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
       </Root>
     </Container>
   );
