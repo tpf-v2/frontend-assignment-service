@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import AddButton from '../../../Buttons/AddButton';
 import { setTopics } from '../../../../redux/slices/topicsSlice';
 import { addTopic } from '../../../../api/handleTopics';
+import AddItemDialog from '../../../AddItemDialog'
 
 const TopicsTable = () => {
   const endpoint = '/topics/'; 
@@ -33,7 +34,18 @@ const TopicsTable = () => {
   return (
       <Box>
         <ParentTable title={title} columns={columns} endpoint={endpoint} renderRow={renderRow} />
-      <AddButton itemFields={itemFields} addItemAction={addTopic} title={title} items={topics} setItems={setTopics} />
+        <AddButton
+          DialogComponent={
+            <AddItemDialog
+              itemFields={itemFields}
+              addItemAction={addTopic}
+              title="Tema"
+              items={topics}
+              setItems={setTopics}
+            />
+          }
+          dialogProps={{ items: topics, setItems: setTopics }}
+        />
       </Box>  
   );
 };
