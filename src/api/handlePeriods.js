@@ -60,18 +60,18 @@ export const getTutorPeriods = async (user) => {
   }
 };
 
-export const getPeriodById = async (user) => {
+export const getPeriod = async (user,periodId=undefined) => {
   try {
     const config = {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     };
+    const periodRequest = periodId? periodId : user.period_id
     const response = await axios.get(
-      `${BASE_URL}/api/periods/${user.period_id}`,
+      `${BASE_URL}/api/periods/${periodRequest}`,
       config
     );
-    console.log(response)
     return response.data;
   } catch (error) {
     throw new Error("Error fetching periods: " + error.message);
