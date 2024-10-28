@@ -21,7 +21,6 @@ import {
   DescriptionBox,
 } from "../styles/AvailabilityCalendarStyle";
 import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 import { transformSlotsToIntervals } from "../utils/TransformSlotsToIntervals";
 import ClosedAlert from "./ClosedAlert";
 import { Box } from "@mui/system";
@@ -44,7 +43,6 @@ const AvailabilityCalendar = () => {
   const [availableDates, setAvailableDates] = useState(new Set()); // Mantener como un Set
   const [defaultDate, setDefaultDate] = useState(null); // Estado para la fecha predeterminada
 
-  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
