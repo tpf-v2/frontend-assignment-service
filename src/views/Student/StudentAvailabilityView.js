@@ -3,6 +3,8 @@ import React from "react";
 import { Container, Paper } from "@mui/material";
 import AvailabilityCalendar from "../../components/AvailabilityCalendar";
 import { styled } from "@mui/material/styles";
+import { useSelector } from "react-redux";
+import ClosedAlert from "../../components/ClosedAlert";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -14,11 +16,18 @@ const Root = styled(Paper)(({ theme }) => ({
 }));
 
 const StudentAvailabilityView = () => {
+  const period = useSelector((state) => state.period);
+
   return (
+    
     <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>
+    {period.final_project_active ? (
       <Root>
         <AvailabilityCalendar />
       </Root>
+    ) : (
+      <ClosedAlert message="No se aceptan respuestas al formulario de fechas." />
+    )}
     </Container>
   );
 };
