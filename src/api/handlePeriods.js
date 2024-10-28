@@ -60,7 +60,7 @@ export const getTutorPeriods = async (user) => {
   }
 };
 
-export const getPeriod = async (user,periodId=undefined) => {
+export const getPeriodById = async (user, periodId=undefined) => {
   try {
     const config = {
       headers: {

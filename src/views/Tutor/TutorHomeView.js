@@ -3,7 +3,7 @@ import { Container, Box, Card, CardContent, Typography} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
-import { getPeriod, getTutorPeriods } from '../../api/handlePeriods'
+import { getPeriodById, getTutorPeriods } from '../../api/handlePeriods'
 import MySnackbar from '../../components/UI/MySnackBar';
 import { setPeriod } from '../../redux/slices/periodSlice';
 
@@ -84,7 +84,7 @@ const TutorHomeView = () => {
   const dispatch = useDispatch();
 
   const handleCardClick = async (cuatrimestre) => {
-    const period = await getPeriod(user, cuatrimestre.period_id);
+    const period = await getPeriodById(user, cuatrimestre.period_id);
     dispatch(setPeriod(period))
     navigate(`/tutor-cuatrimestre/${cuatrimestre.period_id}`);
   };

@@ -31,18 +31,18 @@ const StudentHomeView = () => {
   };
 
   useEffect(() => {
-    const fetchCuatrimestre = async () => {
+    const fetchPeriod = async () => {
       if (user && user.id) {
         try {
           const period = await getPeriodById(user);
           dispatch(setPeriod(period));
         } catch (error) {
-          console.error("Error al obtener el cuatrimestre", error);
+          console.error("Error when getting period: ", error);
         }
       }
     };
 
-    fetchCuatrimestre();
+    fetchPeriod();
   }, [user, dispatch]);
 
   useEffect(() => {
