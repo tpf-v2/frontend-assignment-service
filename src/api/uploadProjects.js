@@ -37,7 +37,7 @@ export const uploadProjects = async ({ projectType, groupId, projectTitle, selec
     }
 
     return {
-      success: response.status === 202,
+      success: response.status === 202 || response.status === 200,
       message: `Envío exitoso para la ${projectNameKeyMap[projectType]}`,
     };
   } catch (error) {

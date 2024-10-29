@@ -99,7 +99,7 @@ const CuatrimestreConfig = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Entrega Final</TableCell>
+              <TableCell>Entrega Final y disponibilidades de presentación</TableCell> 
               <TableCell align="right">
                 <Switch
                   checked={settings.final_project_active}

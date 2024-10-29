@@ -65,7 +65,6 @@ export const getTutorCuatrimestre = async (user) => {
 };
 
 export const getCuatrimestre = async (user,periodId=undefined) => {
-  console.log("API", user.period_id)
   try {
     const config = {
       headers: {

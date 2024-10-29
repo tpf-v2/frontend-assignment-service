@@ -1,20 +1,26 @@
-import React from 'react';
-import { Fab, Tooltip } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
 
-const AddButton = ({ onFlagChange, isFlagActive, infoActive, infoNotActive }) => {
+const AddButton = ({ DialogComponent, dialogProps }) => {
+  const [open, setOpen] = useState(false);
 
-    return (
-        <Tooltip 
-            title={isFlagActive ? infoActive : infoNotActive}
-            arrow
-        >
-            <Fab size="small" color="primary" aria-label="add" onClick={onFlagChange}>
-                {isFlagActive ? <DeleteIcon /> : <AddIcon />}
-            </Fab>
-        </Tooltip>
-    );
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <Box>
+      <Fab size="small" color="primary" aria-label="add" onClick={handleClickOpen}>
+        <AddIcon />
+      </Fab>
+      {DialogComponent && React.cloneElement(DialogComponent, { ...dialogProps, open, handleClose })}
+    </Box>
+  );
 };
 
 export default AddButton;

@@ -52,9 +52,7 @@ const ContentPdfProjects = ({
   }
 
   const getGroupById = (id) => {
-    console.log(groupsData);
     const group = groupsData?.find((g) => g.id === id);
-    console.log(group);
     return group ? group : null;
   };
   const handleReviewerChange = async (deliveryId, reviewerId) => {
@@ -176,10 +174,12 @@ const ContentPdfProjects = ({
                     {projectType === "initial"
                       ? groupsData.find(
                           (g) => parseInt(getGroup(entrega.name)) === g.id
-                        )?.pre_report_title
+                        )?.pre_report_title ||
+                        `Anteproyecto Grupo ${getGroup(entrega.name)}`
                       : groupsData.find(
                           (g) => parseInt(getGroup(entrega.name)) === g.id
-                        )?.final_report_title}
+                        )?.final_report_title ||
+                        `Proyecto final Grupo ${getGroup(entrega.name)}`}
                   </TableCell>
 
                   <TableCell>{formatDate(entrega.last_modified)}</TableCell>

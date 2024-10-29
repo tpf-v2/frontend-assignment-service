@@ -3,10 +3,9 @@ import { Container, Box, Card, CardContent, Typography} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
-import {getTutorCuatrimestre } from '../../api/handlePeriods'
+import {getCuatrimestre, getTutorCuatrimestre } from '../../api/handlePeriods'
 import MySnackbar from '../../components/UI/MySnackBar';
 import { setPeriod } from '../../redux/slices/periodSlice';
-import { getCuatrimestre } from '../../api/handlePeriods';
 
 const Root = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -85,8 +84,8 @@ const TutorHomeView = () => {
   const dispatch = useDispatch();
 
   const handleCardClick = async (cuatrimestre) => {
-    const tutorPeriod = await getCuatrimestre(user,cuatrimestre.period_id)
-    dispatch(setPeriod(tutorPeriod))
+    const period = await getCuatrimestre(user, cuatrimestre.period_id);
+    dispatch(setPeriod(period))
     navigate(`/tutor-cuatrimestre/${cuatrimestre.period_id}`);
   };
 

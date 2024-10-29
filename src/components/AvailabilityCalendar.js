@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Typography } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import MySnackbar from "./UI/MySnackBar";
 import EventModal from "./EventModal";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
@@ -21,8 +21,9 @@ import {
   DescriptionBox,
 } from "../styles/AvailabilityCalendarStyle";
 import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 import { transformSlotsToIntervals } from "../utils/TransformSlotsToIntervals";
+import ClosedAlert from "./ClosedAlert";
+import { Box } from "@mui/system";
 
 // Localizador de momento
 const localizer = momentLocalizer(moment);
@@ -41,7 +42,8 @@ const AvailabilityCalendar = () => {
   const period = useSelector((state) => state.period);
   // const navigate = useNavigate();
   const [availableDates, setAvailableDates] = useState(new Set()); // Mantener como un Set
-  const dispatch = useDispatch();
+  const [defaultDate, setDefaultDate] = useState(null); // Estado para la fecha predeterminada
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -51,7 +53,7 @@ const AvailabilityCalendar = () => {
         setLoading(false);
         return;
       }
-
+      setLoading(true)
       try {
         // Fechas disponibles para seleccionar
         const slots = await fetchAvailability(user, period.id);
@@ -76,6 +78,12 @@ const AvailabilityCalendar = () => {
 
         setAvailableDates(availableDatesSet); // Establecer el conjunto de fechas disponibles
 
+        // Establecer defaultDate como la primera fecha de availableDates
+        if (availableDatesSet.size > 0) {
+          const sortedDates = Array.from(availableDatesSet).sort();
+          setDefaultDate(new Date(sortedDates[0])); // Convertir a Date el primer valor
+        }
+
         // Fechas ya seleccionadas por el estudiante
         const userAvailability = user.role === "student" ? await fetchStudentAvailability(
           user,
@@ -96,7 +104,7 @@ const AvailabilityCalendar = () => {
     };
 
     fetchData();
-  }, [dispatch, user, loading, period]);
+  }, []);
 
   const handleSnackbarOpen = (message, status = "info") => {
     setSnackbarMessage(message);
@@ -227,76 +235,90 @@ const AvailabilityCalendar = () => {
   };
 
   return (
-    <AvailabilityContainer>
-      <Typography variant="h4" align="center" gutterBottom>
-        Selecciona tu disponibilidad
-      </Typography>
-
-      {/* Descripción del Calendario */}
-      <DescriptionBox>
-        <Typography variant="body1" align="justify" gutterBottom>
-          En este calendario, podrás seleccionar los bloques de tiempo que estás
-          disponible para presentar. Haz clic en cualquier espacio en blanco
-          para agregar un bloque de disponibilidad. Si necesitas eliminar un
-          bloque existente, simplemente selecciónalo de nuevo.
-        </Typography>
-      </DescriptionBox>
-      <CalendarStyled
-        localizer={localizer}
-        events={userAvailability} // Fechas seleccionadas por el estudiante
-        selectable
-        onSelectSlot={handleSelectSlot} // Fechas seleccionables
-        onSelectEvent={handleSelectEvent} // Fechas seleccionadas
-        views={["week"]}
-        defaultView="week"
-        timeslots={1}
-        step={60}
-        showMultiDayTimes
-        defaultDate={new Date()}
-        style={{ height: "500px", margin: "50px" }}
-        min={new Date(0, 0, 0, 9, 0, 0)} // Comienza a las 9 AM
-        max={new Date(0, 0, 0, 21, 0, 0)} // Termina a las 9 PM
-        components={{
-          month: {
-            header: () => null,
-          },
-        }}
-        dayPropGetter={(date) => {
-          const day = date.getDay();
-          if (day === 0 || day === 6) {
-            // sábado y domingo
-            return { style: { display: "none" } }; // Ocultar este día
-          }
-          return {};
-        }}
-        slotPropGetter={slotPropGetter}
-        onNavigation={(date) => {
-          const day = date.getDay();
-          if (day === 0 || day === 6) {
-            return false;
-          }
-        }}
-      />
-
-      <EventModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onConfirm={handleConfirmEvent}
-      />
-
-      <ConfirmDeleteModal
-        open={confirmDeleteOpen}
-        onClose={() => setConfirmDeleteOpen(false)}
-        onConfirm={handleDeleteEvent}
-      />
-      <MySnackbar
-        message={snackbarMessage}
-        status={snackbarStatus}
-        open={snackbarOpen}
-        handleClose={handleSnackbarClose}
-      />
-    </AvailabilityContainer>
+    <>
+      {!loading ? (
+        period.final_project_active ? (
+          <AvailabilityContainer>
+            <Typography variant="h4" align="center" gutterBottom>
+              Selecciona tu disponibilidad
+            </Typography>
+  
+            {/* Descripción del Calendario */}
+            <DescriptionBox>
+              <Typography variant="body1" align="justify" gutterBottom>
+                En este calendario, podrás seleccionar los bloques de tiempo que estás
+                disponible para presentar. Haz clic en cualquier espacio en blanco
+                para agregar un bloque de disponibilidad. Si necesitas eliminar un
+                bloque existente, simplemente selecciónalo de nuevo.
+              </Typography>
+            </DescriptionBox>
+  
+            <CalendarStyled
+              localizer={localizer}
+              events={userAvailability}
+              selectable
+              onSelectSlot={handleSelectSlot}
+              onSelectEvent={handleSelectEvent}
+              views={["week"]}
+              defaultView="week"
+              timeslots={1}
+              step={60}
+              showMultiDayTimes
+              defaultDate={defaultDate || new Date()}
+              style={{ height: "500px", margin: "50px" }}
+              min={new Date(0, 0, 0, 9, 0, 0)}
+              max={new Date(0, 0, 0, 21, 0, 0)}
+              components={{
+                month: {
+                  header: () => null,
+                },
+              }}
+              dayPropGetter={(date) => {
+                const day = date.getDay();
+                if (day === 0 || day === 6) {
+                  return { style: { display: "none" } };
+                }
+                return {};
+              }}
+              slotPropGetter={slotPropGetter}
+              onNavigate={(date) => {
+                const day = date.getDay();
+                if (day === 0 || day === 6) {
+                  return false;
+                }
+              }}
+            />
+  
+            <EventModal
+              open={modalOpen}
+              onClose={() => setModalOpen(false)}
+              onConfirm={handleConfirmEvent}
+            />
+  
+            <ConfirmDeleteModal
+              open={confirmDeleteOpen}
+              onClose={() => setConfirmDeleteOpen(false)}
+              onConfirm={handleDeleteEvent}
+            />
+  
+            <MySnackbar
+              message={snackbarMessage}
+              status={snackbarStatus}
+              open={snackbarOpen}
+              handleClose={handleSnackbarClose}
+            />
+          </AvailabilityContainer>
+        ) : (
+          <ClosedAlert message="No se aceptan respuestas al formulario de fechas." />
+        )
+      ) : (
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="300px">
+          <CircularProgress />
+        </Box>
+      )}
+    </>
   );
+  
 };
 
 export default AvailabilityCalendar;

@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchCuatrimestres, addCuatrimestre } from '../../api/handlePeriods'
 import MySnackbar from '../../components/UI/MySnackBar';
 import { setPeriod } from '../../redux/slices/periodSlice';
+import { AddCardStyled } from '../../styles/AddCardStyled';
 
 const Root = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -37,24 +38,6 @@ const CardStyled = styled(Card)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[3],
   backgroundColor: '#FFFFFF',
-  cursor: 'pointer',
-  transition: 'transform 0.3s',
-  '&:hover': {
-    transform: 'scale(1.05)',
-  },
-}));
-
-const AddCardStyled = styled(Card)(({ theme }) => ({
-  width: '200px',
-  height: '150px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  textAlign: 'center',
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[3],
-  border: '2px dashed #bbb',
-  backgroundColor: '#f8f8f8',
   cursor: 'pointer',
   transition: 'transform 0.3s',
   '&:hover': {

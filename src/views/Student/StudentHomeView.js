@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
@@ -48,7 +49,6 @@ const StudentHomeView = () => {
     const fetchGroupAnswer = async () => {
       try {
         const userData = await dispatch(getStudentInfo(user));
-        console.log(userData);
 
         let group = {};
         if (userData.group_id !== 0) {
@@ -89,11 +89,7 @@ const StudentHomeView = () => {
               {
                 title: "Entregado",
                 completed:
-                  group.intermediate_assigment_date !== null ? true : false,
-              },
-              {
-                title: "Aprobado",
-                completed: group.intermediate_assigment_approved,
+                  !!group.intermediate_assigment_date,
               },
             ],
           },
@@ -102,12 +98,8 @@ const StudentHomeView = () => {
             tasks: [
               {
                 title: "Entregado",
-                completed: group.final_report_date !== null ? true : false,
-              },
-              {
-                title: "Aprobado",
-                completed: group.final_report_approved,
-              },
+                completed: !!group.final_report_date,
+              }
             ],
           },
         ]);
