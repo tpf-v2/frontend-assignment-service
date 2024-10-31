@@ -55,12 +55,14 @@ const ParentTable = ({ title, columns, endpoint, renderRow, AddButtonComponent, 
   
   if (loading) return <Typography variant="h6">Cargando...</Typography>;
 
+  const topicsCond = title === "Temas" ? items.length > 0 : true;
+  // if its topic table, the user can't add a new topic since there are not categories created yet
   return (
     <Container maxWidth="lg">
       <Root>
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <Title variant="h4" sx={{ flexGrow: 1, textAlign: 'center' }}>{title}</Title>
-          {AddButtonComponent && <AddButtonComponent />}
+          {(AddButtonComponent &&  topicsCond) && <AddButtonComponent />}
         </Box>
         <Box sx={{ overflow: 'auto'}}>
           <TableContainer component={Paper}>

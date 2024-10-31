@@ -1,10 +1,8 @@
-// src/services/apiService.js
 import axios from "axios";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
-// Fetch existing cuatrimesters
-export const fetchCuatrimestres = async (user) => {
+export const getAllPeriods = async (user) => {
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -19,8 +17,7 @@ export const fetchCuatrimestres = async (user) => {
   }
 };
 
-// Add a new period
-export const addCuatrimestre = async (newEntry, user) => {
+export const addPeriod = async (newEntry, user) => {
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -36,8 +33,7 @@ export const addCuatrimestre = async (newEntry, user) => {
   }
 };
 
-// Fetch existing cuatrimesters
-export const getTutorCuatrimestre = async (user) => {
+export const getTutorPeriods = async (user) => {
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -60,11 +56,11 @@ export const getTutorCuatrimestre = async (user) => {
         });
     return periods;
   } catch (error) {
-    throw new Error("Error fetching cuatrimestres: " + error.message);
+    throw new Error("Error fetching periods: " + error.message);
   }
 };
 
-export const getCuatrimestre = async (user,periodId=undefined) => {
+export const getPeriodById = async (user, periodId=undefined) => {
   try {
     const config = {
       headers: {
@@ -78,6 +74,6 @@ export const getCuatrimestre = async (user,periodId=undefined) => {
     );
     return response.data;
   } catch (error) {
-    throw new Error("Error fetching cuatrimestre: " + error.message);
+    throw new Error("Error fetching periods: " + error.message);
   }
 };
