@@ -19,6 +19,7 @@ const StudentHomeView = () => {
   const period = useSelector((state) => state.user.period_id);
 
   const [milestones, setMilestones] = useState([]);
+  const [group, setGroup] = useState({});
   const [loading, setLoading] = useState(true); // Estado para manejar la carga
   const [notification, setNotification] = useState({
     open: false,
@@ -55,6 +56,8 @@ const StudentHomeView = () => {
         if (userData.group_id !== 0) {
           group = await dispatch(getGroupById(user, userData.group_id));
         }
+
+        setGroup(group);
 
         setMilestones([
           {
@@ -132,7 +135,7 @@ const StudentHomeView = () => {
       <Box sx={{ flex: 1, mr: 8, mt: 8 }}>
         <StudentInfo />
         <Box sx={{ mb: 1 }} />
-        <PresentationDateCard />
+        <PresentationDateCard presentationDate={group.exhibition_date}/>
         {!loading && (
           <>
             <SubmitButton

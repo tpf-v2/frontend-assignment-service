@@ -10,7 +10,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
   backgroundColor: purple[100],
   border: `2px solid ${purple[600]}`,
   textAlign: "center",
-  padding: '10px', // Aumentar padding
+  padding: "10px", // Aumentar padding
 }));
 
 const calculateTimeLeft = (presentationDate) => {
@@ -27,17 +27,20 @@ const calculateTimeLeft = (presentationDate) => {
   return { days, hours, minutes, seconds };
 };
 
-const PresentationDateCard = () => {
+const PresentationDateCard = (date) => {
   const user = useSelector((state) => state.user);
   const [timeLeft, setTimeLeft] = useState({});
-
-  const presentationDate = "2024-12-13T19:00:00";
+  const presentationDate = date.presentationDate;
   const dateObject = new Date(presentationDate);
   const formattedDate = dateObject.toLocaleDateString(); // Formato de fecha
-  const formattedTime = dateObject.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const formattedTime = dateObject.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const now = new Date();
 
   useEffect(() => {
-    if (presentationDate !== "Sin fecha asignada") {
+    if (presentationDate !== "Sin fecha asignada" && now < dateObject) {
       const interval = setInterval(() => {
         setTimeLeft(calculateTimeLeft(presentationDate));
       }, 1000);
@@ -49,24 +52,46 @@ const PresentationDateCard = () => {
   return (
     <StyledCard>
       <CardContent>
-        <Typography color="text.primary">
-          Tu grupo expondrá el:
-        </Typography>
         {presentationDate !== "Sin fecha asignada" ? (
-          <Typography fontSize={18} fontWeight="bold" color="text.primary">
-            {formattedDate} <span style={{ fontWeight: 'normal', fontSize: "18px"}}>a las</span> {formattedTime}
-          </Typography>
+          now < dateObject ? (
+            <>
+              <Typography fontSize={18} fontWeight="bold" color="text.primary">
+                Tu grupo expondrá a las:
+              </Typography>
+              <Typography fontSize={18} fontWeight="bold" color="text.primary">
+                {formattedDate}{" "}
+                <span style={{ fontWeight: "normal", fontSize: "18px" }}>
+                  a las
+                </span>{" "}
+                {formattedTime}
+              </Typography>
+              <Typography
+                fontWeight="bold"
+                fontSize={18}
+                sx={{ letterSpacing: 0.5 }}
+              >
+                <span style={{ fontWeight: "normal", fontSize: "18px" }}>
+                  Te quedan
+                </span>{" "}
+                {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m{" "}
+                {timeLeft.seconds}s
+              </Typography>
+            </>
+          ) : (
+            <>
+              <Typography color="text.secondary">Tu grupo expuso el</Typography>
+              <Typography fontSize={18} fontWeight="bold" color="text.primary">
+                {formattedDate}{" "}
+                <span style={{ fontWeight: "normal", fontSize: "18px" }}>
+                  a las
+                </span>{" "}
+                {formattedTime}
+              </Typography>
+            </>
+          )
         ) : (
           <Typography color="text.secondary">Sin fecha asignada</Typography>
         )}
-        <Typography 
-          fontWeight="bold"
-          fontSize={18} 
-          sx={{ letterSpacing: 0.5 }} 
-        >
-            <span style={{ fontWeight: 'normal', fontSize: "18px"}}>Te quedan</span> {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m{" "}
-            {timeLeft.seconds}s
-        </Typography>
       </CardContent>
     </StyledCard>
   );
