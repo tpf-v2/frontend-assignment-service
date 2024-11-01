@@ -291,8 +291,27 @@ const Dates = () => {
   };
 
   const handleSaveChanges = () => {
-    setIsEditing(false)
+    // Crear un mapa para contar las fechas asignadas a cada grupo
+    const groupDateCount = {};
+  
+    events.forEach((event) => {
+      const groupId = event.result.group_id;
+      groupDateCount[groupId] = (groupDateCount[groupId] || 0) + 1;
+    });
+  
+    // Verificar si algún grupo tiene más de una fecha asignada
+    const hasMultipleDates = Object.values(groupDateCount).some(count => count > 1);
+  
+    if (hasMultipleDates) {
+      handleSnackbarOpen("No se pueden guardar los cambios. Hay grupos con más de una fecha asignada.", "error");
+      return; // Detener la función si se encuentra más de una fecha para un grupo
+    }
+  
+    // Si la validación pasa, desactivar el modo de edición
+    setIsEditing(false);
+    handleSnackbarOpen("Cambios guardados exitosamente", "success");
   };
+  
 
   const handleRerunAlgorithm = () => {
     setShowResults(false); // Cierra el diálogo de resultados
@@ -696,10 +715,9 @@ const Dates = () => {
       </Dialog>
 
       <Dialog open={openRunDialog} onClose={handleCloseRunDialog}>
-        <DialogTitle>Seleccione el límite máximo</DialogTitle>
+        <DialogTitle>Seleccione la diferencia de grupos entre evaluadores y el límite máximo de grupos por semana</DialogTitle>
         <DialogContent>
           <TextField
-            autoFocus
             margin="dense"
             label="Límite máximo en la diferencia"
             type="number"
@@ -733,7 +751,7 @@ const Dates = () => {
         <DialogContent>
           <Typography variant="body1">
             Importante: Al confirmar los resultados no podrá volver a correr el
-            algoritmo.
+            algoritmo ni editar las fechas de presentación.
           </Typography>
         </DialogContent>
         <DialogActions>
