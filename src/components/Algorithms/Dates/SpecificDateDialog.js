@@ -179,7 +179,7 @@ const SpecificDateDialog = ({
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCancel} color="secondary" variant="outlined">
+        <Button onClick={handleCancel} color="error" variant="outlined">
           Cancelar
         </Button>
         <Button

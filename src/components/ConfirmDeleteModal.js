@@ -14,10 +14,10 @@ const ConfirmDeleteModal = ({ open, onClose, onConfirm }) => {
         <p>¿Estás seguro de que deseas eliminar este bloque de disponibilidad?</p>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="secondary">
+        <Button onClick={onClose} color="secondary" variant="outlined">
           Cancelar
         </Button>
-        <Button onClick={handleConfirm} style={{color: 'red' }}>
+        <Button onClick={handleConfirm}  color="error" variant="contained">
           Eliminar
         </Button>
       </DialogActions>

@@ -121,14 +121,26 @@ const groups = Object.values(useSelector((state) => state.groups))
                     {index === 0 && (
                       <>
                         {group.preferred_topics.length === 0 ? (
+                          <>
                           <TableCell
                             rowSpan={group.students.length}
-                            colSpan={3}
                             align="center"
                           >
-                            {getTopicNameById(group.topic_id)}{" "}
-                            {/* Mostrar nombre del topic */}
+                            {"N/A"}{" "}
                           </TableCell>
+                          <TableCell
+                            rowSpan={group.students.length}
+                            align="center"
+                          >
+                            {"N/A"}{" "}
+                          </TableCell>
+                          <TableCell
+                            rowSpan={group.students.length}
+                            align="center"
+                          >
+                            {"N/A"}{" "}
+                          </TableCell>
+                          </>
                         ) : (
                           <>
                             <TableCell rowSpan={group.students.length}>

@@ -13,6 +13,7 @@ import {
   IconButton,
   MenuItem,
   Select,
+  DialogContentText,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
@@ -46,8 +47,8 @@ const getEvaluatorColor = (evaluatorId, evaluatorColorMap) => {
   if (!evaluatorColorMap[evaluatorId]) {
     const colorIndex =
       Object.keys(evaluatorColorMap).length % evaluatorColors.length;
-      console.log(Object.keys(evaluatorColorMap).length)
-      console.log("Color index", evaluatorId, colorIndex)
+    console.log(Object.keys(evaluatorColorMap).length);
+    console.log("Color index", evaluatorId, colorIndex);
     evaluatorColorMap[evaluatorId] = evaluatorColors[colorIndex];
   }
   return evaluatorColorMap[evaluatorId];
@@ -98,7 +99,7 @@ const Dates = () => {
 
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
-
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
   // Transforma datesResult en eventos para el calendario
   useEffect(() => {
     if (datesResult.length > 0) {
@@ -112,7 +113,7 @@ const Dates = () => {
           start: new Date(result.date),
           end: new Date(new Date(result.date).getTime() + 60 * 60 * 1000), // Dura 1 hora
           color: color,
-          result: result
+          result: result,
         };
       });
       setEvents(formattedEvents);
@@ -120,7 +121,7 @@ const Dates = () => {
   }, [datesResult]);
 
   useEffect(() => {
-    setEvaluatorColorMap(prevMap => ({ ...prevMap }));
+    setEvaluatorColorMap((prevMap) => ({ ...prevMap }));
   }, [events]);
 
   const localizer = momentLocalizer(moment);
@@ -142,25 +143,12 @@ const Dates = () => {
     setOpenRunDialog(false);
   };
 
-  const handleHourChange = (event) => {
-    setSelectedHour(event.target.value);
+  const handleRun = async () => {
+    setOpenRunDialog(true);
   };
 
-  const handleRun = async () => {
-    // try {
-    //   // Inicia la carga y abre el diálogo
-    //   setLoading(true);
-    //   setOpenDialog(true);
-    //   console.log("Running the algorithm!");
-    // } catch (error) {
-    //   // Manejo de errores global
-    //   console.error("Error when running availability algorithm:", error);
-    // } finally {
-    //   // Finaliza la carga independientemente de si hubo un error o no
-    //   setLoading(false);
-    //   setOpenDialog(false);
-    // }
-    setOpenRunDialog(true);
+  const handleCloseErrorDialog = () => {
+    setErrorDialogOpen(false);
   };
 
   const handleRunAlgorithm = async () => {
@@ -178,6 +166,7 @@ const Dates = () => {
       setDatesResult(response.assigments);
     } catch (error) {
       console.error("Error running algorithm:", error);
+      setErrorDialogOpen(true);
     } finally {
       setRunning(false);
       setOpenDialog(false);
@@ -284,36 +273,38 @@ const Dates = () => {
     setIsEditing(true);
   };
 
-  // Función para cancelar la edición y restaurar la copia original
   const handleCancelEditing = () => {
     setEvents(originalEvents); // Restaura la copia original
     setIsEditing(false); // Sale del modo de edición
   };
 
   const handleSaveChanges = () => {
-    // Crear un mapa para contar las fechas asignadas a cada grupo
     const groupDateCount = {};
-  
+
     events.forEach((event) => {
       const groupId = event.result.group_id;
       groupDateCount[groupId] = (groupDateCount[groupId] || 0) + 1;
     });
-  
+
     // Verificar si algún grupo tiene más de una fecha asignada
-    const hasMultipleDates = Object.values(groupDateCount).some(count => count > 1);
-  
+    const hasMultipleDates = Object.values(groupDateCount).some(
+      (count) => count > 1
+    );
+
     if (hasMultipleDates) {
-      handleSnackbarOpen("No se pueden guardar los cambios. Hay grupos con más de una fecha asignada.", "error");
-      return; // Detener la función si se encuentra más de una fecha para un grupo
+      handleSnackbarOpen(
+        "No se pueden guardar los cambios. Hay grupos con más de una fecha asignada.",
+        "error"
+      );
+      return; 
     }
-  
-    // Si la validación pasa, desactivar el modo de edición
+
     setIsEditing(false);
     handleSnackbarOpen("Cambios guardados exitosamente", "success");
   };
-  
 
   const handleRerunAlgorithm = () => {
+    setErrorDialogOpen(false);
     setShowResults(false); // Cierra el diálogo de resultados
     setMaxDifference(""); // Reinicia el valor del límite máximo
     setMaxGroups("");
@@ -370,7 +361,6 @@ const Dates = () => {
       setEventToDelete(event);
       setConfirmDeleteOpen(true);
     }
-    
   };
 
   const handleDeleteEvent = async () => {
@@ -380,53 +370,42 @@ const Dates = () => {
           event.start !== eventToDelete.start || event.end !== eventToDelete.end
       );
       setConfirmDeleteOpen(false);
-      setEvents(updatedEvents); 
+      setEvents(updatedEvents);
     }
   };
 
   const handleConfirmEvent = async () => {
     if (selectedSlot && group) {
-      // const newEvent = { start: selectedSlot.start, end: selectedSlot.end };
-      // setEvents((prevEvents) => [...prevEvents, newEvent]);
-      // setModalOpen(false); // Cerrar el modal después de confirmar
-
-      // try {
-      //   const formattedEvents = [
-      //     {
-      //       start: moment(newEvent.start).subtract(3, "hours").utc().format(),
-      //       end: moment(newEvent.end).subtract(3, "hours").utc().format(),
-      //     },
-      //   ];
-
-      //   await sendAvailability(user, formattedEvents, period.id);
-      //   setAvailabilitySent(true);
-      //   handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
-      // } catch (error) {
-      //   handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
-      // }
       console.log(selectedSlot);
-      console.log(group)
-      console.log(evaluador)
+      console.log(group);
+      console.log(evaluador);
       const groupTutor = tutors.find(
         (t) =>
           t.tutor_periods &&
-          t.tutor_periods.some((tp) => tp.period_id === period.id && tp.id === group.tutor_period_id)
+          t.tutor_periods.some(
+            (tp) =>
+              tp.period_id === period.id && tp.id === group.tutor_period_id
+          )
       );
       const color = getEvaluatorColor(evaluador, evaluatorColorMap);
 
-      const newEvent = { title: `Grupo ${group.id} - Tutor ${getTutorNameByTutorId(
-            groupTutor.id
-          )} - Evaluador ${getTutorNameByTutorId(evaluador)}`,
-           start: selectedSlot.start, end: selectedSlot.end, color: color,
-          result: {
-            date: selectedSlot.start,
-            evaluator_id: evaluador,
-            group_id: group.id,
-            tutor_id: groupTutor.id
-          }  };
-           console.log(newEvent)
+      const newEvent = {
+        title: `Grupo ${group.id} - Tutor ${getTutorNameByTutorId(
+          groupTutor.id
+        )} - Evaluador ${getTutorNameByTutorId(evaluador)}`,
+        start: selectedSlot.start,
+        end: selectedSlot.end,
+        color: color,
+        result: {
+          date: selectedSlot.start,
+          evaluator_id: evaluador,
+          group_id: group.id,
+          tutor_id: groupTutor.id,
+        },
+      };
+      console.log(newEvent);
       setEvents((prevEvents) => [...prevEvents, newEvent]);
-      setModalOpen(false)
+      setModalOpen(false);
     }
   };
 
@@ -585,8 +564,8 @@ const Dates = () => {
           )}
           {isEditing && (
             <Button
+              color="error"
               variant="outlined"
-              color="primary"
               onClick={handleCancelEditing} // Cancela la edición y restaura la copia original
             >
               Cancelar
@@ -637,85 +616,106 @@ const Dates = () => {
         fullWidth
       >
         <DialogTitle>Asignar Fecha a Grupo</DialogTitle>
+
         <DialogContent>
-          <Grid container spacing={2}>
+          <Grid container spacing={3}>
+            {/* Selección de Grupo */}
             <Grid item xs={12}>
-            <Typography variant="subtitle1">Selecciona un Grupo:</Typography>
-            <Select
-              fullWidth
-              value={group.id}
-              onChange={(e) => {
-                const selectedGroup = groups.find(
-                  (g) => g.id === e.target.value
-                );
-                setGroup(selectedGroup);
+              <Typography variant="subtitle1">Grupo</Typography>
+              <Select
+                fullWidth
+                displayEmpty
+                value={group.id}
+                onChange={(e) => {
+                  const selectedGroup = groups.find(
+                    (g) => g.id === e.target.value
+                  );
+                  setGroup(selectedGroup);
 
-                const selectedTutor = getTutorNameById(
-                  selectedGroup.tutor_period_id,
-                  period.id
-                );
-                setTutor(selectedTutor ? selectedTutor : "");
-                setTopic(selectedGroup.topic.name);
-              }}
-              renderValue={(selected) => {
-                const selectedGroup = groups.find((g) => g.id === selected);
-                return selectedGroup ? `Grupo ${selectedGroup.id}` : "";
-              }}
-            >
-            {groups.map((group) => (
-                <MenuItem key={group.id} value={group.id}>
-                  {`Grupo ${group.id}`}
-                </MenuItem>
-              ))}
-            </Select>
+                  const selectedTutor = getTutorNameById(
+                    selectedGroup.tutor_period_id,
+                    period.id
+                  );
+                  setTutor(selectedTutor ? selectedTutor : "");
+                  setTopic(selectedGroup.topic.name);
+                }}
+                renderValue={(selected) => {
+                  const selectedGroup = groups.find((g) => g.id === selected);
+                  return selectedGroup
+                    ? `Grupo ${selectedGroup.id}`
+                    : "Selecciona un Grupo";
+                }}
+              >
+                {groups.map((group) => (
+                  <MenuItem key={group.id} value={group.id}>
+                    {`Grupo ${group.id}`}
+                  </MenuItem>
+                ))}
+              </Select>
             </Grid>
-            <Grid item xs={12}>
-            <TextField
-              label="Tutor"
-              value={tutor}
-              fullWidth
-              InputProps={{ readOnly: true }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Tema"
-              value={topic}
-              fullWidth
-              InputProps={{ readOnly: true }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="subtitle1">
-              Selecciona un Evaluador:
-            </Typography>
-            <Select
-              fullWidth
-              value={evaluador}
-              onChange={(e) => setEvaluador(e.target.value)}
-            >
-              {filteredTutors.map((tutor) => (
-                <MenuItem key={tutor.id} value={tutor.id}>
-                  {tutor.name + " " + tutor.last_name}
-                </MenuItem>
-              ))}
-            </Select>
-          </Grid>  
 
+            {/* Tutor y Tema */}
+            <Grid item xs={12} md={12}>
+              <TextField
+                label="Tutor"
+                value={tutor}
+                fullWidth
+                InputProps={{ readOnly: true }}
+                variant="filled"
+              />
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <TextField
+                label="Tema"
+                value={topic}
+                fullWidth
+                InputProps={{ readOnly: true }}
+                variant="filled"
+              />
+            </Grid>
+
+            {/* Selección de Evaluador */}
+            <Grid item xs={12}>
+              <Typography variant="subtitle1">Evaluador</Typography>
+              <Select
+                fullWidth
+                displayEmpty
+                value={evaluador}
+                onChange={(e) => setEvaluador(e.target.value)}
+              >
+                {filteredTutors.map((tutor) => (
+                  <MenuItem key={tutor.id} value={tutor.id}>
+                    {`${tutor.name} ${tutor.last_name}`}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions>
-        <Button onClick={() => setModalOpen(false)} color="primary">
-          Cancelar
-        </Button>
-        <Button onClick={handleConfirmEvent} color="primary">
-          Asignar
-        </Button>
-      </DialogActions>
+
+        <DialogActions sx={{ padding: "16px 24px" }}>
+          <Button
+            onClick={() => setModalOpen(false)}
+            color="error"
+            variant="outlined"
+          >
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleConfirmEvent}
+            color="primary"
+            variant="contained"
+          >
+            Asignar
+          </Button>
+        </DialogActions>
       </Dialog>
 
       <Dialog open={openRunDialog} onClose={handleCloseRunDialog}>
-        <DialogTitle>Seleccione la diferencia de grupos entre evaluadores y el límite máximo de grupos por semana</DialogTitle>
+        <DialogTitle>
+          Seleccione la diferencia de grupos entre evaluadores y el límite
+          máximo de grupos por semana
+        </DialogTitle>
         <DialogContent>
           <TextField
             margin="dense"
@@ -735,11 +735,19 @@ const Dates = () => {
             onChange={(e) => setMaxGroups(e.target.value)}
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseRunDialog} color="secondary">
+        <DialogActions sx={{ padding: "16px 24px" }}>
+          <Button
+            onClick={handleCloseRunDialog}
+            color="error"
+            variant="outlined"
+          >
             Cancelar
           </Button>
-          <Button onClick={handleRunAlgorithm} color="primary">
+          <Button
+            onClick={handleRunAlgorithm}
+            color="primary"
+            variant="contained"
+          >
             Correr
           </Button>
         </DialogActions>
@@ -754,12 +762,46 @@ const Dates = () => {
             algoritmo ni editar las fechas de presentación.
           </Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseConfirmDialog} color="secondary">
+        <DialogActions sx={{ padding: "16px 24px" }}>
+          <Button
+            onClick={handleCloseConfirmDialog}
+            color="error"
+            variant="outlined"
+          >
             Cancelar
           </Button>
-          <Button onClick={handleAcceptResults} color="primary">
+          <Button
+            onClick={handleAcceptResults}
+            color="primary"
+            variant="contained"
+          >
             Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={errorDialogOpen} onClose={handleCloseErrorDialog}>
+        <DialogTitle>{"Error al ejecutar el algoritmo"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Ocurrió un error al intentar correr el algoritmo. Por favor, ajusta
+            los parámetros e intenta nuevamente.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleCloseErrorDialog}
+            color="error"
+            variant="outlined"
+          >
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleRerunAlgorithm}
+            color="primary"
+            variant="contained"
+          >
+            Reintentar
           </Button>
         </DialogActions>
       </Dialog>

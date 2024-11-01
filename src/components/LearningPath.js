@@ -69,7 +69,7 @@ const LearningPath = ({ group_id, group }) => {
                 title: "Entregado",
                 completed: group.pre_report_date !== null ? true : false,
               },
-              { title: "Aprobado", completed: group.pre_report_approved },
+              { title: "Revisado", completed: group.pre_report_approved },
             ],
           },
           {
