@@ -331,7 +331,7 @@ const TopicTutor = () => {
                         )
                         .map((group) => (
                           <TableRow key={group.id}>
-                            <TableCell align="center">{group.id}</TableCell>
+                            <TableCell align="center">{group.group_number}</TableCell>
 
                             <TableCell>
                               {group.tutor_period_id

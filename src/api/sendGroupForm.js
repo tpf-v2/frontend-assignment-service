@@ -11,7 +11,7 @@ export const sendGroupForm = async (period, payload, existingGroup, user) => {
   try {
     var response;
     if(!existingGroup){
-      response = await axios.post(`${BASE_URL}/forms/answers/?period=${period}`, payload, config);
+      response = await axios.post(`${BASE_URL}/forms/answers?period=${period}`, payload, config);
     }
     else{
       //TO-DO dynamic period in QP

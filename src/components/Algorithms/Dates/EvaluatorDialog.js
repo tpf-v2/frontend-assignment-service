@@ -13,8 +13,9 @@ import {
   Button,
 } from "@mui/material";
 import { useSelector } from "react-redux";
+import { makeEvaluator } from "../../../api/makeEvaluator";
 
-const EvaluatorDialog = ({ open, handleClose, handleEvaluatorDialogClose }) => {
+const EvaluatorDialog = ({ user, open, handleClose, handleEvaluatorDialogClose }) => {
   const period = useSelector((state) => state.period);
   const tutors = Object.values(useSelector((state) => state.tutors))
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
@@ -47,6 +48,21 @@ const EvaluatorDialog = ({ open, handleClose, handleEvaluatorDialogClose }) => {
   const handleCancel = () => {
     setSelectedTutors(initialSelectedTutors); // Restauramos la selección inicial al cancelar
     handleEvaluatorDialogClose();
+  };
+
+  const confirmSelection = async () => {
+    try {
+    //   const response = await axios.post("/api/evaluators", {
+    //     periodId: period.id,
+    //     evaluators: selectedTutors,
+    //   })
+
+      for (const tutorId of selectedTutors) {
+      await makeEvaluator(period.id, tutorId, user);
+        }
+    } catch (error) {
+      console.error("Error al llamar al backend:", error);
+    }
   };
 
   return (
@@ -132,7 +148,7 @@ const EvaluatorDialog = ({ open, handleClose, handleEvaluatorDialogClose }) => {
         </Button>
         <Button
           onClick={() => {
-            //TODO: call backend
+            confirmSelection();
             handleEvaluatorDialogClose();
             console.log("Evaluadores seleccionados:", selectedTutors);
           }}

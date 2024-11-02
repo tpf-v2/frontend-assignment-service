@@ -111,7 +111,7 @@ const Dates = () => {
         const color = getEvaluatorColor(result.evaluator_id, evaluatorColorMap);
 
         return {
-          title: `Grupo ${result.group_id} - Tutor ${getTutorNameByTutorId(
+          title: `Grupo ${result.group_number} - Tutor ${getTutorNameByTutorId(
             result.tutor_id
           )} - Evaluador ${getTutorNameByTutorId(result.evaluator_id)}`,
           start: new Date(result.date),
@@ -410,7 +410,7 @@ const Dates = () => {
       const color = getEvaluatorColor(evaluador, evaluatorColorMap);
 
       const newEvent = {
-        title: `Grupo ${group.id} - Tutor ${getTutorNameByTutorId(
+        title: `Grupo ${group.group_number} - Tutor ${getTutorNameByTutorId(
           groupTutor.id
         )} - Evaluador ${getTutorNameByTutorId(evaluador)}`,
         start: selectedSlot.start,
@@ -475,6 +475,7 @@ const Dates = () => {
       />
 
       <EvaluatorDialog
+        user={user}
         open={openEvaluatorDialog}
         handleClose={handleEvaluatorDialogClose}
         handleEvaluatorDialogClose={handleEvaluatorDialogClose}
@@ -645,10 +646,10 @@ const Dates = () => {
               <Select
                 fullWidth
                 displayEmpty
-                value={group.id}
+                value={group.group_number}
                 onChange={(e) => {
                   const selectedGroup = groups.find(
-                    (g) => g.id === e.target.value
+                    (g) => g.group_number === e.target.value
                   );
                   setGroup(selectedGroup);
 
@@ -660,15 +661,15 @@ const Dates = () => {
                   setTopic(selectedGroup.topic.name);
                 }}
                 renderValue={(selected) => {
-                  const selectedGroup = groups.find((g) => g.id === selected);
+                  const selectedGroup = groups.find((g) => g.group_number === selected);
                   return selectedGroup
-                    ? `Grupo ${selectedGroup.id}`
+                    ? `Grupo ${selectedGroup.group_number}`
                     : "Selecciona un Grupo";
                 }}
               >
                 {groups.map((group) => (
-                  <MenuItem key={group.id} value={group.id}>
-                    {`Grupo ${group.id}`}
+                  <MenuItem key={group.id} value={group.group_number}>
+                    {`Grupo ${group.group_number}`}
                   </MenuItem>
                 ))}
               </Select>

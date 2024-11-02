@@ -16,7 +16,7 @@ export const getStudentInfo = (user) => async (dispatch) => {
   };
 
   // Realiza la solicitud GET con los parámetros de consulta dinámicos
-  const response = await axios.get(`${BASE_URL}/students/info/me/?period=2C2024`, config);
+  const response = await axios.get(`${BASE_URL}/students/info/me`, config);
   
   const userData = {
     form_answered: response.data.form_answered,
@@ -24,7 +24,8 @@ export const getStudentInfo = (user) => async (dispatch) => {
     tutor: response.data.tutor,
     topic: response.data.topic,
     teammates: response.data.teammates ? response.data.teammates.join(" , ") : "",
-    period_id: response.data.period_id
+    period_id: response.data.period_id,
+    group_number: response.data.group_number
   };
 
   // Guarda la informacion del usuario

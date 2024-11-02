@@ -77,10 +77,10 @@ const SpecificDateDialog = ({
             </Typography>
             <Select
               fullWidth
-              value={group?.id || ""}
+              value={group?.group_number || ""}
               onChange={(e) => {
                 const selectedGroup = groups.find(
-                  (g) => g.id === e.target.value
+                  (g) => g.group_number === e.target.value
                 );
                 setGroup(selectedGroup);
 
@@ -93,16 +93,16 @@ const SpecificDateDialog = ({
               }}
               displayEmpty
               renderValue={(selected) => {
-                const selectedGroup = groups.find((g) => g.id === selected);
-                return selectedGroup ? `Grupo ${selectedGroup.id}` : "Selecciona un grupo";
+                const selectedGroup = groups.find((g) => g.group_number === selected);
+                return selectedGroup ? `Grupo ${selectedGroup.group_number}` : "Selecciona un grupo";
               }}
             >
               <MenuItem value="" disabled>
                 Selecciona un grupo
               </MenuItem>
               {groups.map((group) => (
-                <MenuItem key={group.id} value={group.id}>
-                  {`Grupo ${group.id}`}
+                <MenuItem key={group.id} value={group.group_number}>
+                  {`Grupo ${group.group_number}`}
                 </MenuItem>
               ))}
             </Select>

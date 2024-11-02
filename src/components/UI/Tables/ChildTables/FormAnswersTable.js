@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 const FormAnswersTable = () => {
   const period = useSelector((state) => state.period);
 
-  const endpoint = `/forms/answers/?period=${period.id}`; // Replace with your endpoint
+  const endpoint = `/forms/answers?period=${period.id}`; // Replace with your endpoint
   const title = 'Respuestas';
   const columns = ['Fecha de envio', 'Alumnos', 'Temas']; // Specify your column names here
 

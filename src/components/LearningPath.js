@@ -140,7 +140,7 @@ const LearningPath = ({ group_id, group }) => {
                 gutterBottom
                 marginTop={1}
               >
-                Grupo {group_id}
+                Grupo {group.group_number}
               </Typography>
               <StyledCard>
                 <CardContent>

@@ -89,7 +89,7 @@ const ContentIntermediateProject = () => {
               <TableBody>
                 {deliveredGroups.map((group, index) => (
                   <TableRow key={index}>
-                    <TableCell>{group.id}</TableCell>
+                    <TableCell>{group.group_number}</TableCell>
                     <TableCell>
                       {getTutorNameById(group.tutor_period_id, period.id)}
                     </TableCell>
