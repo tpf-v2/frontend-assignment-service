@@ -17,7 +17,7 @@ const StudentHomeView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.user.period_id);
-
+ 
   const [milestones, setMilestones] = useState([]);
   const [loading, setLoading] = useState(true); // Estado para manejar la carga
   const [notification, setNotification] = useState({
@@ -151,6 +151,7 @@ const StudentHomeView = () => {
               url="/availability-view"
               title="Disponibilidades de Exposición"
               width="100%"
+              disabled={!period.presentation_dates_available}
               handleSubmit={() => handleNavigation("/availability-view")}
             />
             <SubmitButton

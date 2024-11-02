@@ -37,7 +37,7 @@ const CuatrimestreConfig = () => {
     dispatch(togglePeriodSetting({ field }));
     // Prepara el payload con el campo modificado
     const updatedSettings = {
-      id: "2C2024",
+      id: settings.id,
       ...settings,
       [field]: !settings[field],
     };
@@ -99,7 +99,17 @@ const CuatrimestreConfig = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Entrega Final y disponibilidades de presentación</TableCell> 
+              <TableCell>Disponibilidades de presentación</TableCell> 
+              <TableCell align="right">
+                <Switch
+                  checked={settings.presentation_dates_available}
+                  onChange={() => handleToggle("presentation_dates_available")}
+                  color="primary"
+                />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Entrega Final</TableCell> 
               <TableCell align="right">
                 <Switch
                   checked={settings.final_project_active}

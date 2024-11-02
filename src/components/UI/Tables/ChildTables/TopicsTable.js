@@ -9,7 +9,9 @@ import { addTopic } from '../../../../api/handleTopics';
 import AddItemDialog from '../../../AddItemDialog'
 
 const TopicsTable = () => {
-  const endpoint = '/topics/'; 
+  const period = useSelector((state) => state.period);
+
+  const endpoint = `/topics/?period=${period.id}`; 
   const title = 'Temas';
   const columns = ['ID', 'Tema', 'Categoría'];
   

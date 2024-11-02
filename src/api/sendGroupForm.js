@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
-export const sendGroupForm = async (payload, existingGroup, user) => {
+export const sendGroupForm = async (period, payload, existingGroup, user) => {
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -11,7 +11,7 @@ export const sendGroupForm = async (payload, existingGroup, user) => {
   try {
     var response;
     if(!existingGroup){
-      response = await axios.post(`${BASE_URL}/forms/answers`, payload, config);
+      response = await axios.post(`${BASE_URL}/forms/answers/?period=${period}`, payload, config);
     }
     else{
       //TO-DO dynamic period in QP
@@ -27,7 +27,7 @@ export const sendGroupForm = async (payload, existingGroup, user) => {
       }
 
       groupPayload.students_ids = groupPayload.students_ids.filter(uid => uid);
-      response = await axios.post(`${BASE_URL}/groups/?period=2C2024`, groupPayload, config); //TODO: Esta hardcodeado el 2024
+      response = await axios.post(`${BASE_URL}/groups/?period=${period}`, groupPayload, config);
     }
     return response;
   } catch (error) {

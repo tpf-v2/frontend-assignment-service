@@ -38,7 +38,7 @@ const ContentPdfProjects = ({
   const [selectedReviewers, setSelectedReviewers] = useState({});
   const dispatch = useDispatch();
 
-  if (loadingProjects || groupsData.length === 0) {
+  if (loadingProjects) {
     return (
       <Box
         display="flex"

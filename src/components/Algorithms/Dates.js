@@ -15,7 +15,7 @@ import {
   Select,
   DialogContentText,
 } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import dayjs from "dayjs";
 import Description from "./Dates/Description";
@@ -29,8 +29,9 @@ import CloseIcon from "@mui/icons-material/Close"; // Importa el ícono Close
 import { CalendarStyled } from "../../styles/AvailabilityCalendarStyle";
 import { momentLocalizer } from "react-big-calendar";
 import moment from "moment";
-import EventModal from "../EventModal";
 import ConfirmDeleteModal from "../ConfirmDeleteModal";
+import { togglePeriodSetting } from "../../redux/slices/periodSlice";
+import updatePeriod from "../../api/updatePeriod";
 
 const evaluatorColors = [
   "#87CEFA", // Light Blue
@@ -100,6 +101,9 @@ const Dates = () => {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
   const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+
+  const dispatch = useDispatch();
+
   // Transforma datesResult en eventos para el calendario
   useEffect(() => {
     if (datesResult.length > 0) {
@@ -162,6 +166,22 @@ const Dates = () => {
 
       const response = await dates(user, period, maxDifference, maxGroups);
       console.log("Dates response:", response);
+
+      dispatch(
+        togglePeriodSetting({ field: "presentation_dates_assignment_completed" })
+      );
+  
+      // Crea el objeto de configuración actualizado
+      const updatedSettings = {
+        id: period.id,
+        ...period,
+        presentation_dates_assignment_completed: true, // Actualización directa
+      };
+  
+      // Llama a la función de actualización del período
+      const result = await updatePeriod(updatedSettings, user);
+      console.log("Updated successfully:", result);
+  
       setShowResults(true);
       setDatesResult(response.assigments);
     } catch (error) {

@@ -237,7 +237,7 @@ const AvailabilityCalendar = () => {
   return (
     <>
       {!loading ? (
-        period.final_project_active ? (
+        period.presentation_dates_available ? (
           <AvailabilityContainer>
             <Typography variant="h4" align="center" gutterBottom>
               Selecciona tu disponibilidad

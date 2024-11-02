@@ -2,14 +2,14 @@ import axios from 'axios';
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
-export const getTopics = async (user) => {
+export const getTopics = async (period, user) => {
     const config = {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       };
 
-    const response = await axios.get(`${BASE_URL}/topics/`, config);
+    const response = await axios.get(`${BASE_URL}/topics/?period=${period}`, config);
     return response;
 };
 

@@ -16,7 +16,7 @@ export const getStudentInfo = (user) => async (dispatch) => {
   };
 
   // Realiza la solicitud GET con los parámetros de consulta dinámicos
-  const response = await axios.get(`${BASE_URL}/students/info/me`, config);
+  const response = await axios.get(`${BASE_URL}/students/info/me/?period=2C2024`, config);
   
   const userData = {
     form_answered: response.data.form_answered,

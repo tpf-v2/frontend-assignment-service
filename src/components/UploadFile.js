@@ -86,6 +86,13 @@ const UploadFile = ({ projectType }) => {
     }
     setTitleError("");
 
+    console.log(selectedFile)
+    if (!selectedFile && projectType !== "intermediate-project") {
+      setFileError("Por favor cargue un archivo PDF.");
+      return;
+    } 
+    setFileError("");
+    
     const youtubeOrDrivePattern =
       /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be|drive\.google\.com)\/.+$/;
 
@@ -145,8 +152,8 @@ const UploadFile = ({ projectType }) => {
                 style={{ marginBottom: "8px" }}
                 align="center"
               >
-                El link de la entrega intermedia debe ser un enlace a 
-                YouTube o Google Drive
+                El link de la entrega intermedia debe ser un enlace a YouTube o
+                Google Drive
               </Typography>
 
               <TextField
@@ -208,61 +215,68 @@ const UploadFile = ({ projectType }) => {
             {loading ? "Cargando..." : "Aceptar"}
           </ButtonStyled>
         </form>
-        <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="xs" fullWidth>
-      {/* Icono centrado y mensaje */}
-      <DialogContent
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          padding: "24px 16px",
-        }}
-      >
-        {isSuccess ? (
-          <CheckCircleIcon sx={{ fontSize: 60, color: "#4CAF50" }} />
-        ) : (
-          <ErrorIcon sx={{ fontSize: 60, color: "#F44336" }} />
-        )}
-        <Typography
-          variant="h6"
-          sx={{
-            color: isSuccess ? "#4CAF50" : "#F44336",
-            fontWeight: "600",
-            marginTop: "16px",
-          }}
+        <Dialog
+          open={openDialog}
+          onClose={handleCloseDialog}
+          maxWidth="xs"
+          fullWidth
         >
-          {isSuccess ? "¡Operación Exitosa!" : "Ha Ocurrido un Error"}
-        </Typography>
-        <Typography
-          variant="body2"
-          color="textSecondary"
-          align="center"
-          sx={{ marginTop: "8px", padding: "0 12px" }}
-        >
-          {responseMessage}
-        </Typography>
-      </DialogContent>
+          {/* Icono centrado y mensaje */}
+          <DialogContent
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              padding: "24px 16px",
+            }}
+          >
+            {isSuccess ? (
+              <CheckCircleIcon sx={{ fontSize: 60, color: "#4CAF50" }} />
+            ) : (
+              <ErrorIcon sx={{ fontSize: 60, color: "#F44336" }} />
+            )}
+            <Typography
+              variant="h6"
+              sx={{
+                color: isSuccess ? "#4CAF50" : "#F44336",
+                fontWeight: "600",
+                marginTop: "16px",
+              }}
+            >
+              {isSuccess ? "¡Operación Exitosa!" : "Ha Ocurrido un Error"}
+            </Typography>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              align="center"
+              sx={{ marginTop: "8px", padding: "0 12px" }}
+            >
+              {responseMessage}
+            </Typography>
+          </DialogContent>
 
-      {/* Botón de acción centrado */}
-      <DialogActions sx={{ justifyContent: "center", paddingBottom: "16px" }}>
-        <Button
-          onClick={handleCloseDialog}
-          variant="contained"
-          sx={{
-            backgroundColor: isSuccess ? "#4CAF50" : "#F44336",
-            color: "white",
-            padding: "8px 24px",
-            fontWeight: "bold",
-            borderRadius: "24px",
-            "&:hover": {
-              backgroundColor: isSuccess ? "#388E3C" : "#D32F2F",
-            },
-          }}
-        >
-          Aceptar
-        </Button>
-      </DialogActions>
-    </Dialog>
+          {/* Botón de acción centrado */}
+          <DialogActions
+            sx={{ justifyContent: "center", paddingBottom: "16px" }}
+          >
+            <Button
+              onClick={handleCloseDialog}
+              variant="contained"
+              sx={{
+                backgroundColor: isSuccess ? "#4CAF50" : "#F44336",
+                color: "white",
+                padding: "8px 24px",
+                fontWeight: "bold",
+                borderRadius: "24px",
+                "&:hover": {
+                  backgroundColor: isSuccess ? "#388E3C" : "#D32F2F",
+                },
+              }}
+            >
+              Aceptar
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Root>
     </Container>
   );

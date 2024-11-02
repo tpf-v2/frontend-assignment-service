@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
-export const getStudents = async (uids, user) => {
+export const getStudents = async (period, uids, user) => {
   // Crea una instancia de URLSearchParams
   const params = new URLSearchParams();
 
@@ -19,7 +19,7 @@ export const getStudents = async (uids, user) => {
   };
 
   // Realiza la solicitud GET con los parámetros de consulta dinámicos
-  const response = await axios.get(`${BASE_URL}/students/`, config);
+  const response = await axios.get(`${BASE_URL}/students/?period=${period.id}`, config);
 
   return response;
 };

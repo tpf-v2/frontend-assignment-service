@@ -50,7 +50,7 @@ const Title = styled(Typography)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-const years = ['2024', '2025', '2026', '2027'];
+const years = [new Date().getFullYear()-1, new Date().getFullYear(), new Date().getFullYear()+1, new Date().getFullYear()+2];
 const terms = ['1', '2'];
 
 const AdminHomeView = () => {
@@ -76,7 +76,15 @@ const AdminHomeView = () => {
       try {
         const data = await fetchCuatrimestres(user);
         // Ordenar los datos por 'id' antes de guardar en el estado
-      const sortedData = data.sort((a, b) => a.id - b.id);
+        const sortedData = data.sort((a, b) => {
+          const [termA, yearA] = [parseInt(a.id[0]), parseInt(a.id.slice(2))];
+          const [termB, yearB] = [parseInt(b.id[0]), parseInt(b.id.slice(2))];
+          
+          if (yearA === yearB) {
+            return termA - termB; // Si el año es igual, compara por cuatrimestre
+          }
+          return yearA - yearB; // Si el año es diferente, ordena por año
+        });
       
       // Guardar solo los periods ordenados en el estado
       setCuatrimestres(sortedData);
@@ -95,6 +103,11 @@ const AdminHomeView = () => {
         const newPeriod = await addCuatrimestre(newEntry, user); // Call the add function
         setCuatrimestres([...periods, newPeriod]);
         handleClose();
+        setNotification({
+          open: true,
+          message: "Cuatrimestre creado exitosamente!",
+          status: "success",
+        });
       } catch (error) {
         setNotification({
           open: true,

@@ -69,7 +69,15 @@ const TutorHomeView = () => {
       try {
         const data = await getTutorCuatrimestre(user);
         
-        const sortedData = data.sort((a, b) => b.id - a.id);
+        const sortedData = data.sort((a, b) => {
+          const [termA, yearA] = [parseInt(a.id[0]), parseInt(a.id.slice(2))];
+          const [termB, yearB] = [parseInt(b.id[0]), parseInt(b.id.slice(2))];
+          
+          if (yearA === yearB) {
+            return termA - termB; // Si el año es igual, compara por cuatrimestre
+          }
+          return yearA - yearB; // Si el año es diferente, ordena por año
+        });
       
         setCuatrimestres(sortedData);
       } catch (error) {

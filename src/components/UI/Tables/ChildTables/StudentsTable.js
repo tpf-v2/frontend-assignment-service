@@ -1,9 +1,11 @@
 import React from 'react';
 import { TableCell } from '@mui/material';
 import ParentTable from '../ParentTable';
+import { useSelector } from 'react-redux';
 
 const StudentsTable = () => {
-  const endpoint = '/students/'; // Replace with your endpoint
+  const period = useSelector((state) => state.period);
+  const endpoint = `/students/?period=${period.id}`; // Replace with your endpoint
   const title = 'Alumnos';
   const columns = ['Padron', 'Nombre', 'Apellido', 'Email']; // Specify your column names here
 

@@ -20,9 +20,9 @@ const countResponsesByStudentLength = (responses) => {
 };
 
 export const getDashboardData = async (period, user) => {
-  const studentEndpoint = "/students/";
-  const answersEndpoint = "/forms/answers";
-  const topicsEndpoint = "/topics/";
+  const studentEndpoint = `/students/?period=${period}`;
+  const answersEndpoint = `/forms/answers/?period=${period}`;
+  const topicsEndpoint = `/topics/?period=${period}`;
   const tutorsEndpoint = `/tutors/periods/${period}`;
 
   const config = {
