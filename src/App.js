@@ -28,6 +28,9 @@ import DashboardView from './views/Admin/DashboardView'
 import ChangePasswordView from './views/ChangePasswordView';
 import StudentForm from './components/Forms/StudentForm';
 import StudentAvailabilityView from './views/Student/StudentAvailabilityView';
+import { setStudents } from './redux/slices/studentsSlice';
+import { setTutors } from './redux/slices/tutorsSlice';
+import { setTopics } from './redux/slices/topicsSlice';
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -94,9 +97,9 @@ const App = () => {
             <Route path="/tutor-cuatrimestre/:period" element={<ProtectedRoute><TutorDashboardView /></ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />
             <Route path="/admin-add-corrector" element={<ProtectedRoute><AddTutorForm /></ProtectedRoute>} />
-            <Route path="/upload-students/:period" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="students" /> : <Navigate to="/" />}</ProtectedRoute>} />
-            <Route path="/upload-topics/:period" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />}</ProtectedRoute>} />
-            <Route path="/upload-tutors/:period" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/upload-students/:period" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="students" setItems={setStudents} /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/upload-topics/:period" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="topics" setItems={setTopics}/> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/upload-tutors/:period" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="tutors" setItems={setTutors}/> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile user={user} /></ProtectedRoute>} />
             <Route path="/change-password" element={<ProtectedRoute><ChangePasswordView /></ProtectedRoute>} />
             <Route path="/availability-view" element={<ProtectedRoute><StudentAvailabilityView /></ProtectedRoute>} />

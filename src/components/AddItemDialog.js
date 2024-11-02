@@ -15,25 +15,31 @@ const AddItemDialog = ({ open, handleClose, itemFields, addItemAction, title, it
     });
 
     const user = useSelector((state) => state.user);
-    
+    const period = useSelector((state) => state.period);
     const handleAddItem = async () => {
         try {
-        const item = await addItemAction(newItem, user);
-        setNewItem(itemFields.reduce((acc, field) => ({ ...acc, [field.name]: '' }), {}));
-        setNotification({
-            open: true,
-            message: `${title} agregado éxitosamente`,
-            status: "success",
-        });
-        dispatch(setItems([...items, item]));
-        handleClose(true);
+            const item = await addItemAction(newItem, user, period.id);
+            console.log("item: ", item)
+            setNewItem(itemFields.reduce((acc, field) => ({ ...acc, [field.name]: '' }), {}));
+            console.log("clean item")
+            setNotification({
+                open: true,
+                message: `${title} agregado éxitosamente`,
+                status: "success",
+            });
+            console.log("notify")
+            console.log("items: ", items)
+            dispatch(setItems([...items, item]));
+            console.log("dispatch")
+            handleClose(true);
+            console.log("close")
         } catch (err) {
-        console.error(`Error when adding new ${title}:`, err);
-        setNotification({
-            open: true,
-            message: `Error al agregar ${title.toLowerCase()}. Por favor, vuelva a intentar más tarde.`,
-            status: "error",
-        });
+            console.error(`Error when adding new ${title}:`, err);
+            setNotification({
+                open: true,
+                message: `Error al agregar ${title.toLowerCase()}. Por favor, vuelva a intentar más tarde.`,
+                status: "error",
+            });
         }
     };
 
@@ -41,7 +47,7 @@ const AddItemDialog = ({ open, handleClose, itemFields, addItemAction, title, it
         setNotification({ ...notification, open: false });
     };
 
-    const categories = title === "Tema" ? getCategories(items) : items
+    const subItems = title === "Tema" ? getCategories(items) : [];
     const renderField = (field) => {
         if (field.type === 'select') {
         return (
@@ -52,7 +58,7 @@ const AddItemDialog = ({ open, handleClose, itemFields, addItemAction, title, it
                 onChange={(e) => setNewItem({ ...newItem, [field.name]: e.target.value })}
                 label={field.label}
             >
-                {categories.map((item) => (
+                {subItems.map((item) => (
                 <MenuItem key={item} value={item}>
                     {item}
                 </MenuItem>
@@ -60,18 +66,31 @@ const AddItemDialog = ({ open, handleClose, itemFields, addItemAction, title, it
             </Select>
             </FormControl>
         );
+        } if (field.type === 'number') {
+            return (
+                <FormControl fullWidth margin="normal" key={field.name}>
+                <TextField
+                    variant="outlined"
+                    fullWidth
+                    placeholder={field.label}
+                    value={newItem[field.name] || ''}
+                    onChange={(e) => setNewItem({ ...newItem, [field.name]: e.target.value })}
+                    type="number"
+                />
+                </FormControl>
+            );
         } else {
-        return (
-            <FormControl fullWidth margin="normal" key={field.name}>
-            <TextField
-                variant="outlined"
-                fullWidth
-                placeholder={field.label}
-                value={newItem[field.name] || ''}
-                onChange={(e) => setNewItem({ ...newItem, [field.name]: e.target.value })}
-            />
-            </FormControl>
-        );
+            return (
+                <FormControl fullWidth margin="normal" key={field.name}>
+                <TextField
+                    variant="outlined"
+                    fullWidth
+                    placeholder={field.label}
+                    value={newItem[field.name] || ''}
+                    onChange={(e) => setNewItem({ ...newItem, [field.name]: e.target.value })}
+                />
+                </FormControl>
+            );
         }
     };
 

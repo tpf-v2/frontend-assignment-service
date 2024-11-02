@@ -35,7 +35,7 @@ export const getDashboardData = async (period, user) => {
   };
 
   try {
-    const responseStudent = await axios.get(`${BASE_URL}${studentEndpoint}`, config);
+    const responseStudents = await axios.get(`${BASE_URL}${studentEndpoint}`, config);
     const responseTopics = await axios.get(`${BASE_URL}${topicsEndpoint}`, config);
     const responseTutors = await axios.get(`${BASE_URL}${tutorsEndpoint}`, config);
     const responseAnswers = await axios.get(`${BASE_URL}${answersEndpoint}`, config);
@@ -51,15 +51,17 @@ export const getDashboardData = async (period, user) => {
         { name: "4 Integrantes", cantidad: null },
       ],
       topics: null,
-      tutors: null
+      tutors: null,
+      students: null
     };
 
-    data.studentCard = responseStudent.data.length;
+    data.studentCard = responseStudents.data.length;
     data.topicsCard = responseTopics.data.length;
     data.tutorsCard = responseTutors.data.length;
 
     data.topics = responseTopics.data;
     data.tutors = responseTutors.data;
+    data.students = responseStudents.data;
 
     var clusteredGroups = countResponsesByStudentLength(responseAnswers.data);
     data.answersChart[0].cantidad = clusteredGroups[1] || 0;

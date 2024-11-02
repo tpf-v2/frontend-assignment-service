@@ -7,10 +7,10 @@ import MySnackbar from "../../components/UI/MySnackBar";
 import SubmitButton from "../../components/Buttons/SubmitButton";
 import StudentInfo from "../../components/UI/Dashboards/Student/StudentInfo";
 import Phase from "../../components/UI/Dashboards/Student/Phase";
-import { getStudentInfo } from "../../api/getStudentInfo";
+import { getStudentInfo } from "../../api/handleStudents";
 import { getGroupById } from "../../api/getGroupById";
 import { useNavigate } from "react-router-dom";
-import { getCuatrimestre } from "../../api/handlePeriods";
+import { getPeriodById } from "../../api/handlePeriods";
 import { setPeriod } from "../../redux/slices/periodSlice";
 
 const StudentHomeView = () => {
@@ -31,18 +31,18 @@ const StudentHomeView = () => {
   };
 
   useEffect(() => {
-    const fetchCuatrimestre = async () => {
+    const fetchPeriod = async () => {
       if (user && user.id) {
         try {
-          const period = await getCuatrimestre(user);
+          const period = await getPeriodById(user);
           dispatch(setPeriod(period));
         } catch (error) {
-          console.error("Error al obtener el cuatrimestre", error);
+          console.error("Error when getting period: ", error);
         }
       }
     };
 
-    fetchCuatrimestre();
+    fetchPeriod();
   }, [user, dispatch]);
 
   useEffect(() => {

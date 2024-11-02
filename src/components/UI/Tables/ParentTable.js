@@ -85,20 +85,14 @@ const ParentTable = ({
       </Box>
     );
 
+  const topicsCond = title === "Temas" ? items.length > 0 : true;
+  // if its topic table, the user can't add a new topic since there are not categories created yet
   return (
     <Container maxWidth="lg">
       <Root>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <Title variant="h4" sx={{ flexGrow: 1, textAlign: "center" }}>
-            {title}
-          </Title>
-          {AddButtonComponent && <AddButtonComponent />}
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+        <Title variant="h4" sx={{ flexGrow: 1, textAlign: 'center' }}>{title}</Title>
+          {(AddButtonComponent &&  topicsCond) && <AddButtonComponent />}
         </Box>
         <Box sx={{ overflow: "auto" }}>
           <TableContainer component={Paper}>

@@ -3,7 +3,7 @@ import { Container, Box, Card, CardContent, Typography} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
-import {getCuatrimestre, getTutorCuatrimestre } from '../../api/handlePeriods'
+import { getPeriodById, getTutorPeriods } from '../../api/handlePeriods'
 import MySnackbar from '../../components/UI/MySnackBar';
 import { setPeriod } from '../../redux/slices/periodSlice';
 
@@ -51,7 +51,7 @@ const Title = styled(Typography)(({ theme }) => ({
 
 const TutorHomeView = () => {
   const user = useSelector((state) => state.user);
-  const [cuatrimestres, setCuatrimestres] = useState([]);
+  const [periods, setPeriods] = useState([]);
   const navigate = useNavigate();
 
   const [notification, setNotification] = useState({
@@ -67,7 +67,7 @@ const TutorHomeView = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getTutorCuatrimestre(user);
+        const data = await getTutorPeriods(user);
         
         const sortedData = data.sort((a, b) => {
           const [termA, yearA] = [parseInt(a.id[0]), parseInt(a.id.slice(2))];
@@ -79,20 +79,20 @@ const TutorHomeView = () => {
           return yearA - yearB; // Si el año es diferente, ordena por año
         });
       
-        setCuatrimestres(sortedData);
+        setPeriods(sortedData);
       } catch (error) {
         console.error(error.message);
       }
     };
 
     fetchData();
-    console.log(cuatrimestres)
+    console.log(periods)
   }, []);
 
   const dispatch = useDispatch();
 
   const handleCardClick = async (cuatrimestre) => {
-    const period = await getCuatrimestre(user, cuatrimestre.period_id);
+    const period = await getPeriodById(user, cuatrimestre.period_id);
     dispatch(setPeriod(period))
     navigate(`/tutor-cuatrimestre/${cuatrimestre.period_id}`);
   };
@@ -102,7 +102,7 @@ const TutorHomeView = () => {
       <Title variant="h4">Bienvenido, {user.name}!</Title>
       <Typography variant="h5" style={{ color: '#555' }}>Cuatrimestres</Typography>
       <CardContainer>
-        {cuatrimestres.map((cuatrimestre, index) => (
+        {periods.map((cuatrimestre, index) => (
           <CardStyled key={index} onClick={() => handleCardClick(cuatrimestre)}>
             <CardContent>
               <Typography variant="h6" style={{ color: '#333' }}>{cuatrimestre.period_id}</Typography>
