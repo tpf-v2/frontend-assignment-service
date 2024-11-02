@@ -6,6 +6,12 @@ const StudentsTable = () => {
   const endpoint = '/students/'; // Replace with your endpoint
   const title = 'Alumnos';
   const columns = ['Padron', 'Nombre', 'Apellido', 'Email']; // Specify your column names here
+  const rowKeys = {
+    'Padron': 'id',
+    'Nombre': 'name',
+    'Apellido': 'last_name',
+    'Email': 'email',
+  };
 
   const renderRow = (item) => (
     <>
@@ -17,7 +23,7 @@ const StudentsTable = () => {
   );
 
   return (
-    <ParentTable title={title} columns={columns} endpoint={endpoint} renderRow={renderRow} />
+    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} />
   );
 };
 

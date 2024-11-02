@@ -20,7 +20,7 @@ const Title = styled(Typography)(({ theme }) => ({
   fontWeight: 'bold',
 }));
 
-const ParentTable = ({ title, columns, endpoint, renderRow }) => {
+const ParentTable = ({ title, columns, rowKeys, endpoint, renderRow }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -42,6 +42,20 @@ const ParentTable = ({ title, columns, endpoint, renderRow }) => {
     fetchData();
   }, [endpoint, user]);
 
+  const unnestKeys = (obj, parentKey = '', result = {}) => {
+    for (const [key, value] of Object.entries(obj)) {
+      const newKey = parentKey ? `${parentKey}.${key}` : key; 
+  
+      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        unnestKeys(value, newKey, result);
+      } else {
+        result[newKey] = value;
+      }
+    }
+  
+    return result;
+  };
+
   const handleDelete = async (id) => {
     try {
       await deleteRow(endpoint, id, user);
@@ -60,13 +74,14 @@ const ParentTable = ({ title, columns, endpoint, renderRow }) => {
     
     // Headers
     csvRows.push(columns.join(','));
-  
+
     // Data
     data.forEach(item => {
-      const row = Object.values(item).join(',');
+      const unnestedItem = unnestKeys(item);
+      const row = columns.map(column => unnestedItem[rowKeys[column]]).join(',');
       csvRows.push(row);
     });
-  
+    
     // Crear un blob y descargar
     const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -78,9 +93,13 @@ const ParentTable = ({ title, columns, endpoint, renderRow }) => {
     URL.revokeObjectURL(url);
   };
 
+  // Filtrado mejorado
   const filteredData = data.filter(item => {
+    console.log(item)
     return columns.some(column => {
-      return String(item[column.toLowerCase()]).toLowerCase().includes(searchTerm.toLowerCase());
+      const unnestedItem = unnestKeys(item);
+      const itemValue = unnestedItem[rowKeys[column]] || ''; // Utiliza el mapeo
+      return String(itemValue).toLowerCase().includes(searchTerm.toLowerCase());
     });
   });
 
@@ -90,7 +109,6 @@ const ParentTable = ({ title, columns, endpoint, renderRow }) => {
     <Container maxWidth="lg">
       <Root>
         <Title variant="h4">{title}</Title>
-
         <TextField 
           label="Buscar"
           variant="outlined"
@@ -99,11 +117,9 @@ const ParentTable = ({ title, columns, endpoint, renderRow }) => {
           fullWidth
           style={{ marginBottom: '20px' }}
         />
-
         <Button variant="contained" color="primary" onClick={downloadCSV} style={{ marginBottom: '20px' }}>
           Descargar como CSV
         </Button>
-        
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -117,7 +133,7 @@ const ParentTable = ({ title, columns, endpoint, renderRow }) => {
             <TableBody>
               {filteredData.map((item) => (
                 <TableRow key={item.id}>
-                  {renderRow(item)}
+                  {renderRow(item, rowKeys)}
                   <TableCell>
                     <Button onClick={() => handleDelete(item.id)} style={{ backgroundColor: 'red', color: 'white' }}>
                       Eliminar

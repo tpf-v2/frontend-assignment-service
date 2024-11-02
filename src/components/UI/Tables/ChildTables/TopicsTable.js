@@ -6,6 +6,11 @@ const TopicsTable = () => {
   const endpoint = '/topics/'; // Replace with your endpoint
   const title = 'Temas';
   const columns = ['ID', 'Tema', 'Categoría'];
+  const rowKeys = {
+    'ID': 'id',
+    'Tema': 'name',
+    'Categoría': 'category.name',
+  };
 
   const renderRow = (item) => (
     <>
@@ -16,7 +21,7 @@ const TopicsTable = () => {
   );
 
   return (
-    <ParentTable title={title} columns={columns} endpoint={endpoint} renderRow={renderRow} />
+    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} />
   );
 };
 
