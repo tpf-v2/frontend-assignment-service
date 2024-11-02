@@ -20,7 +20,7 @@ const StudentInfo = () => {
           <Typography component="span" color="text.primary" fontWeight="bold" marginRight={1}>
             Número de grupo:
           </Typography>
-          {user.group_id || "Sin asignar aún"}
+          {user.group_number || "Sin asignar aún"}
         </Typography>
         <Typography color="text.primary">
           <Typography component="span" color="text.primary" fontWeight="bold" marginRight={1}>

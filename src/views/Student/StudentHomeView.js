@@ -17,7 +17,7 @@ const StudentHomeView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.user.period_id);
-
+ 
   const [milestones, setMilestones] = useState([]);
   const [loading, setLoading] = useState(true); // Estado para manejar la carga
   const [notification, setNotification] = useState({
@@ -49,7 +49,6 @@ const StudentHomeView = () => {
     const fetchGroupAnswer = async () => {
       try {
         const userData = await dispatch(getStudentInfo(user));
-        console.log(userData);
 
         let group = {};
         if (userData.group_id !== 0) {
@@ -90,7 +89,7 @@ const StudentHomeView = () => {
               {
                 title: "Entregado",
                 completed:
-                  group.intermediate_assigment_date !== null ? true : false,
+                  !!group.intermediate_assigment_date,
               },
             ],
           },
@@ -99,7 +98,7 @@ const StudentHomeView = () => {
             tasks: [
               {
                 title: "Entregado",
-                completed: group.final_report_date !== null ? true : false,
+                completed: !!group.final_report_date,
               }
             ],
           },
@@ -152,6 +151,7 @@ const StudentHomeView = () => {
               url="/availability-view"
               title="Disponibilidades de Exposición"
               width="100%"
+              disabled={!period.presentation_dates_available}
               handleSubmit={() => handleNavigation("/availability-view")}
             />
             <SubmitButton

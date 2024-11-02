@@ -23,7 +23,8 @@ export const getStudentInfo = (user) => async (dispatch) => {
     tutor: response.data.tutor,
     topic: response.data.topic,
     teammates: response.data.teammates ? response.data.teammates.join(" , ") : "",
-    period_id: response.data.period_id
+    period_id: response.data.period_id,
+    group_number: response.data.group_number
   };
 
   // Guarda la informacion del usuario
@@ -32,8 +33,8 @@ export const getStudentInfo = (user) => async (dispatch) => {
   return response.data;
 };
 
-export const getStudents = async (uids, user) => {
-    // Crea una instancia de URLSearchParams
+export const getStudents = async (period, uids, user) => {
+  // Crea una instancia de URLSearchParams
     const params = new URLSearchParams();
   
     // Agrega cada uid al objeto de parámetros
@@ -49,7 +50,7 @@ export const getStudents = async (uids, user) => {
     };
   
     // Realiza la solicitud GET con los parámetros de consulta dinámicos
-    const response = await axios.get(`${BASE_URL}/students/`, config);
+    const response = await axios.get(`${BASE_URL}/students/?period=${period.id}`, config);
   
     return response;
   };

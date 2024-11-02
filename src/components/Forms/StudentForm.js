@@ -79,7 +79,7 @@ const StudentForm = () => {
   useEffect(() => {
     const fetchTopics = async () => {
       try {
-        const response = await getTopics(user);
+        const response = await getTopics(period.id, user);
         const topics = response.data.filter(
           (c) => c.category.name !== "default"
         ).sort((a, b) => a.name.localeCompare(b.name)); // Sorting alphabetically;
@@ -112,7 +112,7 @@ const StudentForm = () => {
       formData.uid4,
     ].filter((uid) => uid);
 
-    getStudents(padrones, user)
+    getStudents(period, padrones, user)
       .then((response) => {
         setStudentNames(response.data);
         setOpenDialog(true);
@@ -146,7 +146,7 @@ const StudentForm = () => {
     };
 
     try {
-      const response = await sendGroupForm(payload, existingGroup, user);
+      const response = await sendGroupForm(period.id, payload, existingGroup, user);
       if (response.status === 201) {
         setSubmitSuccess(true);
         setOpenDialog(false);

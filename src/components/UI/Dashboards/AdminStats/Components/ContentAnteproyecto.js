@@ -38,7 +38,7 @@ const ContentPdfProjects = ({
   const [selectedReviewers, setSelectedReviewers] = useState({});
   const dispatch = useDispatch();
 
-  if (loadingProjects || groupsData.length === 0) {
+  if (loadingProjects) {
     return (
       <Box
         display="flex"
@@ -82,16 +82,16 @@ const ContentPdfProjects = ({
     }
   };
 
-  // Función para obtener el nombre del tutor por su id
-  const getTutorNameById = (id) => {
-    const tutor = tutors.find(
-      (t) =>
-        t.tutor_periods &&
-        t.tutor_periods.length > 0 &&
-        t.tutor_periods[0].id === id
-    );
-    return tutor ? `${tutor.name} ${tutor.last_name}` : "Sin asignar";
-  };
+      // Función para obtener el nombre del tutor por su id
+      const getTutorNameById = (id, periodId) => {
+        const tutor = tutors.find(
+          (t) =>
+            t.tutor_periods &&
+            t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
+        );
+    
+        return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
+      };
 
   function getGroup(path) {
     const parts = path.split("/");
@@ -167,7 +167,7 @@ const ContentPdfProjects = ({
                     {getTutorNameById(
                       groupsData.find(
                         (g) => parseInt(getGroup(entrega.name)) === g.id
-                      )?.tutor_period_id
+                      )?.tutor_period_id, period.id
                     )}
                   </TableCell>
                   <TableCell>

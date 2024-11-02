@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useSelector } from "react-redux";
 import {
@@ -10,12 +10,13 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   TextField,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { uploadProjects } from "../api/uploadProjects";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ErrorIcon from "@mui/icons-material/Error";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -60,15 +61,6 @@ const UploadFile = ({ projectType }) => {
   const user = useSelector((state) => state.user);
   const groupId = useSelector((state) => state.user.group_id);
 
-  useEffect(() => {
-    if (isSuccess) {
-      const timer = setTimeout(() => {
-        navigate("/learning-path");
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [isSuccess, navigate]);
-
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
     if (file && file.name.endsWith(".pdf")) {
@@ -94,6 +86,13 @@ const UploadFile = ({ projectType }) => {
     }
     setTitleError("");
 
+    console.log(selectedFile)
+    if (!selectedFile && projectType !== "intermediate-project") {
+      setFileError("Por favor cargue un archivo PDF.");
+      return;
+    } 
+    setFileError("");
+    
     const youtubeOrDrivePattern =
       /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be|drive\.google\.com)\/.+$/;
 
@@ -153,8 +152,8 @@ const UploadFile = ({ projectType }) => {
                 style={{ marginBottom: "8px" }}
                 align="center"
               >
-                El link de la entrega intermedia debe ser un enlace a 
-                YouTube o Google Drive
+                El link de la entrega intermedia debe ser un enlace a YouTube o
+                Google Drive
               </Typography>
 
               <TextField
@@ -216,14 +215,64 @@ const UploadFile = ({ projectType }) => {
             {loading ? "Cargando..." : "Aceptar"}
           </ButtonStyled>
         </form>
-
-        <Dialog open={openDialog} onClose={handleCloseDialog}>
-          <DialogTitle>{isSuccess ? "Éxito" : "Error"}</DialogTitle>
-          <DialogContent>
-            <Typography variant="body1">{responseMessage}</Typography>
+        <Dialog
+          open={openDialog}
+          onClose={handleCloseDialog}
+          maxWidth="xs"
+          fullWidth
+        >
+          {/* Icono centrado y mensaje */}
+          <DialogContent
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              padding: "24px 16px",
+            }}
+          >
+            {isSuccess ? (
+              <CheckCircleIcon sx={{ fontSize: 60, color: "#4CAF50" }} />
+            ) : (
+              <ErrorIcon sx={{ fontSize: 60, color: "#F44336" }} />
+            )}
+            <Typography
+              variant="h6"
+              sx={{
+                color: isSuccess ? "#4CAF50" : "#F44336",
+                fontWeight: "600",
+                marginTop: "16px",
+              }}
+            >
+              {isSuccess ? "¡Operación Exitosa!" : "Ha Ocurrido un Error"}
+            </Typography>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              align="center"
+              sx={{ marginTop: "8px", padding: "0 12px" }}
+            >
+              {responseMessage}
+            </Typography>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog} color="primary">
+
+          {/* Botón de acción centrado */}
+          <DialogActions
+            sx={{ justifyContent: "center", paddingBottom: "16px" }}
+          >
+            <Button
+              onClick={handleCloseDialog}
+              variant="contained"
+              sx={{
+                backgroundColor: isSuccess ? "#4CAF50" : "#F44336",
+                color: "white",
+                padding: "8px 24px",
+                fontWeight: "bold",
+                borderRadius: "24px",
+                "&:hover": {
+                  backgroundColor: isSuccess ? "#388E3C" : "#D32F2F",
+                },
+              }}
+            >
               Aceptar
             </Button>
           </DialogActions>

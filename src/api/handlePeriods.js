@@ -25,7 +25,7 @@ export const addPeriod = async (newEntry, user) => {
   };
 
   try {
-    const url = `${BASE_URL}/periods`;
+    const url = `${BASE_URL}/api/periods/`;
     const response = await axios.post(url, { id: newEntry }, config);
     return response.data;
   } catch (error) {

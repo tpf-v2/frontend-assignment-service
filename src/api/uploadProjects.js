@@ -5,8 +5,8 @@ const BASE_URL = process.env.REACT_APP_API_URL;
 export const uploadProjects = async ({ projectType, groupId, projectTitle, selectedFile, url, token }) => {
   const projectNameKeyMap = {
     "initial-project": "Anteproyecto",
-    "intermediate-project": "entrega Intermedia",
-    "final-project": "entrega Final",
+    "intermediate-project": "Entrega Intermedia",
+    "final-project": "Entrega Final",
   };
 
   try {
@@ -38,13 +38,13 @@ export const uploadProjects = async ({ projectType, groupId, projectTitle, selec
 
     return {
       success: response.status === 202 || response.status === 200,
-      message: `Envío exitoso para la ${projectNameKeyMap[projectType]}`,
+      message: `¡Envío exitoso! Se ha registrado correctamente la ${projectNameKeyMap[projectType]}.`,
     };
   } catch (error) {
-    console.error(`Error en la ${projectNameKeyMap[projectType]}`, error);
+    console.error(`Error al enviar la ${projectNameKeyMap[projectType]}`, error);
     return {
       success: false,
-      message: `Error en la ${projectNameKeyMap[projectType]}`,
+      message: `No se pudo completar el envío de la ${projectNameKeyMap[projectType]}. Por favor, inténtalo de nuevo.`,
     };
   }
 };

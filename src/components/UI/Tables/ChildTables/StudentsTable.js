@@ -9,7 +9,8 @@ import { addStudent } from '../../../../api/handleStudents';
 import { setStudents } from '../../../../redux/slices/studentsSlice';
 
 const StudentsTable = () => {
-  const endpoint = '/students/'; // Replace with your endpoint
+  const period = useSelector((state) => state.period);
+  const endpoint = `/students/?period=${period.id}`; // Replace with your endpoint
   const title = 'Alumnos';
   const columns = ['Padron', 'Nombre', 'Apellido', 'Email']; // Specify your column names here
 

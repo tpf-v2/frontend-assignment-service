@@ -11,10 +11,12 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
 } from '@mui/material';
 import { styled } from '@mui/system';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ErrorIcon from "@mui/icons-material/Error";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -54,6 +56,9 @@ const UploadCSVForm = ({ formType, setItems }) => {
   const [responseMessage, setResponseMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [openDialog, setOpenDialog] = useState(false); // Estado para controlar el diálogo
+  const [loading, setLoading] = useState(false); // Estado para controlar el diálogo
+
+  const navigate = useNavigate();
 
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
@@ -81,7 +86,7 @@ const UploadCSVForm = ({ formType, setItems }) => {
       setFileError('Por favor cargue un archivo CSV.');
       return;
     }
-
+    setLoading(true)
     const formData = new FormData();
     formData.append('file', selectedFile);
     const apiUrl = `${BASE_URL}/${formType}/upload?period=${period.id}`;
@@ -92,7 +97,6 @@ const UploadCSVForm = ({ formType, setItems }) => {
           Authorization: `Bearer ${user.token}`
         },
       });
-      //Check this since it's a temporary fix for server behavior
       if (response.status === 201) {
         setResponseMessage(`Archivo de ${formType} cargado con éxito`);
         setIsSuccess(true);
@@ -107,6 +111,7 @@ const UploadCSVForm = ({ formType, setItems }) => {
       setIsSuccess(false);
     } finally {
       setOpenDialog(true); // Abre el diálogo al finalizar
+      setLoading(false)
     }
   };
 
@@ -141,20 +146,68 @@ const UploadCSVForm = ({ formType, setItems }) => {
             </Typography>
           )}
           <ButtonStyled variant="contained" color="primary" type="submit" fullWidth>
-            Enviar
+            {loading ? "Cargando..." : "Enviar"}
           </ButtonStyled>
         </form>
 
-        {/* Diálogo de respuesta */}
-        <Dialog open={openDialog} onClose={handleCloseDialog}>
-          <DialogTitle>{isSuccess ? "Éxito" : "Error"}</DialogTitle>
-          <DialogContent>
-            <Typography variant="body1">
+        <Dialog
+          open={openDialog}
+          onClose={handleCloseDialog}
+          maxWidth="xs"
+          fullWidth
+        >
+          {/* Icono centrado y mensaje */}
+          <DialogContent
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              padding: "24px 16px",
+            }}
+          >
+            {isSuccess ? (
+              <CheckCircleIcon sx={{ fontSize: 60, color: "#4CAF50" }} />
+            ) : (
+              <ErrorIcon sx={{ fontSize: 60, color: "#F44336" }} />
+            )}
+            <Typography
+              variant="h6"
+              sx={{
+                color: isSuccess ? "#4CAF50" : "#F44336",
+                fontWeight: "600",
+                marginTop: "16px",
+              }}
+            >
+              {isSuccess ? "¡Operación Exitosa!" : "Ha Ocurrido un Error"}
+            </Typography>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              align="center"
+              sx={{ marginTop: "8px", padding: "0 12px" }}
+            >
               {responseMessage}
             </Typography>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog} color="primary">
+
+          {/* Botón de acción centrado */}
+          <DialogActions
+            sx={{ justifyContent: "center", paddingBottom: "16px" }}
+          >
+            <Button
+              onClick={handleCloseDialog}
+              variant="contained"
+              sx={{
+                backgroundColor: isSuccess ? "#4CAF50" : "#F44336",
+                color: "white",
+                padding: "8px 24px",
+                fontWeight: "bold",
+                borderRadius: "24px",
+                "&:hover": {
+                  backgroundColor: isSuccess ? "#388E3C" : "#D32F2F",
+                },
+              }}
+            >
               Aceptar
             </Button>
           </DialogActions>
