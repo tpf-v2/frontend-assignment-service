@@ -78,11 +78,7 @@ const LearningPath = ({ group_id, group }) => {
               {
                 title: "Entregado",
                 completed: group.intermediate_assigment_date !== null ? true : false,
-              },
-              {
-                title: "Aprobado",
-                completed: group.intermediate_assigment_approved,
-              },
+              }
             ],
           },
           {
@@ -91,11 +87,7 @@ const LearningPath = ({ group_id, group }) => {
               {
                 title: "Entregado",
                 completed: group.final_report_date !== null ? true : false,
-              },
-              {
-                title: "Aprobado",
-                completed: group.final_report_approved,
-              },
+              }
             ],
           },
         ]);

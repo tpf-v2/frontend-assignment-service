@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCuatrimestres, addCuatrimestre } from '../../api/handlePeriods'
+import { getAllPeriods, addPeriod } from '../../api/handlePeriods'
 import MySnackbar from '../../components/UI/MySnackBar';
 import { setPeriod } from '../../redux/slices/periodSlice';
+import { AddCardStyled } from '../../styles/AddCardStyled';
 
 const Root = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -44,24 +45,6 @@ const CardStyled = styled(Card)(({ theme }) => ({
   },
 }));
 
-const AddCardStyled = styled(Card)(({ theme }) => ({
-  width: '200px',
-  height: '150px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  textAlign: 'center',
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[3],
-  border: '2px dashed #bbb',
-  backgroundColor: '#f8f8f8',
-  cursor: 'pointer',
-  transition: 'transform 0.3s',
-  '&:hover': {
-    transform: 'scale(1.05)',
-  },
-}));
-
 const Title = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(4),
   color: theme.palette.primary.main,
@@ -72,9 +55,9 @@ const terms = ['1', '2'];
 
 const AdminHomeView = () => {
   const user = useSelector((state) => state.user);
-  const [periods, setCuatrimestres] = useState([]);
+  const [periods, setPeriods] = useState([]);
   const [open, setOpen] = useState(false);
-  const [newCuatrimestre, setNewCuatrimestre] = useState({ year: '', term: '' });
+  const [newPeriod, setNewPeriod] = useState({ year: '', term: '' });
   const navigate = useNavigate();
 
   const [notification, setNotification] = useState({
@@ -87,30 +70,25 @@ const AdminHomeView = () => {
     setNotification({ ...notification, open: false });
   };
 
-  // Fetch existing cuatrimesters on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchCuatrimestres(user);
-        // Ordenar los datos por 'id' antes de guardar en el estado
-      const sortedData = data.sort((a, b) => a.id - b.id);
-      
-      // Guardar solo los periods ordenados en el estado
-      setCuatrimestres(sortedData);
+        const data = await getAllPeriods(user);
+        const sortedData = data.sort((a, b) => a.id - b.id);        
+        setPeriods(sortedData);
       } catch (error) {
         console.error(error.message);
       }
     };
-
     fetchData();
   }, []);
 
-  const handleAddCuatrimestre = async () => {
-    if (newCuatrimestre.year && newCuatrimestre.term) {
-      const newEntry = `${newCuatrimestre.term}C${newCuatrimestre.year}`;
+  const handleAddPeriod = async () => {
+    if (newPeriod.year && newPeriod.term) {
+      const newEntry = `${newPeriod.term}C${newPeriod.year}`;
       try {
-        const newPeriod = await addCuatrimestre(newEntry, user); // Call the add function
-        setCuatrimestres([...periods, newPeriod]);
+        const newPeriod = await addPeriod(newEntry, user); // Call the add function
+        setPeriods([...periods, newPeriod]);
         handleClose();
       } catch (error) {
         setNotification({
@@ -134,7 +112,7 @@ const AdminHomeView = () => {
 
   const handleClose = () => {
     setOpen(false);
-    setNewCuatrimestre({ year: '', term: '' });
+    setNewPeriod({ year: '', term: '' });
   };
 
   return (
@@ -161,8 +139,8 @@ const AdminHomeView = () => {
           <FormControl variant="outlined" fullWidth margin="normal">
             <InputLabel>Año</InputLabel>
             <Select
-              value={newCuatrimestre.year}
-              onChange={(e) => setNewCuatrimestre({ ...newCuatrimestre, year: e.target.value })}
+              value={newPeriod.year}
+              onChange={(e) => setNewPeriod({ ...newPeriod, year: e.target.value })}
               label="Año"
             >
               {years.map((year) => (
@@ -175,8 +153,8 @@ const AdminHomeView = () => {
           <FormControl variant="outlined" fullWidth margin="normal">
             <InputLabel>Cuatrimestre</InputLabel>
             <Select
-              value={newCuatrimestre.term}
-              onChange={(e) => setNewCuatrimestre({ ...newCuatrimestre, term: e.target.value })}
+              value={newPeriod.term}
+              onChange={(e) => setNewPeriod({ ...newPeriod, term: e.target.value })}
               label="Cuatrimestre"
             >
               {terms.map((term) => (
@@ -191,7 +169,7 @@ const AdminHomeView = () => {
           <Button onClick={handleClose} color="secondary">
             Cancelar
           </Button>
-          <Button onClick={handleAddCuatrimestre} color="primary">
+          <Button onClick={handleAddPeriod} color="primary">
             Agregar
           </Button>
         </DialogActions>

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import {
   Container,
@@ -15,7 +15,6 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/system';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -43,28 +42,21 @@ const DropzoneBox = styled(Box)(({ theme }) => ({
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
-const UploadCSVForm = ({ formType }) => {
+const TITLE_DICT = {
+  "students": "Alumnos",
+  "tutors": "Tutores",
+  "topics": "Temas"
+}
+
+const UploadCSVForm = ({ formType, setItems }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileError, setFileError] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [openDialog, setOpenDialog] = useState(false); // Estado para controlar el diálogo
-  const navigate = useNavigate();
 
   const period = useSelector((state) => state.period);
-
   const user = useSelector((state) => state.user);
-
-  // Effecto para redireccionar si la carga fue exitosa
-  useEffect(() => {
-    if (isSuccess) {
-      const timer = setTimeout(() => {
-        navigate('/home'); // Redirige a la homepage
-      }, 3000); // Espera 3 segundos antes de redirigir
-
-      return () => clearTimeout(timer);
-    }
-  }, [isSuccess, navigate]);
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -80,6 +72,8 @@ const UploadCSVForm = ({ formType }) => {
     onDrop,
     accept: '.csv',
   });
+
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -102,6 +96,7 @@ const UploadCSVForm = ({ formType }) => {
       if (response.status === 201) {
         setResponseMessage(`Archivo de ${formType} cargado con éxito`);
         setIsSuccess(true);
+        dispatch(setItems(response));
       } else {
         setResponseMessage(`Hubo un problema al cargar el archivo de ${formType}`);
         setIsSuccess(false);
@@ -117,20 +112,13 @@ const UploadCSVForm = ({ formType }) => {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    if (isSuccess) {
-      navigate(`/home`); // Redirige a la homepage al cerrar el diálogo
-    }
   };
 
   return (
     <Container maxWidth="sm">
       <Root>
         <Box textAlign="center">
-          <Title variant="h5">
-            {formType === 'students' && 'Cargar Archivo de Alumnos'}
-            {formType === 'topics' && 'Cargar Archivo de Temas'}
-            {formType === 'tutors' && 'Cargar Archivo de Tutores'}
-          </Title>
+          <Title variant="h5">Cargar Archivo de {TITLE_DICT[formType]}</Title>
         </Box>
 
         <form onSubmit={handleSubmit}>

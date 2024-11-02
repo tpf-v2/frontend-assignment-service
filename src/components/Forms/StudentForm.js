@@ -20,8 +20,8 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { sendGroupForm } from "../../api/sendGroupForm";
-import { getStudents } from "../../api/getStudents";
-import { getTopics } from "../../api/getTopics";
+import { getStudents } from "../../api/handleStudents";
+import { getTopics } from "../../api/handleTopics";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { NumericFormat } from "react-number-format";
