@@ -78,7 +78,17 @@ const ParentTable = ({ title, columns, rowKeys, endpoint, renderRow }) => {
     // Data
     data.forEach(item => {
       const unnestedItem = unnestKeys(item);
-      const row = columns.map(column => unnestedItem[rowKeys[column]]).join(',');
+      const row = columns.map(column => {
+        const value = unnestedItem[rowKeys[column]]; // Obtener el valor
+    
+        // Verificar si el valor es un array
+        if (Array.isArray(value)) {
+          return value.join(' || ').replace(/,/g, ' '); // Unir los elementos del array usando ';'
+        }
+        
+        return value.replace(/,/g, ' ')
+      }).join(',');
+      console.log(row);
       csvRows.push(row);
     });
     
