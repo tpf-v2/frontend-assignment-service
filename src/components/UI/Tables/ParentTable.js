@@ -88,7 +88,6 @@ const ParentTable = ({ title, columns, rowKeys, endpoint, renderRow }) => {
         
         return value.replace(/,/g, ' ')
       }).join(',');
-      console.log(row);
       csvRows.push(row);
     });
     
