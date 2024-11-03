@@ -14,7 +14,6 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/system';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 
@@ -57,8 +56,6 @@ const UploadCSVForm = ({ formType, setItems }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [openDialog, setOpenDialog] = useState(false); // Estado para controlar el diálogo
   const [loading, setLoading] = useState(false); // Estado para controlar el diálogo
-
-  const navigate = useNavigate();
 
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
