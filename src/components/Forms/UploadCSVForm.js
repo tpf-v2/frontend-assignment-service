@@ -58,8 +58,6 @@ const UploadCSVForm = ({ formType, setItems }) => {
   const [openDialog, setOpenDialog] = useState(false); // Estado para controlar el diálogo
   const [loading, setLoading] = useState(false); // Estado para controlar el diálogo
 
-  const navigate = useNavigate();
-
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
 
