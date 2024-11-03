@@ -17,6 +17,8 @@ import TopicTutor from "../../components/Algorithms/TopicTutor";
 import ContentIntermediateProject from "../../components/UI/Dashboards/AdminStats/Components/ContentIntermediateProject";
 import { downloadProject, getProjects } from "../../api/handleProjects";
 import AvailabilityCalendarAdmin from "../../components/AvailabilityCalendarAdmin";
+import Dates from "../../components/Algorithms/Dates";
+import { setStudents } from "../../redux/slices/studentsSlice";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -49,6 +51,7 @@ const DashboardView = () => {
         const data = await getDashboardData(period.id, user);
         dispatch(setTopics(data.topics));
         dispatch(setTutors(data.tutors));
+        dispatch(setStudents(data.students));
         setDashboardData(data);
 
         const endpoint = `/groups/?period=${period.id}`;
@@ -154,7 +157,7 @@ const DashboardView = () => {
           />
         );
       case "Fechas de presentación":
-        return <div>Fechas de presentación</div>;
+        return <Dates/>;
       case "Disponibilidad fechas de Presentación":
         return <AvailabilityCalendarAdmin />;
 

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
@@ -6,10 +7,10 @@ import MySnackbar from "../../components/UI/MySnackBar";
 import SubmitButton from "../../components/Buttons/SubmitButton";
 import StudentInfo from "../../components/UI/Dashboards/Student/StudentInfo";
 import Phase from "../../components/UI/Dashboards/Student/Phase";
-import { getStudentInfo } from "../../api/getStudentInfo";
+import { getStudentInfo } from "../../api/handleStudents";
 import { getGroupById } from "../../api/getGroupById";
 import { useNavigate } from "react-router-dom";
-import { getCuatrimestre } from "../../api/handlePeriods";
+import { getPeriodById } from "../../api/handlePeriods";
 import { setPeriod } from "../../redux/slices/periodSlice";
 import PresentationDateCard from "../../components/UI/Dashboards/Student/PresentationDateCard";
 
@@ -17,7 +18,7 @@ const StudentHomeView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.user.period_id);
-
+ 
   const [milestones, setMilestones] = useState([]);
   const [group, setGroup] = useState({});
   const [loading, setLoading] = useState(true); // Estado para manejar la carga
@@ -32,25 +33,24 @@ const StudentHomeView = () => {
   };
 
   useEffect(() => {
-    const fetchCuatrimestre = async () => {
+    const fetchPeriod = async () => {
       if (user && user.id) {
         try {
-          const period = await getCuatrimestre(user);
+          const period = await getPeriodById(user);
           dispatch(setPeriod(period));
         } catch (error) {
-          console.error("Error al obtener el cuatrimestre", error);
+          console.error("Error when getting period: ", error);
         }
       }
     };
 
-    fetchCuatrimestre();
+    fetchPeriod();
   }, [user, dispatch]);
 
   useEffect(() => {
     const fetchGroupAnswer = async () => {
       try {
         const userData = await dispatch(getStudentInfo(user));
-        console.log(userData);
 
         let group = {};
         if (userData.group_id !== 0) {
@@ -93,11 +93,7 @@ const StudentHomeView = () => {
               {
                 title: "Entregado",
                 completed:
-                  group.intermediate_assigment_date !== null ? true : false,
-              },
-              {
-                title: "Aprobado",
-                completed: group.intermediate_assigment_approved,
+                  !!group.intermediate_assigment_date,
               },
             ],
           },
@@ -106,12 +102,8 @@ const StudentHomeView = () => {
             tasks: [
               {
                 title: "Entregado",
-                completed: group.final_report_date !== null ? true : false,
-              },
-              {
-                title: "Aprobado",
-                completed: group.final_report_approved,
-              },
+                completed: !!group.final_report_date,
+              }
             ],
           },
         ]);
@@ -165,6 +157,7 @@ const StudentHomeView = () => {
               url="/availability-view"
               title="Disponibilidades de Exposición"
               width="100%"
+              disabled={!period.presentation_dates_available}
               handleSubmit={() => handleNavigation("/availability-view")}
             />
             <SubmitButton

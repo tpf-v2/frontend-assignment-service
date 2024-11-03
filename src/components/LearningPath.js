@@ -69,7 +69,7 @@ const LearningPath = ({ group_id, group }) => {
                 title: "Entregado",
                 completed: group.pre_report_date !== null ? true : false,
               },
-              { title: "Aprobado", completed: group.pre_report_approved },
+              { title: "Revisado", completed: group.pre_report_approved },
             ],
           },
           {
@@ -78,11 +78,7 @@ const LearningPath = ({ group_id, group }) => {
               {
                 title: "Entregado",
                 completed: group.intermediate_assigment_date !== null ? true : false,
-              },
-              {
-                title: "Aprobado",
-                completed: group.intermediate_assigment_approved,
-              },
+              }
             ],
           },
           {
@@ -91,11 +87,7 @@ const LearningPath = ({ group_id, group }) => {
               {
                 title: "Entregado",
                 completed: group.final_report_date !== null ? true : false,
-              },
-              {
-                title: "Aprobado",
-                completed: group.final_report_approved,
-              },
+              }
             ],
           },
         ]);
@@ -148,7 +140,7 @@ const LearningPath = ({ group_id, group }) => {
                 gutterBottom
                 marginTop={1}
               >
-                Grupo {group_id}
+                Grupo {group.group_number}
               </Typography>
               <StyledCard>
                 <CardContent>

@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
+import { Container, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, TextField, Box,CircularProgress} from '@mui/material';
 import { styled } from '@mui/system';
 import { getTableData, deleteRow } from '../../../api/handleTableData';
 import { useSelector } from 'react-redux';
 
-// Estilos
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(4),
   padding: theme.spacing(4),
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: '#ffffff',
+  backgroundColor: "#ffffff",
   boxShadow: theme.shadows[3],
 }));
 
 const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
+  marginBottom: theme.spacing(2),
   color: '#0072C6',
   textAlign: 'center',
   fontSize: '2rem',
   fontWeight: 'bold',
 }));
 
-const ParentTable = ({ title, columns, endpoint, renderRow }) => {
+const ParentTable = ({ title, columns, rowKeys, endpoint, renderRow, AddButtonComponent, items}) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const user = useSelector((state) => state.user);
 
@@ -31,35 +31,120 @@ const ParentTable = ({ title, columns, endpoint, renderRow }) => {
     const fetchData = async () => {
       try {
         const responseData = await getTableData(endpoint, user);
-        setData(responseData); // Updates state with fetched data
+        setData(responseData);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
         setLoading(false); // Handle error
       }
     };
 
     fetchData();
-  }, [endpoint]);
+  }, [endpoint, user]);
+
+  const unnestKeys = (obj, parentKey = '', result = {}) => {
+    for (const [key, value] of Object.entries(obj)) {
+      const newKey = parentKey ? `${parentKey}.${key}` : key; 
+  
+      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        unnestKeys(value, newKey, result);
+      } else {
+        result[newKey] = value;
+      }
+    }
+  
+    return result;
+  };
 
   const handleDelete = async (id) => {
     try {
       // Call deleteResponse to remove the record
-      await deleteRow(endpoint, id, user); 
+      await deleteRow(endpoint, id, user);
       // Filter the data state to remove the deleted item
-      setData(prevData => prevData.filter(item => item.id !== id)); 
+      setData((prevData) => prevData.filter((item) => item.id !== id));
     } catch (error) {
-      console.error('Error deleting item:', error);
+      console.error("Error deleting item:", error);
     }
   };
+
+  if (loading)
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="300px"
+      >
+        <CircularProgress />
+      </Box>
+    );
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const downloadCSV = () => {
+    const csvRows = [];
+    
+    // Headers
+    csvRows.push(columns.join(','));
+
+    // Data
+    data.forEach(item => {
+      const unnestedItem = unnestKeys(item);
+      const row = columns.map(column => {
+      const value = unnestedItem[rowKeys[column]]; // Obtener el valor
+    
+        // Verificar si el valor es un array
+        if (Array.isArray(value)) {
+          return value.join(' || ').replace(/,/g, ' '); // Unir los elementos del array usando ';'
+        }
+        return String(value).replace(/,/g, ' ')
+      }).join(',');
+      csvRows.push(row);
+    });
+    
+    // Crear un blob y descargar
+    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
   
+    const a = document.createElement('a');
+    a.setAttribute('href', url);
+    a.setAttribute('download', 'table_data.csv');
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Filtrado mejorado
+  const filteredData = data.filter(item => {
+    return columns.some(column => {
+      const unnestedItem = unnestKeys(item);
+      const itemValue = unnestedItem[rowKeys[column]] || ''; // Utiliza el mapeo
+      return String(itemValue).toLowerCase().includes(searchTerm.toLowerCase());
+    });
+  });
+
   if (loading) return <Typography variant="h6">Cargando...</Typography>;
+  const topicsCond = title === "Temas" ? items.length > 0 : true;
 
   return (
     <Container maxWidth="lg">
       <Root>
         <Title variant="h4">{title}</Title>
-        
+        <TextField 
+          label="Buscar"
+          variant="outlined"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          fullWidth
+          style={{ marginBottom: '20px' }}
+        />
+        <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={2}>
+        <Button variant="contained" color="primary" onClick={downloadCSV}>
+          Descargar como CSV
+        </Button>
+        {(AddButtonComponent && topicsCond) && <AddButtonComponent />}
+      </Box>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -71,9 +156,9 @@ const ParentTable = ({ title, columns, endpoint, renderRow }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((item) => (
+              {filteredData.map((item) => (
                 <TableRow key={item.id}>
-                  {renderRow(item)}
+                  {renderRow(item, rowKeys)}
                   <TableCell>
                     <Button onClick={() => handleDelete(item.id)} style={{ backgroundColor: 'red', color: 'white' }}>
                       Eliminar

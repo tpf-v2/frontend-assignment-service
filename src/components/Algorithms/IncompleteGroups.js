@@ -222,7 +222,7 @@ const IncompleteGroups = () => {
                         rowSpan={group.students?.length + 1}
                         align="center"
                       >
-                        {group.id}
+                        {group.group_number}
                       </TableCell>
                       {/* Iterar sobre los estudiantes del grupo */}
                       {group.students.map((student, index) => (

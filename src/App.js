@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import FormSelection from './components/Forms/FormSelection';
 import TutorForm from './components/Forms/TutorForm';
 import AddTopicForm from './components/Forms/AddTopicForm';
 import AddTutorForm from './components/Forms/AddTutorForm';
@@ -29,6 +28,9 @@ import DashboardView from './views/Admin/DashboardView'
 import ChangePasswordView from './views/ChangePasswordView';
 import StudentForm from './components/Forms/StudentForm';
 import StudentAvailabilityView from './views/Student/StudentAvailabilityView';
+import { setStudents } from './redux/slices/studentsSlice';
+import { setTutors } from './redux/slices/tutorsSlice';
+import { setTopics } from './redux/slices/topicsSlice';
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -79,7 +81,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<LoginView />} />
             <Route path="/home" element={<HomeView />} />
-            <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} />
+            {/* <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} /> */}
             <Route path="/dashboard/:period" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />
             <Route path="/table-view" element={<ProtectedRoute><ParentTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/students" element={<ProtectedRoute><StudentsTable /></ProtectedRoute>} />
@@ -87,7 +89,7 @@ const App = () => {
             <Route path="dashboard/:period/tutors" element={<ProtectedRoute><TutorsTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/form-answers" element={<ProtectedRoute><FormAnswersTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/groups" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
-            <Route path="/form-selection/:period" element={<FormSelection />} />            
+            {/* <Route path="/form-selection/:period" element={<FormSelection />} />             */}
             <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
             <Route path="/upload/:projectType" element={<ProtectedRoute><UploadView /></ProtectedRoute>} />
             <Route path="/student-form" element={<ProtectedRoute><StudentForm /></ProtectedRoute>} />
@@ -95,9 +97,9 @@ const App = () => {
             <Route path="/tutor-cuatrimestre/:period" element={<ProtectedRoute><TutorDashboardView /></ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />
             <Route path="/admin-add-corrector" element={<ProtectedRoute><AddTutorForm /></ProtectedRoute>} />
-            <Route path="/upload-students/:period" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="students" /> : <Navigate to="/" />}</ProtectedRoute>} />
-            <Route path="/upload-topics/:period" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="topics" /> : <Navigate to="/" />}</ProtectedRoute>} />
-            <Route path="/upload-tutors/:period" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="tutors" /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/upload-students/:period" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="students" setItems={setStudents} /> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/upload-topics/:period" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="topics" setItems={setTopics}/> : <Navigate to="/" />}</ProtectedRoute>} />
+            <Route path="/upload-tutors/:period" element={<ProtectedRoute>{user.temporal_role === 'admin' ? <UploadCSVForm formType="tutors" setItems={setTutors}/> : <Navigate to="/" />}</ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile user={user} /></ProtectedRoute>} />
             <Route path="/change-password" element={<ProtectedRoute><ChangePasswordView /></ProtectedRoute>} />
             <Route path="/availability-view" element={<ProtectedRoute><StudentAvailabilityView /></ProtectedRoute>} />

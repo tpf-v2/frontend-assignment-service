@@ -208,13 +208,13 @@ const transformEventData = (data) => {
       <ListItemStyled
         key={group.id}
         button
-        selected={selectedMenu === `Grupo ${group.id}`}
+        selected={selectedMenu === `Grupo ${group.group_number}`}
         onClick={() => {
           setSelectedGroup(group.id);
-          setSelectedMenu(`Grupo ${group.id}`);
+          setSelectedMenu(`Grupo ${group.group_number}`);
         }}
       >
-        Grupo {group.id}
+        Grupo {group.group_number}
       </ListItemStyled>
     ));
   };
@@ -247,7 +247,7 @@ const transformEventData = (data) => {
           setSelectedMenu("Revisiones");
         }}
       >
-        Grupo {group.id}
+        Grupo {group.group_number}
       </ListItemStyled>
     ));
   };

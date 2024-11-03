@@ -47,7 +47,7 @@ const ContentInscripciones = ({
                 setShowUploadCSV(true);
               }}
             >
-               ALUMNOS
+               CARGAR ALUMNOS
             </ButtonStyled>
             <ButtonStyled
               onClick={() => {
@@ -55,7 +55,7 @@ const ContentInscripciones = ({
                 setShowUploadCSV(true);
               }}
             >
-               TUTORES
+               CARGAR TUTORES
             </ButtonStyled>
             <ButtonStyled
               onClick={() => {
@@ -63,7 +63,7 @@ const ContentInscripciones = ({
                 setShowUploadCSV(true);
               }}
             >
-               TEMAS
+               CARGAR TEMAS
             </ButtonStyled>
           </Box>
           

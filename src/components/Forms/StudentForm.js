@@ -20,8 +20,8 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { sendGroupForm } from "../../api/sendGroupForm";
-import { getStudents } from "../../api/getStudents";
-import { getTopics } from "../../api/getTopics";
+import { getStudents } from "../../api/handleStudents";
+import { getTopics } from "../../api/handleTopics";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { NumericFormat } from "react-number-format";
@@ -79,7 +79,7 @@ const StudentForm = () => {
   useEffect(() => {
     const fetchTopics = async () => {
       try {
-        const response = await getTopics(user);
+        const response = await getTopics(period.id, user);
         const topics = response.data.filter(
           (c) => c.category.name !== "default"
         ).sort((a, b) => a.name.localeCompare(b.name)); // Sorting alphabetically;
@@ -112,7 +112,7 @@ const StudentForm = () => {
       formData.uid4,
     ].filter((uid) => uid);
 
-    getStudents(padrones, user)
+    getStudents(period, padrones, user)
       .then((response) => {
         setStudentNames(response.data);
         setOpenDialog(true);
@@ -146,7 +146,7 @@ const StudentForm = () => {
     };
 
     try {
-      const response = await sendGroupForm(payload, existingGroup, user);
+      const response = await sendGroupForm(period.id, payload, existingGroup, user);
       if (response.status === 201) {
         setSubmitSuccess(true);
         setOpenDialog(false);
