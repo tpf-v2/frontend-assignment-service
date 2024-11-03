@@ -68,10 +68,10 @@ const TutorHomeView = () => {
     const fetchData = async () => {
       try {
         const data = await getTutorPeriods(user);
-        
+        console.log(data)
         const sortedData = data.sort((a, b) => {
-          const [termA, yearA] = [parseInt(a.id[0]), parseInt(a.id.slice(2))];
-          const [termB, yearB] = [parseInt(b.id[0]), parseInt(b.id.slice(2))];
+          const [termA, yearA] = [parseInt(a.period_id[0]), parseInt(a.period_id.slice(2))];
+          const [termB, yearB] = [parseInt(b.period_id[0]), parseInt(b.period_id.slice(2))];
           
           if (yearA === yearB) {
             return termA - termB; // Si el año es igual, compara por cuatrimestre
