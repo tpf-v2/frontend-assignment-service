@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, TextField } from '@mui/material';
+import { Container, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, TextField, Box } from '@mui/material';
 import { styled } from '@mui/system';
 import { getTableData, deleteRow } from '../../../api/handleTableData';
 import { useSelector } from 'react-redux';
@@ -20,7 +20,7 @@ const Title = styled(Typography)(({ theme }) => ({
   fontWeight: 'bold',
 }));
 
-const ParentTable = ({ title, columns, rowKeys, endpoint, renderRow }) => {
+const ParentTable = ({ title, columns, rowKeys, endpoint, renderRow, AddButtonComponent, items}) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -113,6 +113,7 @@ const ParentTable = ({ title, columns, rowKeys, endpoint, renderRow }) => {
   });
 
   if (loading) return <Typography variant="h6">Cargando...</Typography>;
+  const topicsCond = title === "Temas" ? items.length > 0 : true;
 
   return (
     <Container maxWidth="lg">
@@ -126,9 +127,12 @@ const ParentTable = ({ title, columns, rowKeys, endpoint, renderRow }) => {
           fullWidth
           style={{ marginBottom: '20px' }}
         />
-        <Button variant="contained" color="primary" onClick={downloadCSV} style={{ marginBottom: '20px' }}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={2}>
+        <Button variant="contained" color="primary" onClick={downloadCSV}>
           Descargar como CSV
         </Button>
+        {(AddButtonComponent && topicsCond) && <AddButtonComponent />}
+      </Box>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>

@@ -84,10 +84,10 @@ const GroupDataTable = () => {
           student.email,
           student.id,
           index === 0 ? getTutorNameById(group.tutor_period_id) || "Sin asignar" : "",
-          index === 0 ? (group.topic ? group.topic.name : "Sin asignar") : "",
-          index === 0 ? getTopicNameById(group.preferred_topics[0]) || "" : "",
-          index === 0 ? getTopicNameById(group.preferred_topics[1]) || "" : "",
-          index === 0 ? getTopicNameById(group.preferred_topics[2]) || "" : "",
+          index === 0 ? (group.topic ? group.topic.name.replace(/,/g, ' ') : "Sin asignar") : "",
+          index === 0 ? getTopicNameById(group.preferred_topics[0]).replace(/,/g, ' ') || "" : "",
+          index === 0 ? getTopicNameById(group.preferred_topics[1]).replace(/,/g, ' ') || "" : "",
+          index === 0 ? getTopicNameById(group.preferred_topics[2]).replace(/,/g, ' ') || "" : "",
         ].join(',');
         
         csvRows.push(row);
