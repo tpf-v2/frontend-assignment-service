@@ -44,6 +44,7 @@ const GroupDataTable = () => {
 
   // Función para obtener el nombre del tutor por su id
   const getTutorNameById = (id, periodId) => {
+    console.log(periodId)
     const tutor = tutors.find(
       (t) =>
         t.tutor_periods &&
@@ -59,7 +60,7 @@ const GroupDataTable = () => {
       student.last_name.toLowerCase().includes(searchTerm.toLowerCase()) || 
       student.email.toLowerCase().includes(searchTerm.toLowerCase())
     ) ||
-    (getTutorNameById(group.tutor_period_id).toLowerCase().includes(searchTerm.toLowerCase())) || // Filtrar por tutor
+    (getTutorNameById(group.tutor_period_id, period.id).toLowerCase().includes(searchTerm.toLowerCase())) || // Filtrar por tutor
     (group.topic ? group.topic.name.toLowerCase().includes(searchTerm.toLowerCase()) : false) // Filtrar por tema
     || (String(group.group_number).toLowerCase().includes(searchTerm.toLowerCase()))
   );
@@ -88,7 +89,7 @@ const GroupDataTable = () => {
           student.last_name,
           student.email,
           student.id,
-          index === 0 ? getTutorNameById(group.tutor_period_id) || "Sin asignar" : "",
+          index === 0 ? getTutorNameById(group.tutor_period_id, period.id) || "Sin asignar" : "",
           index === 0 ? (group.topic ? group.topic.name.replace(/,/g, ' ') : "Sin asignar") : "",
           index === 0 ? getTopicNameById(group.preferred_topics[0]).replace(/,/g, ' ') || "" : "",
           index === 0 ? getTopicNameById(group.preferred_topics[1]).replace(/,/g, ' ') || "" : "",
@@ -172,7 +173,7 @@ const GroupDataTable = () => {
                       <>
                         {index === 0 && (
                           <TableCell rowSpan={group.students.length} align="center">
-                            {getTutorNameById(group.tutor_period_id) || "Sin asignar"}
+                            {getTutorNameById(group.tutor_period_id, period.id) || "Sin asignar"}
                           </TableCell>
                         )}
                         {index === 0 && (
@@ -183,9 +184,17 @@ const GroupDataTable = () => {
                         {index === 0 && (
                           <>
                             {group.preferred_topics.length === 0 ? (
-                              <TableCell rowSpan={group.students.length} colSpan={3} align="center">
-                                {getTopicNameById(group.topic_id)}
+                              <>
+                              <TableCell rowSpan={group.students.length} align="center">
+                                {"N/A"}
                               </TableCell>
+                              <TableCell rowSpan={group.students.length} align="center">
+                                {"N/A"}
+                              </TableCell>
+                              <TableCell rowSpan={group.students.length} align="center">
+                                {"N/A"}
+                              </TableCell>
+                              </>
                             ) : (
                               <>
                                 <TableCell rowSpan={group.students.length}>
