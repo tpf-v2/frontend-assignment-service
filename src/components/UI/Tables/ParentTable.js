@@ -117,7 +117,6 @@ const ParentTable = ({ title, columns, rowKeys, endpoint, renderRow, AddButtonCo
 
   // Filtrado mejorado
   const filteredData = data.filter(item => {
-    console.log(item)
     return columns.some(column => {
       const unnestedItem = unnestKeys(item);
       const itemValue = unnestedItem[rowKeys[column]] || ''; // Utiliza el mapeo

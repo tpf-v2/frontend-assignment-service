@@ -44,7 +44,6 @@ const GroupDataTable = () => {
 
   // Función para obtener el nombre del tutor por su id
   const getTutorNameById = (id, periodId) => {
-    console.log(periodId)
     const tutor = tutors.find(
       (t) =>
         t.tutor_periods &&

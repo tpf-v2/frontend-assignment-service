@@ -22,7 +22,7 @@ const TopicsTable = () => {
   
   const topics = Object.values(useSelector((state) => state.topics))
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
-    .filter(item => Object.keys(item).length > 0); // Elimina objetos vacíos  console.log(topics)
+    .filter(item => Object.keys(item).length > 0); // Elimina objetos vacíos
   
   
   const itemFields = [
