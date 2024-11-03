@@ -9,6 +9,11 @@ const FormAnswersTable = () => {
   const endpoint = `/forms/answers?period=${period.id}`; // Replace with your endpoint
   const title = 'Respuestas';
   const columns = ['Fecha de envio', 'Alumnos', 'Temas']; // Specify your column names here
+  const rowKeys = {
+    'Fecha de envio': 'id',
+    'Alumnos': 'students',
+    'Temas': 'topics',
+  };
 
   const renderRow = (item) => (
     <>
@@ -19,7 +24,7 @@ const FormAnswersTable = () => {
   );
 
   return (
-    <ParentTable title={title} columns={columns} endpoint={endpoint} renderRow={renderRow} />
+    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} />
   );
 };
 

@@ -14,10 +14,15 @@ const TopicsTable = () => {
   const endpoint = `/topics/?period=${period.id}`; 
   const title = 'Temas';
   const columns = ['ID', 'Tema', 'Categoría'];
+  const rowKeys = {
+    'ID': 'id',
+    'Tema': 'name',
+    'Categoría': 'category.name',
+  };
   
   const topics = Object.values(useSelector((state) => state.topics))
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
-    .filter(item => Object.keys(item).length > 0); // Elimina objetos vacíos  console.log(topics)
+    .filter(item => Object.keys(item).length > 0); // Elimina objetos vacíos
   
   
   const itemFields = [
@@ -49,14 +54,8 @@ const TopicsTable = () => {
   );
 
   return (
-      <ParentTable
-        title={title}
-        columns={columns}
-        endpoint={endpoint}
-        renderRow={renderRow} 
-        AddButtonComponent={AddButtonComponent}
-        items={topics}
-      />
+    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} AddButtonComponent={AddButtonComponent}
+    items={topics}/>
   );
 };
 
