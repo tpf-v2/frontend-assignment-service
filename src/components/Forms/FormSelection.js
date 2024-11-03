@@ -38,6 +38,8 @@ const Title = styled(Typography)(({ theme }) => ({
 
 const FormSelection = () => {
   const { cuatrimestre } = useParams(); // Captura del cuatrimestre
+  const period = useSelector((state) => state.period);
+
   const navigate = useNavigate(); // Hook para navegación
   const user = useSelector((state) => state.user); // Obtener el usuario desde Redux
   const [groupCount, setGroupAnswer] = useState([]);
@@ -49,7 +51,7 @@ const FormSelection = () => {
   useEffect(() => {
     const fetchGroupAnswer = async () => {
       try {
-        const response = await getFormAnswersById(user);
+        const response = await getFormAnswersById(period.id, user);
         const groupCount = response.data.length;
         setGroupAnswer(groupCount);
       } catch (error) {
@@ -64,7 +66,7 @@ const FormSelection = () => {
     <Container maxWidth="sm">
       <Root>
         <Title variant="h4" style={{ color: '#555' }}>
-          {cuatrimestre || '2C2024'}
+          {cuatrimestre}
         </Title>
         {user.temporal_role !== 'admin' ? (
           <Title variant="h6">Bienvenido, {user.name}!</Title>

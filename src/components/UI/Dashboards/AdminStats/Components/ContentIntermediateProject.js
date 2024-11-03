@@ -13,6 +13,8 @@ import StatCard from "./StatCard";
 import { useSelector } from "react-redux";
 
 const ContentIntermediateProject = () => {
+  const period = useSelector((state) => state.period);
+
   // Obtiene los datos de los grupos del estado
   let groupsData = Object.values(useSelector((state) => state.groups))
     .sort((a, b) => a.id - b.id)
@@ -27,14 +29,14 @@ const ContentIntermediateProject = () => {
   );
 
   // Función para obtener el nombre del tutor por su id
-  const getTutorNameById = (id) => {
+  const getTutorNameById = (id, periodId) => {
     const tutor = tutors.find(
       (t) =>
         t.tutor_periods &&
-        t.tutor_periods.length > 0 &&
-        t.tutor_periods[0].id === id
+        t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
     );
-    return tutor ? `${tutor.name} ${tutor.last_name}` : "Sin asignar";
+
+    return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
   };
 
   function formatDate(dateString) {
@@ -87,9 +89,9 @@ const ContentIntermediateProject = () => {
               <TableBody>
                 {deliveredGroups.map((group, index) => (
                   <TableRow key={index}>
-                    <TableCell>{group.id}</TableCell>
+                    <TableCell>{group.group_number}</TableCell>
                     <TableCell>
-                      {getTutorNameById(group.tutor_period_id)}
+                      {getTutorNameById(group.tutor_period_id, period.id)}
                     </TableCell>
 
                     <TableCell>

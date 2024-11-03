@@ -16,6 +16,8 @@ import { Box } from "@mui/system";
 
 // Componente para la tabla de grupos
 const GroupDataTable = () => {
+  const period = useSelector((state) => state.period);
+
   // Obtener la lista de topics desde Redux
   const topics = Object.values(useSelector((state) => state.topics))
     .map(({ version, rehydrated, ...rest }) => rest)
@@ -41,9 +43,11 @@ const GroupDataTable = () => {
   };
 
   // Función para obtener el nombre del tutor por su id
-  const getTutorNameById = (id) => {
+  const getTutorNameById = (id, periodId) => {
     const tutor = tutors.find(
-      (t) => t.tutor_periods && t.tutor_periods[0].id === id
+      (t) =>
+        t.tutor_periods &&
+        t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
     );
     return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
   };
@@ -57,6 +61,7 @@ const GroupDataTable = () => {
     ) ||
     (getTutorNameById(group.tutor_period_id).toLowerCase().includes(searchTerm.toLowerCase())) || // Filtrar por tutor
     (group.topic ? group.topic.name.toLowerCase().includes(searchTerm.toLowerCase()) : false) // Filtrar por tema
+    || (String(group.group_number).toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   // Función para descargar los datos en formato CSV
@@ -156,7 +161,7 @@ const GroupDataTable = () => {
                     <TableCell colSpan={10} align="center"></TableCell>
                   </TableRow>
                   <TableCell rowSpan={group.students?.length + 1} align="center">
-                    {group.id}
+                    {group.group_number}
                   </TableCell>
                   {group.students.map((student, index) => (
                     <TableRow key={student.id}>

@@ -9,7 +9,9 @@ import { setTopics } from '../../../../redux/slices/topicsSlice';
 import { addTopic } from '../../../../api/handleTopics';
 
 const TopicsTable = () => {
-  const endpoint = '/topics/'; 
+  const period = useSelector((state) => state.period);
+
+  const endpoint = `/topics/?period=${period.id}`; 
   const title = 'Temas';
   const columns = ['ID', 'Tema', 'Categoría'];
   const rowKeys = {

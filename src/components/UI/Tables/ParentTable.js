@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, TextField, Box } from '@mui/material';
+import { Container, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, TextField, Box,CircularProgress} from '@mui/material';
 import { styled } from '@mui/system';
 import { getTableData, deleteRow } from '../../../api/handleTableData';
 import { useSelector } from 'react-redux';
@@ -8,7 +8,7 @@ const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(4),
   padding: theme.spacing(4),
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: '#ffffff',
+  backgroundColor: "#ffffff",
   boxShadow: theme.shadows[3],
 }));
 
@@ -34,8 +34,8 @@ const ParentTable = ({ title, columns, rowKeys, endpoint, renderRow, AddButtonCo
         setData(responseData);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching data:', error);
-        setLoading(false);
+        console.error("Error fetching data:", error);
+        setLoading(false); // Handle error
       }
     };
 
@@ -58,12 +58,26 @@ const ParentTable = ({ title, columns, rowKeys, endpoint, renderRow, AddButtonCo
 
   const handleDelete = async (id) => {
     try {
+      // Call deleteResponse to remove the record
       await deleteRow(endpoint, id, user);
-      setData(prevData => prevData.filter(item => item.id !== id));
+      // Filter the data state to remove the deleted item
+      setData((prevData) => prevData.filter((item) => item.id !== id));
     } catch (error) {
-      console.error('Error deleting item:', error);
+      console.error("Error deleting item:", error);
     }
   };
+
+  if (loading)
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="300px"
+      >
+        <CircularProgress />
+      </Box>
+    );
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);

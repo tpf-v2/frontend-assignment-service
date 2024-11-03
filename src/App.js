@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import FormSelection from './components/Forms/FormSelection';
 import TutorForm from './components/Forms/TutorForm';
 import AddTopicForm from './components/Forms/AddTopicForm';
 import AddTutorForm from './components/Forms/AddTutorForm';
@@ -82,7 +81,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<LoginView />} />
             <Route path="/home" element={<HomeView />} />
-            <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} />
+            {/* <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} /> */}
             <Route path="/dashboard/:period" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />
             <Route path="/table-view" element={<ProtectedRoute><ParentTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/students" element={<ProtectedRoute><StudentsTable /></ProtectedRoute>} />
@@ -90,7 +89,7 @@ const App = () => {
             <Route path="dashboard/:period/tutors" element={<ProtectedRoute><TutorsTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/form-answers" element={<ProtectedRoute><FormAnswersTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/groups" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
-            <Route path="/form-selection/:period" element={<FormSelection />} />            
+            {/* <Route path="/form-selection/:period" element={<FormSelection />} />             */}
             <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
             <Route path="/upload/:projectType" element={<ProtectedRoute><UploadView /></ProtectedRoute>} />
             <Route path="/student-form" element={<ProtectedRoute><StudentForm /></ProtectedRoute>} />

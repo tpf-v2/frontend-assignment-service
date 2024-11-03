@@ -21,7 +21,7 @@ const StudentAvailabilityView = () => {
   return (
     
     <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>
-    {period.final_project_active ? (
+    {period.presentation_dates_available ? (
       <Root>
         <AvailabilityCalendar />
       </Root>

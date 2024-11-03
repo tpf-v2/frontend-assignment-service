@@ -14,7 +14,8 @@ const initialState = {
   tutor: "",
   topic: "",
   teammates: [],
-  period_id: ""
+  period_id: "",
+  group_number: ""
 };
 
 export const userSlice = createSlice({
@@ -43,6 +44,7 @@ export const userSlice = createSlice({
       state.topic = action.payload.topic;
       state.teammates = action.payload.teammates;
       state.period_id = action.payload.period_id;
+      state.group_number = action.payload.group_number;
     },
     setTemporalRole: (state, action) => {
       state.temporal_role = action.payload; 
