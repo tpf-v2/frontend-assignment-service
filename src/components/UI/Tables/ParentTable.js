@@ -93,14 +93,13 @@ const ParentTable = ({ title, columns, rowKeys, endpoint, renderRow, AddButtonCo
     data.forEach(item => {
       const unnestedItem = unnestKeys(item);
       const row = columns.map(column => {
-        const value = unnestedItem[rowKeys[column]]; // Obtener el valor
+      const value = unnestedItem[rowKeys[column]]; // Obtener el valor
     
         // Verificar si el valor es un array
         if (Array.isArray(value)) {
           return value.join(' || ').replace(/,/g, ' '); // Unir los elementos del array usando ';'
         }
-        
-        return value.replace(/,/g, ' ')
+        return String(value).replace(/,/g, ' ')
       }).join(',');
       csvRows.push(row);
     });
