@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, Typography } from "@mui/material";
 import { styled } from "@mui/system";
-import { useSelector } from "react-redux";
 import { purple } from "@mui/material/colors";
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -28,7 +27,6 @@ const calculateTimeLeft = (presentationDate) => {
 };
 
 const PresentationDateCard = (date) => {
-  const user = useSelector((state) => state.user);
   const [timeLeft, setTimeLeft] = useState({});
   const presentationDate = date.presentationDate;
   const dateObject = new Date(presentationDate);

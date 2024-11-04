@@ -110,7 +110,8 @@ const ParentTable = ({ title, columns, rowKeys, endpoint, renderRow, AddButtonCo
   
     const a = document.createElement('a');
     a.setAttribute('href', url);
-    a.setAttribute('download', 'table_data.csv');
+
+    a.setAttribute('download', title.toLowerCase().replace(" ","_").concat(".csv"));
     a.click();
     URL.revokeObjectURL(url);
   };
