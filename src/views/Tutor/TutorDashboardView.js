@@ -133,6 +133,7 @@ const TutorDashboardView = () => {
   const [selectedGroupReview, setSelectedGroupReview] = useState(null);
   const [events, setEvents] = useState([]);
   
+  const [loadingEvents, setLoadingEvents] = useState(false)
   
 const transformEventData = (data) => {
   const tutorEvents = data.tutor_dates.map(event => ({
@@ -179,9 +180,11 @@ const transformEventData = (data) => {
     };
 
     const getEvents = async () => {
+      setLoadingEvents(true)
       const events = await getTutorEvents(user,period);
       const formattedEvents = transformEventData(events);
       setEvents(formattedEvents); 
+      setLoadingEvents(false)
     }
 
     getGroups();
@@ -265,7 +268,7 @@ const transformEventData = (data) => {
     Inicio: <Inicio />,
     "Mis Grupos": <div>Contenido del Formulario de Fechas</div>,
     "Seleccionar Disponibilidad": <AvailabilityCalendar />,
-    "Fechas de presentación": <TutorEvents events={events}></TutorEvents>,
+    "Fechas de presentación": <TutorEvents events={events} loading={loadingEvents}></TutorEvents>,
     Revisiones: selectedGroupReview ? (
       <GroupReview group={selectedGroupReview} />
     ) : (

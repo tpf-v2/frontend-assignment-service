@@ -54,7 +54,7 @@ const PresentationDateCard = (date) => {
           now < dateObject ? (
             <>
               <Typography fontSize={18} fontWeight="bold" color="text.primary">
-                Tu grupo expondrá a las:
+                Tu grupo expondrá el:
               </Typography>
               <Typography fontSize={18} fontWeight="bold" color="text.primary">
                 {formattedDate}{" "}
