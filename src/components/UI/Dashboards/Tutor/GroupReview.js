@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { notifyGroup } from "../../../../api/notifyGroup";
 import { updateGroup } from "../../../../api/updateGroups";
 import { downloadProject, fetchProjectPdf } from "../../../../api/handleProjects";
+import MySnackbar from "../../MySnackBar";
 
 // Estilos
 const GroupReviewContainer = styled(Box)(({ theme }) => ({
@@ -49,6 +50,16 @@ const GroupReview = ({ group }) => {
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
 
+  const [notification, setNotification] = useState({
+    open: false,
+    message: "",
+    status: "",
+  });
+
+  const handleSnackbarClose = () => {
+    setNotification({ ...notification, open: false });
+  };
+
   const handleCommentChange = (event) => {
     setComment(event.target.value);
   };
@@ -65,11 +76,23 @@ const GroupReview = ({ group }) => {
   const handleSubmit = async () => {
     try {
       console.log(`Comentario para Grupo ${group.id}: ${comment}`);
-      await notifyGroup(user, comment, group.id);
+      //await notifyGroup(user, comment, group.id);
       group.pre_report_approved = true;
-      await updateGroup(user, period.id, group);
+      //await updateGroup(user, period.id, group);
+      setNotification({
+        open: true,
+        message:
+          "Comentario enviado con exito!",
+        status: "success",
+      });
     } catch (error) {
       console.error("Error al enviar feedback:", error);
+      setNotification({
+        open: true,
+        message:
+          "Hubo un error al enviar el comentario",
+        status: "error",
+      });
     } finally {
       setComment("");
     }
@@ -86,6 +109,7 @@ const GroupReview = ({ group }) => {
   };
 
   useEffect(() => {
+    console.log(group)
     loadPdfPreview();
   }, [group.id, user, period]);
 
@@ -136,11 +160,18 @@ const GroupReview = ({ group }) => {
           variant="contained"
           onClick={handleSubmit}
           color="primary"
+          disabled={group.pre_report_approved}
           sx={{ width: "100%", borderRadius: "4px" }} // Botón de enviar que también ocupa todo el ancho
         >
-          Enviar
+          {group.pre_report_approved ? "El comentario ya fue enviado" : "Enviar"}
         </Button>
       </Box>
+      <MySnackbar
+        open={notification.open}
+        handleClose={handleSnackbarClose}
+        message={notification.message}
+        status={notification.status}
+      />
     </GroupReviewContainer>
   );
 };
