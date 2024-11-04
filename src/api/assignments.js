@@ -120,3 +120,22 @@ export const confirmDates = async (user, events) => {
   }
 };
 
+export const getAssignedDates = async (user, period) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+    params: {
+      cache_bust: new Date().getTime(), // add params to avoid caching
+    },
+  };
+
+  try {
+    const url = `${BASE_URL}/assignments/date-assigment?period_id=${period.id}`;
+    const response = await axios.get(url, config);
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+

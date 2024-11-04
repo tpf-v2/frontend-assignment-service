@@ -38,11 +38,13 @@ const EvaluatorDialog = ({ user, open, handleClose, handleEvaluatorDialogClose }
   }, []);
 
   const handleToggleTutor = (tutor) => {
-    setSelectedTutors((prevSelectedTutors) =>
-      prevSelectedTutors.includes(tutor.id)
-        ? prevSelectedTutors.filter((id) => id !== tutor.id)
-        : [...prevSelectedTutors, tutor.id]
-    );
+    if (!initialSelectedTutors.includes(tutor.id)) {
+      setSelectedTutors((prevSelectedTutors) =>
+        prevSelectedTutors.includes(tutor.id)
+          ? prevSelectedTutors.filter((id) => id !== tutor.id)
+          : [...prevSelectedTutors, tutor.id]
+      );
+    }
   };
 
   const handleCancel = () => {
@@ -52,14 +54,19 @@ const EvaluatorDialog = ({ user, open, handleClose, handleEvaluatorDialogClose }
 
   const confirmSelection = async () => {
     try {
-    //   const response = await axios.post("/api/evaluators", {
-    //     periodId: period.id,
-    //     evaluators: selectedTutors,
-    //   })
+      // Filtra solo los tutores nuevos que no estaban inicialmente seleccionados
+      const newEvaluators = selectedTutors.filter(
+        (tutorId) => !initialSelectedTutors.includes(tutorId)
+      );
+  
+      // Llama a makeEvaluator solo para los evaluadores nuevos
+      for (const tutorId of newEvaluators) {
+        await makeEvaluator(period.id, tutorId, user);
+      }
+      
+      setInitialSelectedTutors((prevInitial) => [...prevInitial, ...newEvaluators]);
 
-      for (const tutorId of selectedTutors) {
-      await makeEvaluator(period.id, tutorId, user);
-        }
+      console.log("Llamadas al backend completadas para evaluadores nuevos.");
     } catch (error) {
       console.error("Error al llamar al backend:", error);
     }

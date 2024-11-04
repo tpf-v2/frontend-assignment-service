@@ -10,11 +10,11 @@ import {
   TextField,
   DialogActions,
   Button,
-  IconButton,
   MenuItem,
   Select,
   DialogContentText,
 } from "@mui/material";
+import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import dayjs from "dayjs";
@@ -24,14 +24,16 @@ import CalendarSection from "./Dates/CalendarSection";
 import LoadingDialog from "./Dates/LoadingDialog";
 import EvaluatorDialog from "./Dates/EvaluatorDialog";
 import SpecificDateDialog from "./Dates/SpecificDateDialog";
-import { assignSpecificDate, confirmDates, dates } from "../../api/assignments";
-import CloseIcon from "@mui/icons-material/Close"; // Importa el ícono Close
-import { CalendarStyled } from "../../styles/AvailabilityCalendarStyle";
-import { momentLocalizer } from "react-big-calendar";
-import moment from "moment";
+import {
+  assignSpecificDate,
+  confirmDates,
+  dates,
+  getAssignedDates,
+} from "../../api/assignments";
 import ConfirmDeleteModal from "../ConfirmDeleteModal";
 import { togglePeriodSetting } from "../../redux/slices/periodSlice";
 import updatePeriod from "../../api/updatePeriod";
+import ResultsDialog from "./Dates/ResultsDialog";
 
 const evaluatorColors = [
   "#87CEFA", // Light Blue
@@ -78,6 +80,7 @@ const Dates = () => {
   const [selectedHour, setSelectedHour] = useState("");
 
   const [events, setEvents] = useState([]);
+  const [initialEvents, setInitialEvents] = useState([]);
 
   // Genera las opciones de horas (ej: 9:00, 10:00, ..., 17:00)
   const hours = Array.from({ length: 13 }, (_, i) => `${9 + i}:00`);
@@ -102,11 +105,57 @@ const Dates = () => {
   const [eventToDelete, setEventToDelete] = useState(null);
   const [errorDialogOpen, setErrorDialogOpen] = useState(false);
 
+  const [defaultDate, setDefaultDate] = useState(null); // Estado para la fecha predeterminada
+  const [initialDefaultDate, setInitialDefaultDate] = useState(null); // Estado para la fecha predeterminada
+
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const dates = await getAssignedDates(user, period);
+
+        if (dates.length > 0) {
+          const formattedEvents = dates.map((result) => {
+            console.log(result);
+            const color = getEvaluatorColor(
+              result.evaluator_id,
+              evaluatorColorMap
+            );
+
+            return {
+              title: `Grupo ${
+                result.group_number
+              } - Tutor ${getTutorNameByTutorId(
+                result.tutor_id
+              )} - Evaluador ${getTutorNameByTutorId(result.evaluator_id)}`,
+              start: new Date(result.date),
+              end: new Date(new Date(result.date).getTime() + 60 * 60 * 1000), // Dura 1 hora
+              color: color,
+              result: result,
+            };
+          });
+
+          const sortedEvents = formattedEvents.sort(
+            (a, b) => a.start - b.start
+          );
+          if (sortedEvents.length > 0) {
+            setInitialDefaultDate(new Date(sortedEvents[0].start));
+          }
+          setInitialEvents(formattedEvents);
+        }
+      } catch (error) {
+        console.error("Error fetching assigned dates:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Transforma datesResult en eventos para el calendario
   useEffect(() => {
     if (datesResult.length > 0) {
+      console.log(datesResult);
       const formattedEvents = datesResult.map((result) => {
         const color = getEvaluatorColor(result.evaluator_id, evaluatorColorMap);
 
@@ -120,6 +169,12 @@ const Dates = () => {
           result: result,
         };
       });
+
+      const sortedEvents = formattedEvents.sort((a, b) => a.start - b.start);
+      if (sortedEvents.length > 0) {
+        setDefaultDate(new Date(sortedEvents[0].start));
+      }
+
       setEvents(formattedEvents);
     }
   }, [datesResult]);
@@ -128,7 +183,22 @@ const Dates = () => {
     setEvaluatorColorMap((prevMap) => ({ ...prevMap }));
   }, [events]);
 
-  const localizer = momentLocalizer(moment);
+  const generateCSVData = () => {
+    return initialEvents.map((event) => ({
+      "Numero de grupo": event.result.group_number,
+      "Nombre y apellido del tutor": getTutorNameByTutorId(
+        event.result.tutor_id
+      ),
+      "Nombre y apellido del evaluador": getTutorNameByTutorId(
+        event.result.evaluator_id
+      ),
+      Fecha: new Date(event.result.date).toLocaleDateString("es-ES"),
+      Hora: new Date(event.result.date).toLocaleTimeString("es-ES", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    }));
+  };
 
   const handleSnackbarOpen = (message, status = "info") => {
     setSnackbarMessage(message);
@@ -167,21 +237,6 @@ const Dates = () => {
       const response = await dates(user, period, maxDifference, maxGroups);
       console.log("Dates response:", response);
 
-      dispatch(
-        togglePeriodSetting({ field: "presentation_dates_assignment_completed" })
-      );
-  
-      // Crea el objeto de configuración actualizado
-      const updatedSettings = {
-        id: period.id,
-        ...period,
-        presentation_dates_assignment_completed: true, // Actualización directa
-      };
-  
-      // Llama a la función de actualización del período
-      const result = await updatePeriod(updatedSettings, user);
-      console.log("Updated successfully:", result);
-  
       setShowResults(true);
       setDatesResult(response.assigments);
     } catch (error) {
@@ -273,7 +328,7 @@ const Dates = () => {
   };
 
   // Manejo del popup de confirmación
-  const handleConfirmResults = () => {
+  const handleConfirmResults = async () => {
     setOpenConfirmDialog(true); // Abrir el popup de confirmación
   };
 
@@ -316,7 +371,7 @@ const Dates = () => {
         "No se pueden guardar los cambios. Hay grupos con más de una fecha asignada.",
         "error"
       );
-      return; 
+      return;
     }
 
     setIsEditing(false);
@@ -337,6 +392,21 @@ const Dates = () => {
 
   const handleAcceptResults = async () => {
     await confirmDates(user, events);
+
+    dispatch(
+      togglePeriodSetting({ field: "presentation_dates_assignment_completed" })
+    );
+
+    // Crea el objeto de configuración actualizado
+    const updatedSettings = {
+      id: period.id,
+      ...period,
+      presentation_dates_assignment_completed: true, // Actualización directa
+    };
+
+    // Llama a la función de actualización del período
+    const result = await updatePeriod(updatedSettings, user);
+    console.log("Updated successfully:", result);
 
     setOpenConfirmDialog(false); // Cerrar el popup de confirmación
     setShowResults(false);
@@ -460,11 +530,35 @@ const Dates = () => {
         <Typography variant="h5" sx={{ fontWeight: "bold" }}>
           Resultados
         </Typography>
+        {initialEvents.length > 0 && (
+          <Button
+            variant="outlined"
+            // onClick={() => navigate(`/dashboard/${period.id}/groups`)}
+            sx={{
+              padding: "6px 16px",
+              textTransform: "none", // Evitar que el texto esté en mayúsculas
+            }}
+          >
+            <CSVLink
+              data={generateCSVData()}
+              filename={`Calendario_Resultados_${new Date().toLocaleDateString(
+                "es-ES"
+              )}.csv`}
+              className="btn btn-primary"
+              target="_blank"
+            >
+              Descargar calendario como CSV
+            </CSVLink>
+          </Button>
+        )}
       </Grid>
 
       {/* Sección de Tabla y Botón a la derecha */}
       <Grid item xs={12}>
-        <CalendarSection />
+        <CalendarSection
+          events={initialEvents}
+          defaultDate={initialDefaultDate}
+        />
       </Grid>
 
       {/* Spinner de carga */}
@@ -504,125 +598,21 @@ const Dates = () => {
         setTopic={setTopic}
       />
 
-      <Dialog
+      <ResultsDialog
         open={showResults}
         onClose={handleCloseResults}
-        fullWidth
-        maxWidth="xl"
-        PaperProps={{
-          style: {
-            height: "90vh", // Ajusta la altura total del diálogo
-            maxHeight: "90vh", // Limita la altura máxima para que no desborde
-            borderRadius: "8px",
-          },
-        }}
-      >
-        <DialogTitle sx={{ backgroundColor: "#e0f7fa", color: "#006064" }}>
-          Resultados
-          <IconButton
-            edge="end"
-            color="inherit"
-            onClick={handleCloseResults}
-            aria-label="close"
-            sx={{ position: "absolute", right: 8, top: 8 }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent
-          dividers
-          sx={{ maxHeight: "90vh", backgroundColor: "#f4f6f8" }}
-        >
-          <CalendarStyled
-            localizer={localizer}
-            onSelectSlot={handleSelectSlot}
-            onSelectEvent={handleSelectEvent}
-            events={events}
-            selectable
-            views={["week"]}
-            defaultView="week"
-            timeslots={1} // Aumenta la cantidad de slots por cada intervalo de tiempo
-            step={60}
-            showMultiDayTimes
-            defaultDate={new Date()}
-            style={{
-              height: "90vh",
-              margin: "20px",
-              backgroundColor: "white",
-              borderRadius: "8px",
-              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
-            }}
-            eventPropGetter={(event) => ({
-              style: {
-                backgroundColor: event.color,
-                color: "black",
-                fontSize: "0.85rem",
-                borderRadius: "4px",
-                padding: "4px",
-              },
-            })}
-            min={new Date(0, 0, 0, 9, 0, 0)}
-            max={new Date(0, 0, 0, 21, 0, 0)}
-            dayPropGetter={(date) => {
-              const day = date.getDay();
-              if (day === 0 || day === 6) {
-                return { style: { display: "none" } };
-              }
-              return {};
-            }}
-          />
-        </DialogContent>
-
-        <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
-          {!isEditing && (
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleStartEditing} // Comienza el modo de edición
-            >
-              Editar resultado
-            </Button>
-          )}
-          {isEditing && (
-            <Button
-              color="error"
-              variant="outlined"
-              onClick={handleCancelEditing} // Cancela la edición y restaura la copia original
-            >
-              Cancelar
-            </Button>
-          )}
-          {isEditing && (
-            <Button
-              onClick={handleSaveChanges}
-              color="primary"
-              variant="contained"
-              // disabled={!canSaveChanges()} // Desactiva el botón si no se pueden guardar los cambios
-            >
-              Guardar cambios
-            </Button>
-          )}
-
-          {!isEditing && (
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={handleRerunAlgorithm}
-            >
-              Volver a correr algoritmo
-            </Button>
-          )}
-          {!isEditing && (
-            <Button
-              variant="contained"
-              color="success"
-              onClick={handleConfirmResults}
-            >
-              Confirmar resultados
-            </Button>
-          )}
-        </DialogActions>
-      </Dialog>
+        events={events}
+        isEditing={isEditing}
+        handleStartEditing={handleStartEditing}
+        handleCancelEditing={handleCancelEditing}
+        handleSaveChanges={handleSaveChanges}
+        handleCloseResults={handleCloseResults}
+        handleSelectSlot={handleSelectSlot}
+        handleSelectEvent={handleSelectEvent}
+        defaultDate={defaultDate}
+        handleRerunAlgorithm={handleRerunAlgorithm}
+        handleConfirmResults={handleConfirmResults}
+      />
 
       <ConfirmDeleteModal
         open={confirmDeleteOpen}
@@ -661,7 +651,9 @@ const Dates = () => {
                   setTopic(selectedGroup.topic.name);
                 }}
                 renderValue={(selected) => {
-                  const selectedGroup = groups.find((g) => g.group_number === selected);
+                  const selectedGroup = groups.find(
+                    (g) => g.group_number === selected
+                  );
                   return selectedGroup
                     ? `Grupo ${selectedGroup.group_number}`
                     : "Selecciona un Grupo";
