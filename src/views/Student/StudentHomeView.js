@@ -127,7 +127,7 @@ const StudentHomeView = () => {
       <Box sx={{ flex: 1, mr: 8, mt: 8 }}>
         <StudentInfo />
         <Box sx={{ mb: 1 }} />
-        <PresentationDateCard presentationDate={group.exhibition_date}/>
+        {!loading && group.exhibition_date && <PresentationDateCard presentationDate={group.exhibition_date}/>}
         {!loading && (
           <>
             <SubmitButton
