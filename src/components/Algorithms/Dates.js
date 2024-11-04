@@ -297,7 +297,8 @@ const Dates = () => {
         group.id,
         tutor.id,
         evaluador,
-        formatUpdatedDateTime(selectedDateTime, selectedHour)
+        formatUpdatedDateTime(selectedDateTime, selectedHour),
+        period.id
       );
       handleSnackbarOpen("Fecha asignada correctamente", "success");
     } catch {

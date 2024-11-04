@@ -25,7 +25,7 @@ const StudentsTable = () => {
   .filter(item => Object.keys(item).length > 0);
 
   const itemFields = [
-    { name: 'id', label: 'Padron', type: 'text' },
+    { name: 'id', label: 'Padron', type: 'number' },
     { name: 'name', label: 'Nombre', type: 'text' },
     { name: 'last_name', label: 'Apellido', type: 'text' },
     { name: 'email', label: 'Email', type: 'text' },

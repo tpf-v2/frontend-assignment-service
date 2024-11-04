@@ -65,7 +65,8 @@ export const assignSpecificDate = async (
   group_id,
   tutor_id,
   evaluator_id,
-  date
+  date,
+  period_id
 ) => {
   const config = {
     headers: {
@@ -86,7 +87,7 @@ export const assignSpecificDate = async (
   ];
 
   try {
-    const url = `${BASE_URL}/assignments/date-assigment`;
+    const url = `${BASE_URL}/assignments/date-assigment?period_id=${period_id}`;
     const response = await axios.put(url, body, config);
     return response.data;
   } catch (error) {
