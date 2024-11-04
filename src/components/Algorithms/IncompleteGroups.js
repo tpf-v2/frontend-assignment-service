@@ -29,7 +29,7 @@ const IncompleteGroups = () => {
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
   const groups = Object.values(useSelector((state) => state.groups))
-    .sort((a, b) => a.id - b.id)
+    .sort((a, b) => a.group_number - b.group_number)
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
   const topics = Object.values(useSelector((state) => state.topics))

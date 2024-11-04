@@ -36,7 +36,7 @@ const TopicTutor = () => {
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
   const groups = Object.values(useSelector((state) => state.groups))
-    .sort((a, b) => a.id - b.id)
+    .sort((a, b) => a.group_number - b.group_number)
     .map(({ version, rehydrated, ...rest }) => rest)
     .filter((item) => Object.keys(item).length > 0);
   const topics = Object.values(useSelector((state) => state.topics))

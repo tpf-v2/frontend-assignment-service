@@ -143,7 +143,7 @@ const UploadCSVForm = ({ formType, setItems }) => {
               {fileError}
             </Typography>
           )}
-          <ButtonStyled variant="contained" color="primary" type="submit" fullWidth>
+          <ButtonStyled variant="contained" color="primary" type="submit" fullWidth disabled={loading}>
             {loading ? "Cargando..." : "Enviar"}
           </ButtonStyled>
         </form>
