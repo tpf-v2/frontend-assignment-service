@@ -76,9 +76,9 @@ const GroupReview = ({ group }) => {
   const handleSubmit = async () => {
     try {
       console.log(`Comentario para Grupo ${group.id}: ${comment}`);
-      //await notifyGroup(user, comment, group.id);
+      await notifyGroup(user, comment, group.id);
       group.pre_report_approved = true;
-      //await updateGroup(user, period.id, group);
+      await updateGroup(user, period.id, group);
       setNotification({
         open: true,
         message:

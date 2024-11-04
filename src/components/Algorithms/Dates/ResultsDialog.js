@@ -11,6 +11,7 @@ import CloseIcon from "@mui/icons-material/Close"; // Importa el ícono Close
 import { CalendarStyled } from "../../../styles/AvailabilityCalendarStyle";
 import { momentLocalizer } from "react-big-calendar";
 import moment from "moment";
+import { CSVLink } from "react-csv";
 
 const ResultsDialog = ({
   open,
@@ -26,9 +27,26 @@ const ResultsDialog = ({
   defaultDate,
   handleRerunAlgorithm,
   handleConfirmResults,
+  getTutorNameByTutorId
 }) => {
   const localizer = momentLocalizer(moment);
 
+  const generateCSVData = () => {
+    return events.map((event) => ({
+      "Numero de grupo": event.result.group_number,
+      "Nombre y apellido del tutor": getTutorNameByTutorId(
+        event.result.tutor_id
+      ),
+      "Nombre y apellido del evaluador": getTutorNameByTutorId(
+        event.result.evaluator_id
+      ),
+      Fecha: new Date(event.result.date).toLocaleDateString("es-ES"),
+      Hora: new Date(event.result.date).toLocaleTimeString("es-ES", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    }));
+  };
   return (
     <Dialog
       open={open}
@@ -103,6 +121,27 @@ const ResultsDialog = ({
         {!isEditing && (
           <Button
             variant="outlined"
+            color="primary"
+          >
+             <CSVLink
+              data={generateCSVData()}
+              filename={`Calendario_Resultados_${new Date().toLocaleDateString(
+                "es-ES"
+              )}.csv`}
+              className="btn btn-primary"
+              target="_blank"
+              style={{
+                textDecoration: "none", // Quitar el estilo de enlace
+                color: "inherit", // Heredar el color del botón
+              }}
+            >
+              Descargar resultados como CSV
+            </CSVLink>
+          </Button>
+        )}
+        {!isEditing && (
+          <Button
+            variant="contained"
             color="primary"
             onClick={handleStartEditing} // Comienza el modo de edición
           >

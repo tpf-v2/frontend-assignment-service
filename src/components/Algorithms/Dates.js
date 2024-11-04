@@ -108,10 +108,13 @@ const Dates = () => {
   const [defaultDate, setDefaultDate] = useState(null); // Estado para la fecha predeterminada
   const [initialDefaultDate, setInitialDefaultDate] = useState(null); // Estado para la fecha predeterminada
 
+  const [loadingDates, setLoadingDates] = useState(false);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoadingDates(true)
       try {
         const dates = await getAssignedDates(user, period);
 
@@ -147,6 +150,7 @@ const Dates = () => {
       } catch (error) {
         console.error("Error fetching assigned dates:", error);
       }
+      setLoadingDates(false)
     };
 
     fetchData();
@@ -172,11 +176,15 @@ const Dates = () => {
 
       const sortedEvents = formattedEvents.sort((a, b) => a.start - b.start);
       if (sortedEvents.length > 0) {
+        console.log(new Date(sortedEvents[0].start))
         setDefaultDate(new Date(sortedEvents[0].start));
       }
 
       setEvents(formattedEvents);
+      setShowResults(true);
     }
+    setRunning(false);
+    setOpenDialog(false)
   }, [datesResult]);
 
   useEffect(() => {
@@ -237,14 +245,11 @@ const Dates = () => {
       const response = await dates(user, period, maxDifference, maxGroups);
       console.log("Dates response:", response);
 
-      setShowResults(true);
       setDatesResult(response.assigments);
     } catch (error) {
       console.error("Error running algorithm:", error);
       setErrorDialogOpen(true);
-    } finally {
       setRunning(false);
-      setOpenDialog(false);
     }
   };
 
@@ -392,7 +397,7 @@ const Dates = () => {
   };
 
   const handleAcceptResults = async () => {
-    await confirmDates(user, events);
+    await confirmDates(user, events, period.id);
 
     dispatch(
       togglePeriodSetting({ field: "presentation_dates_assignment_completed" })
@@ -411,6 +416,8 @@ const Dates = () => {
 
     setOpenConfirmDialog(false); // Cerrar el popup de confirmación
     setShowResults(false);
+
+    setInitialEvents((prevEvents) => [...prevEvents, ...events]);
   };
 
   const handleSelectSlot = ({ start, end }) => {
@@ -547,6 +554,10 @@ const Dates = () => {
               )}.csv`}
               className="btn btn-primary"
               target="_blank"
+              style={{
+                textDecoration: "none", // Quitar el estilo de enlace
+                color: "inherit", // Heredar el color del botón
+              }}
             >
               Descargar calendario como CSV
             </CSVLink>
@@ -559,6 +570,7 @@ const Dates = () => {
         <CalendarSection
           events={initialEvents}
           defaultDate={initialDefaultDate}
+          loadingDates={loadingDates}
         />
       </Grid>
 
@@ -613,6 +625,7 @@ const Dates = () => {
         defaultDate={defaultDate}
         handleRerunAlgorithm={handleRerunAlgorithm}
         handleConfirmResults={handleConfirmResults}
+        getTutorNameByTutorId={getTutorNameByTutorId}
       />
 
       <ConfirmDeleteModal
