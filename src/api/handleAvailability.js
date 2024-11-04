@@ -18,7 +18,7 @@ export const sendAvailability = async (user, slots, period_id) => {
     }
 };
 
-export const sendStudentAvailability = async (perido_id, user, slots, group_id) => {
+export const sendStudentAvailability = async (user, slots, group_id,period_id) => {
   const config = {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -26,7 +26,7 @@ export const sendStudentAvailability = async (perido_id, user, slots, group_id) 
     };
   
     try {
-      const url = `${BASE_URL}/api/dates/groups?group_id=${group_id}&period=${perido_id}`;
+      const url = `${BASE_URL}/api/dates/groups?group_id=${group_id}&period=${period_id}`;
       const response = await axios.post(url, slots, config);
       return response.data;
     } catch (error) {
