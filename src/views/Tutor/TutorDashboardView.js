@@ -186,6 +186,7 @@ const transformEventData = (data) => {
 
     getGroups();
     getGroupsToReview();
+    getEvents();
   }, [user]);
 
   const renderGroups = () => {

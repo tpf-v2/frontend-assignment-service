@@ -173,7 +173,7 @@ const AvailabilityCalendar = () => {
           },
         ];
 
-        user.role === "student" ? await sendStudentAvailability(user, formattedEvents, user.group_id) : await sendTutorAvailability(user, formattedEvents, user.id, period.id);
+        user.role === "student" ? await sendStudentAvailability(user, formattedEvents, user.group_id, period.id) : await sendTutorAvailability(user, formattedEvents, user.id, period.id);
         handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
       } catch (error) {
         handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
