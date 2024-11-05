@@ -73,9 +73,20 @@ const TopicTutor = () => {
     return topic ? topic.name : ""; // Si no encuentra el topic, mostrar 'Desconocido'
   };
 
-  const getTopicsForTutor = (tutorId) => {
-    const tutor = tutors.find((t) => t.id === tutorId);
-    return tutor ? tutor.tutor_periods[0]?.topics.map((t) => t.name) : [];
+  const getTopicsForTutor = (tutorId, periodId) => {
+    const tutor = tutors.find(
+      (t) =>
+        t.id === tutorId &&
+        t.tutor_periods &&
+        t.tutor_periods.some((tp) => tp.period_id === periodId)
+    );
+  
+    // Busca los temas solo del periodo correspondiente si el tutor existe
+    const periodTopics = tutor
+      ? tutor.tutor_periods.find((tp) => tp.period_id === periodId)?.topics
+      : [];
+  
+    return periodTopics ? periodTopics.map((t) => t.name) : [];
   };
 
   // Función para obtener el nombre del tutor por su id
@@ -702,7 +713,7 @@ const TopicTutor = () => {
             >
               <Tooltip title="DCG (Discounted Cumulative Gain) evalúa cuán relevantes son los resultados devueltos por el algoritmo, penalizando aquellos que no se eligió las primeras preferencias.">
                 <Typography variant="body2">
-                  {dcg !== null ? `Eficiencia (DCG): ${dcg}` : "Sin calcular"}
+                  {dcg !== null ? `Eficiencia (DCG): ${dcg.toFixed(2)}` : "Sin calcular"}
                 </Typography>
               </Tooltip>
             </Box>
