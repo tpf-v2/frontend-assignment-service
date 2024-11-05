@@ -21,8 +21,7 @@ const ButtonSection = ({
       variant="outlined"
       color="primary"
       onClick={handleSelectEvaluators}
-      disabled={true}
-    //   disabled={period.presentation_dates_available || !period.topics_tutors_assignment_completed}
+      disabled={period.presentation_dates_assignment_completed || !period.topics_tutors_assignment_completed}
       sx={{
         padding: "6px 26px",
         boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.07)",
@@ -35,8 +34,7 @@ const ButtonSection = ({
       variant="outlined"
       color="primary"
       onClick={handleAssignEspecificDate}
-      disabled={true}
-    //   disabled={period.presentation_dates_available || !period.topics_tutors_assignment_completed}
+      disabled={period.presentation_dates_assignment_completed || !period.topics_tutors_assignment_completed}
       sx={{
         padding: "6px 26px",
         boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.07)",
@@ -50,8 +48,7 @@ const ButtonSection = ({
       variant="contained"
       color="primary"
       onClick={handleRun}
-      disabled={true}
-    //   disabled={period.presentation_dates_available || !period.topics_tutors_assignment_completed}
+      disabled={period.presentation_dates_assignment_completed || !period.topics_tutors_assignment_completed}
       sx={{
         padding: "6px 26px",
         boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",

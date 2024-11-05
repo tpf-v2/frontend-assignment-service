@@ -8769,6 +8769,11 @@
     "react-overlays" "^5.2.1"
     "uncontrollable" "^7.2.1"
 
+"react-csv@^2.2.2":
+  "integrity" "sha512-RG5hOcZKZFigIGE8LxIEV/OgS1vigFQT4EkaHeKgyuCbUAu9Nbd/1RYq++bJcJJ9VOqO/n9TZRADsXNDR4VEpw=="
+  "resolved" "https://registry.npmjs.org/react-csv/-/react-csv-2.2.2.tgz"
+  "version" "2.2.2"
+
 "react-datepicker@^7.4.0":
   "integrity" "sha512-vSSok4DTZ9/Os8O4HjZLxh4SZVFU6dQvoCX6mfbNdBqMsBBdzftrvMz0Nb4UUVVbgj9o8PfX84K3/31oPrTqmg=="
   "resolved" "https://registry.npmjs.org/react-datepicker/-/react-datepicker-7.4.0.tgz"

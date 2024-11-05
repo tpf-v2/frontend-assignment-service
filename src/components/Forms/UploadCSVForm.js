@@ -16,6 +16,7 @@ import { styled } from '@mui/system';
 import axios from 'axios';
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
+import { setTopics } from '../../redux/slices/topicsSlice';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -97,7 +98,7 @@ const UploadCSVForm = ({ formType, setItems }) => {
       if (response.status === 201) {
         setResponseMessage(`Archivo de ${formType} cargado con éxito`);
         setIsSuccess(true);
-        dispatch(setItems(response));
+        dispatch(setTopics(response.data));
       } else {
         setResponseMessage(`Hubo un problema al cargar el archivo de ${formType}`);
         setIsSuccess(false);
@@ -142,7 +143,7 @@ const UploadCSVForm = ({ formType, setItems }) => {
               {fileError}
             </Typography>
           )}
-          <ButtonStyled variant="contained" color="primary" type="submit" fullWidth>
+          <ButtonStyled variant="contained" color="primary" type="submit" fullWidth disabled={loading}>
             {loading ? "Cargando..." : "Enviar"}
           </ButtonStyled>
         </form>

@@ -31,6 +31,7 @@ import StudentAvailabilityView from './views/Student/StudentAvailabilityView';
 import { setStudents } from './redux/slices/studentsSlice';
 import { setTutors } from './redux/slices/tutorsSlice';
 import { setTopics } from './redux/slices/topicsSlice';
+import Credits from './views/CreditsView';
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -81,6 +82,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<LoginView />} />
             <Route path="/home" element={<HomeView />} />
+            <Route path="/credits" element={<Credits />} />
             {/* <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} /> */}
             <Route path="/dashboard/:period" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />
             <Route path="/table-view" element={<ProtectedRoute><ParentTable /></ProtectedRoute>} />

@@ -19,7 +19,8 @@ import {
   CircularProgress,
   Select,
   MenuItem,
-  FormControl, // Importa IconButton
+  FormControl,
+  Tooltip, // Importa IconButton
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close"; // Importa el ícono Close
 import { Box } from "@mui/system";
@@ -31,12 +32,13 @@ import { setGroups } from "../../redux/slices/groupsSlice";
 import { togglePeriodSetting } from "../../redux/slices/periodSlice";
 import updatePeriod from "../../api/updatePeriod";
 import { useNavigate } from "react-router-dom";
+import { NumericFormat } from "react-number-format";
 
 const TopicTutor = () => {
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
   const groups = Object.values(useSelector((state) => state.groups))
-    .sort((a, b) => a.id - b.id)
+    .sort((a, b) => a.group_number - b.group_number)
     .map(({ version, rehydrated, ...rest }) => rest)
     .filter((item) => Object.keys(item).length > 0);
   const topics = Object.values(useSelector((state) => state.topics))
@@ -55,6 +57,9 @@ const TopicTutor = () => {
   const [originalAssignments, setOriginalAssignments] = useState([]); // Copia de assignments para restaurar si se cancela
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false); // Dialogo para confirmar resultados
 
+  const [dcg, setDcg] = useState(null);
+  const [algorithmType, setAlgorithmType] = useState("Programacion Lineal"); // Estado para el tipo de algoritmo
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -68,9 +73,20 @@ const TopicTutor = () => {
     return topic ? topic.name : ""; // Si no encuentra el topic, mostrar 'Desconocido'
   };
 
-  const getTopicsForTutor = (tutorId) => {
-    const tutor = tutors.find((t) => t.id === tutorId);
-    return tutor ? tutor.tutor_periods[0]?.topics.map((t) => t.name) : [];
+  const getTopicsForTutor = (tutorId, periodId) => {
+    const tutor = tutors.find(
+      (t) =>
+        t.id === tutorId &&
+        t.tutor_periods &&
+        t.tutor_periods.some((tp) => tp.period_id === periodId)
+    );
+  
+    // Busca los temas solo del periodo correspondiente si el tutor existe
+    const periodTopics = tutor
+      ? tutor.tutor_periods.find((tp) => tp.period_id === periodId)?.topics
+      : [];
+  
+    return periodTopics ? periodTopics.map((t) => t.name) : [];
   };
 
   // Función para obtener el nombre del tutor por su id
@@ -84,6 +100,10 @@ const TopicTutor = () => {
     return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
   };
 
+  const getGroupNumberById = (id) => {
+    const group = groups.find((g) => g.id === id);
+    return group.group_number; // Si no encuentra el topic, mostrar 'Desconocido'
+  }
   const handleRun = () => {
     setOpenDialog(true);
   };
@@ -151,14 +171,20 @@ const TopicTutor = () => {
     );
   };
 
-  const handleRunAlgorithm = async () => {
+  const handleRunAlgorithm = async (algorithmType) => {
     try {
       setRunning(true);
       setOpenDialog(false);
       setShowResults(false);
-      const response = await groupsTopicTutor(user, period, maxDifference);
+      const response = await groupsTopicTutor(
+        user,
+        period,
+        maxDifference,
+        algorithmType
+      );
       console.log("Groups topic tutor response:", response);
-      setAssignments(response);
+      setAssignments(response.assigment);
+      setDcg(response.dcg);
       setShowResults(true);
     } catch (error) {
       console.error("Error running algorithm:", error);
@@ -203,6 +229,60 @@ const TopicTutor = () => {
     setOpenConfirmDialog(false); // Cierra el popup
     setShowResults(false);
     // Lógica adicional para confirmar los resultados
+  };
+
+  const downloadCSV = () => {
+    const csvRows = [];
+    csvRows.push(
+      [
+        "Grupo número",
+        "Tutor asignado",
+        "Tema asignado",
+        "Preferencia 1",
+        "Preferencia 2",
+        "Preferencia 3"
+      ].join(",")
+    );
+
+    assignments.forEach((group, index) => {
+      // group.students.forEach((student, index) => {
+        const row = [
+          getGroupNumberById(group.id),
+          group.tutor ? (
+            `${group.tutor.name} ${group.tutor.last_name}`
+          ) : (
+            "Sin asignar"
+          ),
+          group.topic ? (
+            group.topic.name.replace(/,/g, "-")
+          ) : (
+            "Sin asignar"
+          ),
+          getTopicNameById(
+            getGroupById(group.id).preferred_topics[0]
+          ).replace(/,/g, "-") || "",
+          getTopicNameById(
+            getGroupById(group.id).preferred_topics[1]
+          ).replace(/,/g, "-") ||
+          "",
+          getTopicNameById(
+            getGroupById(group.id).preferred_topics[2]
+          ).replace(/,/g, "-") ||
+          ""
+        ].join(",");
+        csvRows.push(row);
+      // });
+    });
+
+    const csvString = csvRows.join("\n");
+    const blob = new Blob([csvString], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.setAttribute("href", url);
+    a.setAttribute("download", `topic_tutor_${maxDifference}.csv`);
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -331,7 +411,9 @@ const TopicTutor = () => {
                         )
                         .map((group) => (
                           <TableRow key={group.id}>
-                            <TableCell align="center">{group.group_number}</TableCell>
+                            <TableCell align="center">
+                              {group.group_number}
+                            </TableCell>
 
                             <TableCell>
                               {group.tutor_period_id
@@ -401,21 +483,39 @@ const TopicTutor = () => {
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Seleccione el límite máximo</DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Límite máximo en la diferencia"
-            type="number"
+          <NumericFormat
             fullWidth
+            allowNegative={false}
+            customInput={TextField}
+            variant="outlined"
+            autoFocus
+            margin="normal"
+            label="Límite máximo en la diferencia"
             value={maxDifference}
             onChange={(e) => setMaxDifference(e.target.value)}
           />
+          <Select
+            value={algorithmType}
+            onChange={(e) => setAlgorithmType(e.target.value)} // Cambiar el tipo de algoritmo
+            fullWidth
+            sx={{ marginTop: 1 }}
+            variant="outlined"
+            margin="normal"
+          >
+            <MenuItem value="Programacion Lineal">Programación Lineal</MenuItem>
+            <MenuItem value="Redes de flujo">Redes de Flujo</MenuItem>
+          </Select>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} color="secondary">
             Cancelar
           </Button>
-          <Button onClick={handleRunAlgorithm} color="primary">
+          <Button
+            onClick={() => {
+              handleRunAlgorithm(algorithmType); // Pasar el tipo de algoritmo al manejar la ejecución
+            }}
+            color="primary"
+          >
             Correr
           </Button>
         </DialogActions>
@@ -446,7 +546,7 @@ const TopicTutor = () => {
         open={showResults}
         onClose={handleCloseResults}
         fullWidth
-        maxWidth="lg"
+        maxWidth="xl"
       >
         <DialogTitle>
           Resultados
@@ -488,7 +588,7 @@ const TopicTutor = () => {
                 {assignments?.length > 0 ? (
                   assignments.map((assignment) => (
                     <TableRow key={assignment.id}>
-                      <TableCell align="center">{assignment.id}</TableCell>
+                      <TableCell align="center">{getGroupNumberById(assignment.id)}</TableCell>
 
                       <TableCell>
                         {isEditing ? (
@@ -568,17 +668,17 @@ const TopicTutor = () => {
                       </TableCell>
 
                       {/* Preferencias no editables */}
-                      <TableCell align="center">
+                      <TableCell >
                         {getTopicNameById(
                           getGroupById(assignment.id).preferred_topics[0]
                         )}
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell >
                         {getTopicNameById(
                           getGroupById(assignment.id).preferred_topics[1]
                         )}
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell >
                         {getTopicNameById(
                           getGroupById(assignment.id).preferred_topics[2]
                         )}
@@ -597,15 +697,55 @@ const TopicTutor = () => {
           </TableContainer>
         </DialogContent>
 
-        <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
+        <DialogActions
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            position: "relative",
+            flexGrow: 1,
+          }}
+        >
+        {!isEditing && (
+            <Box
+              sx={{
+                position: "absolute",
+                right: 10,
+                top: "50%",
+                transform: "translateY(-50%)",
+                backgroundColor: "rgba(230, 230, 250, 0.8)", // Lavanda
+                border: "2px dotted #888", // Borde punteado gris
+                borderRadius: 6, // Bordes redondeados
+                boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)", // Sombra ligera
+                padding: "8px 12px", // Padding interno
+              }}
+            >
+              <Tooltip title="DCG (Discounted Cumulative Gain) evalúa cuán relevantes son los resultados devueltos por el algoritmo, penalizando aquellos que no se eligió las primeras preferencias.">
+                <Typography variant="body2">
+                  {dcg !== null ? `Eficiencia (DCG): ${dcg.toFixed(2)}` : "Sin calcular"}
+                </Typography>
+              </Tooltip>
+            </Box>
+          )}
+
           {!isEditing && (
             <Button
               variant="outlined"
               color="primary"
               onClick={handleStartEditing} // Comienza el modo de edición
+              sx={{ margin: "0 8px" }}
             >
               Editar resultado
             </Button>
+          )}
+          {!isEditing && (
+            <Button
+            variant="contained"
+            color="primary"
+            onClick={downloadCSV}
+            sx={{ margin: "0 8px" }}
+          >
+            Descargar CSV
+          </Button>
           )}
           {isEditing && (
             <Button
@@ -632,6 +772,7 @@ const TopicTutor = () => {
               variant="outlined"
               color="secondary"
               onClick={handleRerunAlgorithm}
+              sx={{ margin: "0 8px" }}
             >
               Volver a correr algoritmo
             </Button>
@@ -645,6 +786,10 @@ const TopicTutor = () => {
               Confirmar resultados
             </Button>
           )}
+
+          
+
+          
         </DialogActions>
       </Dialog>
     </Box>

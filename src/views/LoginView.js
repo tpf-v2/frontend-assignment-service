@@ -1,11 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Container, TextField, Button, Typography, Box, Paper } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { styled } from '@mui/system';
-import BackgroundContainer from '../components/UI/BackgroundContainer.js';
-import { authenticateUser } from '../api/auth.js'; // Importa las funciones desde auth.js
+import React, { useEffect, useState } from "react";
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Paper,
+  Divider,
+} from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import { styled } from "@mui/system";
+import BackgroundContainer from "../components/UI/BackgroundContainer.js";
+import { authenticateUser } from "../api/auth.js"; // Importa las funciones desde auth.js
 import { useDispatch, useSelector } from "react-redux";
-import MySnackbar from '../components/UI/MySnackBar.js';
+import MySnackbar from "../components/UI/MySnackBar.js";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -23,9 +31,9 @@ const Title = styled(Typography)(({ theme }) => ({
 }));
 
 const LoginView = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setloading] = useState(false)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setloading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -35,7 +43,7 @@ const LoginView = () => {
     if (user?.token) {
       navigate("/home");
     }
-  }, [user])
+  }, [user]);
 
   const [notification, setNotification] = useState({
     open: false,
@@ -48,13 +56,13 @@ const LoginView = () => {
   };
 
   const handleSubmit = async (e) => {
-    setloading(true)
+    setloading(true);
     e.preventDefault();
 
     if (email && password) {
       try {
         await dispatch(authenticateUser(email, password));
-        navigate('/home')
+        navigate("/home");
       } catch (error) {
         console.error("Error when logging in", error);
         setNotification({
@@ -63,7 +71,7 @@ const LoginView = () => {
           status: "error",
         });
       } finally {
-        setloading(false)
+        setloading(false);
       }
     } else {
       // navigate('/form-selection');
@@ -98,16 +106,44 @@ const LoginView = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <ButtonStyled disabled={loading} variant="contained" color="primary" type="submit" fullWidth>
+          <ButtonStyled
+            disabled={loading}
+            variant="contained"
+            color="primary"
+            type="submit"
+            fullWidth
+          >
             {loading ? "Cargando ..." : "Iniciar Sesión"}
           </ButtonStyled>
         </form>
+
+        <Divider sx={{ marginTop: 3, marginBottom: 2 }} />
+        <Typography
+          variant="body2"
+          align="center"
+          color="textSecondary"
+          sx={{ marginTop: 2 }}
+        >
+          Este sitio es un Trabajo Profesional de Ing. Informática.{" "}
+          <Link
+            href="#"
+            onClick={(e) => {
+              e.preventDefault(); // Evita que se recargue la página
+              navigate("/credits");
+            }}
+            underline="hover"
+            color="primary"
+          >
+            Ver créditos
+          </Link>
+        </Typography>
+
         <MySnackbar
-        open={notification.open}
-        handleClose={handleSnackbarClose}
-        message={notification.message}
-        status={notification.status}
-      />
+          open={notification.open}
+          handleClose={handleSnackbarClose}
+          message={notification.message}
+          status={notification.status}
+        />
       </Root>
     </Container>
   );
