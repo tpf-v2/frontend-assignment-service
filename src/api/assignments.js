@@ -22,7 +22,9 @@ export const incompleteGroups = async (user, period) => {
   }
 };
 
-export const groupsTopicTutor = async (user, period, balance_limit) => {
+export const groupsTopicTutor = async (user, period, balance_limit, algorithmType) => {
+  const algorithm = algorithmType === "Programacion Lineal" ? "lp" : "flow";
+  
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -33,7 +35,7 @@ export const groupsTopicTutor = async (user, period, balance_limit) => {
   };
 
   try {
-    const url = `${BASE_URL}/assignments/group-topic-tutor?period_id=${period.id}&balance_limit=${balance_limit}`;
+    const url = `${BASE_URL}/assignments/group-topic-tutor?period_id=${period.id}&balance_limit=${balance_limit}&method=${algorithm}`;
     const response = await axios.post(url, {}, config);
     return response.data;
   } catch (error) {

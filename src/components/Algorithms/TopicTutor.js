@@ -19,7 +19,8 @@ import {
   CircularProgress,
   Select,
   MenuItem,
-  FormControl, // Importa IconButton
+  FormControl,
+  Tooltip, // Importa IconButton
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close"; // Importa el ícono Close
 import { Box } from "@mui/system";
@@ -31,6 +32,7 @@ import { setGroups } from "../../redux/slices/groupsSlice";
 import { togglePeriodSetting } from "../../redux/slices/periodSlice";
 import updatePeriod from "../../api/updatePeriod";
 import { useNavigate } from "react-router-dom";
+import { NumericFormat } from "react-number-format";
 
 const TopicTutor = () => {
   const period = useSelector((state) => state.period);
@@ -54,6 +56,9 @@ const TopicTutor = () => {
   const [isEditing, setIsEditing] = useState(null); // Almacena el id del grupo que está siendo editado
   const [originalAssignments, setOriginalAssignments] = useState([]); // Copia de assignments para restaurar si se cancela
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false); // Dialogo para confirmar resultados
+
+  const [dcg, setDcg] = useState(null);
+  const [algorithmType, setAlgorithmType] = useState("Programacion Lineal"); // Estado para el tipo de algoritmo
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -151,14 +156,20 @@ const TopicTutor = () => {
     );
   };
 
-  const handleRunAlgorithm = async () => {
+  const handleRunAlgorithm = async (algorithmType) => {
     try {
       setRunning(true);
       setOpenDialog(false);
       setShowResults(false);
-      const response = await groupsTopicTutor(user, period, maxDifference);
+      const response = await groupsTopicTutor(
+        user,
+        period,
+        maxDifference,
+        algorithmType
+      );
       console.log("Groups topic tutor response:", response);
-      setAssignments(response);
+      setAssignments(response.assigment);
+      setDcg(response.dcg);
       setShowResults(true);
     } catch (error) {
       console.error("Error running algorithm:", error);
@@ -331,7 +342,9 @@ const TopicTutor = () => {
                         )
                         .map((group) => (
                           <TableRow key={group.id}>
-                            <TableCell align="center">{group.group_number}</TableCell>
+                            <TableCell align="center">
+                              {group.group_number}
+                            </TableCell>
 
                             <TableCell>
                               {group.tutor_period_id
@@ -401,21 +414,39 @@ const TopicTutor = () => {
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Seleccione el límite máximo</DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Límite máximo en la diferencia"
-            type="number"
+          <NumericFormat
             fullWidth
+            allowNegative={false}
+            customInput={TextField}
+            variant="outlined"
+            autoFocus
+            margin="normal"
+            label="Límite máximo en la diferencia"
             value={maxDifference}
             onChange={(e) => setMaxDifference(e.target.value)}
           />
+          <Select
+            value={algorithmType}
+            onChange={(e) => setAlgorithmType(e.target.value)} // Cambiar el tipo de algoritmo
+            fullWidth
+            sx={{ marginTop: 1 }}
+            variant="outlined"
+            margin="normal"
+          >
+            <MenuItem value="Programacion Lineal">Programación Lineal</MenuItem>
+            <MenuItem value="Redes de flujo">Redes de Flujo</MenuItem>
+          </Select>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} color="secondary">
             Cancelar
           </Button>
-          <Button onClick={handleRunAlgorithm} color="primary">
+          <Button
+            onClick={() => {
+              handleRunAlgorithm(algorithmType); // Pasar el tipo de algoritmo al manejar la ejecución
+            }}
+            color="primary"
+          >
             Correr
           </Button>
         </DialogActions>
@@ -597,12 +628,20 @@ const TopicTutor = () => {
           </TableContainer>
         </DialogContent>
 
-        <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
+        <DialogActions
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            position: "relative",
+            flexGrow: 1,
+          }}
+        >
           {!isEditing && (
             <Button
               variant="outlined"
               color="primary"
               onClick={handleStartEditing} // Comienza el modo de edición
+              sx={{ margin: "0 8px" }}
             >
               Editar resultado
             </Button>
@@ -632,6 +671,7 @@ const TopicTutor = () => {
               variant="outlined"
               color="secondary"
               onClick={handleRerunAlgorithm}
+              sx={{ margin: "0 8px" }}
             >
               Volver a correr algoritmo
             </Button>
@@ -644,6 +684,28 @@ const TopicTutor = () => {
             >
               Confirmar resultados
             </Button>
+          )}
+
+          {!isEditing && (
+            <Box
+              sx={{
+                position: "absolute",
+                right: 10,
+                top: "50%",
+                transform: "translateY(-50%)",
+                backgroundColor: "rgba(230, 230, 250, 0.8)", // Lavanda
+                border: "2px dotted #888", // Borde punteado gris
+                borderRadius: 6, // Bordes redondeados
+                boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)", // Sombra ligera
+                padding: "8px 12px", // Padding interno
+              }}
+            >
+              <Tooltip title="DCG (Discounted Cumulative Gain) evalúa cuán relevantes son los resultados devueltos por el algoritmo, penalizando aquellos que no se eligió las primeras preferencias.">
+                <Typography variant="body2">
+                  {dcg !== null ? `Eficiencia (DCG): ${dcg}` : "Sin calcular"}
+                </Typography>
+              </Tooltip>
+            </Box>
           )}
         </DialogActions>
       </Dialog>
