@@ -100,6 +100,10 @@ const TopicTutor = () => {
     return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
   };
 
+  const getGroupNumberById = (id) => {
+    const group = groups.find((g) => g.id === id);
+    return group.group_number; // Si no encuentra el topic, mostrar 'Desconocido'
+  }
   const handleRun = () => {
     setOpenDialog(true);
   };
@@ -225,6 +229,60 @@ const TopicTutor = () => {
     setOpenConfirmDialog(false); // Cierra el popup
     setShowResults(false);
     // Lógica adicional para confirmar los resultados
+  };
+
+  const downloadCSV = () => {
+    const csvRows = [];
+    csvRows.push(
+      [
+        "Grupo número",
+        "Tutor asignado",
+        "Tema asignado",
+        "Preferencia 1",
+        "Preferencia 2",
+        "Preferencia 3"
+      ].join(",")
+    );
+
+    assignments.forEach((group, index) => {
+      // group.students.forEach((student, index) => {
+        const row = [
+          getGroupNumberById(group.id),
+          group.tutor ? (
+            `${group.tutor.name} ${group.tutor.last_name}`
+          ) : (
+            "Sin asignar"
+          ),
+          group.topic ? (
+            group.topic.name.replace(/,/g, "-")
+          ) : (
+            "Sin asignar"
+          ),
+          getTopicNameById(
+            getGroupById(group.id).preferred_topics[0]
+          ).replace(/,/g, "-") || "",
+          getTopicNameById(
+            getGroupById(group.id).preferred_topics[1]
+          ).replace(/,/g, "-") ||
+          "",
+          getTopicNameById(
+            getGroupById(group.id).preferred_topics[2]
+          ).replace(/,/g, "-") ||
+          ""
+        ].join(",");
+        csvRows.push(row);
+      // });
+    });
+
+    const csvString = csvRows.join("\n");
+    const blob = new Blob([csvString], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.setAttribute("href", url);
+    a.setAttribute("download", `topic_tutor_${maxDifference}.csv`);
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -488,7 +546,7 @@ const TopicTutor = () => {
         open={showResults}
         onClose={handleCloseResults}
         fullWidth
-        maxWidth="lg"
+        maxWidth="xl"
       >
         <DialogTitle>
           Resultados
@@ -530,7 +588,7 @@ const TopicTutor = () => {
                 {assignments?.length > 0 ? (
                   assignments.map((assignment) => (
                     <TableRow key={assignment.id}>
-                      <TableCell align="center">{assignment.id}</TableCell>
+                      <TableCell align="center">{getGroupNumberById(assignment.id)}</TableCell>
 
                       <TableCell>
                         {isEditing ? (
@@ -610,17 +668,17 @@ const TopicTutor = () => {
                       </TableCell>
 
                       {/* Preferencias no editables */}
-                      <TableCell align="center">
+                      <TableCell >
                         {getTopicNameById(
                           getGroupById(assignment.id).preferred_topics[0]
                         )}
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell >
                         {getTopicNameById(
                           getGroupById(assignment.id).preferred_topics[1]
                         )}
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell >
                         {getTopicNameById(
                           getGroupById(assignment.id).preferred_topics[2]
                         )}
@@ -647,6 +705,28 @@ const TopicTutor = () => {
             flexGrow: 1,
           }}
         >
+        {!isEditing && (
+            <Box
+              sx={{
+                position: "absolute",
+                right: 10,
+                top: "50%",
+                transform: "translateY(-50%)",
+                backgroundColor: "rgba(230, 230, 250, 0.8)", // Lavanda
+                border: "2px dotted #888", // Borde punteado gris
+                borderRadius: 6, // Bordes redondeados
+                boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)", // Sombra ligera
+                padding: "8px 12px", // Padding interno
+              }}
+            >
+              <Tooltip title="DCG (Discounted Cumulative Gain) evalúa cuán relevantes son los resultados devueltos por el algoritmo, penalizando aquellos que no se eligió las primeras preferencias.">
+                <Typography variant="body2">
+                  {dcg !== null ? `Eficiencia (DCG): ${dcg.toFixed(2)}` : "Sin calcular"}
+                </Typography>
+              </Tooltip>
+            </Box>
+          )}
+
           {!isEditing && (
             <Button
               variant="outlined"
@@ -656,6 +736,16 @@ const TopicTutor = () => {
             >
               Editar resultado
             </Button>
+          )}
+          {!isEditing && (
+            <Button
+            variant="contained"
+            color="primary"
+            onClick={downloadCSV}
+            sx={{ margin: "0 8px" }}
+          >
+            Descargar CSV
+          </Button>
           )}
           {isEditing && (
             <Button
@@ -697,27 +787,9 @@ const TopicTutor = () => {
             </Button>
           )}
 
-          {!isEditing && (
-            <Box
-              sx={{
-                position: "absolute",
-                right: 10,
-                top: "50%",
-                transform: "translateY(-50%)",
-                backgroundColor: "rgba(230, 230, 250, 0.8)", // Lavanda
-                border: "2px dotted #888", // Borde punteado gris
-                borderRadius: 6, // Bordes redondeados
-                boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)", // Sombra ligera
-                padding: "8px 12px", // Padding interno
-              }}
-            >
-              <Tooltip title="DCG (Discounted Cumulative Gain) evalúa cuán relevantes son los resultados devueltos por el algoritmo, penalizando aquellos que no se eligió las primeras preferencias.">
-                <Typography variant="body2">
-                  {dcg !== null ? `Eficiencia (DCG): ${dcg.toFixed(2)}` : "Sin calcular"}
-                </Typography>
-              </Tooltip>
-            </Box>
-          )}
+          
+
+          
         </DialogActions>
       </Dialog>
     </Box>
