@@ -22,13 +22,24 @@ export const getTableData = async (endpoint, user) => {
 };
 
 export const deleteRow = async (endpoint, id, user) => {
+  console.log(endpoint)
+  let url = null;
+
+  if (endpoint.includes('students')) {
+    url = '/students';
+  } else if (endpoint.includes('tutors')) {
+    url = '/tutors';
+  } else if (endpoint.includes('topics')) {
+    url = '/topics';
+  }
+  
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
     },
   };
   try {
-    await axios.delete(`${BASE_URL}${endpoint}/${id}`, config); // Cambia esta URL según tu API
+    await axios.delete(`${BASE_URL}${url}/${id}`, config); // Cambia esta URL según tu API
   } catch (error) {
     throw error; // Lanza el error para manejarlo en el componente
   }
