@@ -295,7 +295,6 @@ const Dates = () => {
         period.id
       );
       handleSnackbarOpen("Fecha asignada correctamente", "success");
-      console.log("Initial events", initialEvents);
       const color = getEvaluatorColor(evaluador, evaluatorColorMap);
 
       const newEvent = {
@@ -322,7 +321,6 @@ const Dates = () => {
           tutor_id: tutor.id,
         },
       };
-      console.log(newEvent);
       // Actualizar el evento si existe, o agregar uno nuevo si no existe
     setInitialEvents((prevEvents) => {
       const eventIndex = prevEvents.findIndex(
@@ -345,7 +343,6 @@ const Dates = () => {
     });
     } catch (e) {
       handleSnackbarOpen("Hubo un error al asignar la fecha.", "error");
-      console.log(e)
     } finally {
       setAssignDateOpenDialog(false); // Cerrar el diálogo después de asignar
     }

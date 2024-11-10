@@ -38,7 +38,6 @@ const SpecificDateDialog = ({
   setTopic,
 }) => {
   const [isAssignDisabled, setIsAssignDisabled] = useState(true);
-  console.log(tutors)
   const filteredTutors = tutors.filter((tutor) =>
     tutor.tutor_periods.some(
       (tutor_period) =>
