@@ -249,7 +249,6 @@ const ParentTable = ({
   });
 
   if (loading) return <Typography variant="h6">Cargando...</Typography>;
-  const topicsCond = title === "Temas" ? items.length > 0 : true;
   const categories = title === "Temas" ? getCategories(items) : [];
   return (
     <>

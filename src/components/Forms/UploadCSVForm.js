@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import React, { useState } from "react";
+import { useDropzone } from "react-dropzone";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
@@ -12,14 +12,14 @@ import {
   DialogActions,
   DialogContent,
   Divider,
-} from '@mui/material';
-import { styled } from '@mui/system';
-import axios from 'axios';
+} from "@mui/material";
+import { styled } from "@mui/system";
+import axios from "axios";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
-import { setTopics } from '../../redux/slices/topicsSlice';
-import { setStudents } from '../../redux/slices/studentsSlice';
-import { setTutors } from '../../redux/slices/tutorsSlice';
+import { setTopics } from "../../redux/slices/topicsSlice";
+import { setStudents } from "../../redux/slices/studentsSlice";
+import { setTutors } from "../../redux/slices/tutorsSlice";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -37,26 +37,26 @@ const Title = styled(Typography)(({ theme }) => ({
 }));
 
 const DropzoneBox = styled(Box)(({ theme }) => ({
-  border: '2px dashed #cccccc',
+  border: "2px dashed #cccccc",
   padding: theme.spacing(2),
-  textAlign: 'center',
-  cursor: 'pointer',
-  color: 'rgba(0, 0, 0, 0.6)',
+  textAlign: "center",
+  cursor: "pointer",
+  color: "rgba(0, 0, 0, 0.6)",
   marginBottom: theme.spacing(2),
 }));
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
 const TITLE_DICT = {
-  "students": "Alumnos",
-  "tutors": "Tutores",
-  "topics": "Temas"
-}
+  students: "Alumnos",
+  tutors: "Tutores",
+  topics: "Temas",
+};
 
 const UploadCSVForm = ({ formType, setItems }) => {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [fileError, setFileError] = useState('');
-  const [responseMessage, setResponseMessage] = useState('');
+  const [fileError, setFileError] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [openDialog, setOpenDialog] = useState(false); // Estado para controlar el diálogo
   const [loading, setLoading] = useState(false); // Estado para controlar el diálogo
@@ -68,17 +68,17 @@ const UploadCSVForm = ({ formType, setItems }) => {
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
-    if (file && file.name.endsWith('.csv')) {
+    if (file && file.name.endsWith(".csv")) {
       setSelectedFile(file);
-      setFileError('');
+      setFileError("");
     } else {
-      setFileError('Por favor cargue un archivo CSV.');
+      setFileError("Por favor cargue un archivo CSV.");
     }
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: '.csv',
+    accept: ".csv",
   });
 
   const dispatch = useDispatch();
@@ -86,24 +86,26 @@ const UploadCSVForm = ({ formType, setItems }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedFile) {
-      setFileError('Por favor cargue un archivo CSV.');
+      setFileError("Por favor cargue un archivo CSV.");
       return;
     }
-    setLoading(true)
+    setLoading(true);
     const formData = new FormData();
-    formData.append('file', selectedFile);
+    formData.append("file", selectedFile);
     const apiUrl = `${BASE_URL}/${formType}/upload?period=${period.id}`;
     try {
       const response = await axios.post(apiUrl, formData, {
         headers: {
-          'Content-Type': 'text/csv',
-          Authorization: `Bearer ${user.token}`
+          "Content-Type": "text/csv",
+          Authorization: `Bearer ${user.token}`,
         },
       });
       if (response.status === 201) {
-        setResponseMessage(`Archivo de ${TITLE_DICT[formType]} cargado con éxito`);
+        setResponseMessage(
+          `Archivo de ${TITLE_DICT[formType]} cargado con éxito`
+        );
         setIsSuccess(true);
-        if (formType === "topics"){
+        if (formType === "topics") {
           dispatch(setTopics(response.data));
         } else if (formType === "students") {
           dispatch(setStudents(response.data));
@@ -111,16 +113,23 @@ const UploadCSVForm = ({ formType, setItems }) => {
           dispatch(setTutors(response.data));
         }
       } else {
-        setResponseMessage(`Hubo un problema al cargar el archivo de ${TITLE_DICT[formType]}`);
+        setResponseMessage(
+          `Hubo un problema al cargar el archivo de ${TITLE_DICT[formType]}`
+        );
         setIsSuccess(false);
       }
     } catch (error) {
-      console.error(`Error al cargar el archivo de ${TITLE_DICT[formType]}`, error);
-      setResponseMessage(`Error al cargar el archivo de ${TITLE_DICT[formType]}`);
+      console.error(
+        `Error al cargar el archivo de ${TITLE_DICT[formType]}`,
+        error
+      );
+      setResponseMessage(
+        `Error al cargar el archivo de ${TITLE_DICT[formType]}`
+      );
       setIsSuccess(false);
     } finally {
       setOpenDialog(true); // Abre el diálogo al finalizar
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -151,7 +160,10 @@ const UploadCSVForm = ({ formType, setItems }) => {
             {isDragActive ? (
               <p>Suelta el archivo aquí...</p>
             ) : (
-              <p>Arrastra y suelta el archivo aquí, o haz clic para seleccionar el archivo CSV</p>
+              <p>
+                Arrastra y suelta el archivo aquí, o haz clic para seleccionar
+                el archivo CSV
+              </p>
             )}
           </DropzoneBox>
           {selectedFile && (
@@ -164,18 +176,35 @@ const UploadCSVForm = ({ formType, setItems }) => {
               {fileError}
             </Typography>
           )}
-          <ButtonStyled variant="contained" color="primary" type="submit" fullWidth disabled={loading}>
+          <ButtonStyled
+            variant="contained"
+            color="primary"
+            type="submit"
+            fullWidth
+            disabled={loading}
+          >
             {loading ? "Cargando..." : "Enviar"}
           </ButtonStyled>
         </form>
 
-
         {/* Divider */}
-        <Divider sx={{ margin: '20px 0' }} />
+        <Divider sx={{ margin: "20px 0" }} />
 
         {/* Enlace para descargar un CSV de ejemplo */}
         <Typography variant="body2" align="center" sx={{ marginTop: 2 }}>
-        Si desea descargar un CSV de ejemplo, haga <a href="#" onClick={handleDownload}>click aquí</a>
+          Si desea descargar un CSV de ejemplo, haga
+          <button
+            onClick={handleDownload}
+            style={{
+              background: "none",
+              border: "none",
+              color: "blue",
+              textDecoration: "underline",
+              cursor: "pointer",
+            }}
+          >
+            click aquí
+          </button>
         </Typography>
 
         <Dialog
