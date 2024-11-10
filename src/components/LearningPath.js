@@ -18,6 +18,7 @@ import MySnackbar from "./UI/MySnackBar";
 import ProjectPdfComponent from "./UI/Dashboards/Tutor/ProjectPdfComponent";
 import TutorIntermediateProjectComponent from "./UI/Dashboards/Tutor/TutorIntermediateProjectComponent"; // Importar el componente
 import { getGroupById } from "../api/getGroupById";
+import GroupReview from "./UI/Dashboards/Tutor/GroupReview";
 
 const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),
@@ -127,7 +128,7 @@ const LearningPath = ({ group_id, group }) => {
       ) : (
         <>
           {selectedPhase === "anteproyecto" ? (
-            <ProjectPdfComponent groupId={group_id} projectType={"Anteproyecto"} />
+            <GroupReview group={group}/>
           ) : selectedPhase === "intermediate" ? ( 
             <TutorIntermediateProjectComponent groupId={group_id} /> 
           ) : selectedPhase === "final" ? ( 

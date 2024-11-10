@@ -32,7 +32,7 @@ export const confirmGroups = async (user, period, assignments, groups) => {
   });
 
   try {
-    const url = `${BASE_URL}/groups?period=${period.id}`;
+    const url = `${BASE_URL}/groups/?period=${period.id}`;
     const response = await axios.put(url, body, config); // Enviar el body creado
     return response.data;
   } catch (error) {

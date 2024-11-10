@@ -12,10 +12,18 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { makeEvaluator } from "../../../api/makeEvaluator";
+import { setTutors } from "../../../redux/slices/tutorsSlice";
 
-const EvaluatorDialog = ({ user, open, handleClose, handleEvaluatorDialogClose }) => {
+const EvaluatorDialog = ({
+  user,
+  open,
+  handleClose,
+  handleEvaluatorDialogClose,
+}) => {
+  const dispatch = useDispatch();
+
   const period = useSelector((state) => state.period);
   const tutors = Object.values(useSelector((state) => state.tutors))
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
@@ -58,15 +66,35 @@ const EvaluatorDialog = ({ user, open, handleClose, handleEvaluatorDialogClose }
       const newEvaluators = selectedTutors.filter(
         (tutorId) => !initialSelectedTutors.includes(tutorId)
       );
-  
+
       // Llama a makeEvaluator solo para los evaluadores nuevos
       for (const tutorId of newEvaluators) {
         await makeEvaluator(period.id, tutorId, user);
       }
-      
-      setInitialSelectedTutors((prevInitial) => [...prevInitial, ...newEvaluators]);
 
-      console.log("Llamadas al backend completadas para evaluadores nuevos.");
+      // Actualizamos el flag is_evaluator a true solo en los tutores seleccionados
+      const updatedTutors = tutors.map((tutor) => {
+        if (newEvaluators.includes(tutor.id)) {
+          const update = {
+            ...tutor,
+            tutor_periods: tutor.tutor_periods.map((tutorPeriod) =>
+              tutorPeriod.period_id === period.id
+                ? { ...tutorPeriod, is_evaluator: true }
+                : tutorPeriod
+            ),
+          };
+          return update;
+        }
+        return tutor;
+      });
+
+      // Llamar a la acción para actualizar el estado global de los tutores
+      dispatch(setTutors(updatedTutors));
+
+      setInitialSelectedTutors((prevInitial) => [
+        ...prevInitial,
+        ...newEvaluators,
+      ]);
     } catch (error) {
       console.error("Error al llamar al backend:", error);
     }
@@ -157,7 +185,6 @@ const EvaluatorDialog = ({ user, open, handleClose, handleEvaluatorDialogClose }
           onClick={() => {
             confirmSelection();
             handleEvaluatorDialogClose();
-            console.log("Evaluadores seleccionados:", selectedTutors);
           }}
           color="primary"
           variant="contained"

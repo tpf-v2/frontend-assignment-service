@@ -50,8 +50,6 @@ const getEvaluatorColor = (evaluatorId, evaluatorColorMap) => {
   if (!evaluatorColorMap[evaluatorId]) {
     const colorIndex =
       Object.keys(evaluatorColorMap).length % evaluatorColors.length;
-    console.log(Object.keys(evaluatorColorMap).length);
-    console.log("Color index", evaluatorId, colorIndex);
     evaluatorColorMap[evaluatorId] = evaluatorColors[colorIndex];
   }
   return evaluatorColorMap[evaluatorId];
@@ -114,13 +112,12 @@ const Dates = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoadingDates(true)
+      setLoadingDates(true);
       try {
         const dates = await getAssignedDates(user, period);
 
         if (dates.length > 0) {
           const formattedEvents = dates.map((result) => {
-            console.log(result);
             const color = getEvaluatorColor(
               result.evaluator_id,
               evaluatorColorMap
@@ -150,7 +147,7 @@ const Dates = () => {
       } catch (error) {
         console.error("Error fetching assigned dates:", error);
       }
-      setLoadingDates(false)
+      setLoadingDates(false);
     };
 
     fetchData();
@@ -159,7 +156,6 @@ const Dates = () => {
   // Transforma datesResult en eventos para el calendario
   useEffect(() => {
     if (datesResult.length > 0) {
-      console.log(datesResult);
       const formattedEvents = datesResult.map((result) => {
         const color = getEvaluatorColor(result.evaluator_id, evaluatorColorMap);
 
@@ -176,7 +172,6 @@ const Dates = () => {
 
       const sortedEvents = formattedEvents.sort((a, b) => a.start - b.start);
       if (sortedEvents.length > 0) {
-        console.log(new Date(sortedEvents[0].start))
         setDefaultDate(new Date(sortedEvents[0].start));
       }
 
@@ -184,7 +179,7 @@ const Dates = () => {
       setShowResults(true);
     }
     setRunning(false);
-    setOpenDialog(false)
+    setOpenDialog(false);
   }, [datesResult]);
 
   useEffect(() => {
@@ -243,7 +238,6 @@ const Dates = () => {
       console.log("Running the algorithm!");
 
       const response = await dates(user, period, maxDifference, maxGroups);
-      console.log("Dates response:", response);
 
       setDatesResult(response.assigments);
     } catch (error) {
@@ -276,11 +270,6 @@ const Dates = () => {
   }
 
   const handleAssignDate = async () => {
-    console.log("Fecha y hora asignada:", selectedDateTime);
-    console.log("Hora:", selectedHour);
-    console.log("Grupo", group);
-    console.log("Evaluador", evaluador);
-
     if (!group || !evaluador || !selectedDateTime || !selectedHour) {
       handleSnackbarOpen(
         "Por favor completa todos los campos antes de asignar.",
@@ -306,8 +295,57 @@ const Dates = () => {
         period.id
       );
       handleSnackbarOpen("Fecha asignada correctamente", "success");
-    } catch {
+      console.log("Initial events", initialEvents);
+      const color = getEvaluatorColor(evaluador, evaluatorColorMap);
+
+      const newEvent = {
+        title: `Grupo ${group.group_number} - Tutor ${getTutorNameByTutorId(
+          tutor.id
+        )} - Evaluador ${getTutorNameByTutorId(evaluador)}`,
+        start: new Date(
+          new Date(formatUpdatedDateTime(selectedDateTime, selectedHour)).getTime() +
+            60 * 60 * 1000 * 3
+        ),
+        end: new Date(
+          new Date(formatUpdatedDateTime(selectedDateTime, selectedHour)).getTime() +
+            60 * 60 * 1000 * 4
+        ), // Dura 1 hora
+        color: color,
+        result: {
+          date: new Date(
+            new Date(formatUpdatedDateTime(selectedDateTime, selectedHour)).getTime() +
+              60 * 60 * 1000 * 3
+          ),
+          evaluator_id: evaluador,
+          group_id: group.id,
+          group_number: group.group_number,
+          tutor_id: tutor.id,
+        },
+      };
+      console.log(newEvent);
+      // Actualizar el evento si existe, o agregar uno nuevo si no existe
+    setInitialEvents((prevEvents) => {
+      const eventIndex = prevEvents.findIndex(
+        (event) => event.result.group_id === group.id
+      );
+
+      if (eventIndex !== -1) {
+        // Si el evento existe, actualiza el start y end
+        const updatedEvents = [...prevEvents];
+        updatedEvents[eventIndex] = {
+          ...updatedEvents[eventIndex],
+          start: newEvent.start,
+          end: newEvent.end,
+        };
+        return updatedEvents;
+      } else {
+        // Si no existe, agrega el nuevo evento
+        return [...prevEvents, newEvent];
+      }
+    });
+    } catch (e) {
       handleSnackbarOpen("Hubo un error al asignar la fecha.", "error");
+      console.log(e)
     } finally {
       setAssignDateOpenDialog(false); // Cerrar el diálogo después de asignar
     }
@@ -421,9 +459,6 @@ const Dates = () => {
   };
 
   const handleSelectSlot = ({ start, end }) => {
-    console.log("START", start);
-    console.log("END", end);
-
     if (isEditing) {
       const duration = (end - start) / (1000 * 60); // Duración en minutos
 
@@ -474,9 +509,6 @@ const Dates = () => {
 
   const handleConfirmEvent = async () => {
     if (selectedSlot && group) {
-      console.log(selectedSlot);
-      console.log(group);
-      console.log(evaluador);
       const groupTutor = tutors.find(
         (t) =>
           t.tutor_periods &&
@@ -501,7 +533,6 @@ const Dates = () => {
           tutor_id: groupTutor.id,
         },
       };
-      console.log(newEvent);
       setEvents((prevEvents) => [...prevEvents, newEvent]);
       setModalOpen(false);
     }
@@ -604,7 +635,7 @@ const Dates = () => {
         handleAssignDate={handleAssignDate}
         getTutorNameById={getTutorNameById}
         hours={hours}
-        filteredTutors={filteredTutors}
+        tutors={tutors}
         group={group}
         setGroup={setGroup}
         setTutor={setTutor}

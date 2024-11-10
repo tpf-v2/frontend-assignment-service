@@ -14,7 +14,7 @@ const StudentInfo = () => {
     <StyledCard>
       <CardContent>
         <Typography variant="h5" component="div" gutterBottom>
-          Bienvenido, {user.name}!
+          {user.name}, te damos la bienvenida!
         </Typography>
         <Typography color="text.secondary">
           <Typography component="span" color="text.primary" fontWeight="bold" marginRight={1}>

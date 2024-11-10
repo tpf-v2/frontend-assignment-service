@@ -11,12 +11,15 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  Divider,
 } from '@mui/material';
 import { styled } from '@mui/system';
 import axios from 'axios';
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import { setTopics } from '../../redux/slices/topicsSlice';
+import { setStudents } from '../../redux/slices/studentsSlice';
+import { setTutors } from '../../redux/slices/tutorsSlice';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -61,6 +64,8 @@ const UploadCSVForm = ({ formType, setItems }) => {
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
 
+  const downloadCSVLink = `/csvs/${formType}.csv`;
+
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
     if (file && file.name.endsWith('.csv')) {
@@ -96,16 +101,22 @@ const UploadCSVForm = ({ formType, setItems }) => {
         },
       });
       if (response.status === 201) {
-        setResponseMessage(`Archivo de ${formType} cargado con éxito`);
+        setResponseMessage(`Archivo de ${TITLE_DICT[formType]} cargado con éxito`);
         setIsSuccess(true);
-        dispatch(setTopics(response.data));
+        if (formType === "topics"){
+          dispatch(setTopics(response.data));
+        } else if (formType === "students") {
+          dispatch(setStudents(response.data));
+        } else if (formType === "tutors") {
+          dispatch(setTutors(response.data));
+        }
       } else {
-        setResponseMessage(`Hubo un problema al cargar el archivo de ${formType}`);
+        setResponseMessage(`Hubo un problema al cargar el archivo de ${TITLE_DICT[formType]}`);
         setIsSuccess(false);
       }
     } catch (error) {
-      console.error(`Error al cargar el archivo de ${formType}`, error);
-      setResponseMessage(`Error al cargar el archivo de ${formType}`);
+      console.error(`Error al cargar el archivo de ${TITLE_DICT[formType]}`, error);
+      setResponseMessage(`Error al cargar el archivo de ${TITLE_DICT[formType]}`);
       setIsSuccess(false);
     } finally {
       setOpenDialog(true); // Abre el diálogo al finalizar
@@ -115,6 +126,16 @@ const UploadCSVForm = ({ formType, setItems }) => {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
+  };
+
+  const handleDownload = (e) => {
+    e.preventDefault();
+    const link = document.createElement("a");
+    link.href = downloadCSVLink;
+    link.download = `${formType}.csv`; // Puedes ajustar el nombre del archivo si lo deseas
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -147,6 +168,15 @@ const UploadCSVForm = ({ formType, setItems }) => {
             {loading ? "Cargando..." : "Enviar"}
           </ButtonStyled>
         </form>
+
+
+        {/* Divider */}
+        <Divider sx={{ margin: '20px 0' }} />
+
+        {/* Enlace para descargar un CSV de ejemplo */}
+        <Typography variant="body2" align="center" sx={{ marginTop: 2 }}>
+        Si desea descargar un CSV de ejemplo, haga <a href="#" onClick={handleDownload}>click aquí</a>
+        </Typography>
 
         <Dialog
           open={openDialog}

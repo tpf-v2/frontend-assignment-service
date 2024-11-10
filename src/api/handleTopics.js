@@ -13,7 +13,7 @@ export const getTopics = async (period, user) => {
     return response;
 };
 
-export const addTopic = async (newTopic, user) => {
+export const addTopic = async (newTopic, user, period_id) => {
     const config = {
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -21,7 +21,7 @@ export const addTopic = async (newTopic, user) => {
       };
     
     try {
-        const url = `${BASE_URL}/topics/`;
+        const url = `${BASE_URL}/topics/?period=${period_id}`;
         const response = await axios.post(url, newTopic, config);
         return response.data;
     } catch (err) {

@@ -10,7 +10,7 @@ export const makeEvaluator = async (periodId, tutorId, user) => {
       };
     
       try {
-        const url = `${BASE_URL}/tutors/evaluator/?period_id=${periodId}&tutor_id=${tutorId}`;
+        const url = `${BASE_URL}/tutors/evaluator?period_id=${periodId}&tutor_id=${tutorId}`;
         const response = await axios.post(url, {}, config);
         return response.data;
       } catch (error) {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Typography } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import moment from "moment-timezone";
 
@@ -19,6 +19,7 @@ import {
   DescriptionBox,
 } from "../styles/AvailabilityCalendarStyle";
 import { transformSlotsToIntervals } from "../utils/TransformSlotsToIntervals";
+import { Box } from "@mui/system";
 
 // Localizador de momento
 const localizer = momentLocalizer(moment);
@@ -33,6 +34,8 @@ const AvailabilityCalendarAdmin = () => {
   const [availabilitySent, setAvailabilitySent] = useState(false);
   const [modalOpen, setModalOpen] = useState(false); // Estado para el EventModal
   const [selectedSlot, setSelectedSlot] = useState(null); // Estado para el slot seleccionado
+  const [defaultDate, setDefaultDate] = useState(null); // Estado para la fecha predeterminada
+  const [loading, setLoading] = useState(true);
 
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
@@ -51,9 +54,6 @@ const AvailabilityCalendarAdmin = () => {
   };
 
   const handleSelectSlot = ({ start, end }) => {
-    console.log("START", start);
-    console.log("END", end);
-
     const isEventOverlap = events.some(
       (event) => start < event.end && end > event.start
     );
@@ -130,14 +130,23 @@ const AvailabilityCalendarAdmin = () => {
   useEffect(() => {
     const initialAvailability = async () => {
       try {
+        setLoading(true);
         const slots = await fetchAvailability(user, period.id);
         const formattedSlots = transformSlotsToIntervals(slots);
         setEvents(formattedSlots);
         if (slots.length > 0) {
           setAvailabilitySent(true);
         }
+
+        // Establecer defaultDate como la primera fecha de availableDates
+        if (slots.length > 0) {
+          const sortedDates = Array.from(slots).sort();
+          setDefaultDate(new Date(sortedDates[0].slot));
+        }
       } catch (error) {
         console.error("Error when fetching dates");
+      } finally {
+        setLoading(false);
       }
     };
     initialAvailability();
@@ -162,41 +171,52 @@ const AvailabilityCalendarAdmin = () => {
         </Typography>
       </DescriptionBox>
 
-      <CalendarStyled
-        localizer={localizer}
-        events={events}
-        selectable
-        onSelectSlot={handleSelectSlot}
-        onSelectEvent={handleSelectEvent}
-        views={["week"]}
-        defaultView="week"
-        timeslots={1}
-        step={60}
-        showMultiDayTimes
-        defaultDate={new Date()}
-        style={{ height: "500px", margin: "50px" }}
-        min={new Date(0, 0, 0, 9, 0, 0)} // Comienza a las 9 AM
-        max={new Date(0, 0, 0, 21, 0, 0)} // Termina a las 9 PM
-        components={{
-          month: {
-            header: () => null,
-          },
-        }}
-        dayPropGetter={(date) => {
-          const day = date.getDay();
-          if (day === 0 || day === 6) {
-            // sábado y domingo
-            return { style: { display: "none" } }; // Ocultar este día
-          }
-          return {};
-        }}
-        onNavigation={(date) => {
-          const day = date.getDay();
-          if (day === 0 || day === 6) {
-            return false;
-          }
-        }}
-      />
+      {!loading ? (
+        <CalendarStyled
+          localizer={localizer}
+          events={events}
+          selectable
+          onSelectSlot={handleSelectSlot}
+          onSelectEvent={handleSelectEvent}
+          views={["week"]}
+          defaultView="week"
+          timeslots={1}
+          step={60}
+          showMultiDayTimes
+          defaultDate={defaultDate || new Date()}
+          style={{ height: "500px", margin: "50px" }}
+          min={new Date(0, 0, 0, 9, 0, 0)} // Comienza a las 9 AM
+          max={new Date(0, 0, 0, 21, 0, 0)} // Termina a las 9 PM
+          components={{
+            month: {
+              header: () => null,
+            },
+          }}
+          dayPropGetter={(date) => {
+            const day = date.getDay();
+            if (day === 0 || day === 6) {
+              // sábado y domingo
+              return { style: { display: "none" } }; // Ocultar este día
+            }
+            return {};
+          }}
+          onNavigation={(date) => {
+            const day = date.getDay();
+            if (day === 0 || day === 6) {
+              return false;
+            }
+          }}
+        />
+      ) : (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="300px"
+        >
+          <CircularProgress />
+        </Box>
+      )}
 
       <EventModal
         open={modalOpen}

@@ -22,7 +22,6 @@ export const getTableData = async (endpoint, user) => {
 };
 
 export const deleteRow = async (endpoint, id, user) => {
-  console.log(endpoint)
   let url = null;
 
   if (endpoint.includes('students')) {

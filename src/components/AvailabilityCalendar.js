@@ -203,7 +203,7 @@ const AvailabilityCalendar = () => {
   
         // Envía la lista actualizada de eventos al backend
         if (user.role === "student") {
-          await putStudentAvailability(user, formattedEvents, user.group_id);
+          await putStudentAvailability(user, formattedEvents, user.group_id, period.id);
         } else {
           await putTutorAvailability(user, formattedEvents, user.id, period.id);
         }
