@@ -86,7 +86,6 @@ const UploadFile = ({ projectType }) => {
     }
     setTitleError("");
 
-    console.log(selectedFile)
     if (!selectedFile && projectType !== "intermediate-project") {
       setFileError("Por favor cargue un archivo PDF.");
       return;

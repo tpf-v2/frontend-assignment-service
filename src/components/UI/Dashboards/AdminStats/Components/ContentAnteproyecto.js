@@ -56,8 +56,6 @@ const ContentPdfProjects = ({
     return group ? group : null;
   };
   const handleReviewerChange = async (deliveryId, reviewerId) => {
-    console.log(selectedReviewers);
-    console.log(deliveryId, reviewerId);
     setSelectedReviewers({
       ...selectedReviewers,
       [deliveryId]: reviewerId,

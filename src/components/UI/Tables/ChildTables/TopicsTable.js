@@ -3,11 +3,6 @@ import ParentTable from '../ParentTable';
 import { TableCell } from '@mui/material';
 import { useSelector } from 'react-redux';
 
-import AddButton from '../../../Buttons/AddButton';
-import AddItemDialog from '../../../AddItemDialog'
-import { setTopics } from '../../../../redux/slices/topicsSlice';
-import { addTopic } from '../../../../api/handleTopics';
-
 const TopicsTable = () => {
   const period = useSelector((state) => state.period);
 
@@ -23,12 +18,6 @@ const TopicsTable = () => {
   const topics = Object.values(useSelector((state) => state.topics))
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter(item => Object.keys(item).length > 0); // Elimina objetos vacíos
-  
-  
-  const itemFields = [
-      { name: 'name', label: 'Título', type: 'text' },
-      { name: 'category', label: 'Categoría', type: 'select' },
-  ]
 
   const renderRow = (item) => (
     <>
@@ -38,24 +27,9 @@ const TopicsTable = () => {
     </>
   );
 
-  const AddButtonComponent = () => (
-    <AddButton
-      DialogComponent={
-        <AddItemDialog
-          itemFields={itemFields}
-          addItemAction={addTopic}
-          title="Tema"
-          items={topics}
-          setItems={setTopics}
-        />
-      }
-      dialogProps={{ items: topics, setItems: setTopics }}
-    />
-  );
 
   return (
-    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} AddButtonComponent={AddButtonComponent}
-    items={topics}/>
+    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} items={topics}/>
   );
 };
 

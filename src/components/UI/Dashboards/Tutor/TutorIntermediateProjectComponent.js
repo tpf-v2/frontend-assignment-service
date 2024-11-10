@@ -10,8 +10,6 @@ const TutorIntermediateProjectComponent = ({ groupId }) => {
   const [videoUrl, setVideoUrl] = useState(null);
 
   const loadIntermediateProject = async () => {
-    console.log(groupId);
-
     try {
       const response = await getIntermediateProject(groupId, user, period.id);
       setVideoUrl(response.intermediate_assigment); // Guarda la URL en el estado

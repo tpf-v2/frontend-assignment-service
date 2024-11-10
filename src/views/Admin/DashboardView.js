@@ -34,6 +34,9 @@ const DashboardView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
+  const tutors = useSelector((state) => state.tutors);
+  const students = useSelector((state) => state.students);
+  const topics = useSelector((state) => state.topics);
 
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -125,6 +128,9 @@ const DashboardView = () => {
             uploadType={uploadType}
             setUploadType={setUploadType}
             dashboardData={dashboardData}
+            students={students}
+            tutors={tutors}
+            topics={topics}
             loading={loading}
             period={period.id}
           />

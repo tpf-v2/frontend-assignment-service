@@ -82,7 +82,7 @@ export const putAvailability = async (user, slots, period_id) => {
     }
 };
 
-export const putStudentAvailability = async (user, slots, group_id) => {
+export const putStudentAvailability = async (user, slots, group_id, period_id) => {
   const config = {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -90,7 +90,7 @@ export const putStudentAvailability = async (user, slots, group_id) => {
     };
   
     try {
-      const url = `${BASE_URL}/dates/groups?group_id=${group_id}`;
+      const url = `${BASE_URL}/dates/groups?group_id=${group_id}&period=${period_id}`;
       const response = await axios.put(url, slots, config);
       return response.data;
     } catch (error) {

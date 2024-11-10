@@ -16,6 +16,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { incompleteGroups } from "../../api/assignments";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,10 +42,15 @@ const IncompleteGroups = () => {
 
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false); // Nuevo estado para el diálogo de confirmación
 
   const handleRun = async () => {
+    setOpenConfirmDialog(true); // Muestra el diálogo de confirmación al presionar el botón "Correr"
+  };
+  
+  const handleAcceptResults = async () => {
     try {
-      // Inicia la carga y abre el diálogo
+      // Inicia la carga y abre el diálogo de carga
       setLoading(true);
       setOpenDialog(true);
 
@@ -70,8 +76,6 @@ const IncompleteGroups = () => {
       const result = await updatePeriod(updatedSettings, user);
       console.log("Updated successfully:", result);
 
-      // Redirige al usuario después de completar la acción
-      //   navigate(`/dashboard/${period.id}/groups`);
     } catch (error) {
       // Manejo de errores global
       console.error("Error in handleRunStep1:", error);
@@ -79,7 +83,12 @@ const IncompleteGroups = () => {
       // Finaliza la carga independientemente de si hubo un error o no
       setLoading(false);
       setOpenDialog(false);
+      setOpenConfirmDialog(false); // Muestra el diálogo de confirmación al presionar el botón "Correr"
     }
+  };
+
+  const handleCloseConfirmDialog = () => {
+    setOpenConfirmDialog(false); // Cierra el diálogo de confirmación si el usuario cancela
   };
 
   // Función para obtener el nombre del topic por su id
@@ -292,6 +301,23 @@ const IncompleteGroups = () => {
           </Box> */}
       </Grid>
 
+      {/* Confirm Dialog */}
+      <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>
+        <DialogTitle>Correr Algoritmo</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            Importante: Este algoritmo solo se puede correr una vez.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmDialog} color="secondary">
+            Cancelar
+          </Button>
+          <Button onClick={handleAcceptResults} color="primary">
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
       {/* Spinner de carga */}
       <Dialog
         open={openDialog}

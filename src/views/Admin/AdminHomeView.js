@@ -130,7 +130,7 @@ const AdminHomeView = () => {
 
   return (
     <Root maxWidth="md">
-      <Title variant="h4">Bienvenido, Admin!</Title>
+      <Title variant="h4">{user.name}, te damos la bienvenida!</Title>
       <Typography variant="h5" style={{ color: '#555' }}>Cuatrimestres</Typography>
       <CardContainer>
         {periods.map((period, index) => (

@@ -68,7 +68,6 @@ const TutorHomeView = () => {
     const fetchData = async () => {
       try {
         const data = await getTutorPeriods(user);
-        console.log(data)
         const sortedData = data.sort((a, b) => {
           const [termA, yearA] = [parseInt(a.period_id[0]), parseInt(a.period_id.slice(2))];
           const [termB, yearB] = [parseInt(b.period_id[0]), parseInt(b.period_id.slice(2))];
@@ -86,7 +85,6 @@ const TutorHomeView = () => {
     };
 
     fetchData();
-    console.log(periods)
   }, []);
 
   const dispatch = useDispatch();
@@ -99,7 +97,7 @@ const TutorHomeView = () => {
 
   return (
     <Root maxWidth="md">
-      <Title variant="h4">Bienvenido, {user.name}!</Title>
+      <Title variant="h4">{user.name}, te damos la bienvenida!</Title>
       <Typography variant="h5" style={{ color: '#555' }}>Cuatrimestres</Typography>
       <CardContainer>
         {periods.map((cuatrimestre, index) => (

@@ -66,7 +66,6 @@ const GroupReview = ({ group }) => {
 
   const downloadFile = async () => {
     try {
-      console.log(period);
       await downloadProject(group.id, user, period.id, 'initial');
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
@@ -109,7 +108,6 @@ const GroupReview = ({ group }) => {
   };
 
   useEffect(() => {
-    console.log(group)
     loadPdfPreview();
   }, [group.id, user, period]);
 
@@ -160,10 +158,9 @@ const GroupReview = ({ group }) => {
           variant="contained"
           onClick={handleSubmit}
           color="primary"
-          disabled={group.pre_report_approved}
           sx={{ width: "100%", borderRadius: "4px" }} // Botón de enviar que también ocupa todo el ancho
         >
-          {group.pre_report_approved ? "El comentario ya fue enviado" : "Enviar"}
+          Enviar
         </Button>
       </Box>
       <MySnackbar

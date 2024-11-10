@@ -31,13 +31,19 @@ const SpecificDateDialog = ({
   handleAssignDate,
   getTutorNameById,
   hours,
-  filteredTutors,
+  tutors,
   group,
   setGroup,
   setTutor,
   setTopic,
 }) => {
   const [isAssignDisabled, setIsAssignDisabled] = useState(true);
+  const filteredTutors = tutors.filter((tutor) =>
+    tutor.tutor_periods.some(
+      (tutor_period) =>
+        tutor_period.period_id === period.id && tutor_period.is_evaluator
+    )
+  );
 
   // Verifica si todos los campos necesarios están completos para habilitar el botón de Asignar
   useEffect(() => {
@@ -65,7 +71,7 @@ const SpecificDateDialog = ({
     setSelectedHour("");
     onClose(); // Cierra el diálogo
   };
-
+  
   return (
     <Dialog open={open} onClose={handleCancel} maxWidth="sm" fullWidth>
       <DialogTitle>Asignar Fecha a Grupo</DialogTitle>

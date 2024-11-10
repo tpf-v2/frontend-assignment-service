@@ -647,7 +647,7 @@ const TopicTutor = () => {
                               }}
                             >
                               {/* Filtrar los topics basados en el tutor seleccionado */}
-                              {getTopicsForTutor(assignment.tutor?.id).map(
+                              {getTopicsForTutor(assignment.tutor?.id, period.id).map(
                                 (topicName, index) => (
                                   <MenuItem
                                     key={index}
