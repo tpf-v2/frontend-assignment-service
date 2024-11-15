@@ -96,6 +96,12 @@ const ContentPdfProjects = ({
     return parts[1]; // Devuelve el grupo
   }
 
+  function getGroupNumber(path) {
+    const parts = path.split("/");
+    const group = groupsData?.find((g) => g.id === parseInt(parts[1]));
+    return group ? group.group_number : null;
+  }
+
   function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString("es-ES", {
@@ -160,7 +166,7 @@ const ContentPdfProjects = ({
             ) : (
               deliveries.map((entrega, index) => (
                 <TableRow key={index}>
-                  <TableCell>{getGroup(entrega.name)}</TableCell>
+                  <TableCell>{getGroupNumber(entrega.name)}</TableCell>
                   <TableCell>
                     {getTutorNameById(
                       groupsData.find(
@@ -173,11 +179,11 @@ const ContentPdfProjects = ({
                       ? groupsData.find(
                           (g) => parseInt(getGroup(entrega.name)) === g.id
                         )?.pre_report_title ||
-                        `Anteproyecto Grupo ${getGroup(entrega.name)}`
+                        `Anteproyecto Grupo ${getGroupNumber(entrega.name)}`
                       : groupsData.find(
                           (g) => parseInt(getGroup(entrega.name)) === g.id
                         )?.final_report_title ||
-                        `Proyecto final Grupo ${getGroup(entrega.name)}`}
+                        `Proyecto final Grupo ${getGroupNumber(entrega.name)}`}
                   </TableCell>
 
                   <TableCell>{formatDate(entrega.last_modified)}</TableCell>
@@ -214,7 +220,7 @@ const ContentPdfProjects = ({
                   )}
                   <TableCell>
                     <IconButton
-                      onClick={() => downloadFile(getGroup(entrega.name))}
+                      onClick={() => downloadFile(getGroup(entrega.name), getGroupNumber(entrega.name))}
                     >
                       <DownloadIcon />
                     </IconButton>

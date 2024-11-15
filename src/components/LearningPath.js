@@ -42,7 +42,6 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
 const LearningPath = ({ group_id, group }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-
   const [milestones, setMilestones] = useState([]);
   const [loading, setLoading] = useState(true); 
   const [notification, setNotification] = useState({
@@ -132,7 +131,7 @@ const LearningPath = ({ group_id, group }) => {
           ) : selectedPhase === "intermediate" ? ( 
             <TutorIntermediateProjectComponent groupId={group_id} /> 
           ) : selectedPhase === "final" ? ( 
-            <ProjectPdfComponent groupId={group_id} projectType={"Final"}/> 
+            <ProjectPdfComponent groupId={group_id} groupNumber={group.group_number} projectType={"Final"}/> 
           ) : (
             <>
               <Typography
