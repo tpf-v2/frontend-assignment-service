@@ -1,76 +1,79 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Frontend Assignment Service
 
-## Available Scriptsy
-Don't forget to run `yarn add env-cmd` beforehand in case you don't have env-cmd installed.
-In the project directory, you can run:
+Este proyecto es el frontend del sistema de asignación de grupos y temas desarrollado como parte del Trabajo Profesional en FIUBA. Está construido con React y tiene como objetivo proporcionar una interfaz amigable para gestionar las asignaciones.
 
-### `npm run start:dev`
+## Requisitos Previos
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Antes de comenzar, asegúrate de tener instalado lo siguiente:
 
-The page will use the host [http://127.0.0.1:5000](http://127.0.0.1:5000) as the backend service.
+- **Node.js**: Descarga e instala la versión más reciente desde [https://nodejs.org/](https://nodejs.org/).
+- **npm** (incluido con Node.js) o **yarn** para manejar dependencias.
 
-### `npm run start:prod`
+## Instalación
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Sigue estos pasos para instalar y ejecutar el proyecto en tu máquina local:
 
-The page will use the host [https://tpp-g4-fiuba.azurewebsites.net](https://tpp-g4-fiuba.azurewebsites.net) as the backend service.
+1. **Clona el repositorio:**
 
-### `npm test`
+   ```bash
+   git clone https://github.com/trabajo-profesional-fiuba/frontend-assignment-service.git
+   cd frontend-assignment-service
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. **Instala las dependencias:**
 
-### `npm run build`
+   Usando npm:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+   ```bash
+   npm install
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. **Configura las variables de entorno:**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   Crea un archivo `.env` en la raíz del proyecto y define las variables necesarias según el archivo `.env.example` proporcionado en el repositorio.
 
-### `npm run eject`
+4. **Ejecuta el proyecto:**
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+   Con npm:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   ```bash
+   npm run start:dev
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+   Esto iniciará la aplicación en modo de desarrollo. Por defecto, estará disponible en `http://localhost:3000`.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Scripts Disponibles
 
-## Learn More
+En el directorio del proyecto, puedes ejecutar los siguientes comandos:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **`npm run start:dev`**: Inicia el servidor de desarrollo.
+- **`npm run start:stg`**: Inicia el servidor de staging.
+- **`npm run start:prod`**: Inicia el servidor de produccion.
+- **`npm run build`**: Genera una versión optimizada para producción en el directorio `build`.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Estructura del Proyecto
 
-### Code Splitting
+El proyecto está organizado en los siguientes directorios principales:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- **`src`**: Contiene el código fuente de la aplicación.
+  - **`components`**: Componentes reutilizables de la interfaz.
+  - **`pages`**: Páginas principales de la aplicación.
+  - **`redux`**: Gestión del estado utilizando Redux.
+  - **`services`**: Lógica para las llamadas al backend.
+  - **`styles`**: Archivos de estilos globales y específicos.
+- **`public`**: Archivos estáticos y el archivo `index.html`.
 
-### Analyzing the Bundle Size
+## Contribución
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Si deseas colaborar en el proyecto:
 
-### Making a Progressive Web App
+1. Haz un fork del repositorio.
+2. Crea una rama para tu funcionalidad (`git checkout -b feature/nueva-funcionalidad`).
+3. Realiza tus cambios y haz commit (`git commit -m "Agrega nueva funcionalidad"`).
+4. Haz push a la rama (`git push origin feature/nueva-funcionalidad`).
+5. Abre un Pull Request.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Para cualquier consulta o sugerencia, no dudes en abrir un issue en el repositorio.
