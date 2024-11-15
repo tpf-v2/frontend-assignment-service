@@ -80,6 +80,11 @@ const UploadFile = ({ projectType }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Validación del título del proyecto
+    if (projectTitle.length > 95) {
+      setTitleError("El título no puede exceder los 95 caracteres.");
+      return;
+    }
+    
     if (!projectTitle.trim() && projectType !== "intermediate-project") {
       setTitleError("Por favor ingrese el título del proyecto.");
       return;
