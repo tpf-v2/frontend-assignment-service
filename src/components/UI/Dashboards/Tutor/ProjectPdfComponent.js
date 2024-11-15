@@ -27,7 +27,7 @@ const PdfPreviewBox = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
 
-const ProjectPdfComponent = ({ groupId, projectType }) => {
+const ProjectPdfComponent = ({ groupId, groupNumber, projectType }) => {
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
   const [pdfUrl, setPdfUrl] = useState(null);
@@ -36,7 +36,7 @@ const ProjectPdfComponent = ({ groupId, projectType }) => {
     try {
       // Llama a la función genérica para descargar el proyecto (inicial o final)
       const projectKey = projectType === "Anteproyecto" ? 'initial' : 'final';
-      await downloadProject(groupId, user, period.id, projectKey);
+      await downloadProject(groupId, user, period.id, projectKey, groupNumber);
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }

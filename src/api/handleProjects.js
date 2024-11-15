@@ -2,9 +2,9 @@ import axios from "axios";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
-export const downloadProject = async (groupId, user, period_id, projectType) => {
+export const downloadProject = async (groupId, user, period_id, projectType, groupNumber) => {
   const projectName = projectType === 'final' ? 'final-project' : 'initial-project';
-  const fileName = projectType === 'final' ? `Grupo-${groupId}-final.pdf` : `Grupo-${groupId}-anteproyecto.pdf`;
+  const fileName = projectType === 'final' ? `EntregaFinal_equipo${groupNumber}.pdf` : `EntregaInicial_equipo${groupNumber}.pdf`;
 
   try {
     const config = {
