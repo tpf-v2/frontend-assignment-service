@@ -98,17 +98,17 @@ const DashboardView = () => {
     }
   };
 
-  const downloadInitialFile = async (groupId) => {
+  const downloadInitialFile = async (groupId, groupNumber) => {
     try {
-      await downloadProject(groupId, user, period.id, "initial");
+      await downloadProject(groupId, user, period.id, "initial", groupNumber);
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }
   };
 
-  const downloadFinalFile = async (groupId) => {
+  const downloadFinalFile = async (groupId, groupNumber) => {
     try {
-      await downloadProject(groupId, user, period.id, "final");
+      await downloadProject(groupId, user, period.id, "final", groupNumber);
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }
