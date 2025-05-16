@@ -12,6 +12,7 @@
     "@mui/x-date-pickers": "^7.22.0",
     "@mui/x-date-pickers-pro": "^7.19.0",
     "@reduxjs/toolkit": "^2.2.7",
+    "@sentry/cli": "^2.45.0",
     "@sentry/react": "^9.19.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -42,9 +43,10 @@
     "start:dev": "env-cmd -f ./.env.development react-scripts start",
     "start:prod": "env-cmd -f ./.env.production react-scripts start",
     "start:stg": "env-cmd -f ./.env.staging react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && npm run sentry:sourcemaps",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org daro --project frontend-assignment-service ./build && sentry-cli sourcemaps upload --org daro --project frontend-assignment-service ./build"
   },
   "eslintConfig": {
     "extends": [
