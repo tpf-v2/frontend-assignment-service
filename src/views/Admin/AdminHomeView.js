@@ -59,6 +59,7 @@ const AdminHomeView = () => {
   const [open, setOpen] = useState(false);
   const [newPeriod, setNewPeriod] = useState({ year: '', term: '' });
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
   const [notification, setNotification] = useState({
     open: false,
@@ -85,7 +86,7 @@ const AdminHomeView = () => {
         });        
         setPeriods(sortedData);
       } catch (error) {
-        console.error(error.message);
+        setError("Error al obtener los cuatrimestres: " + error.message);
       }
     };
     fetchData();
@@ -127,6 +128,13 @@ const AdminHomeView = () => {
     setOpen(false);
     setNewPeriod({ year: '', term: '' });
   };
+
+  if (error) {
+    return <Root maxWidth="md">
+      <Title variant="h4">{user.name}, te damos la bienvenida!</Title>
+      <Typography color="error" variant="body1" fontWeight="bold">{error}</Typography>
+    </Root>
+  }
 
   return (
     <Root maxWidth="md">
