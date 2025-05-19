@@ -86,7 +86,13 @@ const AdminHomeView = () => {
         });        
         setPeriods(sortedData);
       } catch (error) {
-        setError("Error al obtener los cuatrimestres: " + error.message);
+        const errorMessage = "Error al obtener los cuatrimestres: " + error.message;
+        setError(errorMessage);
+        setNotification({
+          open: true,
+          message: errorMessage,
+          status: "error",
+        });
       }
     };
     fetchData();
@@ -133,6 +139,12 @@ const AdminHomeView = () => {
     return <Root maxWidth="md">
       <Title variant="h4">{user.name}, te damos la bienvenida!</Title>
       <Typography color="error" variant="body1" fontWeight="bold">{error}</Typography>
+      <MySnackbar
+        open={notification.open}
+        handleClose={handleSnackbarClose}
+        message={notification.message}
+        status={notification.status}
+      />
     </Root>
   }
 
