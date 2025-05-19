@@ -8,6 +8,21 @@ import { Provider } from "react-redux";
 import { store, persistor } from "./redux/store.js";
 import { PersistGate } from "redux-persist/integration/react";
 
+import * as Sentry from "@sentry/react";
+
+if (process.env.REACT_APP_SENTRY_ENABLED == "true") {
+  console.info("Sentry is enabled");
+  Sentry.init({
+    environment: process.env.NODE_ENV,
+    dsn: process.env.REACT_APP_SENTRY_DSN,
+    // Setting this option to true will send default PII data to Sentry.
+    // For example, automatic IP address collection on events
+    sendDefaultPii: true
+  });
+} else {
+  console.warn("Sentry is disabled");
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
