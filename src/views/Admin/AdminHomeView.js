@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Box, Card, CardContent, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Container, Box, Card, CardContent, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Button, FormControl, InputLabel, Select, MenuItem, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
@@ -59,6 +59,8 @@ const AdminHomeView = () => {
   const [open, setOpen] = useState(false);
   const [newPeriod, setNewPeriod] = useState({ year: '', term: '' });
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [notification, setNotification] = useState({
     open: false,
@@ -73,6 +75,7 @@ const AdminHomeView = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         const data = await getAllPeriods(user);
         const sortedData = data.sort((a, b) => {
           const [termA, yearA] = [parseInt(a.id[0]), parseInt(a.id.slice(2))];
@@ -85,7 +88,15 @@ const AdminHomeView = () => {
         });        
         setPeriods(sortedData);
       } catch (error) {
-        console.error(error.message);
+        const errorMessage = "Error al obtener los cuatrimestres: " + error.message;
+        setError(errorMessage);
+        setNotification({
+          open: true,
+          message: errorMessage,
+          status: "error",
+        });
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchData();
@@ -128,24 +139,43 @@ const AdminHomeView = () => {
     setNewPeriod({ year: '', term: '' });
   };
 
+  if (error) {
+    return <Root maxWidth="md">
+      <Title variant="h4">{user.name}, te damos la bienvenida!</Title>
+      <Typography color="error" variant="body1" fontWeight="bold">{error}</Typography>
+      <MySnackbar
+        open={notification.open}
+        handleClose={handleSnackbarClose}
+        message={notification.message}
+        status={notification.status}
+      />
+    </Root>
+  }
+
   return (
     <Root maxWidth="md">
       <Title variant="h4">{user.name}, te damos la bienvenida!</Title>
       <Typography variant="h5" style={{ color: '#555' }}>Cuatrimestres</Typography>
-      <CardContainer>
-        {periods.map((period, index) => (
-          <CardStyled key={index} onClick={() => handleCardClick(period)}>
+      {isLoading ? (
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+          <CircularProgress />
+        </Box>
+      ) : (
+        <CardContainer>
+          {periods.map((period, index) => (
+            <CardStyled key={index} onClick={() => handleCardClick(period)}>
+              <CardContent>
+                <Typography variant="h6" style={{ color: '#333' }}>{period.id}</Typography>
+              </CardContent>
+            </CardStyled>
+          ))}
+          <AddCardStyled onClick={handleClickOpen}>
             <CardContent>
-              <Typography variant="h6" style={{ color: '#333' }}>{period.id}</Typography>
+              <AddIcon style={{ fontSize: '2rem', color: '#888' }} />
             </CardContent>
-          </CardStyled>
-        ))}
-        <AddCardStyled onClick={handleClickOpen}>
-          <CardContent>
-            <AddIcon style={{ fontSize: '2rem', color: '#888' }} />
-          </CardContent>
-        </AddCardStyled>
-      </CardContainer>
+          </AddCardStyled>
+        </CardContainer>
+      )}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Agregar Nuevo Cuatrimestre</DialogTitle>
         <DialogContent>
