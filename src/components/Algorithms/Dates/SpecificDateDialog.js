@@ -95,7 +95,7 @@ const SpecificDateDialog = ({
                   period.id
                 );
                 setTutor(selectedTutor ? selectedTutor : "");
-                setTopic(selectedGroup.topic.name);
+                setTopic(selectedGroup.topic ? selectedGroup.topic.name : "[No tiene tema asignado.]");
               }}
               displayEmpty
               renderValue={(selected) => {

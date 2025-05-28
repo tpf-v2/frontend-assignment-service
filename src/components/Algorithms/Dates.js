@@ -690,7 +690,7 @@ const Dates = () => {
                     period.id
                   );
                   setTutor(selectedTutor ? selectedTutor : "");
-                  setTopic(selectedGroup.topic.name);
+                  setTopic(selectedGroup.topic ? selectedGroup.topic.name : "[No tiene tema asignado.]");
                 }}
                 renderValue={(selected) => {
                   const selectedGroup = groups.find(
