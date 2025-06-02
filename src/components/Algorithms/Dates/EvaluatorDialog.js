@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { makeEvaluator } from "../../../api/makeEvaluator";
+import { unmakeEvaluator } from "../../../api/unmakeEvaluator";
 import { setTutors } from "../../../redux/slices/tutorsSlice";
 
 const EvaluatorDialog = ({
@@ -46,13 +47,11 @@ const EvaluatorDialog = ({
   }, []);
 
   const handleToggleTutor = (tutor) => {
-    if (!initialSelectedTutors.includes(tutor.id)) {
-      setSelectedTutors((prevSelectedTutors) =>
-        prevSelectedTutors.includes(tutor.id)
-          ? prevSelectedTutors.filter((id) => id !== tutor.id)
-          : [...prevSelectedTutors, tutor.id]
-      );
-    }
+    setSelectedTutors((prevSelectedTutors) =>
+      prevSelectedTutors.includes(tutor.id)
+        ? prevSelectedTutors.filter((id) => id !== tutor.id)
+        : [...prevSelectedTutors, tutor.id]
+    );
   };
 
   const handleCancel = () => {
@@ -67,11 +66,17 @@ const EvaluatorDialog = ({
         (tutorId) => !initialSelectedTutors.includes(tutorId)
       );
 
+      const deleteEvaluators = initialSelectedTutors.filter(
+        (tutorId) => !selectedTutors.includes(tutorId)
+      );
       // Llama a makeEvaluator solo para los evaluadores nuevos
       for (const tutorId of newEvaluators) {
         await makeEvaluator(period.id, tutorId, user);
       }
 
+      for (const tutorId of deleteEvaluators) {
+        await unmakeEvaluator(period.id, tutorId, user);
+      }
       // Actualizamos el flag is_evaluator a true solo en los tutores seleccionados
       const updatedTutors = tutors.map((tutor) => {
         if (newEvaluators.includes(tutor.id)) {
