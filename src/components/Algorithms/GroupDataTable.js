@@ -109,6 +109,7 @@ const GroupDataTable = () => {
 
     filteredGroups.forEach((group) => {
       group.students.forEach((student, index) => {
+        group.preferred_topics = group.preferred_topics ? group.preferred_topics : [];
         const row = [
           index === 0 ? group.id : "",
           student.name,
@@ -248,7 +249,7 @@ const GroupDataTable = () => {
                           )}
                           {index === 0 && (
                             <>
-                              {group.preferred_topics.length === 0 ? (
+                              { (!group.preferred_topics || (group.preferred_topics.length === 0)) ? (
                                 <>
                                   <TableCell
                                     rowSpan={group.students.length}
