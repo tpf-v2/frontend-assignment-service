@@ -267,6 +267,9 @@ const AvailabilityCalendar = () => {
               style={{ height: "500px", margin: "50px" }}
               min={new Date(0, 0, 0, 9, 0, 0)}
               max={new Date(0, 0, 0, 21, 0, 0)}
+              formats={() => ({
+                dateFormat: 'dd',
+              })}
               components={{
                 month: {
                   header: () => null,

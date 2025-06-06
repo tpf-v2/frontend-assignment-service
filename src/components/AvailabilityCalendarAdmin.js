@@ -20,6 +20,7 @@ import {
 } from "../styles/AvailabilityCalendarStyle";
 import { transformSlotsToIntervals } from "../utils/TransformSlotsToIntervals";
 import { Box } from "@mui/system";
+import { useMemo } from 'react';
 
 // Localizador de momento
 const localizer = momentLocalizer(moment);
@@ -152,6 +153,19 @@ const AvailabilityCalendarAdmin = () => {
     initialAvailability();
   }, [availabilitySent]);
 
+  const { _currentDate, formats } = useMemo(() => ({
+    _currentDate: new Date(),
+    formats: {
+      dayFormat: (date, culture, localizer) =>
+        localizer.format(date, 'ddd MM/DD', culture),
+
+      dayRangeHeaderFormat: ({ start, end }, culture, localizer) =>
+        localizer.format(start, 'ddd D YYYY', culture) +
+        ' -' +
+        localizer.format(end, 'ddd D YYYY', culture),
+    },
+  }))
+
   return (
     <AvailabilityContainer>
       <Typography variant="h4" align="center" gutterBottom>
@@ -183,10 +197,11 @@ const AvailabilityCalendarAdmin = () => {
           timeslots={1}
           step={60}
           showMultiDayTimes
-          defaultDate={defaultDate || new Date()}
+          defaultDate={defaultDate || _currentDate}
           style={{ height: "500px", margin: "50px" }}
           min={new Date(0, 0, 0, 9, 0, 0)} // Comienza a las 9 AM
           max={new Date(0, 0, 0, 21, 0, 0)} // Termina a las 9 PM
+          formats={formats}
           components={{
             month: {
               header: () => null,
