@@ -13,6 +13,8 @@ import {
   Paper,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close"; // Importar el ícono de cerrar
+import 'moment/locale/es';
+import { useMemo } from 'react';
 
 const localizer = momentLocalizer(moment);
 
@@ -29,7 +31,17 @@ const CalendarSection = ({ events, defaultDate, loadingDates }) => {
     setOpen(false);
     setSelectedEvent(null);
   };
+  const { formats } = useMemo(() => ({
+    formats: {
+      dayFormat: (date, culture, localizer) =>
+        localizer.format(date,  'dddd DD/MM', culture),
 
+      dayRangeHeaderFormat: ({ start, end }, culture, localizer) =>
+        localizer.format(start,  'dddd D, YYYY', culture) +
+        ' - ' +
+        localizer.format(end,  'dddd D, YYYY', culture),
+    },
+  }))
   return (
     <>
       {loadingDates ? (
@@ -51,11 +63,13 @@ const CalendarSection = ({ events, defaultDate, loadingDates }) => {
                 selectable
                 onSelectEvent={handleEventSelect}
                 views={["week"]}
+                formats={formats}
                 defaultView="week"
                 timeslots={1}
                 step={60}
                 showMultiDayTimes
                 defaultDate={defaultDate || new Date()}
+                culture={"es"}
                 style={{
                   height: "90vh",
                   margin: "20px",

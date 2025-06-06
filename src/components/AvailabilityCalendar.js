@@ -24,6 +24,8 @@ import { useSelector } from "react-redux";
 import { transformSlotsToIntervals } from "../utils/TransformSlotsToIntervals";
 import ClosedAlert from "./ClosedAlert";
 import { Box } from "@mui/system";
+import 'moment/locale/es';
+import { useMemo } from 'react';
 
 // Localizador de momento
 const localizer = momentLocalizer(moment);
@@ -232,6 +234,18 @@ const AvailabilityCalendar = () => {
     }
     return {};
   };
+  const { formats } = useMemo(() => ({
+    formats: {
+      dayFormat: (date, culture, localizer) =>
+        localizer.format(date, 'dddd DD/MM', culture),
+
+      dayRangeHeaderFormat: ({ start, end }, culture, localizer) =>
+        localizer.format(start, 'dddd D, YYYY', culture) +
+        ' - ' +
+        localizer.format(end, 'dddd D, YYYY', culture),
+    },
+  }))
+
 
   return (
     <>
@@ -264,12 +278,11 @@ const AvailabilityCalendar = () => {
               step={60}
               showMultiDayTimes
               defaultDate={defaultDate || new Date()}
+              culture={"es"}
               style={{ height: "500px", margin: "50px" }}
               min={new Date(0, 0, 0, 9, 0, 0)}
               max={new Date(0, 0, 0, 21, 0, 0)}
-              formats={() => ({
-                dateFormat: 'dd',
-              })}
+              formats={formats}
               components={{
                 month: {
                   header: () => null,

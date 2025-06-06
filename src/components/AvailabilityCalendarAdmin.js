@@ -4,7 +4,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { CircularProgress, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import moment from "moment-timezone";
-
+import 'moment/locale/es';
 import MySnackbar from "./UI/MySnackBar";
 import EventModal from "./EventModal"; // Asegúrate de que este import está aquí
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
@@ -153,16 +153,15 @@ const AvailabilityCalendarAdmin = () => {
     initialAvailability();
   }, [availabilitySent]);
 
-  const { _currentDate, formats } = useMemo(() => ({
-    _currentDate: new Date(),
+  const { formats } = useMemo(() => ({
     formats: {
       dayFormat: (date, culture, localizer) =>
-        localizer.format(date, 'ddd MM/DD', culture),
+        localizer.format(date, 'dddd DD/MM', culture),
 
       dayRangeHeaderFormat: ({ start, end }, culture, localizer) =>
-        localizer.format(start, 'ddd D YYYY', culture) +
-        ' -' +
-        localizer.format(end, 'ddd D YYYY', culture),
+        localizer.format(start, 'dddd D, YYYY', culture) +
+        ' - ' +
+        localizer.format(end, 'dddd D, YYYY', culture),
     },
   }))
 
@@ -197,7 +196,8 @@ const AvailabilityCalendarAdmin = () => {
           timeslots={1}
           step={60}
           showMultiDayTimes
-          defaultDate={defaultDate || _currentDate}
+          defaultDate={defaultDate || new Date()}
+          culture={"es"}
           style={{ height: "500px", margin: "50px" }}
           min={new Date(0, 0, 0, 9, 0, 0)} // Comienza a las 9 AM
           max={new Date(0, 0, 0, 21, 0, 0)} // Termina a las 9 PM

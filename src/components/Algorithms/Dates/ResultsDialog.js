@@ -12,6 +12,8 @@ import { CalendarStyled } from "../../../styles/AvailabilityCalendarStyle";
 import { momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { CSVLink } from "react-csv";
+import 'moment/locale/es';
+import { useMemo } from 'react';
 
 const ResultsDialog = ({
   open,
@@ -47,6 +49,18 @@ const ResultsDialog = ({
       }),
     }));
   };
+
+  const { formats } = useMemo(() => ({
+    formats: {
+      dayFormat: (date, culture, localizer) =>
+        localizer.format(date, 'dddd DD/MM', culture),
+
+      dayRangeHeaderFormat: ({ start, end }, culture, localizer) =>
+        localizer.format(start,  'dddd D, YYYY', culture) +
+        ' - ' +
+        localizer.format(end,  'dddd D, YYYY', culture),
+    },
+  }))
   return (
     <Dialog
       open={open}
@@ -84,6 +98,7 @@ const ResultsDialog = ({
           events={events}
           selectable
           views={["week"]}
+          formats={formats}
           defaultView="week"
           timeslots={1} // Aumenta la cantidad de slots por cada intervalo de tiempo
           step={60}
