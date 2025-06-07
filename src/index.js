@@ -25,14 +25,16 @@ if (process.env.REACT_APP_SENTRY_ENABLED == "true") {
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <ThemeProvider theme={theme}>
+    <Sentry.ErrorBoundary fallback={<div>Error</div>}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <ThemeProvider theme={theme}>
           <CssBaseline />
           <App />
         </ThemeProvider>
       </PersistGate>
-    </Provider>
+      </Provider>
+    </Sentry.ErrorBoundary>
   </React.StrictMode>,
   document.getElementById("root")
 );
