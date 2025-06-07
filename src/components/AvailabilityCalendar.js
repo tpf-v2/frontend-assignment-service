@@ -170,8 +170,8 @@ const AvailabilityCalendar = () => {
       try {
         const formattedEvents = [
           {
-            start: moment(newEvent.start).utc().format(),
-            end: moment(newEvent.end).utc().format(),
+            start: moment(newEvent.start).format(),
+            end: moment(newEvent.end).format(),
           },
         ];
 
@@ -199,8 +199,8 @@ const AvailabilityCalendar = () => {
   
       try {
         const formattedEvents = updatedEvents.map((event) => ({
-          start: moment(event.start).utc().format(),
-          end: moment(event.end).utc().format(),
+          start: moment(event.start).format(),
+          end: moment(event.end).format(),
         }));
   
         // Envía la lista actualizada de eventos al backend
