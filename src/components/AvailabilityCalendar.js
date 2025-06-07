@@ -27,6 +27,8 @@ import { Box } from "@mui/system";
 import 'moment/locale/es';
 import { useMemo } from 'react';
 
+import browser from '../services/browserDetect';
+import BrowserWarning from './BrowserWarning';
 // Localizador de momento
 const localizer = momentLocalizer(moment);
 
@@ -246,7 +248,6 @@ const AvailabilityCalendar = () => {
     },
   }))
 
-
   return (
     <>
       {!loading ? (
@@ -255,7 +256,7 @@ const AvailabilityCalendar = () => {
             <Typography variant="h4" align="center" gutterBottom>
               Selecciona tu disponibilidad
             </Typography>
-  
+            {!browser.isDateCompatible() && <BrowserWarning />}
             {/* Descripción del Calendario */}
             <DescriptionBox>
               <Typography variant="body1" align="justify" gutterBottom>
