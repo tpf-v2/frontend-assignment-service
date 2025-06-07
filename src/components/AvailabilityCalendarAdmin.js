@@ -81,8 +81,8 @@ const AvailabilityCalendarAdmin = () => {
       try {
         const formattedEvents = [
           {
-            start: moment(newEvent.start).utc().format(),
-            end: moment(newEvent.end).utc().format(),
+            start: moment(newEvent.start).subtract(3, "hours").utc().format(),
+            end: moment(newEvent.end).subtract(3, "hours").utc().format(),
           },
         ];
 
@@ -110,8 +110,8 @@ const AvailabilityCalendarAdmin = () => {
 
       try {
         const formattedEvents = updatedEvents.map((event) => ({
-          start: moment(event.start).utc().format(),
-          end: moment(event.end).utc().format(),
+          start: moment(event.start).subtract(3, "hours").utc().format(),
+          end: moment(event.end).subtract(3, "hours").utc().format(),
         }));
 
         // Envía la lista actualizada de eventos al backend
