@@ -17,6 +17,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.2",
+    "bowser": "^2.11.0",
     "date-fns": "^4.1.0",
     "env-cmd": "^10.1.0",
     "is-negative-zero": "^2.0.3",
