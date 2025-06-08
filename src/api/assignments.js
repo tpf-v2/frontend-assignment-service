@@ -49,19 +49,43 @@ export const dates = async (user, period, balance_limit, max_groups) => {
   if (!max_groups) {
     max_groups = 5;
   }
-  const config = {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-    params: {
-      cache_bust: new Date().getTime(), // add params to avoid caching
-    },
-  };
 
   try {
-    const url = `${BASE_URL}/assignments/date-assigment?period_id=${period.id}&max_groups_per_week=${max_groups}&max_dif_evaluators=${balance_limit}`;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+      params: {
+        cache_bust: new Date().getTime(), // add params to avoid caching
+      },
+    };
+
+    const url = `${BASE_URL}/assignments/date-assigment?mode=async&period_id=${period.id}&max_groups_per_week=${max_groups}&max_dif_evaluators=${balance_limit}`;
     const response = await axios.post(url, {}, config);
-    return response.data;
+
+    if (response.data.task_id) {
+      const task_id = response.data.task_id;
+
+      while (true) {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+          params: {
+            cache_bust: new Date().getTime(), // add params to avoid caching
+          },
+        };
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const task_url = `${BASE_URL}/assignments/date-assigment-results?task_id=${task_id}`;
+        const task_response = await axios.get(task_url, config);
+        if (task_response.data.status === 1) {
+          return task_response.data;
+        }
+      }
+    } else {
+      return response.data;
+    }
   } catch (error) {
     throw new Error(error);
   }
