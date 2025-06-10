@@ -63,11 +63,11 @@ const UploadFile = ({ projectType }) => {
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
-    if (file && file.name.endsWith(".pdf")) {
+    if (file && file.name.endsWith(".pdf") && file.size <= 4 * 1024 * 1024) {
       setSelectedFile(file);
       setFileError("");
     } else {
-      setFileError("Por favor cargue un archivo PDF.");
+      setFileError("Por favor cargue un archivo PDF que no supere los 4MB.");
     }
   };
 
