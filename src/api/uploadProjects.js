@@ -10,7 +10,7 @@ export const uploadProjects = async ({ projectType, groupId, projectTitle, selec
   };
 
   try {
-    let apiUrl = `${BASE_URL}/groups/${groupId}/${projectType}?project_title=${projectTitle}`;
+    let apiUrl = `${BASE_URL}/groups/${groupId}/${projectType}?mode=async&project_title=${projectTitle}`;
     let response;
 
     // Si es entrega intermedia, enviar la URL
@@ -34,6 +34,27 @@ export const uploadProjects = async ({ projectType, groupId, projectTitle, selec
           Authorization: `Bearer ${token}`,
         },
       });
+    }
+
+    if (response.status == 200 && response.data.task_id) {
+      while (true) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        const statusResponse = await axios.get(
+          `${BASE_URL}/groups/${groupId}/${projectType}/status?task_id=${response.data.task_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (statusResponse.data.status == "error") {
+          throw new Error();
+        } else if (statusResponse.data.status == "success") {
+          break;
+        }
+      }
     }
 
     return {
