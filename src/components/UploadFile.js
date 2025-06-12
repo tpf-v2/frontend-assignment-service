@@ -64,11 +64,11 @@ const UploadFile = ({ projectType }) => {
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
-    if (file && file.name.endsWith(".pdf") && file.size <= 20 * 1024 * 1024) {
+    if (file && file.name.endsWith(".pdf") && file.size <= 100 * 1024 * 1024) {
       setSelectedFile(file);
       setFileError("");
     } else {
-      setFileError("Por favor cargue un archivo PDF que no supere los 20MB. O envialo a través del siguiente link: ");
+      setFileError("Por favor cargue un archivo PDF que no supere los 100MB. O envialo a través del siguiente link: ");
       setExternalLink("https://forms.gle/8Hg5StAkDDD3xfxp9");
     }
   };
