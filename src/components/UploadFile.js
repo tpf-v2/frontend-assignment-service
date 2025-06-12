@@ -67,6 +67,7 @@ const UploadFile = ({ projectType }) => {
     if (file && file.name.endsWith(".pdf") && file.size <= 100 * 1024 * 1024) {
       setSelectedFile(file);
       setFileError("");
+      setExternalLink(null);
     } else {
       setFileError("Por favor cargue un archivo PDF que no supere los 100MB. O envialo a través del siguiente link: ");
       setExternalLink("https://forms.gle/8Hg5StAkDDD3xfxp9");
