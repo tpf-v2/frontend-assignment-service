@@ -57,17 +57,19 @@ const UploadFile = ({ projectType }) => {
   const [loading, setLoading] = useState(false);
   const [projectTitle, setProjectTitle] = useState("");
   const [titleError, setTitleError] = useState("");
+  const [externalLink, setExternalLink] = useState("");
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const groupId = useSelector((state) => state.user.group_id);
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
-    if (file && file.name.endsWith(".pdf") && file.size <= 4 * 1024 * 1024) {
+    if (file && file.name.endsWith(".pdf") && file.size <= 20 * 1024 * 1024) {
       setSelectedFile(file);
       setFileError("");
     } else {
-      setFileError("Por favor cargue un archivo PDF que no supere los 4MB.");
+      setFileError("Por favor cargue un archivo PDF que no supere los 20MB. O envialo a través del siguiente link: ");
+      setExternalLink("https://forms.gle/8Hg5StAkDDD3xfxp9");
     }
   };
 
@@ -206,6 +208,11 @@ const UploadFile = ({ projectType }) => {
           {fileError && (
             <Typography variant="body2" color="error">
               {fileError}
+              {externalLink && (
+                <a href={externalLink} target="_blank" rel="noopener noreferrer">
+                  {externalLink}
+                </a>
+              )}
             </Typography>
           )}
 
