@@ -1,5 +1,8 @@
 import axios from "axios";
 import * as Sentry from "@sentry/react";
+import { io } from "socket.io-client";
+
+window.io = io;
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 const WS_BASE_URL = process.env.REACT_APP_API_URL
@@ -42,64 +45,46 @@ export const uploadProjects = async ({ projectType, groupId, projectTitle, selec
 
     if (response.status == 200 && response.data.task_id && response.data.status == "pending") {
 
+      let socket;
       try {
+        socket = io(`${WS_BASE_URL}`, {path: "/ws"});
+
         const result = new Promise((resolve, reject) => {
-          const ws = new WebSocket(`${WS_BASE_URL}/notifications/connect`);
-          ws.onopen = () => {
-            ws.send(JSON.stringify({
-              type: "listen-task",
+          socket.on("connect", () => {
+            console.log("Conectado al servidor de notificaciones");
+            socket.emit("listentask", {
               task_id: response.data.task_id
-            }));
-          };
+            });
+          });
 
-          ws.onerror = (event) => {
-            reject(event);
-          };
+          socket.on("error", (error) => {
+            console.error("Error al intentar conectar un websocket", error);
+            reject(error);
+          });
 
-          ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.type == "task-status") {
-              if (data.status == "success") {
-                ws.close();
-                resolve(data);
-              } else {
-                ws.close();
-                reject(data);
-              }
-            }
-          };
+          socket.on("taskstatus", (data) => {
+            console.log("Status de la tarea", data);
+            resolve(data.status);
+          });
+
+          socket.on("disconnect", () => {
+            console.log("Desconectado del servidor de notificaciones");
+            reject(new Error("Desconectado del servidor de notificaciones"));
+          });
         });
 
-        await result;
+        const status = await result;
 
         return {
-          success: true,
+          success: status == "success",
           message: `¡Envío exitoso! Se ha registrado correctamente la ${projectNameKeyMap[projectType]}.`,
         };
-
       } catch (error) {
         Sentry.captureException(error);
         console.error("Error al intentar conectar un websocket", error);
-      }
-
-
-      // Espera a que la tarea se complete mediante polling
-      while (true) {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        const statusResponse = await axios.get(
-          `${BASE_URL}/tasks/status/${response.data.task_id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (statusResponse.data.status == "error") {
-          throw new Error();
-        } else if (statusResponse.data.status == "success") {
-          break;
+      } finally {
+        if (socket) {
+          socket.disconnect();
         }
       }
     }
