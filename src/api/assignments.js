@@ -60,8 +60,18 @@ export const dates = async (user, period, balance_limit, max_groups) => {
       },
     };
 
-    const url = `${BASE_URL}/assignments/date-assigment?mode=async&period_id=${period.id}&max_groups_per_week=${max_groups}&max_dif_evaluators=${balance_limit}`;
-    const response = await axios.post(url, {}, config);
+    let response;
+    try {
+      const url = `${BASE_URL}/assignments/date-assigment-async?period_id=${period.id}&max_groups_per_week=${max_groups}&max_dif_evaluators=${balance_limit}`;
+      response = await axios.post(url, {}, config);
+    } catch (error) {
+      if (error.response.status === 404) {  
+        const fallback_url = `${BASE_URL}/assignments/date-assigment?period_id=${period.id}&max_groups_per_week=${max_groups}&max_dif_evaluators=${balance_limit}`;
+        response = await axios.post(fallback_url, {}, config);
+      } else {
+        throw new Error(error);
+      }
+    }
 
     if (response.data.task_id) {
       const task_id = response.data.task_id;
