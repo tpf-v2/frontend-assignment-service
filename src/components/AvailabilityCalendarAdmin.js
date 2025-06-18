@@ -168,12 +168,15 @@ const AvailabilityCalendarAdmin = () => {
     },
   }))
 
+  if (!browser.isDateCompatible()) {
+    return <BrowserWarning />;
+  }
+
   return (
     <AvailabilityContainer>
       <Typography variant="h4" align="center" gutterBottom>
         Selecciona tu disponibilidad
       </Typography>
-      {!browser.isDateCompatible() && <BrowserWarning />}
       {/* Descripción del Calendario */}
       <DescriptionBox>
         <Typography variant="body1" align="justify" gutterBottom>
