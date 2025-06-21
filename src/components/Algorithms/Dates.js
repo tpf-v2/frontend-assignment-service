@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Alert } from "@mui/material";
 import {
   Grid,
   Box,
@@ -230,7 +229,7 @@ const Dates = () => {
   };
 
   const handleRunAlgorithm = async () => {
-    try { 
+    try {
       setRunning(true);
       setOpenDialog(true);
       setOpenRunDialog(false);
@@ -536,31 +535,6 @@ const Dates = () => {
     }
   };
 
-  const parameters_to_complete = () => {
-   return (
-       <>
-        <DialogContent>
-          <TextField
-            margin="dense"
-            label="Límite máximo en la diferencia"
-            type="number"
-            fullWidth
-            value={maxDifference}
-            onChange={(e) => setMaxDifference(e.target.value)}
-          />
-          <TextField
-            // autoFocus
-            margin="dense"
-            label="Máximo grupos por semana"
-            type="number"
-            fullWidth
-            value={maxGroups}
-            onChange={(e) => setMaxGroups(e.target.value)}
-          />
-        </DialogContent>
-        </>)
-  }
-        
   return (
     <Box sx={{ padding: 3 }}>
       <Grid container spacing={2}>
@@ -791,21 +765,31 @@ const Dates = () => {
           </Button>
         </DialogActions>
       </Dialog>
-            
-      
-      <Dialog open={openRunDialog} onClose={handleCloseRunDialog}>
 
-      <DialogTitle>
+      <Dialog open={openRunDialog} onClose={handleCloseRunDialog}>
+        <DialogTitle>
           Seleccione la diferencia de grupos entre evaluadores y el límite
           máximo de grupos por semana
         </DialogTitle>
-
-        <Alert severity="error">            
-          {"Esta funcionalidad está en mantenimiento, estará disponible a la brevedad."}
-        </Alert>
-
-        {parameters_to_complete()}
-
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="Límite máximo en la diferencia"
+            type="number"
+            fullWidth
+            value={maxDifference}
+            onChange={(e) => setMaxDifference(e.target.value)}
+          />
+          <TextField
+            // autoFocus
+            margin="dense"
+            label="Máximo grupos por semana"
+            type="number"
+            fullWidth
+            value={maxGroups}
+            onChange={(e) => setMaxGroups(e.target.value)}
+          />
+        </DialogContent>
         <DialogActions sx={{ padding: "16px 24px" }}>
           <Button
             onClick={handleCloseRunDialog}
@@ -818,7 +802,6 @@ const Dates = () => {
             onClick={handleRunAlgorithm}
             color="primary"
             variant="contained"
-            disabled={true} // HOTFIX: HASTA QUE FUNCIONE LA EJECUCIÓN DEL ALGORITMO DE FECHAS
           >
             Correr
           </Button>
