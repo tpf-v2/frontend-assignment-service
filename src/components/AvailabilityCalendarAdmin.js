@@ -71,10 +71,7 @@ const AvailabilityCalendarAdmin = () => {
     }
 
     // Guardar el intervalo seleccionado
-    setSelectedSlot({
-      start: revertfixRelativeDate(start),
-      end: revertfixRelativeDate(end)
-    });
+    setSelectedSlot({ start, end });
     setModalOpen(true); // Abrir el modal para confirmar
   };
 
@@ -102,10 +99,7 @@ const AvailabilityCalendarAdmin = () => {
   };
 
   const handleSelectEvent = (event) => {
-    setEventToDelete({
-      start: revertfixRelativeDate(event.start),
-      end: revertfixRelativeDate(event.end)
-    });
+    setEventToDelete(event);
     setConfirmDeleteOpen(true);
   };
  
@@ -178,36 +172,6 @@ const AvailabilityCalendarAdmin = () => {
     return <BrowserWarning />;
   }
 
-  function revertfixRelativeDate(date) {
-    // Convertir el horario que NO es de Argentina a horario de Argentina
-    const formattedDate = moment.tz(
-      moment(date).format('YYYY-MM-DDTHH:mm:ss'),
-      'YYYY-MM-DDTHH:mm:ss',
-      'America/Argentina/Buenos_Aires').format()
-
-    return new Date(formattedDate);
-  };
-
-  function fixRelativeDate(date) {
-    // Convertir el horario que NO es de Argentina a horario de Argentina
-    const formattedDate = moment
-      .tz(date, Intl.DateTimeFormat().resolvedOptions().timeZone)
-      .clone()
-      .tz('America/Argentina/Buenos_Aires')
-      // Formatear la fecha para que sea compatible con el calendario
-      // (Esto le elimina cualquier definicion de timezone)
-      .format('YYYY-MM-DDTHH:mm:ss');
-
-    return new Date(formattedDate);
-  };
-
-  function mapEvents(events) {
-    return events.map(event => ({
-      start: fixRelativeDate(event.start),
-      end: fixRelativeDate(event.end)
-    }));
-  }
-
   return (
     <AvailabilityContainer>
       <Typography variant="h4" align="center" gutterBottom>
@@ -229,7 +193,7 @@ const AvailabilityCalendarAdmin = () => {
       {!loading ? (
         <CalendarStyled
           localizer={localizer}
-          events={mapEvents(events)}
+          events={events}
           selectable
           onSelectSlot={handleSelectSlot}
           onSelectEvent={handleSelectEvent}
