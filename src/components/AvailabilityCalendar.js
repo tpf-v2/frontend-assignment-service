@@ -194,7 +194,7 @@ const AvailabilityCalendar = () => {
     if (eventToDelete) {
       const updatedEvents = userAvailability.filter(
         (event) =>
-          event.start.toISOString() !== eventToDelete.start.toISOString() || event.end.toISOString() !== eventToDelete.end.toISOString()
+          event.start !== eventToDelete.start || event.end !== eventToDelete.end
       );
   
       setConfirmDeleteOpen(false);
