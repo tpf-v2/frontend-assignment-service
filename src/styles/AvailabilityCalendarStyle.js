@@ -1,9 +1,9 @@
 import { styled } from "@mui/material/styles";
-import { Calendar } from "react-big-calendar";
+import { MultiTimezoneCalendar } from "../components/Calendar/MultiTimezoneCalendar";
 import { Box } from "@mui/material";
 
 // Estilos personalizados para el calendario
-export const CalendarStyled = styled(Calendar)(({ theme }) => ({
+export const CalendarStyled = styled(MultiTimezoneCalendar)(({ theme }) => ({
   borderRadius: "8px",
   overflow: "hidden",
   backgroundColor: "white",
