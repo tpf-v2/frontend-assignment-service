@@ -1,10 +1,8 @@
 import axios from "axios";
 import * as Sentry from "@sentry/react";
+import { io } from "socket.io-client";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
-const WS_BASE_URL = process.env.REACT_APP_API_URL
-  .replace("http", "ws")
-  .replace("https", "wss");
 
 export const uploadProjects = async ({ projectType, groupId, projectTitle, selectedFile, url, token }) => {
   const projectNameKeyMap = {
@@ -42,49 +40,86 @@ export const uploadProjects = async ({ projectType, groupId, projectTitle, selec
 
     if (response.status == 200 && response.data.task_id && response.data.status == "pending") {
 
+      let socket;
       try {
-        const result = new Promise((resolve, reject) => {
-          const ws = new WebSocket(`${WS_BASE_URL}/notifications/connect`);
-          ws.onopen = () => {
-            ws.send(JSON.stringify({
-              type: "listen-task",
-              task_id: response.data.task_id
-            }));
-          };
-
-          ws.onerror = (event) => {
-            reject(event);
-          };
-
-          ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.type == "task-status") {
-              if (data.status == "success") {
-                ws.close();
-                resolve(data);
-              } else {
-                ws.close();
-                reject(data);
-              }
-            }
-          };
+        let tries = 5
+        socket = io(`${BASE_URL}`, {
+          path: "/ws",
+          reconnection: true,
+          reconnectionAttempts: tries,
+          reconnectionDelay: 1000
         });
 
-        await result;
+        const result = new Promise((resolve, reject) => {
+          socket.on("connect", () => {
+            console.log("Conectado al servidor de notificaciones");
+            socket.emit("listentask", {
+              task_id: response.data.task_id
+            });
+          });
+
+          socket.on("connect_timeout", (error) => {
+            console.error("Error al intentar conectar un websocket (timeout)", error);
+            reject(error);
+          });
+
+          socket.on("connect_error", (error) => {
+            tries--;
+            if (tries <= 0) {
+              console.error("Error al intentar conectar un websocket (connect_error)", error);
+              reject(error);
+            }
+          });
+
+          socket.on("reconnect_failed", (error) => {
+            console.error("Error al intentar conectar un websocket", error);
+            reject(error);
+          });
+
+          socket.on("error", (error) => {
+            console.error("Error al intentar conectar un websocket", error);
+            reject(error);
+          });
+
+          socket.on("taskstatus", (data) => {
+            console.log("Status de la tarea", data);
+            resolve(data.status);
+          });
+
+          socket.on("disconnect", () => {
+            console.log("Desconectado del servidor de notificaciones");
+            reject(new Error("Desconectado del servidor de notificaciones"));
+          });
+        });
+
+        const status = await result;
 
         return {
-          success: true,
+          success: status == "success",
           message: `¡Envío exitoso! Se ha registrado correctamente la ${projectNameKeyMap[projectType]}.`,
         };
-
       } catch (error) {
         Sentry.captureException(error);
         console.error("Error al intentar conectar un websocket", error);
+      } finally {
+        if (socket) {
+          socket.disconnect();
+        }
       }
+    }
 
+    // Todo lo que viene hasta ahora es para la compatibilidad con
+    // la version del backend que no implementa socketio
+    if (!response.data.task_id) {
+      return {
+        success: response.status === 202 || response.status === 200,
+        message: `¡Envío exitoso! Se ha registrado correctamente la ${projectNameKeyMap[projectType]}.`,
+      };
+    }
 
-      // Espera a que la tarea se complete mediante polling
-      while (true) {
+    // El fallback a long polling es necesario si socket.io falla
+    // porque el servidor no lo soporta
+    while (true) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         const statusResponse = await axios.get(
@@ -101,7 +136,6 @@ export const uploadProjects = async ({ projectType, groupId, projectTitle, selec
         } else if (statusResponse.data.status == "success") {
           break;
         }
-      }
     }
 
     return {
