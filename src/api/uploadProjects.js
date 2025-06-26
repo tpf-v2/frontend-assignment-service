@@ -108,6 +108,15 @@ export const uploadProjects = async ({ projectType, groupId, projectTitle, selec
       }
     }
 
+    // Todo lo que viene hasta ahora es para la compatibilidad con
+    // la version del backend que no implementa socketio
+    if (!response.data.task_id) {
+      return {
+        success: response.status === 202 || response.status === 200,
+        message: `¡Envío exitoso! Se ha registrado correctamente la ${projectNameKeyMap[projectType]}.`,
+      };
+    }
+
     // El fallback a long polling es necesario si socket.io falla
     // porque el servidor no lo soporta
     while (true) {
