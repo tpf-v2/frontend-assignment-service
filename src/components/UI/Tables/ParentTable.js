@@ -247,6 +247,80 @@ const ParentTable = ({
       return String(itemValue).toLowerCase().includes(searchTerm.toLowerCase());
     });
   });
+  
+  const addStudentModal = () => {
+    return (
+      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+        <DialogTitle
+          sx={{
+            fontWeight: "bold",
+            textAlign: "center",
+            backgroundColor: "#f5f5f5",
+            color: "#333",
+            padding: "16px 24px",
+          }}
+        >
+          Agregar Nuevo Alumno
+        </DialogTitle>
+        <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
+          <NumericFormat
+            fullWidth
+            allowNegative={false}
+            customInput={TextField}
+            variant="outlined"
+            autoFocus
+            margin="normal"
+            label="Padrón"
+            value={newItem["id"] || ""}
+            required
+            onChange={(e) =>
+              setNewItem({ ...newItem, id: parseInt(e.target.value) })
+            }
+          />
+          <TextField
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            label="Nombre"
+            value={newItem["name"] || ""}
+            required
+            onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+          />
+          <TextField
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            label="Apellido"
+            value={newItem["last_name"] || ""}
+            required
+            onChange={(e) =>
+              setNewItem({ ...newItem, last_name: e.target.value })
+            }
+          />
+          <TextField
+            label="Email"
+            type="email"
+            fullWidth
+            margin="normal"
+            variant="outlined"
+            value={newItem["email"] || ""}
+            onChange={(e) =>
+              setNewItem({ ...newItem, email: e.target.value })
+            }
+            required
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} variant="outlined" color="error">
+            Cancelar
+          </Button>
+          <Button onClick={handleAddItem} variant="contained" color="primary">
+            Agregar
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  }
 
   if (loading) return <Typography variant="h6">Cargando...</Typography>;
   const categories = title === "Temas" ? getCategories(items) : [];
@@ -316,77 +390,7 @@ const ParentTable = ({
           </TableContainer>
         </Root>
       </Container>
-      {title === "Alumnos" && (
-        <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-          <DialogTitle
-            sx={{
-              fontWeight: "bold",
-              textAlign: "center",
-              backgroundColor: "#f5f5f5",
-              color: "#333",
-              padding: "16px 24px",
-            }}
-          >
-            Agregar Nuevo Alumno
-          </DialogTitle>
-          <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
-            <NumericFormat
-              fullWidth
-              allowNegative={false}
-              customInput={TextField}
-              variant="outlined"
-              autoFocus
-              margin="normal"
-              label="Padrón"
-              value={newItem["id"] || ""}
-              required
-              onChange={(e) =>
-                setNewItem({ ...newItem, id: parseInt(e.target.value) })
-              }
-            />
-            <TextField
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              label="Nombre"
-              value={newItem["name"] || ""}
-              required
-              onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-            />
-            <TextField
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              label="Apellido"
-              value={newItem["last_name"] || ""}
-              required
-              onChange={(e) =>
-                setNewItem({ ...newItem, last_name: e.target.value })
-              }
-            />
-            <TextField
-              label="Email"
-              type="email"
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              value={newItem["email"] || ""}
-              onChange={(e) =>
-                setNewItem({ ...newItem, email: e.target.value })
-              }
-              required
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} variant="outlined" color="error">
-              Cancelar
-            </Button>
-            <Button onClick={handleAddItem} variant="contained" color="primary">
-              Agregar
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
+      {title === "Alumnos" && addStudentModal()}
 
       {title === "Tutores" && (
         <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
