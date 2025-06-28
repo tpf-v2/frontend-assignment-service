@@ -3,11 +3,12 @@ import ParentTable from '../ParentTable';
 import { TableCell } from '@mui/material';
 import { useParams } from 'react-router';
 import { useSelector } from "react-redux";
+import { TableType } from '../TableType';
 
 const TutorsTable = () => {
   const { period } = useParams();
   const endpoint = `/tutors/periods/${period}`;
-  const title = 'Tutores';
+  const title = TableType.TUTORS;
   
   const columns = ['ID', 'Nombre', 'Apellido', 'Email'];
   const rowKeys = {

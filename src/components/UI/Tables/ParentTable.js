@@ -35,6 +35,7 @@ import { setTutors } from "../../../redux/slices/tutorsSlice";
 import { getCategories } from "../../../utils/getCategories";
 import { addTopic } from "../../../api/handleTopics";
 import { setTopics } from "../../../redux/slices/topicsSlice";
+import { TableType } from "./TableType";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -127,7 +128,7 @@ const ParentTable = ({
 
   const handleAddItem = async () => {
     try {
-      if (title === "Alumnos") {
+      if (title === TableType.STUDENTS) {
         const item = await addStudent(newItem, user, period.id);
         setNewItem({});
         setNotification({
@@ -137,7 +138,7 @@ const ParentTable = ({
         });
         setData([...items, item]);
         dispatch(setStudents([...items, item]));
-      } else if (title === "Tutores") {
+      } else if (title === TableType.TUTORS) {
         const item = await addTutor(newItem, user, period.id);
         setNewItem({});
         setNotification({
@@ -147,7 +148,7 @@ const ParentTable = ({
         });
         setData([...items, item]);
         dispatch(setTutors([...items, item]));
-      } else if (title === "Temas") {
+      } else if (title === TableType.TOPICS) {
         const item = await addTopic(newItem, user, period.id);
         setNewItem({});
         setNotification({
@@ -247,7 +248,8 @@ const ParentTable = ({
       return String(itemValue).toLowerCase().includes(searchTerm.toLowerCase());
     });
   });
-  
+
+
   const addStudentModal = () => {
     return (
       <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
@@ -320,7 +322,7 @@ const ParentTable = ({
         </DialogActions>
       </Dialog>
     )
-  }
+  };
 
   const addTutorModal = () => {
     return (
@@ -407,7 +409,7 @@ const ParentTable = ({
         </DialogActions>
       </Dialog>
     )
-  }
+  };
 
   const addTopicModal = () => {
     return (
@@ -503,10 +505,10 @@ const ParentTable = ({
         </DialogActions>
       </Dialog>
     )
-  }
+  };
 
   if (loading) return <Typography variant="h6">Cargando...</Typography>;
-  const categories = title === "Temas" ? getCategories(items) : [];
+  const categories = title === TableType.TOPICS ? getCategories(items) : [];
   return (
     <>
       <Container maxWidth="lg">
@@ -575,9 +577,9 @@ const ParentTable = ({
           </TableContainer>
         </Root>
       </Container>
-      {title === "Alumnos" && addStudentModal()}
-      {title === "Tutores" && addTutorModal()}
-      {title === "Temas" && addTopicModal()}
+      {title === TableType.STUDENTS && addStudentModal()}
+      {title === TableType.TUTORS && addTutorModal()}
+      {title === TableType.TOPICS && addTopicModal()}
       <MySnackbar
         open={notification.open}
         handleClose={handleSnackbarClose}
