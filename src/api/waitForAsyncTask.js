@@ -49,7 +49,7 @@ export const waitForAsyncTask = async function (task_id, token) {
 
         socket.on("taskstatus", (data) => {
           console.log("Status de la tarea", data);
-          resolve(data.status);
+          resolve({success: data.status == "success", result: data.result});
         });
 
         socket.on("disconnect", () => {
@@ -58,10 +58,11 @@ export const waitForAsyncTask = async function (task_id, token) {
         });
       });
 
-      await result;
+      const res = await result;
 
       return {
-        success: true
+        success: res.success,
+        result: res.result
       };
     } catch (error) {
       Sentry.captureException(error);
@@ -72,28 +73,8 @@ export const waitForAsyncTask = async function (task_id, token) {
       }
     }
 
-    // El fallback a long polling es necesario si socket.io falla
-    // porque el servidor no lo soporta
-    while (true) {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        const statusResponse = await axios.get(
-          `${BASE_URL}/tasks/status/${task_id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (statusResponse.data.status == "error") {
-          throw new Error();
-        } else if (statusResponse.data.status == "success") {
-          break;
-        }
-    }
-
     return {
-        success: true
+        success: false,
+        result: null
     };
 }
