@@ -1,4 +1,5 @@
 import axios from "axios";
+import { waitForAsyncTask } from "./waitForAsyncTask";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
@@ -62,7 +63,7 @@ export const dates = async (user, period, balance_limit, max_groups) => {
 
     let response;
     try {
-      const url = `${BASE_URL}/assignments/date-assigment-async?period_id=${period.id}&max_groups_per_week=${max_groups}&max_dif_evaluators=${balance_limit}`;
+      const url = `${BASE_URL}/assignments/date-assigment-async?mode=async&period_id=${period.id}&max_groups_per_week=${max_groups}&max_dif_evaluators=${balance_limit}`;
       response = await axios.post(url, {}, config);
     } catch (error) {
       if (error.response.status === 404) {  
@@ -74,23 +75,32 @@ export const dates = async (user, period, balance_limit, max_groups) => {
     }
 
     if (response.data.task_id) {
-      const task_id = response.data.task_id;
+      if (response.data.socketio_deliver) {
+        const result = await waitForAsyncTask(response.data.task_id, user.token);
+        if (result.success) {
+          return result.result;
+        } else {
+          throw new Error(result.message);
+        }
+      } else {
+        const task_id = response.data.task_id;
 
-      while (true) {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-          params: {
-            cache_bust: new Date().getTime(), // add params to avoid caching
-          },
-        };
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        const task_url = `${BASE_URL}/assignments/date-assigment-results?task_id=${task_id}`;
-        const task_response = await axios.get(task_url, config);
-        if (task_response.data.status === 1) {
-          return task_response.data;
+        while (true) {
+          const config = {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+            params: {
+              cache_bust: new Date().getTime(), // add params to avoid caching
+            },
+          };
+  
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          const task_url = `${BASE_URL}/assignments/date-assigment-results?task_id=${task_id}`;
+          const task_response = await axios.get(task_url, config);
+          if (task_response.data.status === 1) {
+            return task_response.data;
+          }
         }
       }
     } else {
