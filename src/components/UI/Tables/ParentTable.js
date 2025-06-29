@@ -186,15 +186,19 @@ const ParentTable = ({
   const handleEdit = async () => {
     try {
       if (title === TableType.STUDENTS) {
-        const item = await addStudent(newItem, user, period.id);
-        setNewItem({});
+        const item = await addStudent(editedItem, user, period.id); // aux: cambiar cuando exista endpoint []
+        setEditedItem({});
         setNotification({
           open: true,
           message: `Alumno editado exitosamente`,
           status: "success",
         });
-        setData([...items, item]);
-        dispatch(setStudents([...items, item]));
+        setData((prevData) =>
+          prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem))
+        );
+        dispatch(setStudents((prevData) =>
+          prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem)))
+        );
       }
       // Esto de acá abajo que está comentado es copypaste del add
       /* else if (title === TableType.TUTORS) {
@@ -226,7 +230,7 @@ const ParentTable = ({
         status: "error",
       });
     } finally {
-      handleCloseAddModal(true);
+      handleCloseEditModal(true);
     }
     
   };
