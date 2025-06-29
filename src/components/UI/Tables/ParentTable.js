@@ -21,6 +21,7 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  Stack
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { getTableData, deleteRow } from "../../../api/handleTableData";
@@ -376,7 +377,7 @@ const ParentTable = ({
             required
           />
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ border: 5 }}>
           <Button onClick={handleCloseEditModal} variant="outlined" color="error">
             Cancelar
           </Button>
@@ -702,18 +703,20 @@ const ParentTable = ({
                   <TableRow key={item.id}>
                     {renderRow(item, rowKeys)}
                     <TableCell>
-                    <Button
-                        onClick={() => handleClickOpenEditModal(item)}
-                        style={{ backgroundColor: "orange", color: "white" }}
-                      >
-                        Editar
-                      </Button>
-                      <Button
-                        onClick={() => handleDelete(item.id)}
-                        style={{ backgroundColor: "red", color: "white" }}
-                      >
-                        Eliminar
-                      </Button>
+                      <Stack direction="row" spacing={1}>
+                        <Button
+                            onClick={() => handleClickOpenEditModal(item)}
+                            style={{ backgroundColor: "#e0711d", color: "white" }}
+                            >
+                            Editar
+                          </Button>
+                          <Button
+                            onClick={() => handleDelete(item.id)}
+                            style={{ backgroundColor: "red", color: "white" }}
+                            >
+                            Eliminar
+                          </Button>
+                        </Stack>
                     </TableCell>
                   </TableRow>
                 ))}
