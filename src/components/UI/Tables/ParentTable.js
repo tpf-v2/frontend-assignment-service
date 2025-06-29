@@ -64,8 +64,10 @@ const ParentTable = ({
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [open, setOpen] = useState(false);
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
   const [newItem, setNewItem] = useState({});
+  const [editedItem, setEditedItem] = useState({});
 
   const [notification, setNotification] = useState({
     open: false,
@@ -73,13 +75,23 @@ const ParentTable = ({
     status: "",
   });
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpenAddModal = () => {
+    setOpenAddModal(true);
   };
 
-  const handleClose = () => {
+  const handleCloseAddModal = () => {
     setNewItem({})
-    setOpen(false);
+    setOpenAddModal(false);
+  };
+
+  const handleClickOpenEditModal = (item) => {
+    setEditedItem(item);
+    setOpenEditModal(true);    
+  };
+
+  const handleCloseEditModal = () => {
+    setEditedItem({})
+    setOpenEditModal(false);
   };
 
   const user = useSelector((state) => state.user);
@@ -167,9 +179,58 @@ const ParentTable = ({
         status: "error",
       });
     } finally {
-      handleClose(true);
+      handleCloseAddModal(true);
     }
   };
+
+  const handleEdit = async () => {
+    try {
+      if (title === TableType.STUDENTS) {
+        const item = await addStudent(newItem, user, period.id);
+        setNewItem({});
+        setNotification({
+          open: true,
+          message: `Alumno editado exitosamente`,
+          status: "success",
+        });
+        setData([...items, item]);
+        dispatch(setStudents([...items, item]));
+      }
+      // Esto de acá abajo que está comentado es copypaste del add
+      /* else if (title === TableType.TUTORS) {
+        const item = await addTutor(newItem, user, period.id);
+        setNewItem({});
+        setNotification({
+          open: true,
+          message: `Tutor editado exitosamente`,
+          status: "success",
+        });
+        setData([...items, item]);
+        dispatch(setTutors([...items, item]));
+      } else if (title === TableType.TOPICS) {
+        const item = await addTopic(newItem, user, period.id);
+        setNewItem({});
+        setNotification({
+          open: true,
+          message: `Tema editado exitosamente`,
+          status: "success",
+        });
+        setData([...items, item]);
+        dispatch(setTopics([...items, item]));
+      }*/
+    } catch (err) {
+      console.error(`Error when editing new ${title}:`, err);
+      setNotification({
+        open: true,
+        message: `Error al editar ${title.toLowerCase()}. Por favor, vuelva a intentar más tarde.`,
+        status: "error",
+      });
+    } finally {
+      handleCloseAddModal(true);
+    }
+    
+  };
+
   const handleDelete = async (id) => {
     try {
       // Call deleteResponse to remove the record
@@ -249,10 +310,84 @@ const ParentTable = ({
     });
   });
 
+  const editStudentModal = () => {
+    return (
+      <Dialog open={openEditModal} onClose={handleCloseEditModal} maxWidth="sm" fullWidth>
+        <DialogTitle
+          sx={{
+            fontWeight: "bold",
+            textAlign: "center",
+            backgroundColor: "#f5f5f5",
+            color: "#333",
+            padding: "16px 24px",
+          }}
+        >
+          Editar Alumno
+        </DialogTitle>
+        <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
+          <NumericFormat
+            fullWidth
+            allowNegative={false}
+            customInput={TextField}
+            variant="outlined"
+            autoFocus
+            margin="normal"
+            label="Padrón"
+            value={editedItem["id"] || ""}
+            required
+            onChange={(e) =>
+              setEditedItem({ ...editedItem, id: parseInt(e.target.value) })
+            }
+          />
+          <TextField
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            label="Nombre"
+            value={editedItem["name"] || ""}
+            required
+            onChange={(e) => setEditedItem({ ...editedItem, name: e.target.value })}
+          />
+          <TextField
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            label="Apellido"
+            value={editedItem["last_name"] || ""}
+            required
+            onChange={(e) =>
+              setEditedItem({ ...editedItem, last_name: e.target.value })
+            }
+          />
+          <TextField
+            label="Email"
+            type="email"
+            fullWidth
+            margin="normal"
+            variant="outlined"
+            value={editedItem["email"] || ""}
+            onChange={(e) =>
+              setEditedItem({ ...editedItem, email: e.target.value })
+            }
+            required
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEditModal} variant="outlined" color="error">
+            Cancelar
+          </Button>
+          <Button onClick={handleEdit} variant="contained" color="primary">
+            Guardar
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  };
+
 
   const addStudentModal = () => {
     return (
-      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+      <Dialog open={openAddModal} onClose={handleCloseAddModal} maxWidth="sm" fullWidth>
         <DialogTitle
           sx={{
             fontWeight: "bold",
@@ -313,7 +448,7 @@ const ParentTable = ({
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} variant="outlined" color="error">
+          <Button onClick={handleCloseAddModal} variant="outlined" color="error">
             Cancelar
           </Button>
           <Button onClick={handleAddItem} variant="contained" color="primary">
@@ -326,7 +461,7 @@ const ParentTable = ({
 
   const addTutorModal = () => {
     return (
-      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+      <Dialog open={openAddModal} onClose={handleCloseAddModal} maxWidth="sm" fullWidth>
         <DialogTitle
           sx={{
             fontWeight: "bold",
@@ -400,7 +535,7 @@ const ParentTable = ({
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} variant="outlined" color="error">
+          <Button onClick={handleCloseAddModal} variant="outlined" color="error">
             Cancelar
           </Button>
           <Button onClick={handleAddItem} variant="contained" color="primary">
@@ -413,7 +548,7 @@ const ParentTable = ({
 
   const addTopicModal = () => {
     return (
-      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+      <Dialog open={openAddModal} onClose={handleCloseAddModal} maxWidth="sm" fullWidth>
         <DialogTitle
           sx={{
             fontWeight: "bold",
@@ -496,7 +631,7 @@ const ParentTable = ({
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} variant="outlined" color="error">
+          <Button onClick={handleCloseAddModal} variant="outlined" color="error">
             Cancelar
           </Button>
           <Button onClick={handleAddItem} variant="contained" color="primary">
@@ -540,7 +675,7 @@ const ParentTable = ({
                   size="small"
                   color="primary"
                   aria-label="add"
-                  onClick={handleClickOpen}
+                  onClick={handleClickOpenAddModal}
                 >
                   <AddIcon />
                 </Fab>
@@ -563,6 +698,12 @@ const ParentTable = ({
                   <TableRow key={item.id}>
                     {renderRow(item, rowKeys)}
                     <TableCell>
+                    <Button
+                        onClick={() => handleClickOpenEditModal(item)}
+                        style={{ backgroundColor: "orange", color: "white" }}
+                      >
+                        Editar
+                      </Button>
                       <Button
                         onClick={() => handleDelete(item.id)}
                         style={{ backgroundColor: "red", color: "white" }}
@@ -577,7 +718,13 @@ const ParentTable = ({
           </TableContainer>
         </Root>
       </Container>
-      {title === TableType.STUDENTS && addStudentModal()}
+      {title === TableType.STUDENTS && (
+        <>
+          {addStudentModal()}
+          {editStudentModal()}
+        </>
+        )
+      };
       {title === TableType.TUTORS && addTutorModal()}
       {title === TableType.TOPICS && addTopicModal()}
       <MySnackbar
