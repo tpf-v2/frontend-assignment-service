@@ -28,7 +28,7 @@ import { getTableData, deleteRow } from "../../../api/handleTableData";
 import { useDispatch, useSelector } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
 import { NumericFormat } from "react-number-format";
-import { addStudent } from "../../../api/handleStudents";
+import { addStudent, editStudent } from "../../../api/handleStudents";
 import MySnackbar from "../MySnackBar";
 import { setStudents } from "../../../redux/slices/studentsSlice";
 import { addTutor } from "../../../api/handleTutors";
@@ -68,7 +68,8 @@ const ParentTable = ({
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [newItem, setNewItem] = useState({});
-  const [editedItem, setEditedItem] = useState({});
+  const [editedItem, setEditedItem] = useState({}); // data
+  const [originalEditedItemId, setOriginalEditedItemId] = useState(null);
 
   const [notification, setNotification] = useState({
     open: false,
@@ -86,6 +87,7 @@ const ParentTable = ({
   };
 
   const handleClickOpenEditModal = (item) => {
+    setOriginalEditedItemId(item.id)
     setEditedItem(item);
     setOpenEditModal(true);    
   };
@@ -187,8 +189,9 @@ const ParentTable = ({
   const handleEdit = async () => {
     try {
       if (title === TableType.STUDENTS) {
-        const item = await addStudent(editedItem, user, period.id); // aux: cambiar cuando exista endpoint []
+        const item = await editStudent(originalEditedItemId, period.id, editedItem, user);
         setEditedItem({});
+        setOriginalEditedItemId(null);
         setNotification({
           open: true,
           message: `Alumno editado exitosamente`,
@@ -201,7 +204,7 @@ const ParentTable = ({
           prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem)))
         );
       }
-      // Esto de acá abajo que está comentado es copypaste del add
+      // Esto de acá abajo que está comentado es copypaste del add, lo modificaré después []
       /* else if (title === TableType.TUTORS) {
         const item = await addTutor(newItem, user, period.id);
         setNewItem({});
