@@ -380,7 +380,7 @@ const ParentTable = ({
             required
           />
         </DialogContent>
-        <DialogActions sx={{ border: 5 }}>
+        <DialogActions>
           <Button onClick={handleCloseEditModal} variant="outlined" color="error">
             Cancelar
           </Button>
