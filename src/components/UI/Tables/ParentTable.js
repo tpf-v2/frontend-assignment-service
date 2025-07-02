@@ -31,7 +31,7 @@ import { NumericFormat } from "react-number-format";
 import { addStudent, editStudent } from "../../../api/handleStudents";
 import MySnackbar from "../MySnackBar";
 import { setStudents } from "../../../redux/slices/studentsSlice";
-import { addTutor } from "../../../api/handleTutors";
+import { addTutor, editTutor } from "../../../api/handleTutors";
 import { setTutors } from "../../../redux/slices/tutorsSlice";
 import { getCategories } from "../../../utils/getCategories";
 import { addTopic } from "../../../api/handleTopics";
@@ -203,19 +203,24 @@ const ParentTable = ({
         dispatch(setStudents((prevData) =>
           prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem)))
         );
-      }
-      // Esto de acá abajo que está comentado es copypaste del add, lo modificaré después []
-      /* else if (title === TableType.TUTORS) {
-        const item = await addTutor(newItem, user, period.id);
-        setNewItem({});
+      } else if (title === TableType.TUTORS) {
+        const item = await editTutor(originalEditedItemId, period.id, editedItem, user);
+        setEditedItem({});
+        setOriginalEditedItemId(null);
         setNotification({
           open: true,
           message: `Tutor editado exitosamente`,
           status: "success",
         });
-        setData([...items, item]);
-        dispatch(setTutors([...items, item]));
-      } else if (title === TableType.TOPICS) {
+        setData((prevData) =>
+          prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem))
+        );
+        dispatch(setStudents((prevData) =>
+          prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem)))
+        );
+      }
+      // Esto de acá abajo que está comentado es copypaste del add, lo modificaré después []
+      /* else if (title === TableType.TOPICS) {
         const item = await addTopic(newItem, user, period.id);
         setNewItem({});
         setNotification({

@@ -26,3 +26,20 @@ export const addTutor = async (newTutor, user, period) => {
     throw new Error(err);
   }
 };
+
+export const editTutor = async (original_tutor_id, period_id, tutorToEdit, user) => {
+  const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+  
+  try {
+      const url = `${BASE_URL}/tutors/${original_tutor_id}/periods/${period_id}`;
+      const response = await axios.patch(url, tutorToEdit, config);
+      return response.data;
+  } catch (err) {
+      console.error(`Error when editing tutor: ${err}`)
+      throw new Error(err);
+  }
+};
