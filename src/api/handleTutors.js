@@ -33,10 +33,20 @@ export const editTutor = async (original_tutor_id, period_id, tutorToEdit, user)
         Authorization: `Bearer ${user.token}`,
       },
     };
-  
+
+    // Esto es necesario porque, si no, el ítem tutor tiene más campos (como tutor_periods)
+    // que el back No espera.
+    const sendableTutorToEdit = {
+      "id": tutorToEdit.id,
+      "name": tutorToEdit.name,
+      "last_name": tutorToEdit.last_name,
+      "email": tutorToEdit.email,
+      "capacity": tutorToEdit.capacity
+    };
   try {
       const url = `${BASE_URL}/tutors/${original_tutor_id}/periods/${period_id}`;
-      const response = await axios.patch(url, tutorToEdit, config);
+      const response = await axios.patch(url, sendableTutorToEdit, config);
+
       return response.data;
   } catch (err) {
       console.error(`Error when editing tutor: ${err}`)
