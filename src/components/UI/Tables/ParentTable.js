@@ -406,8 +406,16 @@ const ParentTable = ({
   };
 
   const addTutorModal = () => {
+    return innerActionTutorModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar Nuevo", "Agregar")
+  };
+
+  const editTutorModal = () => {
+    return innerActionTutorModal(openEditModal, handleCloseEditModal, handleEdit, editedItem, setEditedItem, "Editar", "Guardar")
+  };
+
+  const innerActionTutorModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {
     return (
-      <Dialog open={openAddModal} onClose={handleCloseAddModal} maxWidth="sm" fullWidth>
+      <Dialog open={bool} onClose={handleCloseModal} maxWidth="sm" fullWidth>
         <DialogTitle
           sx={{
             fontWeight: "bold",
@@ -417,7 +425,7 @@ const ParentTable = ({
             padding: "16px 24px",
           }}
         >
-          Agregar Nuevo Tutor
+          {TitleText} Tutor
         </DialogTitle>
         <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
           <NumericFormat
@@ -428,10 +436,10 @@ const ParentTable = ({
             autoFocus
             margin="normal"
             label="DNI o Identificación"
-            value={newItem["id"] || ""}
+            value={item["id"] || ""}
             required
             onChange={(e) =>
-              setNewItem({ ...newItem, id: parseInt(e.target.value) })
+              setItem({ ...item, id: parseInt(e.target.value) })
             }
           />
           <TextField
@@ -439,19 +447,19 @@ const ParentTable = ({
             fullWidth
             margin="normal"
             label="Nombre"
-            value={newItem["name"] || ""}
+            value={item["name"] || ""}
             required
-            onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+            onChange={(e) => setItem({ ...item, name: e.target.value })}
           />
           <TextField
             variant="outlined"
             fullWidth
             margin="normal"
             label="Apellido"
-            value={newItem["last_name"] || ""}
+            value={item["last_name"] || ""}
             required
             onChange={(e) =>
-              setNewItem({ ...newItem, last_name: e.target.value })
+              setItem({ ...item, last_name: e.target.value })
             }
           />
           <TextField
@@ -460,9 +468,9 @@ const ParentTable = ({
             fullWidth
             margin="normal"
             variant="outlined"
-            value={newItem["email"] || ""}
+            value={item["email"] || ""}
             onChange={(e) =>
-              setNewItem({ ...newItem, email: e.target.value })
+              setItem({ ...item, email: e.target.value })
             }
             required
           />
@@ -473,19 +481,19 @@ const ParentTable = ({
             variant="outlined"
             margin="normal"
             label="Capacidad"
-            value={newItem["capacity"] || ""}
+            value={item["capacity"] || ""}
             required
             onChange={(e) =>
-              setNewItem({ ...newItem, capacity: parseInt(e.target.value) })
+              setItem({ ...item, capacity: parseInt(e.target.value) })
             }
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseAddModal} variant="outlined" color="error">
+          <Button onClick={handleCloseModal} variant="outlined" color="error">
             Cancelar
           </Button>
-          <Button onClick={handleAddItem} variant="contained" color="primary">
-            Agregar
+          <Button onClick={handleConfirmAction} variant="contained" color="primary">
+            {ConfirmButtonText}
           </Button>
         </DialogActions>
       </Dialog>
@@ -673,7 +681,13 @@ const ParentTable = ({
         </>
         )
       };
-      {title === TableType.TUTORS && addTutorModal()}
+      {title === TableType.TUTORS && (
+        <>
+          {addTutorModal()}
+          {editTutorModal()}
+        </>
+        )
+      };
       {title === TableType.TOPICS && addTopicModal()}
       <MySnackbar
         open={notification.open}
