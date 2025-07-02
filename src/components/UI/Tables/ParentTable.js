@@ -323,84 +323,17 @@ const ParentTable = ({
     });
   });
 
-  const editStudentModal = () => {
-    return (
-      <Dialog open={openEditModal} onClose={handleCloseEditModal} maxWidth="sm" fullWidth>
-        <DialogTitle
-          sx={{
-            fontWeight: "bold",
-            textAlign: "center",
-            backgroundColor: "#f5f5f5",
-            color: "#333",
-            padding: "16px 24px",
-          }}
-        >
-          Editar Alumno
-        </DialogTitle>
-        <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
-          <NumericFormat
-            fullWidth
-            allowNegative={false}
-            customInput={TextField}
-            variant="outlined"
-            autoFocus
-            margin="normal"
-            label="Padrón"
-            value={editedItem["id"] || ""}
-            required
-            onChange={(e) =>
-              setEditedItem({ ...editedItem, id: parseInt(e.target.value) })
-            }
-          />
-          <TextField
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            label="Nombre"
-            value={editedItem["name"] || ""}
-            required
-            onChange={(e) => setEditedItem({ ...editedItem, name: e.target.value })}
-          />
-          <TextField
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            label="Apellido"
-            value={editedItem["last_name"] || ""}
-            required
-            onChange={(e) =>
-              setEditedItem({ ...editedItem, last_name: e.target.value })
-            }
-          />
-          <TextField
-            label="Email"
-            type="email"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            value={editedItem["email"] || ""}
-            onChange={(e) =>
-              setEditedItem({ ...editedItem, email: e.target.value })
-            }
-            required
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseEditModal} variant="outlined" color="error">
-            Cancelar
-          </Button>
-          <Button onClick={handleEdit} variant="contained" color="primary">
-            Guardar
-          </Button>
-        </DialogActions>
-      </Dialog>
-    )
-  };
-
-
   const addStudentModal = () => {
+    return innerActionStudentModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar", "Agregar")
+  }
+
+  const editStudentModal = () => {
+    return innerActionStudentModal(openEditModal, handleCloseEditModal, handleEdit, editedItem, setEditedItem, "Editar", "Guardar")
+  }
+
+  const innerActionStudentModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {    
     return (
-      <Dialog open={openAddModal} onClose={handleCloseAddModal} maxWidth="sm" fullWidth>
+      <Dialog open={bool} onClose={handleCloseModal} maxWidth="sm" fullWidth>
         <DialogTitle
           sx={{
             fontWeight: "bold",
@@ -410,7 +343,7 @@ const ParentTable = ({
             padding: "16px 24px",
           }}
         >
-          Agregar Nuevo Alumno
+          {TitleText} Alumno
         </DialogTitle>
         <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
           <NumericFormat
@@ -421,10 +354,10 @@ const ParentTable = ({
             autoFocus
             margin="normal"
             label="Padrón"
-            value={newItem["id"] || ""}
+            value={item["id"] || ""}
             required
             onChange={(e) =>
-              setNewItem({ ...newItem, id: parseInt(e.target.value) })
+              setItem({ ...item, id: parseInt(e.target.value) })
             }
           />
           <TextField
@@ -432,19 +365,19 @@ const ParentTable = ({
             fullWidth
             margin="normal"
             label="Nombre"
-            value={newItem["name"] || ""}
+            value={item["name"] || ""}
             required
-            onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+            onChange={(e) => setItem({ ...item, name: e.target.value })}
           />
           <TextField
             variant="outlined"
             fullWidth
             margin="normal"
             label="Apellido"
-            value={newItem["last_name"] || ""}
+            value={item["last_name"] || ""}
             required
             onChange={(e) =>
-              setNewItem({ ...newItem, last_name: e.target.value })
+              setItem({ ...item, last_name: e.target.value })
             }
           />
           <TextField
@@ -453,19 +386,19 @@ const ParentTable = ({
             fullWidth
             margin="normal"
             variant="outlined"
-            value={newItem["email"] || ""}
+            value={item["email"] || ""}
             onChange={(e) =>
-              setNewItem({ ...newItem, email: e.target.value })
+              setItem({ ...item, email: e.target.value })
             }
             required
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseAddModal} variant="outlined" color="error">
+          <Button onClick={handleCloseModal} variant="outlined" color="error">
             Cancelar
           </Button>
-          <Button onClick={handleAddItem} variant="contained" color="primary">
-            Agregar
+          <Button onClick={handleConfirmAction} variant="contained" color="primary">
+            {ConfirmButtonText}
           </Button>
         </DialogActions>
       </Dialog>
