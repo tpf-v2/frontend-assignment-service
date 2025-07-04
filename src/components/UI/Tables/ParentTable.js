@@ -510,8 +510,11 @@ const ParentTable = ({
   };
 
   const addTopicModal = () => {
+    return innerActionTopicModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar Nuevo", "Agregar");
+  }
+  const innerActionTopicModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, titleText, confirmButtonText) => {
     return (
-      <Dialog open={openAddModal} onClose={handleCloseAddModal} maxWidth="sm" fullWidth>
+      <Dialog open={bool} onClose={handleCloseModal} maxWidth="sm" fullWidth>
         <DialogTitle
           sx={{
             fontWeight: "bold",
@@ -521,7 +524,7 @@ const ParentTable = ({
             padding: "16px 24px",
           }}
         >
-          Agregar Nuevo Tema
+          {titleText} Tema
         </DialogTitle>
         <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
           <TextField
@@ -529,18 +532,18 @@ const ParentTable = ({
             fullWidth
             margin="normal"
             label="Titulo"
-            value={newItem["name"] || ""}
+            value={item["name"] || ""}
             required
-            onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+            onChange={(e) => setItem({ ...item, name: e.target.value })}
           />
           <InputLabel>Seleccionar categoria</InputLabel>
           <Select
             value={
-              newItem["category"] || ""
+              item["category"] || ""
             }
             label="Categorías"
             onChange={(e) =>
-              setNewItem({ ...newItem, category: e.target.value })
+              setItem({ ...item, category: e.target.value })
             }
             margin="normal"
 
@@ -561,11 +564,11 @@ const ParentTable = ({
           <Select
             margin="normal"
             value={
-              newItem["tutor_email"] || ""
+              item["tutor_email"] || ""
             }
             label="Email del tutor"
             onChange={(e) =>
-              setNewItem({ ...newItem, tutor_email: e.target.value })
+              setItem({ ...item, tutor_email: e.target.value })
             }
             required
             fullWidth
@@ -586,19 +589,19 @@ const ParentTable = ({
             variant="outlined"
             margin="normal"
             label="Capacidad"
-            value={newItem["capacity"] || ""}
+            value={item["capacity"] || ""}
             required
             onChange={(e) =>
-              setNewItem({ ...newItem, capacity: parseInt(e.target.value) })
+              setItem({ ...item, capacity: parseInt(e.target.value) })
             }
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseAddModal} variant="outlined" color="error">
+          <Button onClick={handleCloseModal} variant="outlined" color="error">
             Cancelar
           </Button>
-          <Button onClick={handleAddItem} variant="contained" color="primary">
-            Agregar
+          <Button onClick={handleConfirmAction} variant="contained" color="primary">
+            {confirmButtonText}
           </Button>
         </DialogActions>
       </Dialog>
