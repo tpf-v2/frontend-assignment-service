@@ -511,7 +511,12 @@ const ParentTable = ({
 
   const addTopicModal = () => {
     return innerActionTopicModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar Nuevo", "Agregar");
-  }
+  };
+
+  const editTopicModal = () => {
+    return innerActionTopicModal(openEditModal, handleCloseEditModal, handleEdit, editedItem, setEditedItem, "Editar", "Guardar")
+  };
+
   const innerActionTopicModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, titleText, confirmButtonText) => {
     return (
       <Dialog open={bool} onClose={handleCloseModal} maxWidth="sm" fullWidth>
@@ -700,7 +705,13 @@ const ParentTable = ({
         </>
         )
       };
-      {title === TableType.TOPICS && addTopicModal()}
+      {title === TableType.TOPICS && (
+        <>
+          {addTopicModal()}
+          {editTopicModal()}
+        </>
+        )      
+      };
       <MySnackbar
         open={notification.open}
         handleClose={handleSnackbarClose}
