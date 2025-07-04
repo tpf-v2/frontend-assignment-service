@@ -90,7 +90,7 @@ const ParentTable = ({
     // Si lo que se está editando es Tutor, es necesario extraer su capacity existente de un
     // campo especial algo estrambótico (item tiene lista de tutor_periods, cada uno con
     // un period_id y una capacity). (Sin esto ítem no tiene capacity y falla la request).
-    if (title=TableType.TUTORS) {
+    if (title===TableType.TUTORS) {
       const selectedTutorPeriod = item.tutor_periods.find(tp => tp.period_id === period.id);
       const capacity = selectedTutorPeriod ? selectedTutorPeriod.capacity : null;
       item["capacity"]=capacity;
