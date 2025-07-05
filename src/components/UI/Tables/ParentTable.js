@@ -34,7 +34,7 @@ import { setStudents } from "../../../redux/slices/studentsSlice";
 import { addTutor, editTutor } from "../../../api/handleTutors";
 import { setTutors } from "../../../redux/slices/tutorsSlice";
 import { getCategories } from "../../../utils/getCategories";
-import { addTopic } from "../../../api/handleTopics";
+import { addTopic, editTopic } from "../../../api/handleTopics";
 import { setTopics } from "../../../redux/slices/topicsSlice";
 import { TableType } from "./TableType";
 
@@ -228,18 +228,22 @@ const ParentTable = ({
           prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem)))
         );
       }
-      // Esto de acá abajo que está comentado es copypaste del add, lo modificaré después []
-      /* else if (title === TableType.TOPICS) {
-        const item = await addTopic(newItem, user, period.id);
-        setNewItem({});
+      else if (title === TableType.TOPICS) {
+        const item = await editTopic(originalEditedItemId, period.id, editedItem, user); //[]
+        setEditedItem({});
+        setOriginalEditedItemId(null);
         setNotification({
           open: true,
           message: `Tema editado exitosamente`,
           status: "success",
         });
-        setData([...items, item]);
-        dispatch(setTopics([...items, item]));
-      }*/
+        setData((prevData) =>
+          prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem))
+        );
+        dispatch(setStudents((prevData) =>
+          prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem)))
+        );
+      }
     } catch (err) {
       console.error(`Error when editing new ${title}:`, err);
       setNotification({
