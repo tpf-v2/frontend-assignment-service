@@ -157,7 +157,7 @@ const ParentTable = ({
         setNewItem({});
         setNotification({
           open: true,
-          message: `Alumno agregado éxitosamente`,
+          message: `Alumno agregado exitosamente`,
           status: "success",
         });
         setData([...items, item]);
@@ -167,7 +167,7 @@ const ParentTable = ({
         setNewItem({});
         setNotification({
           open: true,
-          message: `Tutor agregado éxitosamente`,
+          message: `Tutor agregado exitosamente`,
           status: "success",
         });
         setData([...items, item]);
@@ -177,7 +177,7 @@ const ParentTable = ({
         setNewItem({});
         setNotification({
           open: true,
-          message: `Tema agregado éxitosamente`,
+          message: `Tema agregado exitosamente`,
           status: "success",
         });
         setData([...items, item]);
