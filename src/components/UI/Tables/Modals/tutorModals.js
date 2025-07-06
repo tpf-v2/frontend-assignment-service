@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { NumericFormat } from "react-number-format";
 
-export const StudentModals = ({
+export const TutorModals = ({
   openAddModal, // bools para ver si se debe abrir cada modal
   openEditModal,
   setOpenAddModal, // necesarias para cerrar los modals
@@ -20,12 +20,11 @@ export const StudentModals = ({
   setOriginalEditedItemId,
   item, // recibido del parent, y su set para flushearlo al salir
   setParentItem
-  
 }) => {
-  
+
       const [newItem, setNewItem] = useState({});
       const [editedItem, setEditedItem] = useState({}); // data
-      
+
       // Esto hace de handle open edit (para add no es nec xq solo se setea un bool)
       useEffect(() => {
         if (!openEditModal) return;
@@ -58,8 +57,8 @@ export const StudentModals = ({
           setParentItem(false);
       };
 
-      /////// Modals de Estudiante ///////
-      const innerActionStudentModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {    
+      /////// Modals de Estudiante ///////      
+      const innerActionTutorModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {
         return (
           <Dialog open={bool} onClose={handleCloseModal} maxWidth="sm" fullWidth>
             <DialogTitle
@@ -71,7 +70,7 @@ export const StudentModals = ({
                 padding: "16px 24px",
               }}
             >
-              {TitleText} Alumno
+              {TitleText} Tutor
             </DialogTitle>
             <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
               <NumericFormat
@@ -81,7 +80,7 @@ export const StudentModals = ({
                 variant="outlined"
                 autoFocus
                 margin="normal"
-                label="Padrón"
+                label="DNI o Identificación"
                 value={item["id"] || ""}
                 required
                 onChange={(e) =>
@@ -120,6 +119,19 @@ export const StudentModals = ({
                 }
                 required
               />
+              <NumericFormat
+                fullWidth
+                allowNegative={false}
+                customInput={TextField}
+                variant="outlined"
+                margin="normal"
+                label="Capacidad"
+                value={item["capacity"] || ""}
+                required
+                onChange={(e) =>
+                  setItem({ ...item, capacity: parseInt(e.target.value) })
+                }
+              />
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCloseModal} variant="outlined" color="error">
@@ -133,17 +145,18 @@ export const StudentModals = ({
         )
       };
 
-      // const addStudentModal = () => {
-      //   return innerActionStudentModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar", "Agregar")
-      // }
+    //   const addTutorModal = () => {
+    //     return innerActionTutorModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar Nuevo", "Agregar")
+    //   };
     
-      // const editStudentModal = () => {
-      //   return innerActionStudentModal(openEditModal, handleCloseEditModal, handleEdit, editedItem, setEditedItem, "Editar", "Guardar")
-      // }
-  return (
-    <>
-      {innerActionStudentModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar", "Agregar")};
-      {innerActionStudentModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar")};
-    </>
-  )
+    //   const editTutorModal = () => {
+    //     return innerActionTutorModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar")
+    //   };
+
+      return (
+        <>
+            {innerActionTutorModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar Nuevo", "Agregar")};
+            {innerActionTutorModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar")};
+        </>
+      )
 }
