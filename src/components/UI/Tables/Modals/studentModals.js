@@ -56,62 +56,69 @@ export const StudentModals = ({
             >
               {TitleText} Alumno
             </DialogTitle>
-            <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
-              <NumericFormat
-                fullWidth
-                allowNegative={false}
-                customInput={TextField}
-                variant="outlined"
-                autoFocus
-                margin="normal"
-                label="Padrón"
-                value={item["id"] || ""}
-                required
-                onChange={(e) =>
-                  setItem({ ...item, id: parseInt(e.target.value) })
-                }
-              />
-              <TextField
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                label="Nombre"
-                value={item["name"] || ""}
-                required
-                onChange={(e) => setItem({ ...item, name: e.target.value })}
-              />
-              <TextField
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                label="Apellido"
-                value={item["last_name"] || ""}
-                required
-                onChange={(e) =>
-                  setItem({ ...item, last_name: e.target.value })
-                }
-              />
-              <TextField
-                label="Email"
-                type="email"
-                fullWidth
-                margin="normal"
-                variant="outlined"
-                value={item["email"] || ""}
-                onChange={(e) =>
-                  setItem({ ...item, email: e.target.value })
-                }
-                required
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseModal} variant="outlined" color="error">
-                Cancelar
-              </Button>
-              <Button onClick={() => handleConfirmAction(item, setItem, handleCloseModal)} variant="contained" color="primary">
-                {ConfirmButtonText}
-              </Button>
-            </DialogActions>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault(); // previene el reload del form
+                handleConfirmAction(item, setItem, handleCloseModal);
+              }}
+            >
+              <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
+                <NumericFormat
+                  fullWidth
+                  allowNegative={false}
+                  customInput={TextField}
+                  variant="outlined"
+                  autoFocus
+                  margin="normal"
+                  label="Padrón"
+                  value={item["id"] || ""}
+                  required
+                  onChange={(e) =>
+                    setItem({ ...item, id: parseInt(e.target.value) })
+                  }
+                />
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  label="Nombre"
+                  value={item["name"] || ""}
+                  required
+                  onChange={(e) => setItem({ ...item, name: e.target.value })}
+                />
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  label="Apellido"
+                  value={item["last_name"] || ""}
+                  required
+                  onChange={(e) =>
+                    setItem({ ...item, last_name: e.target.value })
+                  }
+                />
+                <TextField
+                  label="Email"
+                  type="email"
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
+                  value={item["email"] || ""}
+                  onChange={(e) =>
+                    setItem({ ...item, email: e.target.value })
+                  }
+                  required
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseModal} variant="outlined" color="error">
+                  Cancelar
+                </Button>
+                <Button type="submit" variant="contained" color="primary">
+                  {ConfirmButtonText}
+                </Button>
+              </DialogActions>
+            </form>
           </Dialog>
         )
       };
