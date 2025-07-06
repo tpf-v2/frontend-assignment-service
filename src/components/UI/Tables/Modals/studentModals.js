@@ -33,12 +33,12 @@ export const StudentModals = ({
         handleCloseAddModal,
         handleCloseEditModal
       } = useOpenCloseStateModalLogic({
-          openEditModal,
-          item,
-          setOpenAddModal,
-          setOpenEditModal,
-          setOriginalEditedItemId,
-          setParentItem
+          openEditModal: openEditModal,
+          item: item,
+          setOpenAddModal: setOpenAddModal,
+          setOpenEditModal: setOpenEditModal,
+          setOriginalEditedItemId: setOriginalEditedItemId,
+          setParentItem: setParentItem
       });
 
       /////// Modals de Estudiante ///////
