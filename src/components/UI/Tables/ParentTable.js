@@ -37,6 +37,7 @@ import { getCategories } from "../../../utils/getCategories";
 import { addTopic, editTopic } from "../../../api/handleTopics";
 import { setTopics } from "../../../redux/slices/topicsSlice";
 import { TableType } from "./TableType";
+import { StudentModals } from "./Modals/studentModals";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -65,11 +66,6 @@ const ParentTable = ({
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [openAddModal, setOpenAddModal] = useState(false);
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [newItem, setNewItem] = useState({});
-  const [editedItem, setEditedItem] = useState({}); // data
-  const [originalEditedItemId, setOriginalEditedItemId] = useState(null);
 
   const [notification, setNotification] = useState({
     open: false,
@@ -77,34 +73,9 @@ const ParentTable = ({
     status: "",
   });
 
-  const handleClickOpenAddModal = () => {
-    setOpenAddModal(true);
-  };
-
-  const handleCloseAddModal = () => {
-    setNewItem({})
-    setOpenAddModal(false);
-  };
-
-  const handleClickOpenEditModal = (item) => {
-    // Si lo que se está editando es Tutor, es necesario extraer su capacity existente de un
-    // campo especial algo estrambótico (item tiene lista de tutor_periods, cada uno con
-    // un period_id y una capacity). (Sin esto ítem no tiene capacity y falla la request).
-    if (title===TableType.TUTORS) {
-      const selectedTutorPeriod = item.tutor_periods.find(tp => tp.period_id === period.id);
-      const capacity = selectedTutorPeriod ? selectedTutorPeriod.capacity : null;
-      item["capacity"]=capacity;
-    }
-    // El id puede cambiar, así que guardamos el id original
-    setOriginalEditedItemId(item.id);
-    setEditedItem(item);
-    setOpenEditModal(true);    
-  };
-
-  const handleCloseEditModal = () => {
-    setEditedItem({})
-    setOpenEditModal(false);
-  };
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [originalEditedItemId, setOriginalEditedItemId] = useState(null);
 
   const user = useSelector((state) => state.user);
   const tutors = Object.values(useSelector((state) => state.tutors))
@@ -150,7 +121,7 @@ const ParentTable = ({
   const period = useSelector((state) => state.period);
   const dispatch = useDispatch();
 
-  const handleAddItem = async () => {
+  const handleAddItem = async (newItem, setNewItem, handleCloseAddModal) => {
     try {
       if (title === TableType.STUDENTS) {
         const item = await addStudent(newItem, user, period.id);
@@ -195,7 +166,7 @@ const ParentTable = ({
     }
   };
 
-  const handleEdit = async () => {
+  const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal) => {
     try {
       if (title === TableType.STUDENTS) {
         const item = await editStudent(originalEditedItemId, period.id, editedItem, user);
@@ -336,287 +307,6 @@ const ParentTable = ({
     });
   });
 
-  const addStudentModal = () => {
-    return innerActionStudentModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar", "Agregar")
-  }
-
-  const editStudentModal = () => {
-    return innerActionStudentModal(openEditModal, handleCloseEditModal, handleEdit, editedItem, setEditedItem, "Editar", "Guardar")
-  }
-
-  const innerActionStudentModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {    
-    return (
-      <Dialog open={bool} onClose={handleCloseModal} maxWidth="sm" fullWidth>
-        <DialogTitle
-          sx={{
-            fontWeight: "bold",
-            textAlign: "center",
-            backgroundColor: "#f5f5f5",
-            color: "#333",
-            padding: "16px 24px",
-          }}
-        >
-          {TitleText} Alumno
-        </DialogTitle>
-        <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
-          <NumericFormat
-            fullWidth
-            allowNegative={false}
-            customInput={TextField}
-            variant="outlined"
-            autoFocus
-            margin="normal"
-            label="Padrón"
-            value={item["id"] || ""}
-            required
-            onChange={(e) =>
-              setItem({ ...item, id: parseInt(e.target.value) })
-            }
-          />
-          <TextField
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            label="Nombre"
-            value={item["name"] || ""}
-            required
-            onChange={(e) => setItem({ ...item, name: e.target.value })}
-          />
-          <TextField
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            label="Apellido"
-            value={item["last_name"] || ""}
-            required
-            onChange={(e) =>
-              setItem({ ...item, last_name: e.target.value })
-            }
-          />
-          <TextField
-            label="Email"
-            type="email"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            value={item["email"] || ""}
-            onChange={(e) =>
-              setItem({ ...item, email: e.target.value })
-            }
-            required
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseModal} variant="outlined" color="error">
-            Cancelar
-          </Button>
-          <Button onClick={handleConfirmAction} variant="contained" color="primary">
-            {ConfirmButtonText}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    )
-  };
-
-  const addTutorModal = () => {
-    return innerActionTutorModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar Nuevo", "Agregar")
-  };
-
-  const editTutorModal = () => {
-    return innerActionTutorModal(openEditModal, handleCloseEditModal, handleEdit, editedItem, setEditedItem, "Editar", "Guardar")
-  };
-
-  const innerActionTutorModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {
-    return (
-      <Dialog open={bool} onClose={handleCloseModal} maxWidth="sm" fullWidth>
-        <DialogTitle
-          sx={{
-            fontWeight: "bold",
-            textAlign: "center",
-            backgroundColor: "#f5f5f5",
-            color: "#333",
-            padding: "16px 24px",
-          }}
-        >
-          {TitleText} Tutor
-        </DialogTitle>
-        <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
-          <NumericFormat
-            fullWidth
-            allowNegative={false}
-            customInput={TextField}
-            variant="outlined"
-            autoFocus
-            margin="normal"
-            label="DNI o Identificación"
-            value={item["id"] || ""}
-            required
-            onChange={(e) =>
-              setItem({ ...item, id: parseInt(e.target.value) })
-            }
-          />
-          <TextField
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            label="Nombre"
-            value={item["name"] || ""}
-            required
-            onChange={(e) => setItem({ ...item, name: e.target.value })}
-          />
-          <TextField
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            label="Apellido"
-            value={item["last_name"] || ""}
-            required
-            onChange={(e) =>
-              setItem({ ...item, last_name: e.target.value })
-            }
-          />
-          <TextField
-            label="Email"
-            type="email"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            value={item["email"] || ""}
-            onChange={(e) =>
-              setItem({ ...item, email: e.target.value })
-            }
-            required
-          />
-          <NumericFormat
-            fullWidth
-            allowNegative={false}
-            customInput={TextField}
-            variant="outlined"
-            margin="normal"
-            label="Capacidad"
-            value={item["capacity"] || ""}
-            required
-            onChange={(e) =>
-              setItem({ ...item, capacity: parseInt(e.target.value) })
-            }
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseModal} variant="outlined" color="error">
-            Cancelar
-          </Button>
-          <Button onClick={handleConfirmAction} variant="contained" color="primary">
-            {ConfirmButtonText}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    )
-  };
-
-  const addTopicModal = () => {
-    return innerActionTopicModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar Nuevo", "Agregar");
-  };
-
-  const editTopicModal = () => {
-    return innerActionTopicModal(openEditModal, handleCloseEditModal, handleEdit, editedItem, setEditedItem, "Editar", "Guardar")
-  };
-
-  const innerActionTopicModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, titleText, confirmButtonText) => {
-    return (
-      <Dialog open={bool} onClose={handleCloseModal} maxWidth="sm" fullWidth>
-        <DialogTitle
-          sx={{
-            fontWeight: "bold",
-            textAlign: "center",
-            backgroundColor: "#f5f5f5",
-            color: "#333",
-            padding: "16px 24px",
-          }}
-        >
-          {titleText} Tema
-        </DialogTitle>
-        <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
-          <TextField
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            label="Titulo"
-            value={item["name"] || ""}
-            required
-            onChange={(e) => setItem({ ...item, name: e.target.value })}
-          />
-          <InputLabel>Seleccionar categoria</InputLabel>
-          <Select
-            value={
-              item["category"] || ""
-            }
-            label="Categorías"
-            onChange={(e) =>
-              setItem({ ...item, category: e.target.value })
-            }
-            margin="normal"
-
-            sx={{ marginBottom: "8px" }}
-            required
-            fullWidth
-          >
-            <MenuItem key="" value="" disabled>
-              Seleccionar categoria
-            </MenuItem>
-            {categories.map((category) => (
-              <MenuItem key={category} value={category}>
-                {category}
-              </MenuItem>
-            ))}
-          </Select>
-          <InputLabel margin="normal">Seleccionar tutor</InputLabel>
-          <Select
-            margin="normal"
-            value={
-              item["tutor_email"] || ""
-            }
-            label="Email del tutor"
-            onChange={(e) =>
-              setItem({ ...item, tutor_email: e.target.value })
-            }
-            required
-            fullWidth
-          >
-            <MenuItem key="" value="" disabled>
-              Seleccionar tutor
-            </MenuItem>
-            {tutors.map((tutor) => (
-              <MenuItem key={tutor.id} value={tutor.email}>
-                {tutor.email}
-              </MenuItem>
-            ))}
-          </Select>
-          <NumericFormat
-            fullWidth
-            allowNegative={false}
-            customInput={TextField}
-            variant="outlined"
-            margin="normal"
-            label="Capacidad"
-            value={item["capacity"] || ""}
-            required
-            onChange={(e) =>
-              setItem({ ...item, capacity: parseInt(e.target.value) })
-            }
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseModal} variant="outlined" color="error">
-            Cancelar
-          </Button>
-          <Button onClick={handleConfirmAction} variant="contained" color="primary">
-            {confirmButtonText}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    )
-  };
-
   if (loading) return <Typography variant="h6">Cargando...</Typography>;
   const categories = title === TableType.TOPICS ? getCategories(items) : [];
   return (
@@ -650,7 +340,8 @@ const ParentTable = ({
                   size="small"
                   color="primary"
                   aria-label="add"
-                  onClick={handleClickOpenAddModal}
+                  //onClick={handleClickOpenAddModal}
+                  onClick={() => setOpenAddModal(true)}
                 >
                   <AddIcon />
                 </Fab>
@@ -675,7 +366,8 @@ const ParentTable = ({
                     <TableCell>
                       <Stack direction="row" spacing={1}>
                         <Button
-                            onClick={() => handleClickOpenEditModal(item)}
+                            //onClick={() => handleClickOpenEditModal(item)}
+                            onClick={() => setOpenEditModal(true)}
                             style={{ backgroundColor: "#e0711d", color: "white" }}
                             >
                             Editar
@@ -695,27 +387,39 @@ const ParentTable = ({
           </TableContainer>
         </Root>
       </Container>
-      {title === TableType.STUDENTS && (
+      {title === TableType.STUDENTS && /*(
         <>
           {addStudentModal()}
           {editStudentModal()}
         </>
-        )
-      };
-      {title === TableType.TUTORS && (
+        )*/
+       < StudentModals 
+          openAddModal={openAddModal}
+          openEditModal={openEditModal}
+          setOpenAddModal={setOpenAddModal}
+          setOpenEditModal={setOpenEditModal}
+          handleAddItem={handleAddItem}
+          handleEditItem={handleEditItem}
+          originalEditedItemId={originalEditedItemId}
+          setOriginalEditedItemId={setOriginalEditedItemId}
+       />
+
+      }; 
+      { // <--- Eliminar esta llave, está ahí solo para poder comentar tutors y topics
+      /*{title === TableType.TUTORS && (
         <>
           {addTutorModal()}
           {editTutorModal()}
         </>
         )
-      };
-      {title === TableType.TOPICS && (
+      };*/
+      /*{title === TableType.TOPICS && (
         <>
           {addTopicModal()}
           {editTopicModal()}
         </>
         )      
-      };
+      };*/}
       <MySnackbar
         open={notification.open}
         handleClose={handleSnackbarClose}
