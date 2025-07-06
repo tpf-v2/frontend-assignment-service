@@ -19,13 +19,23 @@ export const StudentModals = ({
   handleAddItem, // las acciones al clickear confirmar desde cada modal
   handleEditItem,
   originalEditedItemId, // para pasárselo a la función que habla con la api al confirmar _ no, ya lo tiene si se crea afuera. Necesito su set si debo tener acá ese handle.
-  setOriginalEditedItemId
+  setOriginalEditedItemId,
+  item,
+  setParentItem
   
 }) => {
   
       const [newItem, setNewItem] = useState({});
       const [editedItem, setEditedItem] = useState({}); // data
       
+      // Esto hace de handle open edit (para add no es nec xq solo se setea un bool)
+      useEffect(() => {
+        if (!openEditModal) return;
+
+        setEditedItem(item); // éste es el set complicado xq se crea acá adentro
+        setOriginalEditedItemId(item.id);        
+
+      }, [openEditModal, item]);
       ///// Estos handles podrían ir en otro lado /////
       const handleClickOpenAddModal = () => {
           setOpenAddModal(true);
@@ -41,18 +51,20 @@ export const StudentModals = ({
       const handleCloseAddModal = () => {
           setNewItem({})
           setOpenAddModal(false);
+          setParentItem(false);
       };
       
       const handleCloseEditModal = () => {
           setEditedItem({})
           setOpenEditModal(false);
+          setParentItem(false);
       };
 
       /////// Modals de Estudiante ///////
       const innerActionStudentModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {    
         // y si pongo el set acá?
-        setEditedItem(item); // éste es el set complicado xq se crea acá adentro
-        setOriginalEditedItemId(item.id);
+        // setEditedItem(item); // éste es el set complicado xq se crea acá adentro
+        // setOriginalEditedItemId(item.id);
         return (
           <Dialog open={bool} onClose={handleCloseModal} maxWidth="sm" fullWidth>
             <DialogTitle

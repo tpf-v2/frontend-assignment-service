@@ -76,6 +76,7 @@ const ParentTable = ({
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [originalEditedItemId, setOriginalEditedItemId] = useState(null);
+  const [itemToPassToModal, setItemToPassToModal] = useState(null);
 
   const user = useSelector((state) => state.user);
   const tutors = Object.values(useSelector((state) => state.tutors))
@@ -367,7 +368,7 @@ const ParentTable = ({
                       <Stack direction="row" spacing={1}>
                         <Button
                             //onClick={() => handleClickOpenEditModal(item)}
-                            onClick={() => setOpenEditModal(true)}
+                            onClick={() => {setOpenEditModal(true); setItemToPassToModal(item)}}
                             style={{ backgroundColor: "#e0711d", color: "white" }}
                             >
                             Editar
@@ -402,6 +403,8 @@ const ParentTable = ({
           handleEditItem={handleEditItem}
           originalEditedItemId={originalEditedItemId}
           setOriginalEditedItemId={setOriginalEditedItemId}
+          item={itemToPassToModal}
+          setParentItem={setItemToPassToModal}
        />
 
       }; 
