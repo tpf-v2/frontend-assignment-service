@@ -22,6 +22,10 @@ const TutorsTable = () => {
   .map(({ version, rehydrated, ...rest }) => rest)
   .filter(item => Object.keys(item).length > 0);
 
+  // const selectedTutorPeriod = item.tutor_periods.find(tp => tp.period_id === period.id);
+  //     const capacity = selectedTutorPeriod ? selectedTutorPeriod.capacity : null;
+  //     item["capacity"]=capacity;
+
   const renderRow = (item) => (
     <>
       <TableCell>{item.id}</TableCell>

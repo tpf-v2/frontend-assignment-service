@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Button,
   TextField,
@@ -8,6 +8,7 @@ import {
   DialogActions,
 } from "@mui/material";
 import { NumericFormat } from "react-number-format";
+import { useOpenCloseStateModalLogic } from "./useOpenCloseStateModalLogic";
 
 export const StudentModals = ({
   openAddModal, // bools para ver si se debe abrir cada modal
@@ -22,41 +23,23 @@ export const StudentModals = ({
   setParentItem
   
 }) => {
-  
-      const [newItem, setNewItem] = useState({});
-      const [editedItem, setEditedItem] = useState({}); // data
-      
-      // Esto hace de handle open edit (para add no es nec xq solo se setea un bool)
-      useEffect(() => {
-        if (!openEditModal) return;
 
-        setEditedItem(item); // éste es el set complicado xq se crea acá adentro
-        setOriginalEditedItemId(item.id);        
-
-      }, [openEditModal, item]);
-      ///// Estos handles podrían ir en otro lado /////
-      const handleClickOpenAddModal = () => {
-          setOpenAddModal(true);
-      };
-      
-      const handleClickOpenEditModal = (item) => {
-          // El id puede cambiar, así que guardamos el id original
-          setOriginalEditedItemId(item.id);
-          setEditedItem(item);
-          setOpenEditModal(true);    
-      };
-
-      const handleCloseAddModal = () => {
-          setNewItem({})
-          setOpenAddModal(false);
-          setParentItem(false);
-      };
-      
-      const handleCloseEditModal = () => {
-          setEditedItem({})
-          setOpenEditModal(false);
-          setParentItem(false);
-      };
+      // Creo los estados, gestiono handle open, y obtengo los handle close.
+      const {
+        newItem,
+        setNewItem,
+        editedItem,
+        setEditedItem,
+        handleCloseAddModal,
+        handleCloseEditModal
+      } = useOpenCloseStateModalLogic({
+          openEditModal,
+          item,
+          setOpenAddModal,
+          setOpenEditModal,
+          setOriginalEditedItemId,
+          setParentItem
+      });
 
       /////// Modals de Estudiante ///////
       const innerActionStudentModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {    
@@ -133,17 +116,18 @@ export const StudentModals = ({
         )
       };
 
-      // const addStudentModal = () => {
-      //   return innerActionStudentModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar", "Agregar")
-      // }
+      const addStudentModal = () => {
+        return innerActionStudentModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar", "Agregar")
+      }
     
-      // const editStudentModal = () => {
-      //   return innerActionStudentModal(openEditModal, handleCloseEditModal, handleEdit, editedItem, setEditedItem, "Editar", "Guardar")
-      // }
+      const editStudentModal = () => {
+        return innerActionStudentModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar")
+      }
+
   return (
     <>
-      {innerActionStudentModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar", "Agregar")};
-      {innerActionStudentModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar")};
+      {addStudentModal()};
+      {editStudentModal()};
     </>
   )
 }

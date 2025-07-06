@@ -12,6 +12,7 @@ import {
   InputLabel
 } from "@mui/material";
 import { NumericFormat } from "react-number-format";
+import { useOpenCloseStateModalLogic } from "./useOpenCloseStateModalLogic";
 
 export const TopicModals = ({
   openAddModal, // bools para ver si se debe abrir cada modal
@@ -29,40 +30,22 @@ export const TopicModals = ({
 
 }) => {
 
-    const [newItem, setNewItem] = useState({});
-    const [editedItem, setEditedItem] = useState({}); // data
-
-    // Esto hace de handle open edit (para add no es nec xq solo se setea un bool)
-    useEffect(() => {
-      if (!openEditModal) return;
-
-      setEditedItem(item); // éste es el set complicado xq se crea acá adentro
-      setOriginalEditedItemId(item.id);        
-
-    }, [openEditModal, item]);
-    ///// Estos handles podrían ir en otro lado /////
-    const handleClickOpenAddModal = () => {
-        setOpenAddModal(true);
-    };
-    
-    const handleClickOpenEditModal = (item) => {
-        // El id puede cambiar, así que guardamos el id original
-        setOriginalEditedItemId(item.id);
-        setEditedItem(item);
-        setOpenEditModal(true);    
-    };
-
-    const handleCloseAddModal = () => {
-        setNewItem({})
-        setOpenAddModal(false);
-        setParentItem(false);
-    };
-    
-    const handleCloseEditModal = () => {
-        setEditedItem({})
-        setOpenEditModal(false);
-        setParentItem(false);
-    };
+    // Creo los estados, gestiono handle open, y obtengo los handle close.
+    const {
+      newItem,
+      setNewItem,
+      editedItem,
+      setEditedItem,
+      handleCloseAddModal,
+      handleCloseEditModal
+    } = useOpenCloseStateModalLogic({
+        openEditModal,
+        item,
+        setOpenAddModal,
+        setOpenEditModal,
+        setOriginalEditedItemId,
+        setParentItem
+    });
 
     /////// Modals de Estudiante ///////   
     const innerActionTopicModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, titleText, confirmButtonText) => {
@@ -161,18 +144,18 @@ export const TopicModals = ({
         )
       };
 
-    //   const addTopicModal = () => {
-    //     return innerActionTopicModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar Nuevo", "Agregar");
-    //   };
+      const addTopicModal = () => {
+        return innerActionTopicModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar Nuevo", "Agregar");
+      };
     
-    //   const editTopicModal = () => {
-    //     return innerActionTopicModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar")
-    //   };
+      const editTopicModal = () => {
+        return innerActionTopicModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar")
+      };
 
       return (
         <>
-            {innerActionTopicModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar Nuevo", "Agregar")};
-            {innerActionTopicModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar")};
+            {addTopicModal()};
+            {editTopicModal()};
         </>
       )
 }

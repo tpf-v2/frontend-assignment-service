@@ -14,20 +14,12 @@ import {
   Box,
   CircularProgress,
   Fab,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Select,
-  MenuItem,
-  InputLabel,
   Stack
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { getTableData, deleteRow } from "../../../api/handleTableData";
 import { useDispatch, useSelector } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
-import { NumericFormat } from "react-number-format";
 import { addStudent, editStudent } from "../../../api/handleStudents";
 import MySnackbar from "../MySnackBar";
 import { setStudents } from "../../../redux/slices/studentsSlice";
@@ -38,6 +30,8 @@ import { addTopic, editTopic } from "../../../api/handleTopics";
 import { setTopics } from "../../../redux/slices/topicsSlice";
 import { TableType } from "./TableType";
 import { StudentModals } from "./Modals/studentModals";
+import { TutorModals } from "./Modals/tutorModals";
+import { TopicModals } from "./Modals/topicModals";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -388,13 +382,8 @@ const ParentTable = ({
           </TableContainer>
         </Root>
       </Container>
-      {title === TableType.STUDENTS && /*(
-        <>
-          {addStudentModal()}
-          {editStudentModal()}
-        </>
-        )*/
-       < StudentModals 
+      {title === TableType.STUDENTS &&
+       <StudentModals 
           openAddModal={openAddModal}
           openEditModal={openEditModal}
           setOpenAddModal={setOpenAddModal}
@@ -408,21 +397,37 @@ const ParentTable = ({
        />
 
       }; 
-      { // <--- Eliminar esta llave, está ahí solo para poder comentar tutors y topics
-      /*{title === TableType.TUTORS && (
-        <>
-          {addTutorModal()}
-          {editTutorModal()}
-        </>
-        )
-      };*/
-      /*{title === TableType.TOPICS && (
-        <>
-          {addTopicModal()}
-          {editTopicModal()}
-        </>
-        )      
-      };*/}
+      {title === TableType.TUTORS &&
+        <TutorModals 
+          openAddModal={openAddModal}
+          openEditModal={openEditModal}
+          setOpenAddModal={setOpenAddModal}
+          setOpenEditModal={setOpenEditModal}
+          handleAddItem={handleAddItem}
+          handleEditItem={handleEditItem}
+          originalEditedItemId={originalEditedItemId}
+          setOriginalEditedItemId={setOriginalEditedItemId}
+          item={itemToPassToModal}
+          setParentItem={setItemToPassToModal}
+        />
+        
+      };
+      {title === TableType.TOPICS &&
+        <TopicModals 
+          openAddModal={openAddModal}
+          openEditModal={openEditModal}
+          setOpenAddModal={setOpenAddModal}
+          setOpenEditModal={setOpenEditModal}
+          handleAddItem={handleAddItem}
+          handleEditItem={handleEditItem}
+          originalEditedItemId={originalEditedItemId}
+          setOriginalEditedItemId={setOriginalEditedItemId}
+          item={itemToPassToModal}
+          setParentItem={setItemToPassToModal}
+          tutors={tutors}
+          categories={categories}
+        />
+      };
       <MySnackbar
         open={notification.open}
         handleClose={handleSnackbarClose}
