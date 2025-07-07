@@ -72,6 +72,7 @@ export const TopicModals = ({
               <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
                 <TextField
                   variant="outlined"
+                  autoFocus
                   fullWidth
                   margin="normal"
                   label="Titulo"
