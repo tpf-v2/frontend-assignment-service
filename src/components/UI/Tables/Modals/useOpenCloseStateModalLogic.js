@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 
-// Cada vez que se llama a este custom hook, se llama de nuevo a useState, por lo que cada llamada a este custom hook
-// tiene su propio estado (no compartido entre llamadas a este hook).
+/* Comportamiento común a todos los modals de agregar y editar estudiante/tutor/tema. Dichos modals usan esto.
+ * Aclaración: cada llamada a este custom hook tiene su propio estado (se llama nuevamente a useState cada vez,
+ * es decir que no se comparte entre llamadas a este hook).*/
 export const useOpenCloseStateModalLogic = ({openEditModal, item, setOpenAddModal, setOpenEditModal, setOriginalEditedItemId, setParentItem}) => {
       
       const [newItem, setNewItem] = useState({});
@@ -11,22 +12,16 @@ export const useOpenCloseStateModalLogic = ({openEditModal, item, setOpenAddModa
       useEffect(() => {
         if (!openEditModal) return;
 
-        setEditedItem(item); // éste es el set complicado xq se crea acá adentro
+        setEditedItem(item);
+        // El id puede cambiar, así que guardamos el id original
         setOriginalEditedItemId(item.id);        
 
       }, [openEditModal, item]);
       
       ///// Estos handles son comunes a todos los modals /////
-      const handleClickOpenAddModal = () => {
-          setOpenAddModal(true);
-      };
-      
-      const handleClickOpenEditModal = (item) => {
-          // El id puede cambiar, así que guardamos el id original
-          setOriginalEditedItemId(item.id);
-          setEditedItem(item);
-          setOpenEditModal(true);    
-      };
+      // Para abrir solamente se setea un bool desde afuera y el useEffect de acá arriba captura eso para el caso Editar
+      // (caso Agregar no hay más cosas por hacer al abrir); para cerrar se usan estos handle close en los modal,
+      // y también se pasan a la función que se ejecuta luego de confirmar el modal para que lo cierre ante error.
 
       const handleCloseAddModal = () => {
           setNewItem({})

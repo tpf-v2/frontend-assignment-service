@@ -334,8 +334,7 @@ const ParentTable = ({
                 <Fab
                   size="small"
                   color="primary"
-                  aria-label="add"
-                  //onClick={handleClickOpenAddModal}
+                  aria-label="add"                  
                   onClick={() => setOpenAddModal(true)}
                 >
                   <AddIcon />
@@ -361,7 +360,6 @@ const ParentTable = ({
                     <TableCell>
                       <Stack direction="row" spacing={1}>
                         <Button
-                            //onClick={() => handleClickOpenEditModal(item)}
                             onClick={() => {setOpenEditModal(true); setItemToPassToModal(item)}}
                             style={{ backgroundColor: "#e0711d", color: "white" }}
                             >

@@ -14,6 +14,7 @@ import {
 import { NumericFormat } from "react-number-format";
 import { useOpenCloseStateModalLogic } from "./useOpenCloseStateModalLogic";
 
+/* Modals para Agregar y Editar un tema */
 export const TopicModals = ({
   openAddModal, // bools para ver si se debe abrir cada modal
   openEditModal,
@@ -21,11 +22,11 @@ export const TopicModals = ({
   setOpenEditModal,
   handleAddItem, // las acciones al clickear confirmar desde cada modal
   handleEditItem,
-  originalEditedItemId, // para pasárselo a la función que habla con la api al confirmar _ no, ya lo tiene si se crea afuera. Necesito su set si debo tener acá ese handle.
+  originalEditedItemId, // para pasárselo a la función que habla con la api al confirmar, y su set para el handle
   setOriginalEditedItemId,
   item, // recibido del parent, y su set para flushearlo al salir
   setParentItem,
-  tutors, // estos dos están temporalmente acá, quizás podría []
+  tutors, // estos dos []
   categories
 
 }) => {
