@@ -115,39 +115,27 @@ const ParentTable = ({
   };
   const period = useSelector((state) => state.period);
   const dispatch = useDispatch();
+  
+  const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, stringItemType, setReducer) => {
+    const item = await apiAddFunction(newItem, user, period.id); // el add
+    setNewItem({});
+    setNotification({
+      open: true,
+      message: `Se agregó ${stringItemType} exitosamente`, // 'alumno'
+      status: "success",
+    });
+    setData([...items, item]);
+    dispatch(setReducer([...items, item])); // el set
 
+  };
   const handleAddItem = async (newItem, setNewItem, handleCloseAddModal) => {
     try {
       if (title === TableType.STUDENTS) {
-        const item = await addStudent(newItem, user, period.id);
-        setNewItem({});
-        setNotification({
-          open: true,
-          message: `Alumno agregado exitosamente`,
-          status: "success",
-        });
-        setData([...items, item]);
-        dispatch(setStudents([...items, item]));
+        addItemToGenericTable(addStudent, newItem, setNewItem, "alumno", setStudents);
       } else if (title === TableType.TUTORS) {
-        const item = await addTutor(newItem, user, period.id);
-        setNewItem({});
-        setNotification({
-          open: true,
-          message: `Tutor agregado exitosamente`,
-          status: "success",
-        });
-        setData([...items, item]);
-        dispatch(setTutors([...items, item]));
+        addItemToGenericTable(addTutor, newItem, setNewItem, "tutor/a", setTutors);
       } else if (title === TableType.TOPICS) {
-        const item = await addTopic(newItem, user, period.id);
-        setNewItem({});
-        setNotification({
-          open: true,
-          message: `Tema agregado exitosamente`,
-          status: "success",
-        });
-        setData([...items, item]);
-        dispatch(setTopics([...items, item]));
+        addItemToGenericTable(addTopic, newItem, setNewItem, "tema", setTopics);
       }
     } catch (err) {
       console.error(`Error when adding new ${title}:`, err);
