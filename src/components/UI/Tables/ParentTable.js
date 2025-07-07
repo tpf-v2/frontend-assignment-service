@@ -115,7 +115,7 @@ const ParentTable = ({
   };
   const period = useSelector((state) => state.period);
   const dispatch = useDispatch();
-  
+
   const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, stringItemType, setReducer) => {
     const item = await apiAddFunction(newItem, user, period.id); // el add
     setNewItem({});
@@ -149,54 +149,32 @@ const ParentTable = ({
     }
   };
 
+  const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, stringItemType, setReducer) => {
+    const item = await apiEditFunction(originalEditedItemId, period.id, editedItem, user);
+    setEditedItem({});
+    setOriginalEditedItemId(null);
+    setNotification({
+      open: true,
+      message: `Se editó ${stringItemType} exitosamente`,
+      status: "success",
+    });
+    setData((prevData) =>
+      prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem))
+    );
+    dispatch(setReducer((prevData) =>
+      prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem)))
+    );
+  }
+
   const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal) => {
     try {
       if (title === TableType.STUDENTS) {
-        const item = await editStudent(originalEditedItemId, period.id, editedItem, user);
-        setEditedItem({});
-        setOriginalEditedItemId(null);
-        setNotification({
-          open: true,
-          message: `Alumno editado exitosamente`,
-          status: "success",
-        });
-        setData((prevData) =>
-          prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem))
-        );
-        dispatch(setStudents((prevData) =>
-          prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem)))
-        );
+        editItemInGenericTable(editStudent, editedItem, setEditedItem, "alumno", setStudents);
       } else if (title === TableType.TUTORS) {
-        const item = await editTutor(originalEditedItemId, period.id, editedItem, user);
-        setEditedItem({});
-        setOriginalEditedItemId(null);
-        setNotification({
-          open: true,
-          message: `Tutor editado exitosamente`,
-          status: "success",
-        });
-        setData((prevData) =>
-          prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem))
-        );
-        dispatch(setStudents((prevData) =>
-          prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem)))
-        );
+        editItemInGenericTable(editTutor, editedItem, setEditedItem, "tutor/a", setTutors);       
       }
       else if (title === TableType.TOPICS) {
-        const item = await editTopic(originalEditedItemId, period.id, editedItem, user); //[]
-        setEditedItem({});
-        setOriginalEditedItemId(null);
-        setNotification({
-          open: true,
-          message: `Tema editado exitosamente`,
-          status: "success",
-        });
-        setData((prevData) =>
-          prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem))
-        );
-        dispatch(setStudents((prevData) =>
-          prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem)))
-        );
+        editItemInGenericTable(editTopic, editedItem, setEditedItem, "tema", setTopics);
       }
     } catch (err) {
       console.error(`Error when editing new ${title}:`, err);
