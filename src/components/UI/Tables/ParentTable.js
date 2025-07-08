@@ -131,11 +131,11 @@ const ParentTable = ({
   const handleAddItem = async (newItem, setNewItem, handleCloseAddModal) => {
     try {
       if (title === TableType.STUDENTS) {
-        addItemToGenericTable(addStudent, newItem, setNewItem, "alumno", setStudents);
+        await addItemToGenericTable(addStudent, newItem, setNewItem, "alumno", setStudents);
       } else if (title === TableType.TUTORS) {
-        addItemToGenericTable(addTutor, newItem, setNewItem, "tutor/a", setTutors);
+        await addItemToGenericTable(addTutor, newItem, setNewItem, "tutor/a", setTutors);
       } else if (title === TableType.TOPICS) {
-        addItemToGenericTable(addTopic, newItem, setNewItem, "tema", setTopics);
+        await addItemToGenericTable(addTopic, newItem, setNewItem, "tema", setTopics);
       }
     } catch (err) {
       console.error(`Error when adding new ${title}:`, err);
@@ -169,12 +169,11 @@ const ParentTable = ({
   const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal) => {
     try {
       if (title === TableType.STUDENTS) {
-        editItemInGenericTable(editStudent, editedItem, setEditedItem, "alumno", setStudents);
+        await editItemInGenericTable(editStudent, editedItem, setEditedItem, "alumno", setStudents);
       } else if (title === TableType.TUTORS) {
-        editItemInGenericTable(editTutor, editedItem, setEditedItem, "tutor/a", setTutors);       
-      }
-      else if (title === TableType.TOPICS) {
-        editItemInGenericTable(editTopic, editedItem, setEditedItem, "tema", setTopics);
+        await editItemInGenericTable(editTutor, editedItem, setEditedItem, "tutor/a", setTutors);       
+      } else if (title === TableType.TOPICS) {
+        await editItemInGenericTable(editTopic, editedItem, setEditedItem, "tema", setTopics);
       }
     } catch (err) {
       console.error(`Error when editing new ${title}:`, err);
