@@ -20,7 +20,13 @@ const TutorsTable = () => {
 
   const tutors = Object.values(useSelector((state) => state.tutors))
   .map(({ version, rehydrated, ...rest }) => rest)
-  .filter(item => Object.keys(item).length > 0);
+  .filter(item => Object.keys(item).length > 0)
+  .map((item) => {
+    const selectedTutorPeriod = item.tutor_periods.find(tp => tp.period_id === period.id);
+    const capacity = selectedTutorPeriod ? selectedTutorPeriod.capacity : null;
+    return {...item, capacity};
+  });
+  console.log("TUTORS desde su table:", tutors);
 
   // const selectedTutorPeriod = item.tutor_periods.find(tp => tp.period_id === period.id);
   //     const capacity = selectedTutorPeriod ? selectedTutorPeriod.capacity : null;

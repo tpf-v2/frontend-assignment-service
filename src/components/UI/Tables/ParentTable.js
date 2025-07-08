@@ -72,16 +72,32 @@ const ParentTable = ({
   const [originalEditedItemId, setOriginalEditedItemId] = useState(null);
   const [itemToPassToModal, setItemToPassToModal] = useState(null);
 
+  const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
   const tutors = Object.values(useSelector((state) => state.tutors))
   .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
-  .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
+  .filter((item) => Object.keys(item).length > 0) // Elimina objetos vacíos
+  .map((item) => { // Agrega capacity a cada tutor
+    const selectedTutorPeriod = item.tutor_periods.find(tp => tp.period_id === period.id);
+    const capacity = selectedTutorPeriod ? selectedTutorPeriod.capacity : null;
+    return {...item, capacity};
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const responseData = await getTableData(endpoint, user);
-        setData(responseData);
+        if (title === TableType.TUTORS){
+          const tutorsWithCapacityField = responseData.map((item) => { // Agrega capacity a cada tutor
+            const selectedTutorPeriod = item.tutor_periods.find(tp => tp.period_id === period.id);
+            const capacity = selectedTutorPeriod ? selectedTutorPeriod.capacity : null;
+            return {...item, capacity};
+          });
+          setData(tutorsWithCapacityField);
+        } else {
+          setData(responseData);
+        }
+        // saco esta línea: setData(responseData); y pomgo ese if else de acá arriba.
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -91,6 +107,35 @@ const ParentTable = ({
 
     fetchData();
   }, [endpoint, user]);
+
+  // Campo capacity de tutores
+  useEffect(() => {
+    const addTutorCapacityField = () => {
+      console.log("hola", data);
+      if (title === TableType.TUTORS) {
+        if (!data) {
+          // Seteo inicial xq hasta ahora data no vale nada
+          // Así que agrego capacity a 'items'
+          const tutorsWithCapacityField = items.map((item) => { // Agrega capacity a cada tutor
+            const selectedTutorPeriod = item.tutor_periods.find(tp => tp.period_id === period.id);
+            const capacity = selectedTutorPeriod ? selectedTutorPeriod.capacity : null;
+            return {...item, capacity};
+          });
+          setData(tutorsWithCapacityField);
+          
+        } else {
+          // Agrego capacity a lo que ya tenía 'data'
+          const tutorsWithCapacityField = data.map((item) => { // Agrega capacity a cada tutor
+            const selectedTutorPeriod = item.tutor_periods.find(tp => tp.period_id === period.id);
+            const capacity = selectedTutorPeriod ? selectedTutorPeriod.capacity : null;
+            return {...item, capacity};
+          });
+          setData(tutorsWithCapacityField);
+        }
+      }
+    };
+    addTutorCapacityField();
+  }, [openEditModal, openAddModal]); //endpoint
 
   const handleSnackbarClose = () => {
     setNotification({ ...notification, open: false });
@@ -113,7 +158,7 @@ const ParentTable = ({
 
     return result;
   };
-  const period = useSelector((state) => state.period);
+  
   const dispatch = useDispatch();
 
   const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, stringItemType, setReducer) => {
@@ -124,8 +169,8 @@ const ParentTable = ({
       message: `Se agregó ${stringItemType} exitosamente`, // 'alumno'
       status: "success",
     });
-    setData([...items, item]);
-    dispatch(setReducer([...items, item])); // el set
+    setData((prevData) => [...prevData, item]);
+    dispatch(setReducer((prevData) => [...prevData, item])); // el set
 
   };
   const handleAddItem = async (newItem, setNewItem, handleCloseAddModal) => {
@@ -159,15 +204,16 @@ const ParentTable = ({
       status: "success",
     });
     setData((prevData) =>
-      prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem))
+      prevData.map((existingItem) => (existingItem.id === originalEditedItemId ? item : existingItem))
     );
     dispatch(setReducer((prevData) =>
-      prevData.map((existingItem) => (existingItem.id === item.id ? item : existingItem)))
+      prevData.map((existingItem) => (existingItem.id === originalEditedItemId ? item : existingItem)))
     );
-  }
+  };
 
   const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal) => {
     try {
+      console.log("TUTOR item desde su PARENT:", editedItem);
       if (title === TableType.STUDENTS) {
         await editItemInGenericTable(editStudent, editedItem, setEditedItem, "alumno", setStudents);
       } else if (title === TableType.TUTORS) {
@@ -258,6 +304,7 @@ const ParentTable = ({
     URL.revokeObjectURL(url);
   };
 
+  console.log("ANTES DE FILTEREDDATA:", data);  
   // Filtrado mejorado
   const filteredData = data.filter((item) => {
     return columns.some((column) => {
@@ -267,6 +314,7 @@ const ParentTable = ({
     });
   });
 
+  console.log("DSP DE FILTEREDDATA:", data);
   if (loading) return <Typography variant="h6">Cargando...</Typography>;
   const categories = title === TableType.TOPICS ? getCategories(items) : [];
   return (
@@ -325,7 +373,7 @@ const ParentTable = ({
                     <TableCell>
                       <Stack direction="row" spacing={1}>
                         <Button
-                            onClick={() => {setOpenEditModal(true); setItemToPassToModal(item)}}
+                            onClick={() => {setOpenEditModal(true); console.log("PASANDO ITEM:", item); setItemToPassToModal(item)}}
                             style={{ backgroundColor: "#e0711d", color: "white" }}
                             >
                             Editar
