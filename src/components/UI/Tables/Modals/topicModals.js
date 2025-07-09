@@ -49,7 +49,7 @@ export const TopicModals = ({
     });
 
     /////// Modals de Estudiante ///////   
-    const innerActionTopicModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, titleText, confirmButtonText) => {
+    const innerActionTopicModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, titleText, confirmButtonText, disableBcEndpointDoesNotExistYet=false) => {
         return (
           <Dialog open={bool} onClose={handleCloseModal} maxWidth="sm" fullWidth>
             <DialogTitle
@@ -144,7 +144,7 @@ export const TopicModals = ({
                 <Button onClick={handleCloseModal} variant="outlined" color="error">
                   Cancelar
                 </Button>
-                <Button type="submit" variant="contained" color="primary">
+                <Button type="submit" disabled={disableBcEndpointDoesNotExistYet} variant="contained" color="primary">
                   {confirmButtonText}
                 </Button>
               </DialogActions>
@@ -157,8 +157,9 @@ export const TopicModals = ({
         return innerActionTopicModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar Nuevo", "Agregar");
       };
     
+      // Este true del final es solo temporal hasta que exista el endpoint de editar tema.
       const editTopicModal = () => {
-        return innerActionTopicModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar")
+        return innerActionTopicModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar", true)
       };
 
       return (
