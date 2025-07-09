@@ -43,7 +43,7 @@ export const StudentModals = ({
       });
 
       /////// Modals de Estudiante ///////
-      const innerActionStudentModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {    
+      const innerActionStudentModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText, disableEditId=false) => {
         return (
           <Dialog open={bool} onClose={handleCloseModal} maxWidth="sm" fullWidth>
             <DialogTitle
@@ -77,6 +77,7 @@ export const StudentModals = ({
                   onChange={(e) =>
                     setItem({ ...item, id: parseInt(e.target.value) })
                   }
+                  disabled={disableEditId}
                 />
                 <TextField
                   variant="outlined"
@@ -129,7 +130,7 @@ export const StudentModals = ({
       }
     
       const editStudentModal = () => {
-        return innerActionStudentModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar")
+        return innerActionStudentModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar", true)
       }
 
   return (
