@@ -32,6 +32,7 @@ import { TableType, TableTypeSingularLabel } from "./TableType";
 import { StudentModals } from "./Modals/studentModals";
 import { TutorModals } from "./Modals/tutorModals";
 import { TopicModals } from "./Modals/topicModals";
+import { addCapacityToTutors } from "../../../utils/addCapacityToTutors";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -74,25 +75,17 @@ const ParentTable = ({
 
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
-  const tutors = Object.values(useSelector((state) => state.tutors))
+  const tutorsWithoutCapacityField = Object.values(useSelector((state) => state.tutors))
   .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
-  .filter((item) => Object.keys(item).length > 0) // Elimina objetos vacíos
-  .map((item) => { // Agrega capacity a cada tutor
-    const selectedTutorPeriod = item.tutor_periods.find(tp => tp.period_id === period.id);
-    const capacity = selectedTutorPeriod ? selectedTutorPeriod.capacity : null;
-    return {...item, capacity};
-  });
+  .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
+  const tutors = addCapacityToTutors(tutorsWithoutCapacityField, period);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const responseData = await getTableData(endpoint, user);
         if (title === TableType.TUTORS){
-          const tutorsWithCapacityField = responseData.map((item) => { // Agrega capacity a cada tutor
-            const selectedTutorPeriod = item.tutor_periods.find(tp => tp.period_id === period.id);
-            const capacity = selectedTutorPeriod ? selectedTutorPeriod.capacity : null;
-            return {...item, capacity};
-          });
+          const tutorsWithCapacityField = addCapacityToTutors(responseData, period);
           setData(tutorsWithCapacityField);
         } else {
           setData(responseData);
@@ -116,20 +109,12 @@ const ParentTable = ({
         if (!data) {
           // Seteo inicial xq hasta ahora data no vale nada
           // Así que agrego capacity a 'items'
-          const tutorsWithCapacityField = items.map((item) => { // Agrega capacity a cada tutor
-            const selectedTutorPeriod = item.tutor_periods.find(tp => tp.period_id === period.id);
-            const capacity = selectedTutorPeriod ? selectedTutorPeriod.capacity : null;
-            return {...item, capacity};
-          });
+          const tutorsWithCapacityField = addCapacityToTutors(items, period);
           setData(tutorsWithCapacityField);
           
         } else {
           // Agrego capacity a lo que ya tenía 'data'
-          const tutorsWithCapacityField = data.map((item) => { // Agrega capacity a cada tutor
-            const selectedTutorPeriod = item.tutor_periods.find(tp => tp.period_id === period.id);
-            const capacity = selectedTutorPeriod ? selectedTutorPeriod.capacity : null;
-            return {...item, capacity};
-          });
+          const tutorsWithCapacityField = addCapacityToTutors(data, period);
           setData(tutorsWithCapacityField);
         }
       }

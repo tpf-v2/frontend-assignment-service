@@ -4,6 +4,7 @@ import { TableCell } from '@mui/material';
 import { useParams } from 'react-router';
 import { useSelector } from "react-redux";
 import { TableType } from '../TableType';
+import { addCapacityToTutors } from '../../../../utils/addCapacityToTutors';
 
 const TutorsTable = () => {
   const { period } = useParams();
@@ -18,19 +19,11 @@ const TutorsTable = () => {
     'Email': 'email'
   };
 
-  const tutors = Object.values(useSelector((state) => state.tutors))
+  const tutorsWithoutCapacityField = Object.values(useSelector((state) => state.tutors))
   .map(({ version, rehydrated, ...rest }) => rest)
-  .filter(item => Object.keys(item).length > 0)
-  .map((item) => {
-    const selectedTutorPeriod = item.tutor_periods.find(tp => tp.period_id === period.id);
-    const capacity = selectedTutorPeriod ? selectedTutorPeriod.capacity : null;
-    return {...item, capacity};
-  });
+  .filter(item => Object.keys(item).length > 0);
+  const tutors = addCapacityToTutors(tutorsWithoutCapacityField, period);
   console.log("TUTORS desde su table:", tutors);
-
-  // const selectedTutorPeriod = item.tutor_periods.find(tp => tp.period_id === period.id);
-  //     const capacity = selectedTutorPeriod ? selectedTutorPeriod.capacity : null;
-  //     item["capacity"]=capacity;
 
   const renderRow = (item) => (
     <>
