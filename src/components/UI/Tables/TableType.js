@@ -4,3 +4,9 @@ export const TableType = Object.freeze({
     TUTORS: "Tutores",
     TOPICS: "Temas"
 });
+
+export const TableTypeSingularLabel = {
+    [TableType.STUDENTS]: "alumno",
+    [TableType.TUTORS]: "tutor/a",
+    [TableType.TOPICS]: "tema",
+};

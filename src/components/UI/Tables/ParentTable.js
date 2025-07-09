@@ -28,7 +28,7 @@ import { setTutors } from "../../../redux/slices/tutorsSlice";
 import { getCategories } from "../../../utils/getCategories";
 import { addTopic, editTopic } from "../../../api/handleTopics";
 import { setTopics } from "../../../redux/slices/topicsSlice";
-import { TableType } from "./TableType";
+import { TableType, TableTypeSingularLabel } from "./TableType";
 import { StudentModals } from "./Modals/studentModals";
 import { TutorModals } from "./Modals/tutorModals";
 import { TopicModals } from "./Modals/topicModals";
@@ -161,12 +161,12 @@ const ParentTable = ({
   
   const dispatch = useDispatch();
 
-  const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, stringItemType, setReducer) => {
+  const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, setReducer) => {
     const item = await apiAddFunction(newItem, user, period.id); // el add
     setNewItem({});
     setNotification({
       open: true,
-      message: `Se agregó ${stringItemType} exitosamente`, // 'alumno'
+      message: `Se agregó ${TableTypeSingularLabel[title]||''} exitosamente`, // 'alumno'
       status: "success",
     });
     setData((prevData) => [...prevData, item]);
@@ -176,17 +176,17 @@ const ParentTable = ({
   const handleAddItem = async (newItem, setNewItem, handleCloseAddModal) => {
     try {
       if (title === TableType.STUDENTS) {
-        await addItemToGenericTable(addStudent, newItem, setNewItem, "alumno", setStudents);
+        await addItemToGenericTable(addStudent, newItem, setNewItem, setStudents);
       } else if (title === TableType.TUTORS) {
-        await addItemToGenericTable(addTutor, newItem, setNewItem, "tutor/a", setTutors);
+        await addItemToGenericTable(addTutor, newItem, setNewItem, setTutors);
       } else if (title === TableType.TOPICS) {
-        await addItemToGenericTable(addTopic, newItem, setNewItem, "tema", setTopics);
+        await addItemToGenericTable(addTopic, newItem, setNewItem, setTopics);
       }
     } catch (err) {
       console.error(`Error when adding new ${title}:`, err);
       setNotification({
         open: true,
-        message: `Error al agregar ${title.toLowerCase()}. Por favor, vuelva a intentar más tarde.`,
+        message: `Error al agregar ${TableTypeSingularLabel[title]||''}.`,
         status: "error",
       });
     } finally {
@@ -194,13 +194,13 @@ const ParentTable = ({
     }
   };
 
-  const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, stringItemType, setReducer) => {
+  const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, setReducer) => {
     const item = await apiEditFunction(originalEditedItemId, period.id, editedItem, user);
     setEditedItem({});
     setOriginalEditedItemId(null);
     setNotification({
       open: true,
-      message: `Se editó ${stringItemType} exitosamente`,
+      message: `Se editó ${TableTypeSingularLabel[title]||''} exitosamente`,
       status: "success",
     });
     setData((prevData) =>
@@ -215,17 +215,17 @@ const ParentTable = ({
     try {
       console.log("TUTOR item desde su PARENT:", editedItem);
       if (title === TableType.STUDENTS) {
-        await editItemInGenericTable(editStudent, editedItem, setEditedItem, "alumno", setStudents);
+        await editItemInGenericTable(editStudent, editedItem, setEditedItem, setStudents);
       } else if (title === TableType.TUTORS) {
-        await editItemInGenericTable(editTutor, editedItem, setEditedItem, "tutor/a", setTutors);       
+        await editItemInGenericTable(editTutor, editedItem, setEditedItem, setTutors);       
       } else if (title === TableType.TOPICS) {
-        await editItemInGenericTable(editTopic, editedItem, setEditedItem, "tema", setTopics);
+        await editItemInGenericTable(editTopic, editedItem, setEditedItem, setTopics);
       }
     } catch (err) {
       console.error(`Error when editing new ${title}:`, err);
       setNotification({
         open: true,
-        message: `Error al editar ${title.toLowerCase()}. Por favor, vuelva a intentar más tarde.`,
+        message: `Error al editar ${TableTypeSingularLabel[title]||''}.`,
         status: "error",
       });
     } finally {
@@ -374,7 +374,7 @@ const ParentTable = ({
                       <Stack direction="row" spacing={1}>
                         <Button
                             onClick={() => {setOpenEditModal(true); console.log("PASANDO ITEM:", item); setItemToPassToModal(item)}}
-                            style={{ backgroundColor: "#e0711d", color: "white" }}
+                            style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
                             >
                             Editar
                           </Button>
