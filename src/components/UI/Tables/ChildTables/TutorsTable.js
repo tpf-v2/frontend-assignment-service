@@ -23,7 +23,6 @@ const TutorsTable = () => {
   .map(({ version, rehydrated, ...rest }) => rest)
   .filter(item => Object.keys(item).length > 0);
   const tutors = addCapacityToTutors(tutorsWithoutCapacityField, period);
-  console.log("TUTORS desde su table:", tutors);
 
   const renderRow = (item) => (
     <>

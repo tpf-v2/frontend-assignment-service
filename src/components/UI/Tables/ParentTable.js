@@ -90,7 +90,7 @@ const ParentTable = ({
         } else {
           setData(responseData);
         }
-        // saco esta línea: setData(responseData); y pomgo ese if else de acá arriba.
+        
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -103,8 +103,7 @@ const ParentTable = ({
 
   // Campo capacity de tutores
   useEffect(() => {
-    const addTutorCapacityField = () => {
-      console.log("hola", data);
+    const addTutorCapacityField = () => {      
       if (title === TableType.TUTORS) {
         if (!data) {
           // Seteo inicial xq hasta ahora data no vale nada
@@ -147,15 +146,15 @@ const ParentTable = ({
   const dispatch = useDispatch();
 
   const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, setReducer) => {
-    const item = await apiAddFunction(newItem, user, period.id); // el add
+    const item = await apiAddFunction(newItem, user, period.id); // add
     setNewItem({});
     setNotification({
       open: true,
-      message: `Se agregó ${TableTypeSingularLabel[title]||''} exitosamente`, // 'alumno'
+      message: `Se agregó ${TableTypeSingularLabel[title]||''} exitosamente`, // 'alumno', etc
       status: "success",
     });
     setData((prevData) => [...prevData, item]);
-    dispatch(setReducer((prevData) => [...prevData, item])); // el set
+    dispatch(setReducer((prevData) => [...prevData, item])); // set
 
   };
   const handleAddItem = async (newItem, setNewItem, handleCloseAddModal) => {
@@ -198,7 +197,6 @@ const ParentTable = ({
 
   const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal) => {
     try {
-      console.log("TUTOR item desde su PARENT:", editedItem);
       if (title === TableType.STUDENTS) {
         await editItemInGenericTable(editStudent, editedItem, setEditedItem, setStudents);
       } else if (title === TableType.TUTORS) {
@@ -288,8 +286,7 @@ const ParentTable = ({
     a.click();
     URL.revokeObjectURL(url);
   };
-
-  console.log("ANTES DE FILTEREDDATA:", data);  
+  
   // Filtrado mejorado
   const filteredData = data.filter((item) => {
     return columns.some((column) => {
@@ -299,7 +296,6 @@ const ParentTable = ({
     });
   });
 
-  console.log("DSP DE FILTEREDDATA:", data);
   if (loading) return <Typography variant="h6">Cargando...</Typography>;
   const categories = title === TableType.TOPICS ? getCategories(items) : [];
   return (
@@ -358,7 +354,7 @@ const ParentTable = ({
                     <TableCell>
                       <Stack direction="row" spacing={1}>
                         <Button
-                            onClick={() => {setOpenEditModal(true); console.log("PASANDO ITEM:", item); setItemToPassToModal(item)}}
+                            onClick={() => {setOpenEditModal(true); setItemToPassToModal(item)}}
                             style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
                             >
                             Editar
