@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { HashRouter, Route, Routes, Navigate } from 'react-router-dom';
 import TutorForm from './components/Forms/TutorForm';
 import AddTopicForm from './components/Forms/AddTopicForm';
 import AddTutorForm from './components/Forms/AddTutorForm';
@@ -54,8 +54,16 @@ const App = () => {
 
   const color = user ? getColorBasedOnRole(user.temporal_role) : '#0072C6'; // Default color
 
+  // Garantia que cualquier url sin el # sea redirigida a la version
+  // correspondiente de la url para que cambios de location que no se apoyan
+  // en el router de react sigan funcionando correctamente
+  if (!window.location.hash.startsWith('#')) {
+    window.location = window.location.origin + '/#' + window.location.pathname;
+    return;
+  }
+
   return (
-    <Router>
+    <HashRouter>
       <TokenManager />
       <Box
         className="main-container"
@@ -110,7 +118,7 @@ const App = () => {
         </Box>
         {user.token && <Footer color={color} />}
       </Box>
-    </Router>
+    </HashRouter>
   );
 };
 
