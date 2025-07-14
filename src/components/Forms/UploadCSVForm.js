@@ -48,7 +48,7 @@ const DropzoneBox = styled(Box)(({ theme }) => ({
 const BASE_URL = process.env.REACT_APP_API_URL;
 
 const TITLE_DICT = {
-  students: "Alumnos",
+  students: "Estudiantes",
   tutors: "Tutores",
   topics: "Temas",
 };

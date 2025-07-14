@@ -20,7 +20,7 @@ const ContentInicio = ({ navigate, period }) => {
   return (
     <>
       <Box display="flex" justifyContent="space-between" width="100%">
-        <ButtonStyled onClick={() => navigate(`/dashboard/${period}/students`)}> ALUMNOS</ButtonStyled>
+        <ButtonStyled onClick={() => navigate(`/dashboard/${period}/students`)}> ESTUDIANTES</ButtonStyled>
         <ButtonStyled onClick={() => navigate(`/dashboard/${period}/tutors`)}> TUTORES</ButtonStyled>
       </Box>
       <Box display="flex" justifyContent="space-between" width="100%">

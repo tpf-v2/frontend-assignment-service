@@ -78,7 +78,7 @@ const ContentInscripciones = ({
                 setShowUploadCSV(true);
               }}
             >
-               CARGAR ALUMNOS
+               CARGAR ESTUDIANTES
             </ButtonStyled>
             <ButtonStyled
               onClick={() => {
@@ -101,7 +101,7 @@ const ContentInscripciones = ({
           <Grid container spacing={3}>
             <Grid item xs={12} sm={4}>
               <StatCard
-                title="Total de Alumnos"
+                title="Total de Estudiantes"
                 value={loading ? -1 : studentsLength}
               />
             </Grid>

@@ -55,7 +55,7 @@ export const StudentModals = ({
                 padding: "16px 24px",
               }}
             >
-              {TitleText} Alumno
+              {TitleText} Estudiante
             </DialogTitle>
             <form
               onSubmit={(e) => {
