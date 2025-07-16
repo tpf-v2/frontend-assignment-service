@@ -69,7 +69,7 @@ const FormSelection = () => {
           {cuatrimestre}
         </Title>
         {user.temporal_role !== 'admin' ? (
-          <Title variant="h6">{user.name}, te damos la bienvenida!</Title>
+          <Title variant="h6">¡{user.name}, te damos la bienvenida!</Title>
         ) : null}
         {user.temporal_role === 'student' && (
             <Typography variant="h6">

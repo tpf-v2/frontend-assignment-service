@@ -141,7 +141,7 @@ const AdminHomeView = () => {
 
   if (error) {
     return <Root maxWidth="md">
-      <Title variant="h4">{user.name}, te damos la bienvenida!</Title>
+      <Title variant="h4">¡{user.name}, te damos la bienvenida!</Title>
       <Typography color="error" variant="body1" fontWeight="bold">{error}</Typography>
       <MySnackbar
         open={notification.open}
@@ -154,7 +154,7 @@ const AdminHomeView = () => {
 
   return (
     <Root maxWidth="md">
-      <Title variant="h4">{user.name}, te damos la bienvenida!</Title>
+      <Title variant="h4">¡{user.name}, te damos la bienvenida!</Title>
       <Typography variant="h5" style={{ color: '#555' }}>Cuatrimestres</Typography>
       {isLoading ? (
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
