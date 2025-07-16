@@ -1,3 +1,5 @@
+// Este OldDashboard parece no estarse usando por nadie.
+
 import React, { useEffect, useState } from 'react';
 import { Container, Button, Typography, Box, Paper } from '@mui/material';
 import { styled } from '@mui/system';
@@ -90,12 +92,12 @@ const OldDashboard = () => {
         <Box mt={2} display="flex" flexDirection="column" alignItems="center">
           {/* Buttons Section */}
           <Box display="flex" justifyContent="space-between" width="100%">
-            <ButtonStyled onClick={() => handleNavigation(`/upload-students/${period}`)}> ARCHIVO DE ALUMNOS</ButtonStyled>
+            <ButtonStyled onClick={() => handleNavigation(`/upload-students/${period}`)}> ARCHIVO DE ESTUDIANTES</ButtonStyled>
             <ButtonStyled onClick={() => handleNavigation(`/upload-tutors/${period}`)}> ARCHIVO DE TUTORES</ButtonStyled>
             <ButtonStyled onClick={() => handleNavigation(`/upload-topics/${period}`)}> ARCHIVO DE TEMAS</ButtonStyled>
           </Box>
           <Box display="flex" justifyContent="space-between" width="100%">
-            <ButtonStyled onClick={() => navigate(`/dashboard/${period}/students`)}> LISTA ALUMNOS</ButtonStyled>
+            <ButtonStyled onClick={() => navigate(`/dashboard/${period}/students`)}> LISTA ESTUDIANTES</ButtonStyled>
             <ButtonStyled onClick={() => navigate(`/dashboard/${period}/tutors`)}> LISTA TUTORES</ButtonStyled>
             <ButtonStyled onClick={() => navigate(`/dashboard/${period}/topics`)}> LISTA TEMAS</ButtonStyled>
           </Box>
@@ -104,7 +106,7 @@ const OldDashboard = () => {
         {/* Statistics Section */}
         <Box mt={4}>
           <StatsContainer>
-            <StatCard title="Total de Alumnos" value={loading? -1 : dashboardData.studentCard} />
+            <StatCard title="Total de Estudiantes" value={loading? -1 : dashboardData.studentCard} />
             <StatCard title="Total de Tutores" value={loading? -1 : dashboardData.tutorsCard} />
             <StatCard title="Total de Temas" value={loading? -1 : dashboardData.topicsCard} />
           </StatsContainer>
