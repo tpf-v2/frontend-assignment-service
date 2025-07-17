@@ -4,7 +4,7 @@ import { Container, styled } from "@mui/system";
 import GroupDataTable from "../../../Algorithms/GroupDataTable";
 
 const GroupsTable = () => {
-  const title = "Grupos";
+  const title = "Equipos";
 
   const Title = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(3),
