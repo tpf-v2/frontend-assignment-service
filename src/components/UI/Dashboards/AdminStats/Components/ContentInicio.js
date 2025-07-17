@@ -25,7 +25,7 @@ const ContentInicio = ({ navigate, period }) => {
       </Box>
       <Box display="flex" justifyContent="space-between" width="100%">
         <ButtonStyled onClick={() => navigate(`/dashboard/${period}/topics`)}> TEMAS</ButtonStyled>
-        <ButtonStyled onClick={() => navigate(`/dashboard/${period}/groups`)}> EQUIPOS</ButtonStyled>
+        <ButtonStyled onClick={() => navigate(`/dashboard/${period}/teams`)}> EQUIPOS</ButtonStyled>
       </Box>
       <CuatrimestreConfig />
 

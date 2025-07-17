@@ -358,7 +358,7 @@ const TopicTutor = () => {
 
               <Button
                 variant="outlined"
-                onClick={() => navigate(`/dashboard/${period.id}/groups`)}
+                onClick={() => navigate(`/dashboard/${period.id}/teams`)}
                 sx={{
                   padding: "6px 16px",
                   textTransform: "none", // Evitar que el texto esté en mayúsculas

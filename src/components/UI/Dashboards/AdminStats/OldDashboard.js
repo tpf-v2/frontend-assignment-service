@@ -113,7 +113,7 @@ const OldDashboard = () => {
           <Box mt={2} display="flex" flexDirection="column" alignItems="center">
             <Box mt={2} display="flex" flexDirection="row" justifyContent="space-evenly" alignItems="center" width="100%">
               <ButtonStyled onClick={() => navigate(`/dashboard/${period}/form-answers`)}> RESPUESTAS</ButtonStyled>
-              <ButtonStyled onClick={() => navigate(`/dashboard/${period}/groups`)}> EQUIPOS</ButtonStyled>
+              <ButtonStyled onClick={() => navigate(`/dashboard/${period}/teams`)}> EQUIPOS</ButtonStyled>
             </Box>
             
             {/* Bar Chart Section */}

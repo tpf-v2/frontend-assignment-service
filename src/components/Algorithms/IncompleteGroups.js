@@ -165,7 +165,7 @@ const IncompleteGroups = () => {
         {period.groups_assignment_completed && (
           <Button
             variant="outlined"
-            onClick={() => navigate(`/dashboard/${period.id}/groups`)}
+            onClick={() => navigate(`/dashboard/${period.id}/teams`)}
             sx={{
               padding: "6px 16px",
               textTransform: "none", // Evitar que el texto esté en mayúsculas
@@ -294,7 +294,7 @@ const IncompleteGroups = () => {
           >
             <Button
               variant="outlined"
-              onClick={() => navigate(`/dashboard/${period.id}/groups`)}
+              onClick={() => navigate(`/dashboard/${period.id}/teams`)}
             >
               Ver más información de los equipos
             </Button>
