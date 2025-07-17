@@ -13,7 +13,7 @@ const Inicio = () => {
         <Box mt={4}>
           <Typography variant="body1" gutterBottom>
             Bienvenido al panel de control. En esta página podrás gestionar tus
-            actividades y tareas relacionadas con los grupos a los que vas a tutorear. 
+            actividades y tareas relacionadas con los equipos a los que vas a tutorear. 
             A continuación, se detalla la estructura del panel y cómo
             puedes navegar por las diferentes secciones:
           </Typography>
@@ -52,7 +52,7 @@ const Inicio = () => {
                 <li>
                   <strong>Fechas de presentación:</strong> Aquí podrás ver y
                   gestionar las fechas de presentación de los trabajos de los
-                  grupos.
+                  equipos.
                 </li>
               </ul>
             </li>

@@ -311,7 +311,7 @@ const transformEventData = (data) => {
                   Inicio
                 </ListItemStyled>
                 <Divider />
-                {/* Asignaciones - Mis Grupos */}
+                {/* Asignaciones - Mis Equipos */}
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     Mis Equipos

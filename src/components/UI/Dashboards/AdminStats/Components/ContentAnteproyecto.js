@@ -179,11 +179,11 @@ const ContentPdfProjects = ({
                       ? groupsData.find(
                           (g) => parseInt(getGroup(entrega.name)) === g.id
                         )?.pre_report_title ||
-                        `Anteproyecto Grupo ${getGroupNumber(entrega.name)}`
+                        `Anteproyecto Equipo ${getGroupNumber(entrega.name)}`
                       : groupsData.find(
                           (g) => parseInt(getGroup(entrega.name)) === g.id
                         )?.final_report_title ||
-                        `Proyecto final Grupo ${getGroupNumber(entrega.name)}`}
+                        `Proyecto Final Equipo ${getGroupNumber(entrega.name)}`}
                   </TableCell>
 
                   <TableCell>{formatDate(entrega.last_modified)}</TableCell>

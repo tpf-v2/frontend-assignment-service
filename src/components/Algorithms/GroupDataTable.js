@@ -94,7 +94,7 @@ const GroupDataTable = () => {
     const csvRows = [];
     csvRows.push(
       [
-        "Grupo número",
+        "Equipo número",
         "Nombre",
         "Apellido",
         "Email",
@@ -187,7 +187,7 @@ const GroupDataTable = () => {
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ fontWeight: "bold" }}>
-                    Grupo número
+                    Equipo número
                   </TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>Nombre</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>Apellido</TableCell>

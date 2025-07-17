@@ -1,4 +1,4 @@
-// Este OldDashboard parece no estarse usando por nadie.
+// Nadie usa este OldDashboard.
 
 import React, { useEffect, useState } from 'react';
 import { Container, Button, Typography, Box, Paper } from '@mui/material';
@@ -113,7 +113,7 @@ const OldDashboard = () => {
           <Box mt={2} display="flex" flexDirection="column" alignItems="center">
             <Box mt={2} display="flex" flexDirection="row" justifyContent="space-evenly" alignItems="center" width="100%">
               <ButtonStyled onClick={() => navigate(`/dashboard/${period}/form-answers`)}> RESPUESTAS</ButtonStyled>
-              <ButtonStyled onClick={() => navigate(`/dashboard/${period}/groups`)}> GRUPOS</ButtonStyled>
+              <ButtonStyled onClick={() => navigate(`/dashboard/${period}/groups`)}> EQUIPOS</ButtonStyled>
             </Box>
             
             {/* Bar Chart Section */}

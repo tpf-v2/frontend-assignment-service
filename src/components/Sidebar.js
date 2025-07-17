@@ -56,7 +56,7 @@ const Sidebar = ({ selectedMenu, handleNavigation, period }) => {
           selected={selectedMenu === "Disponibilidad fechas de Presentación"}
           onClick={() => handleNavigation("Disponibilidad fechas de Presentación")}
         >
-          Disponibilidad fechas de Presentación
+          Disponibilidad Fechas de Presentación
         </ListItemStyled>
         <Divider />
         {/* Asignaciones - Desplegable */}

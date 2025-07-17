@@ -18,7 +18,7 @@ const StudentInfo = () => {
         </Typography>
         <Typography color="text.secondary">
           <Typography component="span" color="text.primary" fontWeight="bold" marginRight={1}>
-            Número de grupo:
+            Número de equipo:
           </Typography>
           {user.group_number || "Sin asignar aún"}
         </Typography>

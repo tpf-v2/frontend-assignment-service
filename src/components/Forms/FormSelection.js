@@ -1,3 +1,5 @@
+// Nadie usa esta FormSelection, sus únicos dos usos están comentados.
+
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Typography, Box, Paper } from '@mui/material';
@@ -79,7 +81,7 @@ const FormSelection = () => {
         <Box textAlign="center">
           {user.temporal_role === 'student' && (
             <ButtonStyled variant="contained" color="primary" onClick={() => handleNavigation('/student-form')}>
-              Enviar Formulario de Grupo
+              Enviar Formulario de Equipo
             </ButtonStyled>
           )}
           {user.temporal_role === 'tutor' && (
