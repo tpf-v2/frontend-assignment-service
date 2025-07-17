@@ -41,7 +41,7 @@ const ButtonSection = ({
         transition: "all 0.3s ease",
       }}
     >
-      Asignar fecha y hora a grupo
+      Asignar fecha y hora a equipo
     </Button>
 
     <Button

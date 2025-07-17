@@ -34,8 +34,8 @@ const Inicio = () => {
               el uso del dashboard.
             </li>
             <li>
-              <strong>Mis Grupos:</strong> Aquí encontrarás una lista de los
-              grupos que te han sido asignados. Puedes hacer clic en cada grupo
+              <strong>Mis Equipos:</strong> Aquí encontrarás una lista de los
+              equipos que te han sido asignados. Puedes hacer clic en cada equipo
               para ver detalles específicos y gestionar las tareas
               correspondientes.
             </li>

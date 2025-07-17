@@ -53,7 +53,7 @@ const TopicTutor = () => {
   const [assignments, setAssignments] = useState([]);
   const [showResults, setShowResults] = useState(false);
   const [running, setRunning] = useState(false);
-  const [isEditing, setIsEditing] = useState(null); // Almacena el id del grupo que está siendo editado
+  const [isEditing, setIsEditing] = useState(null); // Almacena el id del equipo que está siendo editado
   const [originalAssignments, setOriginalAssignments] = useState([]); // Copia de assignments para restaurar si se cancela
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false); // Dialogo para confirmar resultados
 
@@ -134,7 +134,7 @@ const TopicTutor = () => {
     );
     if (unassignedTopics) {
       alert(
-        "No puedes guardar los cambios. Asegúrate de que todos los grupos tengan un tema asignado."
+        "No puedes guardar los cambios. Asegúrate de que todos los equipos tengan un tema asignado."
       );
       return;
     }
@@ -296,10 +296,10 @@ const TopicTutor = () => {
         <Grid item xs={12} md={12} sx={{ display: "flex" }}>
           <Typography variant="body1" sx={{ textAlign: "justify" }}>
             Este algoritmo implementa un modelo de programación lineal para
-            resolver el problema de asignación de grupos de estudiantes a
+            resolver el problema de asignación de equipos de estudiantes a
             tutores y temas, asegurando un balance en las asignaciones y
-            maximizando las preferencias de los grupos. El objetivo del
-            algoritmo es asignar de manera eficiente a los grupos los tutores y
+            maximizando las preferencias de los equipos. El objetivo del
+            algoritmo es asignar de manera eficiente a los equipos los tutores y
             temas que mejor se alineen con sus preferencias, manteniendo un
             balance de carga de trabajo entre los tutores y respetando las
             capacidades tanto de los tutores como de los temas.
@@ -308,11 +308,11 @@ const TopicTutor = () => {
         <Grid item xs={12} md={12} sx={{ display: "flex" }}>
           <Typography variant="body1" sx={{ textAlign: "justify" }}>
             Al correr el algoritmo se va a poder elegir el límite máximo
-            permitido en la diferencia del número de grupos asignados a cada
+            permitido en la diferencia del número de equipos asignados a cada
             tutor. Tener en cuenta que este máximo va a estar limitado a la
             capacidad de cada tutor. Este parámetro se utiliza para garantizar
             que la carga de trabajo entre los tutores sea equitativa, es decir,
-            que la cantidad de grupos asignados a un tutor no difiera demasiado
+            que la cantidad de equipos asignados a un tutor no difiera demasiado
             de la cantidad asignada a otro tutor. Por esta razón, este algoritmo
             puede ejecutarse <strong>varias veces</strong> modificando este
             parámetro.
@@ -364,7 +364,7 @@ const TopicTutor = () => {
                   textTransform: "none", // Evitar que el texto esté en mayúsculas
                 }}
               >
-                Ver más información de los grupos
+                Ver más información de los equipos
               </Button>
             </Grid>
             <Grid
@@ -383,7 +383,7 @@ const TopicTutor = () => {
                 <Table stickyHeader>
                   <TableHead>
                     <TableRow>
-                      <TableCell sx={{ fontWeight: "bold" }}>Grupo</TableCell>
+                      <TableCell sx={{ fontWeight: "bold" }}>Equipo</TableCell>
                       <TableCell sx={{ fontWeight: "bold" }}>
                         Tutor Asignado
                       </TableCell>
@@ -537,7 +537,7 @@ const TopicTutor = () => {
         >
           <CircularProgress />
           <Typography sx={{ marginTop: 2 }}>
-            Asignando tema y tutor a cada grupo...
+            Asignando tema y tutor a cada equipo...
           </Typography>
         </DialogContent>
       </Dialog>
@@ -565,7 +565,7 @@ const TopicTutor = () => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ fontWeight: "bold" }}>Grupo</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Equipo</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>
                     Tutor Asignado
                   </TableCell>

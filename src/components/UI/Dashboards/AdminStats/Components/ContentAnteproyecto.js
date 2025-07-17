@@ -60,22 +60,22 @@ const ContentPdfProjects = ({
       ...selectedReviewers,
       [deliveryId]: reviewerId,
     });
-    // Obtener el grupo y crear una copia modificable
+    // Obtener el equipo y crear una copia modificable
     const updatedGroup = { ...getGroupById(parseInt(deliveryId, 10)) };
 
     if (updatedGroup) {
-      // Asignar el reviewerId a la copia del grupo
+      // Asignar el reviewerId a la copia del equipo
       updatedGroup.reviewer_id = reviewerId;
 
-      // Llamar al backend para actualizar el grupo
+      // Llamar al backend para actualizar el equipo
       await updateGroup(user, period.id, updatedGroup);
 
-      // Crear una nueva lista de grupos actualizados
+      // Crear una nueva lista de equipos actualizados
       const updatedGroups = groupsData.map((group) =>
         group.id === updatedGroup.id ? updatedGroup : group
       );
 
-      // Despachar la actualización solo del grupo modificado en Redux
+      // Despachar la actualización solo del equipo modificado en Redux
       dispatch(setGroups(updatedGroups));
     }
   };
@@ -93,7 +93,7 @@ const ContentPdfProjects = ({
 
   function getGroup(path) {
     const parts = path.split("/");
-    return parts[1]; // Devuelve el grupo
+    return parts[1]; // Devuelve el equipo
   }
 
   function getGroupNumber(path) {
@@ -118,13 +118,13 @@ const ContentPdfProjects = ({
           <Grid container spacing={3}>
             <Grid item xs={12} sm={4}>
               <StatCard
-                title="Grupos que entregaron"
+                title="Equipos que entregaron"
                 value={loadingProjects ? -1 : deliveries.length}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
               <StatCard
-                title="Grupos que faltan entregar"
+                title="Equipos que faltan entregar"
                 value={
                   loadingProjects ? -1 : groupsData.length - deliveries.length
                 }
@@ -132,7 +132,7 @@ const ContentPdfProjects = ({
             </Grid>
             <Grid item xs={12} sm={4}>
               <StatCard
-                title="Total de grupos"
+                title="Total de equipos"
                 value={loadingProjects ? -1 : groupsData.length}
               />
             </Grid>
@@ -144,7 +144,7 @@ const ContentPdfProjects = ({
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: "bold" }}>Grupo</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Equipo</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Tutor</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Titulo</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>

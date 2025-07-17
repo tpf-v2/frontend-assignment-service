@@ -14,7 +14,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Box } from "@mui/system";
 
-// Componente para la tabla de grupos
+// Componente para la tabla de equipos
 const GroupDataTable = () => {
   const period = useSelector((state) => state.period);
 
@@ -69,7 +69,7 @@ const GroupDataTable = () => {
     return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
   };
 
-  // Filtrar grupos según el término de búsqueda
+  // Filtrar equipos según el término de búsqueda
   const filteredGroups = groups.filter(
     (group) =>
       group.students.some(

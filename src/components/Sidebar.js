@@ -70,7 +70,7 @@ const Sidebar = ({ selectedMenu, handleNavigation, period }) => {
               selected={selectedMenu === "Grupos"}
               onClick={() => handleNavigation("Grupos")}
             >
-              Completar Grupos
+              Completar Equipos
             </ListItemStyled>
             <ListItemStyled
               button
@@ -91,7 +91,7 @@ const Sidebar = ({ selectedMenu, handleNavigation, period }) => {
         {/* Entregas - Desplegable */}
         <Accordion defaultExpanded>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            Entregas de Grupos
+            Entregas de Equipos
           </AccordionSummary>
           <AccordionDetails>
             <ListItemStyled

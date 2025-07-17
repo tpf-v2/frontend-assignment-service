@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 const ContentIntermediateProject = () => {
   const period = useSelector((state) => state.period);
 
-  // Obtiene los datos de los grupos del estado
+  // Obtiene los datos de los equipos del estado
   let groupsData = Object.values(useSelector((state) => state.groups))
     .sort((a, b) => a.id - b.id)
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
@@ -23,7 +23,7 @@ const ContentIntermediateProject = () => {
   const tutors = Object.values(useSelector((state) => state.tutors))
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
-  // Cuenta los grupos que han entregado su proyecto intermedio
+  // Cuenta los equipos que han entregado su proyecto intermedio
   const deliveredGroups = groupsData.filter(
     (group) => group.intermediate_assigment !== null
   );
@@ -56,18 +56,18 @@ const ContentIntermediateProject = () => {
             <Grid container spacing={3}>
               <Grid item xs={12} sm={4}>
                 <StatCard
-                  title="Grupos que entregaron"
+                  title="Equipos que entregaron"
                   value={deliveredGroups.length}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <StatCard
-                  title="Grupos que faltan entregar"
+                  title="Equipos que faltan entregar"
                   value={groupsData.length - deliveredGroups.length}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
-                <StatCard title="Total de grupos" value={groupsData.length} />
+                <StatCard title="Total de equipos" value={groupsData.length} />
               </Grid>
             </Grid>
           </Box>
@@ -76,7 +76,7 @@ const ContentIntermediateProject = () => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ fontWeight: "bold" }}>Grupo</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Equipo</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>Tutor</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>
                     Fecha de Entrega

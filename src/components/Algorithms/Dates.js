@@ -91,7 +91,7 @@ const Dates = () => {
   const [maxGroups, setMaxGroups] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [datesResult, setDatesResult] = useState([]);
-  const [isEditing, setIsEditing] = useState(null); // Almacena el id del grupo que está siendo editado
+  const [isEditing, setIsEditing] = useState(null); // Almacena el id del equipo que está siendo editado
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false); // Dialogo para confirmar resultados
   const [selectedSlot, setSelectedSlot] = useState(null); // Estado para el slot seleccionado
   const [modalOpen, setModalOpen] = useState(false); // Estado para el EventModal
@@ -402,14 +402,14 @@ const Dates = () => {
       groupDateCount[groupId] = (groupDateCount[groupId] || 0) + 1;
     });
 
-    // Verificar si algún grupo tiene más de una fecha asignada
+    // Verificar si algún equipo tiene más de una fecha asignada
     const hasMultipleDates = Object.values(groupDateCount).some(
       (count) => count > 1
     );
 
     if (hasMultipleDates) {
       handleSnackbarOpen(
-        "No se pueden guardar los cambios. Hay grupos con más de una fecha asignada.",
+        "No se pueden guardar los cambios. Hay equipos con más de una fecha asignada.",
         "error"
       );
       return;
@@ -668,13 +668,13 @@ const Dates = () => {
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>Asignar Fecha a Grupo</DialogTitle>
+        <DialogTitle>Asignar Fecha a Equipo</DialogTitle>
 
         <DialogContent>
           <Grid container spacing={3}>
-            {/* Selección de Grupo */}
+            {/* Selección de Equipo */}
             <Grid item xs={12}>
-              <Typography variant="subtitle1">Grupo</Typography>
+              <Typography variant="subtitle1">Equipo</Typography>
               <Select
                 fullWidth
                 displayEmpty
@@ -768,8 +768,8 @@ const Dates = () => {
 
       <Dialog open={openRunDialog} onClose={handleCloseRunDialog}>
         <DialogTitle>
-          Seleccione la diferencia de grupos entre evaluadores y el límite
-          máximo de grupos por semana
+          Seleccione la diferencia de equipos entre evaluadores y el límite
+          máximo de equipos por semana
         </DialogTitle>
         <DialogContent>
           <TextField
@@ -783,7 +783,7 @@ const Dates = () => {
           <TextField
             // autoFocus
             margin="dense"
-            label="Máximo grupos por semana"
+            label="Máximo equipos por semana"
             type="number"
             fullWidth
             value={maxGroups}

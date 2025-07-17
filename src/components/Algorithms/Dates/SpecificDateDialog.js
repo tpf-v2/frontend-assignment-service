@@ -74,12 +74,12 @@ const SpecificDateDialog = ({
   
   return (
     <Dialog open={open} onClose={handleCancel} maxWidth="sm" fullWidth>
-      <DialogTitle>Asignar Fecha a Grupo</DialogTitle>
+      <DialogTitle>Asignar Fecha a Equipo</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="subtitle1" gutterBottom>
-              Selecciona un Grupo:
+              Selecciona un Equipo:
             </Typography>
             <Select
               fullWidth
