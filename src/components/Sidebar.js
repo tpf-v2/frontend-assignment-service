@@ -67,15 +67,15 @@ const Sidebar = ({ selectedMenu, handleNavigation, period }) => {
           <AccordionDetails>
             <ListItemStyled
               button
-              selected={selectedMenu === "Grupos"}
-              onClick={() => handleNavigation("Grupos")}
+              selected={selectedMenu === "Equipos"}
+              onClick={() => handleNavigation("Equipos")}
             >
               Completar Equipos
             </ListItemStyled>
             <ListItemStyled
               button
-              selected={selectedMenu === "Temas - Tutores - Grupos"}
-              onClick={() => handleNavigation("Temas - Tutores - Grupos")}
+              selected={selectedMenu === "Temas - Tutores - Equipos"}
+              onClick={() => handleNavigation("Temas - Tutores - Equipos")}
             >
               Temas y Tutores
             </ListItemStyled>
