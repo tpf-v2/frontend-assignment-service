@@ -100,15 +100,15 @@ const SpecificDateDialog = ({
               displayEmpty
               renderValue={(selected) => {
                 const selectedGroup = groups.find((g) => g.group_number === selected);
-                return selectedGroup ? `Grupo ${selectedGroup.group_number}` : "Selecciona un grupo";
+                return selectedGroup ? `Equipo ${selectedGroup.group_number}` : "Selecciona un equipo";
               }}
             >
               <MenuItem value="" disabled>
-                Selecciona un grupo
+                Selecciona un equipo
               </MenuItem>
               {groups.map((group) => (
                 <MenuItem key={group.id} value={group.group_number}>
-                  {`Grupo ${group.group_number}`}
+                  {`Equipo ${group.group_number}`}
                 </MenuItem>
               ))}
             </Select>
