@@ -107,7 +107,7 @@ const AvailabilityCalendarAdmin = () => {
     if (eventToDelete) {
       const updatedEvents = events.filter(
         (event) =>
-          event.start !== eventToDelete.start || event.end !== eventToDelete.end
+          event.start.toISOString() !== eventToDelete.start.toISOString() || event.end.toISOString() !== eventToDelete.end.toISOString()
       );
       setConfirmDeleteOpen(false); // Cerrar el modal de confirmación
 
