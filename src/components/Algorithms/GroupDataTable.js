@@ -149,7 +149,7 @@ const GroupDataTable = () => {
 
     const a = document.createElement("a");
     a.setAttribute("href", url);
-    a.setAttribute("download", "group_data.csv");
+    a.setAttribute("download", "equipos.csv");
     a.click();
     URL.revokeObjectURL(url);
   };
