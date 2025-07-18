@@ -3,11 +3,13 @@ import ParentTable from '../ParentTable';
 import { TableCell } from '@mui/material';
 import { useParams } from 'react-router';
 import { useSelector } from "react-redux";
+import { TableType } from '../TableType';
+import { addCapacityToTutors } from '../../../../utils/addCapacityToTutors';
 
 const TutorsTable = () => {
   const { period } = useParams();
   const endpoint = `/tutors/periods/${period}`;
-  const title = 'Tutores';
+  const title = TableType.TUTORS;
   
   const columns = ['ID', 'Nombre', 'Apellido', 'Email'];
   const rowKeys = {
@@ -17,9 +19,10 @@ const TutorsTable = () => {
     'Email': 'email'
   };
 
-  const tutors = Object.values(useSelector((state) => state.tutors))
+  const tutorsWithoutCapacityField = Object.values(useSelector((state) => state.tutors))
   .map(({ version, rehydrated, ...rest }) => rest)
   .filter(item => Object.keys(item).length > 0);
+  const tutors = addCapacityToTutors(tutorsWithoutCapacityField, period);
 
   const renderRow = (item) => (
     <>

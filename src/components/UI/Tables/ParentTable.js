@@ -14,27 +14,25 @@ import {
   Box,
   CircularProgress,
   Fab,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Select,
-  MenuItem,
-  InputLabel,
+  Stack
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { getTableData, deleteRow } from "../../../api/handleTableData";
 import { useDispatch, useSelector } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
-import { NumericFormat } from "react-number-format";
-import { addStudent } from "../../../api/handleStudents";
+import { addStudent, editStudent } from "../../../api/handleStudents";
 import MySnackbar from "../MySnackBar";
 import { setStudents } from "../../../redux/slices/studentsSlice";
-import { addTutor } from "../../../api/handleTutors";
+import { addTutor, editTutor } from "../../../api/handleTutors";
 import { setTutors } from "../../../redux/slices/tutorsSlice";
 import { getCategories } from "../../../utils/getCategories";
-import { addTopic } from "../../../api/handleTopics";
+import { addTopic, editTopic } from "../../../api/handleTopics";
 import { setTopics } from "../../../redux/slices/topicsSlice";
+import { TableType, TableTypeSingularLabel } from "./TableType";
+import { StudentModals } from "./Modals/studentModals";
+import { TutorModals } from "./Modals/tutorModals";
+import { TopicModals } from "./Modals/topicModals";
+import { addCapacityToTutors } from "../../../utils/addCapacityToTutors";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -63,8 +61,6 @@ const ParentTable = ({
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [open, setOpen] = useState(false);
-  const [newItem, setNewItem] = useState({});
 
   const [notification, setNotification] = useState({
     open: false,
@@ -72,25 +68,29 @@ const ParentTable = ({
     status: "",
   });
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [originalEditedItemId, setOriginalEditedItemId] = useState(null);
+  const [itemToPassToModal, setItemToPassToModal] = useState(null);
 
-  const handleClose = () => {
-    setNewItem({})
-    setOpen(false);
-  };
-
+  const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
-  const tutors = Object.values(useSelector((state) => state.tutors))
+  const tutorsWithoutCapacityField = Object.values(useSelector((state) => state.tutors))
   .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
   .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
+  const tutors = addCapacityToTutors(tutorsWithoutCapacityField, period);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const responseData = await getTableData(endpoint, user);
-        setData(responseData);
+        if (title === TableType.TUTORS){
+          const tutorsWithCapacityField = addCapacityToTutors(responseData, period);
+          setData(tutorsWithCapacityField);
+        } else {
+          setData(responseData);
+        }
+        
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -100,6 +100,26 @@ const ParentTable = ({
 
     fetchData();
   }, [endpoint, user]);
+
+  // Campo capacity de tutores
+  useEffect(() => {
+    const addTutorCapacityField = () => {      
+      if (title === TableType.TUTORS) {
+        if (!data) {
+          // Seteo inicial xq hasta ahora data no vale nada
+          // Así que agrego capacity a 'items'
+          const tutorsWithCapacityField = addCapacityToTutors(items, period);
+          setData(tutorsWithCapacityField);
+          
+        } else {
+          // Agrego capacity a lo que ya tenía 'data'
+          const tutorsWithCapacityField = addCapacityToTutors(data, period);
+          setData(tutorsWithCapacityField);
+        }
+      }
+    };
+    addTutorCapacityField();
+  }, [openEditModal, openAddModal]); //endpoint
 
   const handleSnackbarClose = () => {
     setNotification({ ...notification, open: false });
@@ -122,53 +142,81 @@ const ParentTable = ({
 
     return result;
   };
-  const period = useSelector((state) => state.period);
+  
   const dispatch = useDispatch();
 
-  const handleAddItem = async () => {
+  const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, setReducer) => {
+    const item = await apiAddFunction(newItem, user, period.id); // add
+    setNewItem({});
+    setNotification({
+      open: true,
+      message: `Se agregó ${TableTypeSingularLabel[title]||''} exitosamente`, // 'alumno', etc
+      status: "success",
+    });
+    setData((prevData) => [...prevData, item]);
+    dispatch(setReducer((prevData) => [...prevData, item])); // set
+
+  };
+  const handleAddItem = async (newItem, setNewItem, handleCloseAddModal) => {
     try {
-      if (title === "Alumnos") {
-        const item = await addStudent(newItem, user, period.id);
-        setNewItem({});
-        setNotification({
-          open: true,
-          message: `Alumno agregado éxitosamente`,
-          status: "success",
-        });
-        setData([...items, item]);
-        dispatch(setStudents([...items, item]));
-      } else if (title === "Tutores") {
-        const item = await addTutor(newItem, user, period.id);
-        setNewItem({});
-        setNotification({
-          open: true,
-          message: `Tutor agregado éxitosamente`,
-          status: "success",
-        });
-        setData([...items, item]);
-        dispatch(setTutors([...items, item]));
-      } else if (title === "Temas") {
-        const item = await addTopic(newItem, user, period.id);
-        setNewItem({});
-        setNotification({
-          open: true,
-          message: `Tema agregado éxitosamente`,
-          status: "success",
-        });
-        setData([...items, item]);
-        dispatch(setTopics([...items, item]));
+      if (title === TableType.STUDENTS) {
+        await addItemToGenericTable(addStudent, newItem, setNewItem, setStudents);
+      } else if (title === TableType.TUTORS) {
+        await addItemToGenericTable(addTutor, newItem, setNewItem, setTutors);
+      } else if (title === TableType.TOPICS) {
+        await addItemToGenericTable(addTopic, newItem, setNewItem, setTopics);
       }
     } catch (err) {
       console.error(`Error when adding new ${title}:`, err);
       setNotification({
         open: true,
-        message: `Error al agregar ${title.toLowerCase()}. Por favor, vuelva a intentar más tarde.`,
+        message: `Error al agregar ${TableTypeSingularLabel[title]||''}.`,
         status: "error",
       });
     } finally {
-      handleClose(true);
+      handleCloseAddModal(true);
     }
   };
+
+  const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, setReducer) => {
+    const item = await apiEditFunction(originalEditedItemId, period.id, editedItem, user);
+    setEditedItem({});
+    setOriginalEditedItemId(null);
+    setNotification({
+      open: true,
+      message: `Se editó ${TableTypeSingularLabel[title]||''} exitosamente`,
+      status: "success",
+    });
+    setData((prevData) =>
+      prevData.map((existingItem) => (existingItem.id === originalEditedItemId ? item : existingItem))
+    );
+    dispatch(setReducer((prevData) =>
+      prevData.map((existingItem) => (existingItem.id === originalEditedItemId ? item : existingItem)))
+    );
+  };
+
+  const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal) => {
+    try {
+      if (title === TableType.STUDENTS) {
+        await editItemInGenericTable(editStudent, editedItem, setEditedItem, setStudents);
+      } else if (title === TableType.TUTORS) {
+        await editItemInGenericTable(editTutor, editedItem, setEditedItem, setTutors);       
+      } else if (title === TableType.TOPICS) {
+        await editItemInGenericTable(editTopic, editedItem, setEditedItem, setTopics);
+      }
+    } catch (err) {
+      console.error(`Error when editing new ${title}:`, err);
+      setNotification({
+        open: true,
+        message: `Error al editar ${TableTypeSingularLabel[title]||''}.`,
+        status: "error",
+      });
+    } finally {
+      handleCloseEditModal(true);
+    }
+    
+  };
+
   const handleDelete = async (id) => {
     try {
       // Call deleteResponse to remove the record
@@ -238,7 +286,7 @@ const ParentTable = ({
     a.click();
     URL.revokeObjectURL(url);
   };
-
+  
   // Filtrado mejorado
   const filteredData = data.filter((item) => {
     return columns.some((column) => {
@@ -249,11 +297,12 @@ const ParentTable = ({
   });
 
   if (loading) return <Typography variant="h6">Cargando...</Typography>;
-  const categories = title === "Temas" ? getCategories(items) : [];
+  const categories = title === TableType.TOPICS ? getCategories(items) : [];
   return (
     <>
       <Container maxWidth="lg">
         <Root>
+          {/* --- Header --- */}
           <Title variant="h4">{title}</Title>
           <TextField
             label="Buscar"
@@ -279,8 +328,8 @@ const ParentTable = ({
                 <Fab
                   size="small"
                   color="primary"
-                  aria-label="add"
-                  onClick={handleClickOpen}
+                  aria-label="add"                  
+                  onClick={() => setOpenAddModal(true)}
                 >
                   <AddIcon />
                 </Fab>
@@ -297,17 +346,26 @@ const ParentTable = ({
                   <TableCell>Acciones</TableCell>
                 </TableRow>
               </TableHead>
+              {/* --- Content --- */}
               <TableBody>
                 {filteredData.map((item) => (
                   <TableRow key={item.id}>
                     {renderRow(item, rowKeys)}
                     <TableCell>
-                      <Button
-                        onClick={() => handleDelete(item.id)}
-                        style={{ backgroundColor: "red", color: "white" }}
-                      >
-                        Eliminar
-                      </Button>
+                      <Stack direction="row" spacing={1}>
+                        <Button
+                            onClick={() => {setOpenEditModal(true); setItemToPassToModal(item)}}
+                            style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
+                            >
+                            Editar
+                          </Button>
+                          <Button
+                            onClick={() => handleDelete(item.id)}
+                            style={{ backgroundColor: "red", color: "white" }}
+                            >
+                            Eliminar
+                          </Button>
+                        </Stack>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -316,256 +374,52 @@ const ParentTable = ({
           </TableContainer>
         </Root>
       </Container>
-      {title === "Alumnos" && (
-        <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-          <DialogTitle
-            sx={{
-              fontWeight: "bold",
-              textAlign: "center",
-              backgroundColor: "#f5f5f5",
-              color: "#333",
-              padding: "16px 24px",
-            }}
-          >
-            Agregar Nuevo Alumno
-          </DialogTitle>
-          <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
-            <NumericFormat
-              fullWidth
-              allowNegative={false}
-              customInput={TextField}
-              variant="outlined"
-              autoFocus
-              margin="normal"
-              label="Padrón"
-              value={newItem["id"] || ""}
-              required
-              onChange={(e) =>
-                setNewItem({ ...newItem, id: parseInt(e.target.value) })
-              }
-            />
-            <TextField
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              label="Nombre"
-              value={newItem["name"] || ""}
-              required
-              onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-            />
-            <TextField
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              label="Apellido"
-              value={newItem["last_name"] || ""}
-              required
-              onChange={(e) =>
-                setNewItem({ ...newItem, last_name: e.target.value })
-              }
-            />
-            <TextField
-              label="Email"
-              type="email"
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              value={newItem["email"] || ""}
-              onChange={(e) =>
-                setNewItem({ ...newItem, email: e.target.value })
-              }
-              required
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} variant="outlined" color="error">
-              Cancelar
-            </Button>
-            <Button onClick={handleAddItem} variant="contained" color="primary">
-              Agregar
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
+      {title === TableType.STUDENTS &&
+       <StudentModals 
+          openAddModal={openAddModal}
+          openEditModal={openEditModal}
+          setOpenAddModal={setOpenAddModal}
+          setOpenEditModal={setOpenEditModal}
+          handleAddItem={handleAddItem}
+          handleEditItem={handleEditItem}
+          originalEditedItemId={originalEditedItemId}
+          setOriginalEditedItemId={setOriginalEditedItemId}
+          item={itemToPassToModal}
+          setParentItem={setItemToPassToModal}
+       />
 
-      {title === "Tutores" && (
-        <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-          <DialogTitle
-            sx={{
-              fontWeight: "bold",
-              textAlign: "center",
-              backgroundColor: "#f5f5f5",
-              color: "#333",
-              padding: "16px 24px",
-            }}
-          >
-            Agregar Nuevo Tutor
-          </DialogTitle>
-          <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
-            <NumericFormat
-              fullWidth
-              allowNegative={false}
-              customInput={TextField}
-              variant="outlined"
-              autoFocus
-              margin="normal"
-              label="DNI o Identificación"
-              value={newItem["id"] || ""}
-              required
-              onChange={(e) =>
-                setNewItem({ ...newItem, id: parseInt(e.target.value) })
-              }
-            />
-            <TextField
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              label="Nombre"
-              value={newItem["name"] || ""}
-              required
-              onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-            />
-            <TextField
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              label="Apellido"
-              value={newItem["last_name"] || ""}
-              required
-              onChange={(e) =>
-                setNewItem({ ...newItem, last_name: e.target.value })
-              }
-            />
-            <TextField
-              label="Email"
-              type="email"
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              value={newItem["email"] || ""}
-              onChange={(e) =>
-                setNewItem({ ...newItem, email: e.target.value })
-              }
-              required
-            />
-            <NumericFormat
-              fullWidth
-              allowNegative={false}
-              customInput={TextField}
-              variant="outlined"
-              margin="normal"
-              label="Capacidad"
-              value={newItem["capacity"] || ""}
-              required
-              onChange={(e) =>
-                setNewItem({ ...newItem, capacity: parseInt(e.target.value) })
-              }
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} variant="outlined" color="error">
-              Cancelar
-            </Button>
-            <Button onClick={handleAddItem} variant="contained" color="primary">
-              Agregar
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
-
-      {title === "Temas" && (
-        <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-          <DialogTitle
-            sx={{
-              fontWeight: "bold",
-              textAlign: "center",
-              backgroundColor: "#f5f5f5",
-              color: "#333",
-              padding: "16px 24px",
-            }}
-          >
-            Agregar Nuevo Tema
-          </DialogTitle>
-          <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
-            <TextField
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              label="Titulo"
-              value={newItem["name"] || ""}
-              required
-              onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-            />
-            <InputLabel>Seleccionar categoria</InputLabel>
-            <Select
-              value={
-                newItem["category"] || ""
-              }
-              label="Categorías"
-              onChange={(e) =>
-                setNewItem({ ...newItem, category: e.target.value })
-              }
-              margin="normal"
-
-              sx={{ marginBottom: "8px" }}
-              required
-              fullWidth
-            >
-              <MenuItem key="" value="" disabled>
-                Seleccionar categoria
-              </MenuItem>
-              {categories.map((category) => (
-                <MenuItem key={category} value={category}>
-                  {category}
-                </MenuItem>
-              ))}
-            </Select>
-            <InputLabel margin="normal">Seleccionar tutor</InputLabel>
-            <Select
-              margin="normal"
-              value={
-                newItem["tutor_email"] || ""
-              }
-              label="Email del tutor"
-              onChange={(e) =>
-                setNewItem({ ...newItem, tutor_email: e.target.value })
-              }
-              required
-              fullWidth
-            >
-              <MenuItem key="" value="" disabled>
-                Seleccionar tutor
-              </MenuItem>
-              {tutors.map((tutor) => (
-                <MenuItem key={tutor.id} value={tutor.email}>
-                  {tutor.email}
-                </MenuItem>
-              ))}
-            </Select>
-            <NumericFormat
-              fullWidth
-              allowNegative={false}
-              customInput={TextField}
-              variant="outlined"
-              margin="normal"
-              label="Capacidad"
-              value={newItem["capacity"] || ""}
-              required
-              onChange={(e) =>
-                setNewItem({ ...newItem, capacity: parseInt(e.target.value) })
-              }
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} variant="outlined" color="error">
-              Cancelar
-            </Button>
-            <Button onClick={handleAddItem} variant="contained" color="primary">
-              Agregar
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
+      }; 
+      {title === TableType.TUTORS &&
+        <TutorModals 
+          openAddModal={openAddModal}
+          openEditModal={openEditModal}
+          setOpenAddModal={setOpenAddModal}
+          setOpenEditModal={setOpenEditModal}
+          handleAddItem={handleAddItem}
+          handleEditItem={handleEditItem}
+          originalEditedItemId={originalEditedItemId}
+          setOriginalEditedItemId={setOriginalEditedItemId}
+          item={itemToPassToModal}
+          setParentItem={setItemToPassToModal}
+        />
+        
+      };
+      {title === TableType.TOPICS &&
+        <TopicModals 
+          openAddModal={openAddModal}
+          openEditModal={openEditModal}
+          setOpenAddModal={setOpenAddModal}
+          setOpenEditModal={setOpenEditModal}
+          handleAddItem={handleAddItem}
+          handleEditItem={handleEditItem}
+          originalEditedItemId={originalEditedItemId}
+          setOriginalEditedItemId={setOriginalEditedItemId}
+          item={itemToPassToModal}
+          setParentItem={setItemToPassToModal}
+          tutors={tutors}
+          categories={categories}
+        />
+      };
       <MySnackbar
         open={notification.open}
         handleClose={handleSnackbarClose}
