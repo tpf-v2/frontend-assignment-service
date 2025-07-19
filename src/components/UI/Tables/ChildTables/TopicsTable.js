@@ -30,7 +30,7 @@ const TopicsTable = () => {
 
 
   return (
-    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} items={topics}/>
+    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} items={topics} enableEdit={false}/>
   );
 };
 

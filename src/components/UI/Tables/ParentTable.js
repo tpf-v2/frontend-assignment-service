@@ -57,6 +57,8 @@ const ParentTable = ({
   endpoint,
   renderRow,
   items,
+  enableEdit = true,
+  enableDelete = true
 }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -351,22 +353,26 @@ const ParentTable = ({
                 {filteredData.map((item) => (
                   <TableRow key={item.id}>
                     {renderRow(item, rowKeys)}
-                    <TableCell>
+                    {(enableEdit || enableDelete) && <TableCell>
                       <Stack direction="row" spacing={1}>
-                        <Button
+                        {enableEdit && (
+                          <Button
                             onClick={() => {setOpenEditModal(true); setItemToPassToModal(item)}}
                             style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
                             >
                             Editar
                           </Button>
+                        )}
+                        {enableDelete && (
                           <Button
                             onClick={() => handleDelete(item.id)}
                             style={{ backgroundColor: "red", color: "white" }}
                             >
                             Eliminar
                           </Button>
-                        </Stack>
-                    </TableCell>
+                        )}
+                      </Stack>
+                    </TableCell> }
                   </TableRow>
                 ))}
               </TableBody>
