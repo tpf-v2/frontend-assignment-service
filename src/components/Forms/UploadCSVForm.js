@@ -141,7 +141,7 @@ const UploadCSVForm = ({ formType, setItems }) => {
     e.preventDefault();
     const link = document.createElement("a");
     link.href = downloadCSVLink;
-    link.download = `${formType}.csv`; // Puedes ajustar el nombre del archivo si lo deseas
+    link.download = `${TITLE_DICT[formType]}.csv`; // nombre del archivo
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
