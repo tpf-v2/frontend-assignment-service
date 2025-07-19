@@ -85,3 +85,20 @@ export const addStudent = async (newStudent, user, period_id) => {
         throw new Error(err);
     }
 };
+
+export const editStudent = async (original_student_id, period_id, studentToEdit, user) => {
+  const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+  
+  try {
+      const url = `${BASE_URL}/students/${original_student_id}/periods/${period_id}`;
+      const response = await axios.patch(url, studentToEdit, config);
+      return response.data;
+  } catch (err) {
+      console.error(`Error when editing student: ${err}`)
+      throw new Error(err);
+  }
+};
