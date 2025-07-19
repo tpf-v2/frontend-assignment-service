@@ -1,7 +1,7 @@
 
 # Frontend Assignment Service
 
-Este proyecto es el frontend del sistema de asignación de grupos y temas desarrollado como parte del Trabajo Profesional en FIUBA. Está construido con React y tiene como objetivo proporcionar una interfaz amigable para gestionar las asignaciones.
+Este proyecto es el frontend del sistema de asignación de equipos y temas desarrollado como parte del Trabajo Profesional en FIUBA. Está construido con React y tiene como objetivo proporcionar una interfaz amigable para gestionar las asignaciones.
 
 ## Requisitos Previos
 

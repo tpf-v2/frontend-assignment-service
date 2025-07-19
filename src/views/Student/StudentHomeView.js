@@ -132,7 +132,7 @@ const StudentHomeView = () => {
           <>
             <SubmitButton
               url="/student-form"
-              title="Enviar Formulario de Grupo"
+              title="Enviar Formulario de Equipo"
               width="100%"
               handleSubmit={() => handleNavigation("/student-form")}
               disabled={!milestones[0]?.tasks[0].completed}

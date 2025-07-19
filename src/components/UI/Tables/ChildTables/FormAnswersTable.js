@@ -8,10 +8,10 @@ const FormAnswersTable = () => {
 
   const endpoint = `/forms/answers?period=${period.id}`; // Replace with your endpoint
   const title = 'Respuestas';
-  const columns = ['Fecha de envio', 'Alumnos', 'Temas']; // Specify your column names here
+  const columns = ['Fecha de envio', 'Estudiantes', 'Temas']; // Specify your column names here
   const rowKeys = {
     'Fecha de envio': 'id',
-    'Alumnos': 'students',
+    'Estudiantes': 'students',
     'Temas': 'topics',
   };
 

@@ -9,7 +9,7 @@ export const confirmGroups = async (user, period, assignments, groups) => {
     },
   };
 
-  // Crear el body a partir de los grupos
+  // Crear el body a partir de los equipos
   const body = assignments.map((assignment) => {
     // Encontrar el assignment correspondiente
     const group = groups.find((g) => g.id === assignment.id);

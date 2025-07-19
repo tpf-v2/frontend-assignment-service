@@ -1,12 +1,12 @@
 // Enum en reactjs
 export const TableType = Object.freeze({
-    STUDENTS: "Alumnos",
+    STUDENTS: "Estudiantes",
     TUTORS: "Tutores",
     TOPICS: "Temas"
 });
 
 export const TableTypeSingularLabel = {
-    [TableType.STUDENTS]: "alumno",
+    [TableType.STUDENTS]: "estudiante",
     [TableType.TUTORS]: "tutor/a",
     [TableType.TOPICS]: "tema",
 };

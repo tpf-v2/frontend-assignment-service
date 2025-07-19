@@ -1,3 +1,5 @@
+// Este AddItemDialog no es usado por nadie.
+
 import React, { useState } from 'react';
 import { TextField, Dialog, DialogActions, DialogContent, DialogTitle, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';

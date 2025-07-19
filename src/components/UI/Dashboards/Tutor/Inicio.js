@@ -13,7 +13,7 @@ const Inicio = () => {
         <Box mt={4}>
           <Typography variant="body1" gutterBottom>
             Bienvenido al panel de control. En esta página podrás gestionar tus
-            actividades y tareas relacionadas con los grupos a los que vas a tutorear. 
+            actividades y tareas relacionadas con los equipos a los que vas a tutorear. 
             A continuación, se detalla la estructura del panel y cómo
             puedes navegar por las diferentes secciones:
           </Typography>
@@ -34,8 +34,8 @@ const Inicio = () => {
               el uso del dashboard.
             </li>
             <li>
-              <strong>Mis Grupos:</strong> Aquí encontrarás una lista de los
-              grupos que te han sido asignados. Puedes hacer clic en cada grupo
+              <strong>Mis Equipos:</strong> Aquí encontrarás una lista de los
+              equipos que te han sido asignados. Puedes hacer clic en cada equipo
               para ver detalles específicos y gestionar las tareas
               correspondientes.
             </li>
@@ -52,7 +52,7 @@ const Inicio = () => {
                 <li>
                   <strong>Fechas de presentación:</strong> Aquí podrás ver y
                   gestionar las fechas de presentación de los trabajos de los
-                  grupos.
+                  equipos.
                 </li>
               </ul>
             </li>

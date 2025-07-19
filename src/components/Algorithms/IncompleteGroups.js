@@ -54,11 +54,11 @@ const IncompleteGroups = () => {
       setLoading(true);
       setOpenDialog(true);
 
-      // Obtiene los grupos incompletos
+      // Obtiene los equipos incompletos
       const response = await incompleteGroups(user, period);
       console.log("Incomplete groups response:", response);
 
-      // Obtiene y actualiza los grupos en el estado global
+      // Obtiene y actualiza los equipos en el estado global
       const groups = await getGroups(user, period);
       dispatch(setGroups(groups));
 
@@ -109,11 +109,11 @@ const IncompleteGroups = () => {
         </Grid>
         <Grid item xs={12} md={12} sx={{ display: "flex" }}>
           <Typography variant="body1" sx={{ textAlign: "justify" }}>
-            Este algoritmo utiliza programación lineal para formar grupos de
-            estudiantes incompletos (con menos de 4 miembros) a partir de grupos
-            existentes. El objetivo es combinar grupos incompletos para formar
-            tantos grupos completos de 4 estudiantes como sea posible,
-            maximizando el número de grupos y teniendo en cuenta las
+            Este algoritmo utiliza programación lineal para formar equipos de
+            estudiantes incompletos (con menos de 4 miembros) a partir de equipos
+            existentes. El objetivo es combinar equipos incompletos para formar
+            tantos equipos completos de 4 estudiantes como sea posible,
+            maximizando el número de equipos y teniendo en cuenta las
             preferencias de temas de los estudiantes.
           </Typography>
         </Grid>
@@ -165,13 +165,13 @@ const IncompleteGroups = () => {
         {period.groups_assignment_completed && (
           <Button
             variant="outlined"
-            onClick={() => navigate(`/dashboard/${period.id}/groups`)}
+            onClick={() => navigate(`/dashboard/${period.id}/teams`)}
             sx={{
               padding: "6px 16px",
               textTransform: "none", // Evitar que el texto esté en mayúsculas
             }}
           >
-            Ver más información de los grupos
+            Ver más información de los equipos
           </Button>
         )}
       </Grid>
@@ -193,7 +193,7 @@ const IncompleteGroups = () => {
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontWeight: "bold" }}>Grupo</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Equipo</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>
                   Cantidad de integrantes
                 </TableCell>
@@ -223,17 +223,17 @@ const IncompleteGroups = () => {
                     (group) =>
                       group.preferred_topics &&
                       group.preferred_topics.length > 0
-                  ) // Filtrar grupos que tienen preferred_topics
+                  ) // Filtrar equipos que tienen preferred_topics
                   .map((group) => (
                     <React.Fragment key={group.id}>
-                      {/* Fila del grupo */}
+                      {/* Fila del equipo */}
                       <TableCell
                         rowSpan={group.students?.length + 1}
                         align="center"
                       >
                         {group.group_number}
                       </TableCell>
-                      {/* Iterar sobre los estudiantes del grupo */}
+                      {/* Iterar sobre los estudiantes del equipo */}
                       {group.students.map((student, index) => (
                         <TableRow key={student.id}>
                           <>
@@ -243,7 +243,7 @@ const IncompleteGroups = () => {
                                 align="center"
                               >
                                 {group.students.length}{" "}
-                                {/* Mostrar el tutor del grupo */}
+                                {/* Mostrar el tutor del equipo */}
                               </TableCell>
                             )}
                           </>
@@ -294,9 +294,9 @@ const IncompleteGroups = () => {
           >
             <Button
               variant="outlined"
-              onClick={() => navigate(`/dashboard/${period.id}/groups`)}
+              onClick={() => navigate(`/dashboard/${period.id}/teams`)}
             >
-              Ver más información de los grupos
+              Ver más información de los equipos
             </Button>
           </Box> */}
       </Grid>
@@ -330,7 +330,7 @@ const IncompleteGroups = () => {
           maxHeight: "100vh",
         }}
       >
-        <DialogTitle>{!loading && "Grupos Formados"}</DialogTitle>
+        <DialogTitle>{!loading && "Equipos Formados"}</DialogTitle>
         <DialogContent
           sx={{
             display: "flex",
@@ -353,7 +353,7 @@ const IncompleteGroups = () => {
               }}
             >
               <CircularProgress />
-              <Typography sx={{ ml: 2 }}>Armando grupos...</Typography>
+              <Typography sx={{ ml: 2 }}>Armando equipos...</Typography>
             </Box>
           )}
         </DialogContent>

@@ -61,7 +61,7 @@ const CuatrimestreConfig = () => {
         <Table>
           <TableHead>
             <TableRow>
-            <StyledTableCell align="left">Entregas de Grupos</StyledTableCell> {/* Left title */}
+            <StyledTableCell align="left">Entregas de Equipos</StyledTableCell> {/* Left title */}
             <StyledTableCell align="right">Deshabilitar/Habilitar</StyledTableCell>   
             </TableRow>
           </TableHead>

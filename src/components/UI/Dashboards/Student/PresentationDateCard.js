@@ -54,7 +54,7 @@ const PresentationDateCard = (date) => {
           now < dateObject ? (
             <>
               <Typography fontSize={18} fontWeight="bold" color="text.primary">
-                Tu grupo expondrá el:
+                Tu equipo expondrá el:
               </Typography>
               <Typography fontSize={18} fontWeight="bold" color="text.primary">
                 {formattedDate}{" "}
@@ -77,7 +77,7 @@ const PresentationDateCard = (date) => {
             </>
           ) : (
             <>
-              <Typography color="text.secondary">Tu grupo expuso el</Typography>
+              <Typography color="text.secondary">Tu equipo expuso el</Typography>
               <Typography fontSize={18} fontWeight="bold" color="text.primary">
                 {formattedDate}{" "}
                 <span style={{ fontWeight: "normal", fontSize: "18px" }}>

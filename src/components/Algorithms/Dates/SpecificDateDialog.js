@@ -74,12 +74,12 @@ const SpecificDateDialog = ({
   
   return (
     <Dialog open={open} onClose={handleCancel} maxWidth="sm" fullWidth>
-      <DialogTitle>Asignar Fecha a Grupo</DialogTitle>
+      <DialogTitle>Asignar Fecha a Equipo</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="subtitle1" gutterBottom>
-              Selecciona un Grupo:
+              Selecciona un Equipo:
             </Typography>
             <Select
               fullWidth
@@ -100,15 +100,15 @@ const SpecificDateDialog = ({
               displayEmpty
               renderValue={(selected) => {
                 const selectedGroup = groups.find((g) => g.group_number === selected);
-                return selectedGroup ? `Grupo ${selectedGroup.group_number}` : "Selecciona un grupo";
+                return selectedGroup ? `Equipo ${selectedGroup.group_number}` : "Selecciona un equipo";
               }}
             >
               <MenuItem value="" disabled>
-                Selecciona un grupo
+                Selecciona un equipo
               </MenuItem>
               {groups.map((group) => (
                 <MenuItem key={group.id} value={group.group_number}>
-                  {`Grupo ${group.group_number}`}
+                  {`Equipo ${group.group_number}`}
                 </MenuItem>
               ))}
             </Select>
