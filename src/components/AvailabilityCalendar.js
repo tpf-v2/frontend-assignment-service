@@ -160,10 +160,7 @@ const AvailabilityCalendar = () => {
 
       try {
         const formattedEvents = [
-          {
-            start: moment(newEvent.start).subtract(3, "hours").utc().format(),
-            end: moment(newEvent.end).subtract(3, "hours").utc().format(),
-          },
+          newEvent.formatForSendingToServer(),
         ];
 
         user.role === "student" ? await sendStudentAvailability(user, formattedEvents, user.group_id, period.id) : await sendTutorAvailability(user, formattedEvents, user.id, period.id);
@@ -183,16 +180,13 @@ const AvailabilityCalendar = () => {
     if (eventToDelete) {
       const updatedEvents = userAvailability.filter(
         (event) =>
-          event.start.toISOString() !== eventToDelete.start.toISOString() || event.end.toISOString() !== eventToDelete.end.toISOString()
+          event.ISOStart() !== eventToDelete.start.toISOString() || event.ISOEnd() !== eventToDelete.end.toISOString()
       );
   
       setConfirmDeleteOpen(false);
   
       try {
-        const formattedEvents = updatedEvents.map((event) => ({
-          start: moment(event.start).subtract(3, "hours").utc().format(),
-          end: moment(event.end).subtract(3, "hours").utc().format(),
-        }));
+        const formattedEvents = updatedEvents.map((event) => event.formatForSendingToServer());
   
         // Envía la lista actualizada de eventos al backend
         if (user.role === "student") {

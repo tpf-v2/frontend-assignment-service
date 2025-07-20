@@ -81,10 +81,7 @@ const AvailabilityCalendarAdmin = () => {
 
       try {
         const formattedEvents = [
-          {
-            start: moment(newEvent.start).subtract(3, "hours").utc().format(),
-            end: moment(newEvent.end).subtract(3, "hours").utc().format(),
-          },
+          newEvent.formatForSendingToServer(),
         ];
 
         await sendAvailability(user, formattedEvents, period.id);
@@ -110,10 +107,9 @@ const AvailabilityCalendarAdmin = () => {
       setConfirmDeleteOpen(false); // Cerrar el modal de confirmación
 
       try {
-        const formattedEvents = updatedEvents.map((event) => ({
-          start: moment(event.start).subtract(3, "hours").utc().format(),
-          end: moment(event.end).subtract(3, "hours").utc().format(),
-        }));
+        const formattedEvents = updatedEvents.map((event) => (
+          event.formatForSendingToServer()
+        ));
 
         // Envía la lista actualizada de eventos al backend
         await putAvailability(user, formattedEvents, period.id);
