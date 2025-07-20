@@ -479,7 +479,7 @@ const Dates = () => {
       }
 
       // Guardar el intervalo seleccionado
-      setSelectedSlot({ start, end });
+      setSelectedSlot(interval);
       setModalOpen(true); // Abrir el modal para confirmar
     }
   };
