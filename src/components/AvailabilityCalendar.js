@@ -60,6 +60,34 @@ const AvailabilityCalendar = () => {
       setLoading(true)
       try {
         // Fechas disponibles para seleccionar, como lista de strings
+        await setAvailability();
+
+        // Fechas ya seleccionadas por el estudiante
+        var userAvailability = await getUserAvailability();
+        userAvailability = fixTimezoneForSlots(userAvailability)
+        const formattedUserAvailability =
+          transformSlotsToIntervals(userAvailability);
+        setUserAvailability(formattedUserAvailability);
+      } catch (error) {
+        console.error("Error fetching availability", error);
+      } finally {
+        setLoading(false);
+      }
+
+      async function getUserAvailability() {
+        return user.role === "student"
+          ? await fetchStudentAvailability(
+            user,
+            user.group_id
+          )
+          : await fetchTutorAvailability(
+            user,
+            user.id,
+            period.id
+          );
+      }
+
+      async function setAvailability() {
         const slots = await fetchAvailability(user, period.id);
 
         // Actualizar el Set de fechas disponibles
@@ -82,31 +110,12 @@ const AvailabilityCalendar = () => {
 
         setAvailableDates(availableDatesSet); // Establecer el conjunto de fechas disponibles
 
+
         // Establecer defaultDate como la primera fecha de availableDates
         if (availableDatesSet.size > 0) {
           const sortedDates = Array.from(availableDatesSet).sort();
-          setDefaultDate(new Date(sortedDates[0])); // Convertir a Date el primer valor
+          setDefaultDate(new Date(sortedDates[0]));
         }
-
-        // Fechas ya seleccionadas por el estudiante
-        var userAvailability = user.role === "student" 
-        ? await fetchStudentAvailability(
-          user,
-          user.group_id
-        ) 
-        : await fetchTutorAvailability(
-          user,
-          user.id,
-          period.id
-        );
-        userAvailability = fixTimezoneForSlots(userAvailability)
-        const formattedUserAvailability =
-          transformSlotsToIntervals(userAvailability);
-        setUserAvailability(formattedUserAvailability);
-      } catch (error) {
-        console.error("Error fetching availability", error);
-      } finally {
-        setLoading(false);
       }
     };
 
