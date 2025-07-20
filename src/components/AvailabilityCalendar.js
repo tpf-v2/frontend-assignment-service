@@ -149,7 +149,7 @@ const AvailabilityCalendar = () => {
 
   const handleConfirmEvent = async () => {
     if (selectedSlot) {
-      const newEvent = { start: selectedSlot.start, end: selectedSlot.end };
+      const newEvent = selectedSlot;
       setUserAvailability((prevEvents) => [...prevEvents, newEvent]);
       // handleSnackbarOpen(
       //   "Bloque de disponibilidad creado exitosamente.",
@@ -164,7 +164,7 @@ const AvailabilityCalendar = () => {
             end: moment(newEvent.end).subtract(3, "hours").utc().format(),
           },
         ];
-        
+
         user.role === "student" ? await sendStudentAvailability(user, formattedEvents, user.group_id, period.id) : await sendTutorAvailability(user, formattedEvents, user.id, period.id);
         handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
       } catch (error) {
