@@ -49,6 +49,38 @@ const AvailabilityCalendar = () => {
 
   const [loading, setLoading] = useState(true);
 
+  class CalendarInterval {
+    constructor(start, end) {
+      this.start = start;
+      this.end = end;
+    }
+
+    lastHourAvailable(){
+      // Obtener la última hora disponible a partir del intervalo
+      const finalHourSlot = new Date(this.end);
+      finalHourSlot.setHours(finalHourSlot.getHours() - 1);
+      return finalHourSlot
+    }
+
+    ISOStart() {
+      return this.start.toISOString()
+    }
+
+    ISOEnd() {
+      return this.end.toISOString()
+    }
+
+    /**
+     * Revisa si este intervalo está estrictamente dentro de ISOAvailableDates.
+     * @param {ISOAvailableDates} ISOAvailableDates lista de strings de fecha en formato ISO
+     */
+    isWithin(ISOAvailableDates) {
+      const isStartAvailable = ISOAvailableDates.has(this.ISOStart());
+      const isEndAvailable = ISOAvailableDates.has(this.lastHourAvailable().toISOString()); // Verificar con la fecha ajustada
+      return isStartAvailable && isEndAvailable
+    }
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       if (!user) {
@@ -58,7 +90,7 @@ const AvailabilityCalendar = () => {
       }
       setLoading(true)
       try {
-        // Fechas disponibles para seleccionar
+        // Fechas disponibles para seleccionar, como lista de strings
         const slots = await fetchAvailability(user, period.id);
 
         // Actualizar el Set de fechas disponibles
@@ -67,7 +99,7 @@ const AvailabilityCalendar = () => {
             .map((item) => {
               // Asegurarse de que el item tenga la propiedad slot
               if (item.slot) {
-                return moment(item.slot).toISOString();
+                return serializeSlot(item.slot);
               } else {
                 console.error(
                   "El elemento no contiene la propiedad 'slot':",
@@ -88,10 +120,12 @@ const AvailabilityCalendar = () => {
         }
 
         // Fechas ya seleccionadas por el estudiante
-        const userAvailability = user.role === "student" ? await fetchStudentAvailability(
+        const userAvailability = user.role === "student" 
+        ? await fetchStudentAvailability(
           user,
           user.group_id
-        ) : await fetchTutorAvailability(
+        ) 
+        : await fetchTutorAvailability(
           user,
           user.id,
           period.id
@@ -123,18 +157,9 @@ const AvailabilityCalendar = () => {
   };
 
   const handleSelectSlot = ({ start, end }) => {
-    const startIsoString = start.toISOString();
-    
-    // Crear una nueva fecha a partir de 'end' y restarle una hora solo para la verificación
-    const adjustedEnd = new Date(end);
-    adjustedEnd.setHours(adjustedEnd.getHours() - 1);
-    const adjustedEndIsoString = adjustedEnd.toISOString(); // Usar la fecha ajustada solo para el chequeo
-  
-    // Verificar si el intervalo seleccionado está completamente dentro de las fechas disponibles
-    const isStartAvailable = availableDates.has(startIsoString);
-    const isEndAvailable = availableDates.has(adjustedEndIsoString); // Verificar con la fecha ajustada
-  
-    if (!isStartAvailable || !isEndAvailable) {
+    const interval = new CalendarInterval(start, end)
+    // Obtener la última hora disponible a partir del intervalo
+    if (!interval.isWithin(availableDates)) {
       handleSnackbarOpen(
         "Esta hora no está disponible para selección.",
         "error"
@@ -144,7 +169,7 @@ const AvailabilityCalendar = () => {
 
     // Verificación de solapamiento de eventos
     const isEventOverlap = userAvailability.some(
-      (event) => start < event.end && end > event.start
+      (userSlot) => interval.start < userSlot.end && interval.end > userSlot.start
     );
   
     if (isEventOverlap) {
@@ -155,7 +180,7 @@ const AvailabilityCalendar = () => {
       return;
     }
   
-    setSelectedSlot({ start, end }); // Guardar 'end' original
+    setSelectedSlot({ start, end });
     setModalOpen(true);
   };
 
@@ -341,3 +366,7 @@ const AvailabilityCalendar = () => {
 };
 
 export default AvailabilityCalendar;
+
+function serializeSlot(slot) {
+  return moment(slot).toISOString();
+}
