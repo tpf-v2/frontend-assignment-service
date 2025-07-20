@@ -1,29 +1,31 @@
 import moment from "moment";
 
+  /**
+   * Revisa si este intervalo está estrictamente dentro de ISOAvailableDates.
+   * @param {ISOAvailableDates} ISOAvailableDates lista de strings de fecha en formato ISO
+   */
 export const transformSlotsToIntervals = (slots) => {
   if (slots.length === 0) return [];
 
-  slots = fixTimezoneForSlots(slots);
-  // Ordenamos los slots cronológicamente
   const sortedSlots = slots.sort((a, b) => new Date(a.slot) - new Date(b.slot));
-
-  const intervals = [];
   let start = new Date(sortedSlots[0].slot);
 
+  const intervals = [];
+
   for (let i = 1; i < sortedSlots.length; i++) {
-    const currentSlot = new Date(sortedSlots[i].slot);
     const previousSlot = new Date(sortedSlots[i - 1].slot);
+    const currentSlot = new Date(sortedSlots[i].slot);
 
     // Final del intervalo anterior (1 hora después del anterior slot)
-    const previousEnd = moment(previousSlot).add(1, "hours");
-    const currentStart = moment(currentSlot);
+    const endOfCurrentInterval = moment(previousSlot).add(1, "hours");
+    const startOfNextInterval = moment(currentSlot);
 
-    // Verificar si la diferencia es exactamente 0 (es decir, que son contiguos)
-    if (currentStart.diff(previousEnd) !== 0) {
-      // Si no son contiguos, terminamos el intervalo anterior
+    const intervalsConnected = startOfNextInterval.diff(endOfCurrentInterval) === 0;
+    // Si no son contiguos, terminamos el intervalo anterior
+    if (!intervalsConnected) {
       intervals.push({
         start: start,
-        end: previousEnd.toDate(), // Añadimos el final del intervalo anterior
+        end: endOfCurrentInterval.toDate(), // Añadimos el final del intervalo anterior
       });
 
       // Reiniciamos el inicio del siguiente intervalo
@@ -32,15 +34,17 @@ export const transformSlotsToIntervals = (slots) => {
   }
 
   // Aseguramos que se agregue el último intervalo
+  const finalSlot = new Date(sortedSlots[sortedSlots.length - 1].slot)
+  const end = moment(finalSlot).add(1, "hours")
   intervals.push({
     start: start,
-    end: moment(new Date(sortedSlots[sortedSlots.length - 1].slot)).add(1, "hours").toDate(),
+    end: end.toDate(),
   });
 
   return intervals;
 };
 
-function fixTimezoneForSlots(slots) {
+export function fixTimezoneForSlots(slots) {
   slots = slots.map(slot => {
     return {
       ...slot,

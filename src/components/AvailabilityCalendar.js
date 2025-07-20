@@ -22,7 +22,7 @@ import {
 } from "../styles/AvailabilityCalendarStyle";
 import { useSelector } from "react-redux";
 import { CalendarInterval } from "./CalendarInterval"
-import { transformSlotsToIntervals } from "../utils/TransformSlotsToIntervals";
+import { transformSlotsToIntervals, fixTimezoneForSlots } from "../utils/TransformSlotsToIntervals";
 import ClosedAlert from "./ClosedAlert";
 import { Box } from "@mui/system";
 import 'moment/locale/es';
@@ -89,7 +89,7 @@ const AvailabilityCalendar = () => {
         }
 
         // Fechas ya seleccionadas por el estudiante
-        const userAvailability = user.role === "student" 
+        var userAvailability = user.role === "student" 
         ? await fetchStudentAvailability(
           user,
           user.group_id
@@ -99,6 +99,7 @@ const AvailabilityCalendar = () => {
           user.id,
           period.id
         );
+        userAvailability = fixTimezoneForSlots(userAvailability)
         const formattedUserAvailability =
           transformSlotsToIntervals(userAvailability);
         setUserAvailability(formattedUserAvailability);

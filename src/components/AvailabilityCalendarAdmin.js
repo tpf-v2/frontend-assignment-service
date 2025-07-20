@@ -18,7 +18,7 @@ import {
   AvailabilityContainer,
   DescriptionBox,
 } from "../styles/AvailabilityCalendarStyle";
-import { transformSlotsToIntervals } from "../utils/TransformSlotsToIntervals";
+import { transformSlotsToIntervals, fixTimezoneForSlots } from "../utils/TransformSlotsToIntervals";
 import { Box } from "@mui/system";
 import { useMemo } from 'react';
 import { CalendarInterval } from "./CalendarInterval"
@@ -133,7 +133,8 @@ const AvailabilityCalendarAdmin = () => {
     const initialAvailability = async () => {
       try {
         setLoading(true);
-        const slots = await fetchAvailability(user, period.id);
+        var slots = await fetchAvailability(user, period.id);
+        slots = fixTimezoneForSlots(slots)
         const formattedSlots = transformSlotsToIntervals(slots);
         setEvents(formattedSlots);
         if (slots.length > 0) {
