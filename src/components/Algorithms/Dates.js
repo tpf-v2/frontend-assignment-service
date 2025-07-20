@@ -24,6 +24,7 @@ import CalendarSection from "./Dates/CalendarSection";
 import LoadingDialog from "./Dates/LoadingDialog";
 import EvaluatorDialog from "./Dates/EvaluatorDialog";
 import SpecificDateDialog from "./Dates/SpecificDateDialog";
+import { CalendarInterval } from "./../CalendarInterval"
 import {
   assignSpecificDate,
   confirmDates,
@@ -457,7 +458,8 @@ const Dates = () => {
 
   const handleSelectSlot = ({ start, end }) => {
     if (isEditing) {
-      const duration = (end - start) / (1000 * 60); // Duración en minutos
+      const interval = new CalendarInterval(start, end)
+      const duration = interval.minuteDuration()
 
       // Verificar que la duración sea exactamente de 60 minutos
       if (duration !== 60) {
@@ -468,11 +470,7 @@ const Dates = () => {
         return;
       }
 
-      const isEventOverlap = events.some(
-        (event) => start < event.end && end > event.start
-      );
-
-      if (isEventOverlap) {
+      if (interval.overlapsWithAny(events)) {
         handleSnackbarOpen(
           "El evento se solapa con otro existente. Por favor, selecciona un intervalo diferente.",
           "error"

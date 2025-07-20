@@ -21,6 +21,7 @@ import {
 import { transformSlotsToIntervals } from "../utils/TransformSlotsToIntervals";
 import { Box } from "@mui/system";
 import { useMemo } from 'react';
+import { CalendarInterval } from "./CalendarInterval"
 
 import browser from '../services/browserDetect';
 import BrowserWarning from './BrowserWarning';
@@ -58,11 +59,8 @@ const AvailabilityCalendarAdmin = () => {
   };
 
   const handleSelectSlot = ({ start, end }) => {
-    const isEventOverlap = events.some(
-      (event) => start < event.end && end > event.start
-    );
-
-    if (isEventOverlap) {
+    const interval = new CalendarInterval(start, end)
+    if (interval.overlapsWithAny(events)) {
       handleSnackbarOpen(
         "El evento se solapa con otro existente. Por favor, selecciona un intervalo diferente.",
         "error"
@@ -71,13 +69,13 @@ const AvailabilityCalendarAdmin = () => {
     }
 
     // Guardar el intervalo seleccionado
-    setSelectedSlot({ start, end });
+    setSelectedSlot(interval);
     setModalOpen(true); // Abrir el modal para confirmar
   };
 
   const handleConfirmEvent = async () => {
     if (selectedSlot) {
-      const newEvent = { start: selectedSlot.start, end: selectedSlot.end };
+      const newEvent = selectedSlot;
       setEvents((prevEvents) => [...prevEvents, newEvent]);
       setModalOpen(false); // Cerrar el modal después de confirmar
 

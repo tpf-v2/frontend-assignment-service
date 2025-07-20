@@ -137,18 +137,13 @@ const AvailabilityCalendar = () => {
     }
 
     // Verificación de solapamiento de eventos
-    const isEventOverlap = userAvailability.some(
-      (userSlot) => interval.start < userSlot.end && interval.end > userSlot.start
-    );
-  
-    if (isEventOverlap) {
+    if (interval.overlapsWithAny(userAvailability)) {
       handleSnackbarOpen(
         "El evento se solapa con otro existente. Por favor, selecciona un intervalo diferente.",
         "error"
       );
       return;
     }
-  
     setModalOpen(true);
   };
 
@@ -169,7 +164,7 @@ const AvailabilityCalendar = () => {
             end: moment(newEvent.end).subtract(3, "hours").utc().format(),
           },
         ];
-
+        
         user.role === "student" ? await sendStudentAvailability(user, formattedEvents, user.group_id, period.id) : await sendTutorAvailability(user, formattedEvents, user.id, period.id);
         handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
       } catch (error) {
