@@ -84,21 +84,8 @@ const AvailabilityCalendar = () => {
   
     // Actualizar el Set de fechas disponibles
     const availableDatesSet = new Set(
-      slots
-        .map((item) => {
-          // Asegurarse de que el item tenga la propiedad slot
-          if (item.slot) {
-            return serializeSlot(item.slot);
-          } else {
-            console.error(
-              "El elemento no contiene la propiedad 'slot':",
-              item
-            );
-            return null; // TODO: no fallar silenciosamente cuando items no tienen slot, eso nunca deberia suceder
-          }
-        })
-        .filter(Boolean)
-    ); // Filtrar valores nulos
+      slots.map((item) => serializeSlot(item.slot))
+    )
   
     setAvailableDates(availableDatesSet); // Establecer el conjunto de fechas disponibles
 
