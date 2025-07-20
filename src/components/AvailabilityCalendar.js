@@ -60,10 +60,10 @@ const AvailabilityCalendar = () => {
       setLoading(true)
       try {
         // Fechas disponibles para seleccionar, como lista de strings
-        await setAvailability();
+        await setAvailability(user, period);
 
         // Fechas ya seleccionadas por el estudiante
-        var userAvailability = await getUserAvailability();
+        var userAvailability = await getUserAvailability(user);
         userAvailability = fixTimezoneForSlots(userAvailability)
         const formattedUserAvailability =
           transformSlotsToIntervals(userAvailability);
@@ -74,53 +74,54 @@ const AvailabilityCalendar = () => {
         setLoading(false);
       }
 
-      async function getUserAvailability() {
-        return user.role === "student"
-          ? await fetchStudentAvailability(
-            user,
-            user.group_id
-          )
-          : await fetchTutorAvailability(
-            user,
-            user.id,
-            period.id
-          );
-      }
-
-      async function setAvailability() {
-        const slots = await fetchAvailability(user, period.id);
-
-        // Actualizar el Set de fechas disponibles
-        const availableDatesSet = new Set(
-          slots
-            .map((item) => {
-              // Asegurarse de que el item tenga la propiedad slot
-              if (item.slot) {
-                return serializeSlot(item.slot);
-              } else {
-                console.error(
-                  "El elemento no contiene la propiedad 'slot':",
-                  item
-                );
-                return null; // Puede tomar decisiones sobre slots no válidos aquí
-              }
-            })
-            .filter(Boolean)
-        ); // Filtrar valores nulos
-
-        setAvailableDates(availableDatesSet); // Establecer el conjunto de fechas disponibles
-
-
-        // Establecer defaultDate como la primera fecha de availableDates
-        if (availableDatesSet.size > 0) {
-          const sortedDates = Array.from(availableDatesSet).sort();
-          setDefaultDate(new Date(sortedDates[0]));
-        }
-      }
     };
 
     fetchData();
   }, []);
+
+  const setAvailability = async (user, period) => {
+    const slots = await fetchAvailability(user, period.id);
+  
+    // Actualizar el Set de fechas disponibles
+    const availableDatesSet = new Set(
+      slots
+        .map((item) => {
+          // Asegurarse de que el item tenga la propiedad slot
+          if (item.slot) {
+            return serializeSlot(item.slot);
+          } else {
+            console.error(
+              "El elemento no contiene la propiedad 'slot':",
+              item
+            );
+            return null; // TODO: no fallar silenciosamente cuando items no tienen slot, eso nunca deberia suceder
+          }
+        })
+        .filter(Boolean)
+    ); // Filtrar valores nulos
+  
+    setAvailableDates(availableDatesSet); // Establecer el conjunto de fechas disponibles
+
+    // Establecer defaultDate como la primera fecha de availableDates
+    if (availableDatesSet.size > 0) {
+      const sortedDates = Array.from(availableDatesSet).sort();
+      setDefaultDate(new Date(sortedDates[0]));
+    }
+  }
+
+  const getUserAvailability = async (user) => {
+    return user.role === "student"
+      ? await fetchStudentAvailability(
+        user,
+        user.group_id
+      )
+      : await fetchTutorAvailability(
+        user,
+        user.id,
+        period.id
+      );
+  }
+  
 
   const handleSnackbarOpen = (message, status = "info") => {
     setSnackbarMessage(message);
