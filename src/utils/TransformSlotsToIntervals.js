@@ -1,4 +1,5 @@
 import moment from "moment";
+import { CalendarInterval } from "../components/CalendarInterval";
 
   /**
    * Revisa si este intervalo está estrictamente dentro de ISOAvailableDates.
@@ -23,10 +24,8 @@ export const transformSlotsToIntervals = (slots) => {
     const intervalsConnected = startOfNextInterval.diff(endOfCurrentInterval) === 0;
     // Si no son contiguos, terminamos el intervalo anterior
     if (!intervalsConnected) {
-      intervals.push({
-        start: start,
-        end: endOfCurrentInterval.toDate(), // Añadimos el final del intervalo anterior
-      });
+      const interval = new CalendarInterval(start, endOfCurrentInterval.toDate())
+      intervals.push(interval);
 
       // Reiniciamos el inicio del siguiente intervalo
       start = currentSlot;
@@ -36,10 +35,8 @@ export const transformSlotsToIntervals = (slots) => {
   // Aseguramos que se agregue el último intervalo
   const finalSlot = new Date(sortedSlots[sortedSlots.length - 1].slot)
   const end = moment(finalSlot).add(1, "hours")
-  intervals.push({
-    start: start,
-    end: end.toDate(),
-  });
+  const interval = new CalendarInterval(start, end.toDate())
+  intervals.push(interval);
 
   return intervals;
 };
