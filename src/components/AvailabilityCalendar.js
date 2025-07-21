@@ -69,7 +69,10 @@ const AvailabilityCalendar = () => {
 
         // Actualizar el Set de fechas disponibles
         const availableDatesSet = new Set(
-          slots.map((item) => { return fixTimezone(item.slot); })
+          slots.map((item) => { 
+            console.info("Admin Availability:" + fixTimezone(item.slot))
+            return fixTimezone(item.slot); 
+          })
         );
 
         setAvailableDates(availableDatesSet); // Establecer el conjunto de fechas disponibles
@@ -109,16 +112,16 @@ const AvailabilityCalendar = () => {
   };
 
   const handleSelectSlot = ({ start, end }) => {
-    const startIsoString = start.toISOString();
     
-    // Crear una nueva fecha a partir de 'end' y restarle una hora solo para la verificación
-    const adjustedEnd = new Date(end);
-    adjustedEnd.setHours(adjustedEnd.getHours() - 1);
-    const adjustedEndIsoString = adjustedEnd.toISOString(); // Usar la fecha ajustada solo para el chequeo
+    // 'start' y 'end' son recibidas de la librería Calendar, y por lo tanto de 'moment'.
+    // Entonces moment(end) produce una fecha correcta que puede ser transformada.
+    console.info("Tipo de fecha recibida de calendar:" + Object.prototype.toString.call(end))
+    const adjustedEnd = moment(end)
+    adjustedEnd.subtract(1, "hours")
   
     // Verificar si el intervalo seleccionado está completamente dentro de las fechas disponibles
-    const isStartAvailable = availableDates.has(startIsoString);
-    const isEndAvailable = availableDates.has(adjustedEndIsoString); // Verificar con la fecha ajustada
+    const isStartAvailable = availableDates.has(moment(start).toISOString());
+    const isEndAvailable = availableDates.has(adjustedEnd.toISOString()); // Verificar con la fecha ajustada
   
     if (!isStartAvailable || !isEndAvailable) {
       handleSnackbarOpen(
@@ -199,8 +202,7 @@ const AvailabilityCalendar = () => {
   };  
 
   const slotPropGetter = (date) => {
-    const isoString = date.toISOString();
-    if (!availableDates.has(isoString)) {
+    if (!ServerAvailableDatesContainsDate(availableDates, date)) {
       // Aquí se utiliza correctamente el Set
       return {
         style: {
@@ -208,6 +210,8 @@ const AvailabilityCalendar = () => {
           pointerEvents: "none", // Disable interaction
         },
       };
+    } else {
+      console.info("Date is drawn as selectable:" + date.toISOString())
     }
     return {};
   };
@@ -316,6 +320,17 @@ const AvailabilityCalendar = () => {
 };
 
 export default AvailabilityCalendar;
+
+/**
+ * Valida une fecha recibida de Big Calendar contra una lista de strings de fechas
+ * @param {*} availableDates 
+ * @param {*} isoString 
+ * @returns 
+ */
+function ServerAvailableDatesContainsDate(availableDates, date) {
+  const isoString = moment(date).toISOString();
+  return availableDates.has(isoString);
+}
 
 async function sendUserUpdatedEvents(user, formattedEvents, period) {
   if (user.role === "student") {
