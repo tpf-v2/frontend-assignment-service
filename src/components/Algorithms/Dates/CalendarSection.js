@@ -16,6 +16,7 @@ import CloseIcon from "@mui/icons-material/Close"; // Importar el ícono de cerr
 import 'moment/locale/es';
 import { useMemo } from 'react';
 
+moment.tz.setDefault('America/Argentina/Buenos Aires')
 const localizer = momentLocalizer(moment);
 
 const CalendarSection = ({ events, defaultDate, loadingDates }) => {

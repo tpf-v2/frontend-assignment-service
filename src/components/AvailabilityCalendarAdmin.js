@@ -27,6 +27,7 @@ import BrowserWarning from './BrowserWarning';
 import { CalendarInterval } from "./CalendarInterval";
 
 // Localizador de momento
+moment.tz.setDefault('America/Argentina/Buenos Aires')
 const localizer = momentLocalizer(moment);
 
 const AvailabilityCalendarAdmin = () => {

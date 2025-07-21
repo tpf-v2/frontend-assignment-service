@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import { momentLocalizer } from "react-big-calendar";
 import moment from "moment";
+import 'moment-timezone' // or 'moment-timezone/builds/moment-timezone-with-data[-datarange].js'. See their docs
+// Set the IANA time zone you want to use
+
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { CircularProgress, Typography } from "@mui/material";
 import MySnackbar from "./UI/MySnackBar";
@@ -30,6 +33,8 @@ import { useMemo } from 'react';
 
 import browser from '../services/browserDetect';
 import BrowserWarning from './BrowserWarning';
+// Set the IANA time zone you want to use
+moment.tz.setDefault('America/Argentina/Buenos Aires')
 // Localizador de momento
 const localizer = momentLocalizer(moment);
 
