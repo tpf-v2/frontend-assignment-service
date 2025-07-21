@@ -6,9 +6,10 @@ export class CalendarInterval {
     }
 
     formatForSend() {
+        console.info("Formatting for send: " + moment(this.start).utc(true).format() + " and " + moment(this.end).utcOffset(0).format() )
         return {
-            start: moment(this.start).subtract(3, "hours").utc().format(),
-            end: moment(this.end).subtract(3, "hours").utc().format(),
+            start: moment(this.start).utc(true).format(),
+            end: moment(this.end).utc(true).format(),
         }
     }
 }

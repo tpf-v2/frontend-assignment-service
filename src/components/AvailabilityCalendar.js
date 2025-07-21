@@ -120,8 +120,8 @@ const AvailabilityCalendar = () => {
     adjustedEnd.subtract(1, "hours")
   
     // Verificar si el intervalo seleccionado está completamente dentro de las fechas disponibles
-    const isStartAvailable = availableDates.has(moment(start).toISOString());
-    const isEndAvailable = availableDates.has(adjustedEnd.toISOString()); // Verificar con la fecha ajustada
+    const isStartAvailable = ServerAvailableDatesContainsDate(availableDates, start)
+    const isEndAvailable = ServerAvailableDatesContainsDate(availableDates, adjustedEnd)
   
     if (!isStartAvailable || !isEndAvailable) {
       handleSnackbarOpen(
@@ -328,7 +328,6 @@ export default AvailabilityCalendar;
  * @returns 
  */
 function ServerAvailableDatesContainsDate(availableDates, date) {
-  console.info("Comparing" + moment(new Date(availableDates.values().next().value)) + " to " + moment(date))
   // TODO:casting to string because it doesnt recognize equality otherwise despite the moment number being the same
   var some = availableDates.values().some(availdate => moment(availdate).toISOString() == moment(date).toISOString())
   return some
