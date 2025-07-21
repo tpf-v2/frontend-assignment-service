@@ -67,7 +67,7 @@ const AvailabilityCalendar = () => {
             .map((item) => {
               // Asegurarse de que el item tenga la propiedad slot
               if (item.slot) {
-                return moment(item.slot).toISOString();
+                return moment(item.slot + 'Z').add(3, "hours").toDate().toISOString();
               } else {
                 console.error(
                   "El elemento no contiene la propiedad 'slot':",
