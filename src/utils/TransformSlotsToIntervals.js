@@ -46,5 +46,5 @@ export function fixTimezoneInSlots(slots) {
 }
 
 export function fixTimezone(date) {
-  return moment(date + 'Z').toDate().toISOString();
+  return date
 }

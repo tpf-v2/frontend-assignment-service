@@ -328,8 +328,11 @@ export default AvailabilityCalendar;
  * @returns 
  */
 function ServerAvailableDatesContainsDate(availableDates, date) {
-  const isoString = moment(date).toISOString();
-  return availableDates.has(isoString);
+  console.info("Comparing" + moment(new Date(availableDates.values().next().value)) + " to " + moment(date))
+  // TODO:casting to string because it doesnt recognize equality otherwise despite the moment number being the same
+  var some = availableDates.values().some(availdate => moment(availdate).toISOString() == moment(date).toISOString())
+  return some
+  //return moment(new Date(availableDates.values().next().value)) ==  moment(date)
 }
 
 async function sendUserUpdatedEvents(user, formattedEvents, period) {
