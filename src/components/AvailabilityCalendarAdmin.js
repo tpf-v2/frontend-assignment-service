@@ -24,6 +24,7 @@ import { useMemo } from 'react';
 
 import browser from '../services/browserDetect';
 import BrowserWarning from './BrowserWarning';
+import { CalendarInterval } from "./CalendarInterval";
 
 // Localizador de momento
 const localizer = momentLocalizer(moment);
@@ -71,22 +72,19 @@ const AvailabilityCalendarAdmin = () => {
     }
 
     // Guardar el intervalo seleccionado
-    setSelectedSlot({ start, end });
+    setSelectedSlot(new CalendarInterval(start, end));
     setModalOpen(true); // Abrir el modal para confirmar
   };
 
   const handleConfirmEvent = async () => {
     if (selectedSlot) {
-      const newEvent = { start: selectedSlot.start, end: selectedSlot.end };
+      const newEvent = new CalendarInterval(selectedSlot.start, selectedSlot.end);
       setEvents((prevEvents) => [...prevEvents, newEvent]);
       setModalOpen(false); // Cerrar el modal después de confirmar
 
       try {
         const formattedEvents = [
-          {
-            start: moment(newEvent.start).subtract(3, "hours").utc().format(),
-            end: moment(newEvent.end).subtract(3, "hours").utc().format(),
-          },
+          newEvent.formatForSend(),
         ];
 
         await sendAvailability(user, formattedEvents, period.id);
@@ -112,10 +110,10 @@ const AvailabilityCalendarAdmin = () => {
       setConfirmDeleteOpen(false); // Cerrar el modal de confirmación
 
       try {
-        const formattedEvents = updatedEvents.map((event) => ({
-          start: moment(event.start).subtract(3, "hours").utc().format(),
-          end: moment(event.end).subtract(3, "hours").utc().format(),
-        }));
+        const formattedEvents = updatedEvents.map((event) => {
+          const interval = new CalendarInterval(event.start, event.end)
+          return interval.formatForSend()
+        });
 
         // Envía la lista actualizada de eventos al backend
         await putAvailability(user, formattedEvents, period.id);
