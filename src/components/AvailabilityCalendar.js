@@ -75,14 +75,7 @@ const AvailabilityCalendar = () => {
         }
 
         // Fechas ya seleccionadas por el estudiante
-        const userAvailability = user.role === "student" ? await fetchStudentAvailability(
-          user,
-          user.group_id
-        ) : await fetchTutorAvailability(
-          user,
-          user.id,
-          period.id
-        );
+        const userAvailability = await fetchUserAvailability(user, period);
         const formattedUserAvailability =
           transformSlotsToIntervals(userAvailability);
         setUserAvailability(formattedUserAvailability);
@@ -164,7 +157,7 @@ const AvailabilityCalendar = () => {
           },
         ];
 
-        user.role === "student" ? await sendStudentAvailability(user, formattedEvents, user.group_id, period.id) : await sendTutorAvailability(user, formattedEvents, user.id, period.id);
+        await sendUserAvailability(user, formattedEvents, period);
         handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
       } catch (error) {
         handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
@@ -193,11 +186,7 @@ const AvailabilityCalendar = () => {
         }));
   
         // Envía la lista actualizada de eventos al backend
-        if (user.role === "student") {
-          await putStudentAvailability(user, formattedEvents, user.group_id, period.id);
-        } else {
-          await putTutorAvailability(user, formattedEvents, user.id, period.id);
-        }
+        await sendUserUpdatedEvents(user, formattedEvents, period);
   
         setUserAvailability(updatedEvents); // Actualiza el estado local
         handleSnackbarOpen(
@@ -328,3 +317,26 @@ const AvailabilityCalendar = () => {
 };
 
 export default AvailabilityCalendar;
+
+async function sendUserUpdatedEvents(user, formattedEvents, period) {
+  if (user.role === "student") {
+    await putStudentAvailability(user, formattedEvents, user.group_id, period.id);
+  } else {
+    await putTutorAvailability(user, formattedEvents, user.id, period.id);
+  }
+}
+
+async function sendUserAvailability(user, formattedEvents, period) {
+  user.role === "student" ? await sendStudentAvailability(user, formattedEvents, user.group_id, period.id) : await sendTutorAvailability(user, formattedEvents, user.id, period.id);
+}
+
+async function fetchUserAvailability(user, period) {
+  return user.role === "student" ? await fetchStudentAvailability(
+    user,
+    user.group_id
+  ) : await fetchTutorAvailability(
+    user,
+    user.id,
+    period.id
+  );
+}
