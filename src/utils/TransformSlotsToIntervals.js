@@ -1,4 +1,5 @@
 import moment from "moment";
+import { CalendarInterval } from "../components/CalendarInterval";
 
 export const transformSlotsToIntervals = (slots) => {
   if (slots.length === 0) return [];
@@ -21,22 +22,15 @@ export const transformSlotsToIntervals = (slots) => {
     // Verificar si la diferencia es exactamente 0 (es decir, que son contiguos)
     if (currentStart.diff(previousEnd) !== 0) {
       // Si no son contiguos, terminamos el intervalo anterior
-      intervals.push({
-        start: start,
-        end: previousEnd.toDate(), // Añadimos el final del intervalo anterior
-      });
-
-      // Reiniciamos el inicio del siguiente intervalo
+      intervals.push(new CalendarInterval(start, previousEnd.toDate()))
       start = currentSlot;
     }
   }
 
   // Aseguramos que se agregue el último intervalo
-  intervals.push({
-    start: start,
-    end: moment(new Date(sortedSlots[sortedSlots.length - 1].slot)).add(1, "hours").toDate(),
-  });
-
+  const lastSlot = new Date(sortedSlots[sortedSlots.length - 1].slot)
+  const lastIntervalEnd = moment(lastSlot).add(1, "hours").toDate()
+  intervals.push(new CalendarInterval(start, lastIntervalEnd));
   return intervals;
 };
 
