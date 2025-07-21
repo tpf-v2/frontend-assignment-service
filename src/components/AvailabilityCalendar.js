@@ -63,21 +63,8 @@ const AvailabilityCalendar = () => {
 
         // Actualizar el Set de fechas disponibles
         const availableDatesSet = new Set(
-          slots
-            .map((item) => {
-              // Asegurarse de que el item tenga la propiedad slot
-              if (item.slot) {
-                return moment(item.slot + 'Z').add(3, "hours").toDate().toISOString();
-              } else {
-                console.error(
-                  "El elemento no contiene la propiedad 'slot':",
-                  item
-                );
-                return null; // Puede tomar decisiones sobre slots no válidos aquí
-              }
-            })
-            .filter(Boolean)
-        ); // Filtrar valores nulos
+          slots.map((item) => { return fixTimezone(item.slot); })
+        );
 
         setAvailableDates(availableDatesSet); // Establecer el conjunto de fechas disponibles
 
@@ -100,7 +87,7 @@ const AvailabilityCalendar = () => {
           transformSlotsToIntervals(userAvailability);
         setUserAvailability(formattedUserAvailability);
       } catch (error) {
-        console.error("Error fetching availability", error);
+        console.error("Error fetching availability:", error);
       } finally {
         setLoading(false);
       }
