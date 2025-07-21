@@ -3,16 +3,7 @@ import moment from "moment";
 export const transformSlotsToIntervals = (slots) => {
   if (slots.length === 0) return [];
 
-  function fixTimezone(date) {
-    return moment(date + 'Z').add(3, "hours").toDate().toISOString();
-  }
-
-  slots = slots.map(slot => {
-    return {
-      ...slot,
-      slot: fixTimezone(new Date(slot.slot))
-    }
-  });
+  slots = fixTimezoneInSlots(slots);
   // Ordenamos los slots cronológicamente
   const sortedSlots = slots.sort((a, b) => new Date(a.slot) - new Date(b.slot));
 
@@ -48,3 +39,18 @@ export const transformSlotsToIntervals = (slots) => {
 
   return intervals;
 };
+
+export function fixTimezoneInSlots(slots) {
+
+  slots = slots.map(slot => {
+    return {
+      ...slot,
+      slot: fixTimezone(new Date(slot.slot))
+    };
+  });
+  return slots;
+}
+
+export function fixTimezone(date) {
+  return moment(date + 'Z').add(3, "hours").toDate().toISOString();
+}

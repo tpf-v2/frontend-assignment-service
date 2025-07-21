@@ -21,7 +21,7 @@ import {
   DescriptionBox,
 } from "../styles/AvailabilityCalendarStyle";
 import { useSelector } from "react-redux";
-import { transformSlotsToIntervals } from "../utils/TransformSlotsToIntervals";
+import { transformSlotsToIntervals, fixTimezone } from "../utils/TransformSlotsToIntervals";
 import ClosedAlert from "./ClosedAlert";
 import { Box } from "@mui/system";
 import 'moment/locale/es';
