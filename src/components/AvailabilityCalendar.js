@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { momentLocalizer } from "react-big-calendar";
+import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { CircularProgress, Typography } from "@mui/material";
 import MySnackbar from "./UI/MySnackBar";
 import EventModal from "./EventModal";
+import { CalendarInterval } from "./CalendarInterval"
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import {
   fetchAvailability,
@@ -135,13 +136,13 @@ const AvailabilityCalendar = () => {
       return;
     }
   
-    setSelectedSlot({ start, end }); // Guardar 'end' original
+    setSelectedSlot(new CalendarInterval(start, end)); // Guardar 'end' original
     setModalOpen(true);
   };
 
   const handleConfirmEvent = async () => {
     if (selectedSlot) {
-      const newEvent = { start: selectedSlot.start, end: selectedSlot.end };
+      const newEvent = new CalendarInterval(selectedSlot.start, selectedSlot.end); // TODO do we need a new instance?
       setUserAvailability((prevEvents) => [...prevEvents, newEvent]);
       // handleSnackbarOpen(
       //   "Bloque de disponibilidad creado exitosamente.",
@@ -151,10 +152,7 @@ const AvailabilityCalendar = () => {
 
       try {
         const formattedEvents = [
-          {
-            start: moment(newEvent.start).subtract(3, "hours").utc().format(),
-            end: moment(newEvent.end).subtract(3, "hours").utc().format(),
-          },
+          selectedSlot.formatForSend(),
         ];
 
         await sendUserAvailability(user, formattedEvents, period);
