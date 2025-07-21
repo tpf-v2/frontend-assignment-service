@@ -178,11 +178,7 @@ const AvailabilityCalendar = () => {
       setConfirmDeleteOpen(false);
   
       try {
-        const formattedEvents = updatedEvents.map((event) => ({
-          start: moment(event.start).subtract(3, "hours").utc().format(),
-          end: moment(event.end).subtract(3, "hours").utc().format(),
-        }));
-  
+        const formattedEvents = updatedEvents.map((event) => (event.formatForSend()));
         // Envía la lista actualizada de eventos al backend
         await sendUserUpdatedEvents(user, formattedEvents, period);
   
