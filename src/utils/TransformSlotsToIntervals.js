@@ -1,6 +1,31 @@
 import moment from "moment";
 import { CalendarInterval } from "../components/CalendarInterval";
 
+const defaultTimezone = 'America/Argentina/Buenos_Aires';
+
+export function revertfixRelativeDate(date) {
+  // Convertir el horario que NO es de Argentina a horario de Argentina
+  const formattedDate = moment.tz(
+    moment(date).format('YYYY-MM-DDTHH:mm:ss'),
+    'YYYY-MM-DDTHH:mm:ss',
+    defaultTimezone).format()
+
+  return new Date(formattedDate);
+};
+
+export function fixRelativeDate(date) {
+  // Convertir el horario que NO es de Argentina a horario de Argentina
+  const formattedDate = moment
+  .tz(date, Intl.DateTimeFormat().resolvedOptions().timeZone)
+  .clone()
+  .tz(defaultTimezone)
+  // Formatear la fecha para que sea compatible con el calendario
+  // (Esto le elimina cualquier definicion de timezone)
+  .format('YYYY-MM-DDTHH:mm:ss');
+
+  return new Date(formattedDate);
+};
+
 export const transformSlotsToIntervals = (slots) => {
   if (slots.length === 0) return [];
 
@@ -34,17 +59,16 @@ export const transformSlotsToIntervals = (slots) => {
   return intervals;
 };
 
-export function fixTimezoneInSlots(slots) {
-
+function fixTimezoneInSlots(slots) {
   slots = slots.map(slot => {
     return {
       ...slot,
-      slot: fixTimezone(new Date(slot.slot))
+      slot: fixTimezone(slot.slot)
     };
   });
   return slots;
 }
 
 export function fixTimezone(date) {
-  return date
+  return moment(date+'Z').add(3, 'hours').toDate()
 }
