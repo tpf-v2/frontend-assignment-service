@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { momentLocalizer } from "react-big-calendar";
 import moment from "moment";
+import 'moment-timezone' // or 'moment-timezone/builds/moment-timezone-with-data[-datarange].js'. See their docs
+// Set the IANA time zone you want to use
+
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { CircularProgress, Typography } from "@mui/material";
 import MySnackbar from "./UI/MySnackBar";
 import EventModal from "./EventModal";
+import { CalendarInterval } from "./CalendarInterval"
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import {
   fetchAvailability,
@@ -21,7 +25,7 @@ import {
   DescriptionBox,
 } from "../styles/AvailabilityCalendarStyle";
 import { useSelector } from "react-redux";
-import { transformSlotsToIntervals } from "../utils/TransformSlotsToIntervals";
+import { transformSlotsToIntervals, fixExternalDate } from "../utils/TransformSlotsToIntervals";
 import ClosedAlert from "./ClosedAlert";
 import { Box } from "@mui/system";
 import 'moment/locale/es';
@@ -29,6 +33,8 @@ import { useMemo } from 'react';
 
 import browser from '../services/browserDetect';
 import BrowserWarning from './BrowserWarning';
+// Set the IANA time zone you want to use
+moment.tz.setDefault('America/Argentina/Buenos Aires')
 // Localizador de momento
 const localizer = momentLocalizer(moment);
 
@@ -63,21 +69,10 @@ const AvailabilityCalendar = () => {
 
         // Actualizar el Set de fechas disponibles
         const availableDatesSet = new Set(
-          slots
-            .map((item) => {
-              // Asegurarse de que el item tenga la propiedad slot
-              if (item.slot) {
-                return moment(item.slot).toISOString();
-              } else {
-                console.error(
-                  "El elemento no contiene la propiedad 'slot':",
-                  item
-                );
-                return null; // Puede tomar decisiones sobre slots no válidos aquí
-              }
-            })
-            .filter(Boolean)
-        ); // Filtrar valores nulos
+          slots.map((item) => { 
+            return fixExternalDate(item.slot);
+          })
+        );
 
         setAvailableDates(availableDatesSet); // Establecer el conjunto de fechas disponibles
 
@@ -88,19 +83,12 @@ const AvailabilityCalendar = () => {
         }
 
         // Fechas ya seleccionadas por el estudiante
-        const userAvailability = user.role === "student" ? await fetchStudentAvailability(
-          user,
-          user.group_id
-        ) : await fetchTutorAvailability(
-          user,
-          user.id,
-          period.id
-        );
+        const userAvailability = await fetchUserAvailability(user, period);
         const formattedUserAvailability =
           transformSlotsToIntervals(userAvailability);
         setUserAvailability(formattedUserAvailability);
       } catch (error) {
-        console.error("Error fetching availability", error);
+        console.error("Error fetching availability:", error);
       } finally {
         setLoading(false);
       }
@@ -123,16 +111,16 @@ const AvailabilityCalendar = () => {
   };
 
   const handleSelectSlot = ({ start, end }) => {
-    const startIsoString = start.toISOString();
     
-    // Crear una nueva fecha a partir de 'end' y restarle una hora solo para la verificación
-    const adjustedEnd = new Date(end);
-    adjustedEnd.setHours(adjustedEnd.getHours() - 1);
-    const adjustedEndIsoString = adjustedEnd.toISOString(); // Usar la fecha ajustada solo para el chequeo
+    // 'start' y 'end' son recibidas de la librería Calendar, y por lo tanto de 'moment'.
+    // Entonces moment(end) produce una fecha correcta que puede ser transformada.
+    console.info("Tipo de fecha recibida de calendar:" + Object.prototype.toString.call(end))
+    const adjustedEnd = moment(end)
+    adjustedEnd.subtract(1, "hours")
   
     // Verificar si el intervalo seleccionado está completamente dentro de las fechas disponibles
-    const isStartAvailable = availableDates.has(startIsoString);
-    const isEndAvailable = availableDates.has(adjustedEndIsoString); // Verificar con la fecha ajustada
+    const isStartAvailable = ServerAvailableDatesContainsDate(availableDates, start)
+    const isEndAvailable = ServerAvailableDatesContainsDate(availableDates, adjustedEnd)
   
     if (!isStartAvailable || !isEndAvailable) {
       handleSnackbarOpen(
@@ -155,13 +143,13 @@ const AvailabilityCalendar = () => {
       return;
     }
   
-    setSelectedSlot({ start, end }); // Guardar 'end' original
+    setSelectedSlot(new CalendarInterval(start, end)); // Guardar 'end' original
     setModalOpen(true);
   };
 
   const handleConfirmEvent = async () => {
     if (selectedSlot) {
-      const newEvent = { start: selectedSlot.start, end: selectedSlot.end };
+      const newEvent = new CalendarInterval(selectedSlot.start, selectedSlot.end); // TODO do we need a new instance?
       setUserAvailability((prevEvents) => [...prevEvents, newEvent]);
       // handleSnackbarOpen(
       //   "Bloque de disponibilidad creado exitosamente.",
@@ -171,13 +159,10 @@ const AvailabilityCalendar = () => {
 
       try {
         const formattedEvents = [
-          {
-            start: moment(newEvent.start).subtract(3, "hours").utc().format(),
-            end: moment(newEvent.end).subtract(3, "hours").utc().format(),
-          },
+          selectedSlot.formatForSend(),
         ];
 
-        user.role === "student" ? await sendStudentAvailability(user, formattedEvents, user.group_id, period.id) : await sendTutorAvailability(user, formattedEvents, user.id, period.id);
+        await sendUserAvailability(user, formattedEvents, period);
         handleSnackbarOpen("Disponibilidad enviada exitosamente.", "success");
       } catch (error) {
         handleSnackbarOpen("Error al enviar la disponibilidad.", "error");
@@ -194,23 +179,15 @@ const AvailabilityCalendar = () => {
     if (eventToDelete) {
       const updatedEvents = userAvailability.filter(
         (event) =>
-          event.start !== eventToDelete.start || event.end !== eventToDelete.end
+          event.start.toISOString() !== eventToDelete.start.toISOString() || event.end.toISOString() !== eventToDelete.end.toISOString()
       );
   
       setConfirmDeleteOpen(false);
   
       try {
-        const formattedEvents = updatedEvents.map((event) => ({
-          start: moment(event.start).subtract(3, "hours").utc().format(),
-          end: moment(event.end).subtract(3, "hours").utc().format(),
-        }));
-  
+        const formattedEvents = updatedEvents.map((event) => (event.formatForSend()));
         // Envía la lista actualizada de eventos al backend
-        if (user.role === "student") {
-          await putStudentAvailability(user, formattedEvents, user.group_id, period.id);
-        } else {
-          await putTutorAvailability(user, formattedEvents, user.id, period.id);
-        }
+        await sendUserUpdatedEvents(user, formattedEvents, period);
   
         setUserAvailability(updatedEvents); // Actualiza el estado local
         handleSnackbarOpen(
@@ -224,8 +201,7 @@ const AvailabilityCalendar = () => {
   };  
 
   const slotPropGetter = (date) => {
-    const isoString = date.toISOString();
-    if (!availableDates.has(isoString)) {
+    if (!ServerAvailableDatesContainsDate(availableDates, date)) {
       // Aquí se utiliza correctamente el Set
       return {
         style: {
@@ -341,3 +317,39 @@ const AvailabilityCalendar = () => {
 };
 
 export default AvailabilityCalendar;
+
+/**
+ * Valida une fecha recibida de Big Calendar contra una lista de strings de fechas
+ * @param {*} availableDates 
+ * @param {*} isoString 
+ * @returns 
+ */
+function ServerAvailableDatesContainsDate(availableDates, date) {
+  // TODO:casting to string because it doesnt recognize equality otherwise despite the moment number being the same
+  var some = availableDates.values().some(availdate => moment(availdate).toISOString() == moment(date).toISOString())
+  return some
+  //return moment(new Date(availableDates.values().next().value)) ==  moment(date)
+}
+
+async function sendUserUpdatedEvents(user, formattedEvents, period) {
+  if (user.role === "student") {
+    await putStudentAvailability(user, formattedEvents, user.group_id, period.id);
+  } else {
+    await putTutorAvailability(user, formattedEvents, user.id, period.id);
+  }
+}
+
+async function sendUserAvailability(user, formattedEvents, period) {
+  user.role === "student" ? await sendStudentAvailability(user, formattedEvents, user.group_id, period.id) : await sendTutorAvailability(user, formattedEvents, user.id, period.id);
+}
+
+async function fetchUserAvailability(user, period) {
+  return user.role === "student" ? await fetchStudentAvailability(
+    user,
+    user.group_id
+  ) : await fetchTutorAvailability(
+    user,
+    user.id,
+    period.id
+  );
+}
