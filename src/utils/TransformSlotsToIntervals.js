@@ -1,7 +1,11 @@
 import moment from "moment";
 import { CalendarInterval } from "../components/CalendarInterval";
 
+window.moment = moment;
+
 const defaultTimezone = 'America/Argentina/Buenos_Aires';
+
+moment.tz.setDefault(defaultTimezone);
 
 export function revertfixRelativeDate(date) {
   // Convertir el horario que NO es de Argentina a horario de Argentina
@@ -70,5 +74,5 @@ function fixTimezoneInSlots(slots) {
 }
 
 export function fixTimezone(date) {
-  return moment(date+'Z').add(3, 'hours').toDate()
+  return moment(date).toDate()
 }

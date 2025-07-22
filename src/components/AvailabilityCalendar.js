@@ -70,7 +70,6 @@ const AvailabilityCalendar = () => {
         // Actualizar el Set de fechas disponibles
         const availableDatesSet = new Set(
           slots.map((item) => { 
-            console.info("Admin Availability:" + fixTimezone(item.slot))
             return fixTimezone(item.slot); 
           })
         );
@@ -85,6 +84,7 @@ const AvailabilityCalendar = () => {
 
         // Fechas ya seleccionadas por el estudiante
         const userAvailability = await fetchUserAvailability(user, period);
+        debugger;
         const formattedUserAvailability =
           transformSlotsToIntervals(userAvailability);
         setUserAvailability(formattedUserAvailability);
