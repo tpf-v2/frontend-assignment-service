@@ -144,10 +144,10 @@ const DashboardView = () => {
             projectType={"initial"}
           />
         );
-      case "Grupos":
+      case "Equipos":
         // return <Algorithms user={user} />;
         return <IncompleteGroups />;
-      case "Temas - Tutores - Grupos":
+      case "Temas - Tutores - Equipos":
         return <TopicTutor />;
       case "Intermedia":
         return (

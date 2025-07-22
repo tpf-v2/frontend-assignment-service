@@ -139,8 +139,8 @@ const UploadFile = ({ projectType }) => {
 
   const projectNameKeyMap = {
     "initial-project": "Anteproyecto",
-    "intermediate-project": "entrega Intermedia",
-    "final-project": "entrega Final",
+    "intermediate-project": "Entrega Intermedia",
+    "final-project": "Entrega Final",
   };
 
   return (
@@ -164,7 +164,7 @@ const UploadFile = ({ projectType }) => {
               </Typography>
 
               <TextField
-                label="Ingrese el enlace del proyecto"
+                label="Ingrese el enlace al video"
                 variant="outlined"
                 fullWidth
                 margin="normal"

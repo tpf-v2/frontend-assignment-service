@@ -180,7 +180,7 @@ const AvailabilityCalendarAdmin = () => {
       <DescriptionBox>
         <Typography variant="body1" align="justify" gutterBottom>
           En este calendario podrás seleccionar los intervalos de tiempo que
-          estás disponibles para que los grupos realicen sus presentaciones. Haz
+          estás disponibles para que los equipos realicen sus presentaciones. Haz
           clic en cualquier espacio en blanco para agregar un intervalo de
           disponibilidad. Si deseas crear un intervalo que dure más de 1 hora,
           simplemente arrastra el mouse desde el inicio hasta el final del

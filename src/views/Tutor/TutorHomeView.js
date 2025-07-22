@@ -97,7 +97,7 @@ const TutorHomeView = () => {
 
   return (
     <Root maxWidth="md">
-      <Title variant="h4">{user.name}, te damos la bienvenida!</Title>
+      <Title variant="h4">¡{user.name}, te damos la bienvenida!</Title>
       <Typography variant="h5" style={{ color: '#555' }}>Cuatrimestres</Typography>
       <CardContainer>
         {periods.map((cuatrimestre, index) => (
