@@ -1,6 +1,39 @@
 import moment from "moment";
 import { CalendarInterval } from "../components/CalendarInterval";
 
+window.moment = moment;
+
+const defaultTimezone = 'America/Argentina/Buenos_Aires';
+
+moment.tz.setDefault(defaultTimezone);
+
+export function fixExternalDate(date) {
+  return fixRelativeDate(fixTimezone(date));
+}
+
+function revertfixRelativeDate(date) {
+  // Convertir el horario que NO es de Argentina a horario de Argentina
+  const formattedDate = moment.tz(
+    moment(date).format('YYYY-MM-DDTHH:mm:ss'),
+    'YYYY-MM-DDTHH:mm:ss',
+    defaultTimezone).format()
+
+  return new Date(formattedDate);
+};
+
+function fixRelativeDate(date) {
+  // Convertir el horario que NO es de Argentina a horario de Argentina
+  const formattedDate = moment
+  .tz(date, Intl.DateTimeFormat().resolvedOptions().timeZone)
+  .clone()
+  .tz(defaultTimezone)
+  // Formatear la fecha para que sea compatible con el calendario
+  // (Esto le elimina cualquier definicion de timezone)
+  .format('YYYY-MM-DDTHH:mm:ss');
+
+  return new Date(formattedDate);
+};
+
 export const transformSlotsToIntervals = (slots) => {
   if (slots.length === 0) return [];
 
@@ -22,7 +55,7 @@ export const transformSlotsToIntervals = (slots) => {
     // Verificar si la diferencia es exactamente 0 (es decir, que son contiguos)
     if (currentStart.diff(previousEnd) !== 0) {
       // Si no son contiguos, terminamos el intervalo anterior
-      intervals.push(new CalendarInterval(start, previousEnd.toDate()))
+      intervals.push(new CalendarInterval(fixRelativeDate(start), fixRelativeDate(previousEnd.toDate())))
       start = currentSlot;
     }
   }
@@ -30,21 +63,20 @@ export const transformSlotsToIntervals = (slots) => {
   // Aseguramos que se agregue el último intervalo
   const lastSlot = new Date(sortedSlots[sortedSlots.length - 1].slot)
   const lastIntervalEnd = moment(lastSlot).add(1, "hours").toDate()
-  intervals.push(new CalendarInterval(start, lastIntervalEnd));
+  intervals.push(new CalendarInterval(fixRelativeDate(start), fixRelativeDate(lastIntervalEnd)));
   return intervals;
 };
 
-export function fixTimezoneInSlots(slots) {
-
+function fixTimezoneInSlots(slots) {
   slots = slots.map(slot => {
     return {
       ...slot,
-      slot: fixTimezone(new Date(slot.slot))
+      slot: fixTimezone(slot.slot)
     };
   });
   return slots;
 }
 
-export function fixTimezone(date) {
-  return date
+function fixTimezone(date) {
+  return moment(date+'Z').add(3, 'hours').toDate()
 }

@@ -25,7 +25,7 @@ import {
   DescriptionBox,
 } from "../styles/AvailabilityCalendarStyle";
 import { useSelector } from "react-redux";
-import { transformSlotsToIntervals, fixTimezone } from "../utils/TransformSlotsToIntervals";
+import { transformSlotsToIntervals, fixExternalDate } from "../utils/TransformSlotsToIntervals";
 import ClosedAlert from "./ClosedAlert";
 import { Box } from "@mui/system";
 import 'moment/locale/es';
@@ -70,8 +70,7 @@ const AvailabilityCalendar = () => {
         // Actualizar el Set de fechas disponibles
         const availableDatesSet = new Set(
           slots.map((item) => { 
-            console.info("Admin Availability:" + fixTimezone(item.slot))
-            return fixTimezone(item.slot); 
+            return fixExternalDate(item.slot);
           })
         );
 
@@ -210,8 +209,6 @@ const AvailabilityCalendar = () => {
           pointerEvents: "none", // Disable interaction
         },
       };
-    } else {
-      console.info("Date is drawn as selectable:" + date.toISOString())
     }
     return {};
   };
