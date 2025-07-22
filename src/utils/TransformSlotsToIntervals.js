@@ -47,7 +47,7 @@ export const transformSlotsToIntervals = (slots) => {
     // Verificar si la diferencia es exactamente 0 (es decir, que son contiguos)
     if (currentStart.diff(previousEnd) !== 0) {
       // Si no son contiguos, terminamos el intervalo anterior
-      intervals.push(new CalendarInterval(start, previousEnd.toDate()))
+      intervals.push(new CalendarInterval(fixRelativeDate(start), fixRelativeDate(previousEnd.toDate())))
       start = currentSlot;
     }
   }
@@ -55,7 +55,7 @@ export const transformSlotsToIntervals = (slots) => {
   // Aseguramos que se agregue el último intervalo
   const lastSlot = new Date(sortedSlots[sortedSlots.length - 1].slot)
   const lastIntervalEnd = moment(lastSlot).add(1, "hours").toDate()
-  intervals.push(new CalendarInterval(start, lastIntervalEnd));
+  intervals.push(new CalendarInterval(fixRelativeDate(start), fixRelativeDate(lastIntervalEnd)));
   return intervals;
 };
 
