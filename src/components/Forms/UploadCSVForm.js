@@ -48,9 +48,9 @@ const DropzoneBox = styled(Box)(({ theme }) => ({
 const BASE_URL = process.env.REACT_APP_API_URL;
 
 const TITLE_DICT = {
-  students: "Alumnos",
-  tutors: "Tutores",
-  topics: "Temas",
+  students: "estudiantes",
+  tutors: "tutores",
+  topics: "temas",
 };
 
 const UploadCSVForm = ({ formType, setItems }) => {
@@ -141,17 +141,21 @@ const UploadCSVForm = ({ formType, setItems }) => {
     e.preventDefault();
     const link = document.createElement("a");
     link.href = downloadCSVLink;
-    link.download = `${formType}.csv`; // Puedes ajustar el nombre del archivo si lo deseas
+    link.download = `${TITLE_DICT[formType]}.csv`; // nombre del archivo
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
+  const capitalizeFirstLetter = (s) => {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
   return (
     <Container maxWidth="sm">
       <Root>
         <Box textAlign="center">
-          <Title variant="h5">Cargar Archivo de {TITLE_DICT[formType]}</Title>
+          <Title variant="h5">Cargar Archivo de {capitalizeFirstLetter(TITLE_DICT[formType])}</Title>
         </Box>
 
         <form onSubmit={handleSubmit}>

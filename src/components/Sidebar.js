@@ -56,7 +56,7 @@ const Sidebar = ({ selectedMenu, handleNavigation, period }) => {
           selected={selectedMenu === "Disponibilidad fechas de Presentación"}
           onClick={() => handleNavigation("Disponibilidad fechas de Presentación")}
         >
-          Disponibilidad fechas de Presentación
+          Disponibilidad Fechas de Presentación
         </ListItemStyled>
         <Divider />
         {/* Asignaciones - Desplegable */}
@@ -67,15 +67,15 @@ const Sidebar = ({ selectedMenu, handleNavigation, period }) => {
           <AccordionDetails>
             <ListItemStyled
               button
-              selected={selectedMenu === "Grupos"}
-              onClick={() => handleNavigation("Grupos")}
+              selected={selectedMenu === "Equipos"}
+              onClick={() => handleNavigation("Equipos")}
             >
-              Completar Grupos
+              Completar Equipos
             </ListItemStyled>
             <ListItemStyled
               button
-              selected={selectedMenu === "Temas - Tutores - Grupos"}
-              onClick={() => handleNavigation("Temas - Tutores - Grupos")}
+              selected={selectedMenu === "Temas - Tutores - Equipos"}
+              onClick={() => handleNavigation("Temas - Tutores - Equipos")}
             >
               Temas y Tutores
             </ListItemStyled>
@@ -91,7 +91,7 @@ const Sidebar = ({ selectedMenu, handleNavigation, period }) => {
         {/* Entregas - Desplegable */}
         <Accordion defaultExpanded>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            Entregas de Grupos
+            Entregas de Equipos
           </AccordionSummary>
           <AccordionDetails>
             <ListItemStyled

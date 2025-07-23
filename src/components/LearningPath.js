@@ -133,21 +133,22 @@ const LearningPath = ({ group_id, group }) => {
           ) : selectedPhase === "final" ? ( 
             <ProjectPdfComponent groupId={group_id} groupNumber={group.group_number} projectType={"Final"}/> 
           ) : (
-            <>
+            // Título de la sección
+            <>              
               <Typography
                 variant="h4"
                 align="center"
                 gutterBottom
                 marginTop={1}
               >
-                Grupo {group.group_number}
+                Equipo {group.group_number}
               </Typography>
               <StyledCard>
                 <CardContent>
                   <Grid container spacing={2}>
                     <Grid item xs={12} md={8}>
                       <Typography variant="h6" gutterBottom>
-                        Alumnos
+                        Estudiantes
                       </Typography>
                       {group?.students.map((student) => (
                         <Box key={student.id} marginBottom={1}>

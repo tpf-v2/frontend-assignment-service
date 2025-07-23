@@ -152,7 +152,7 @@ const ParentTable = ({
     setNewItem({});
     setNotification({
       open: true,
-      message: `Se agregó ${TableTypeSingularLabel[title]||''} exitosamente`, // 'alumno', etc
+      message: `Se agregó ${TableTypeSingularLabel[title]||''} exitosamente`, // 'estudiante', etc
       status: "success",
     });
     setData((prevData) => [...prevData, item]);

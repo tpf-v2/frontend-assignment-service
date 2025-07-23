@@ -31,6 +31,8 @@ const ResultsDialog = ({
   handleConfirmResults,
   getTutorNameByTutorId
 }) => {
+
+  moment.tz.setDefault('America/Argentina/Buenos Aires')
   const localizer = momentLocalizer(moment);
 
   const generateCSVData = () => {

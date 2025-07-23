@@ -190,10 +190,10 @@ const StudentForm = () => {
     <Container maxWidth="sm">
       {period.form_active ? (
         <Root>
-          <Title variant="h5">Formulario del Grupo</Title>
+          <Title variant="h5">Formulario de Equipo</Title>
           {submitSuccess && (
             <Alert severity="success">
-              Gracias por enviar el formulario de grupo.
+              Gracias por enviar el formulario de equipo.
             </Alert>
           )}
           {!submitSuccess && (
@@ -375,7 +375,7 @@ const StudentForm = () => {
             <DialogTitle>Confirmar Envío</DialogTitle>
             <DialogContent>
               <Typography variant="body1">
-                ¿Estás seguro que quieres crear un grupo con los estudiantes:{" "}
+                ¿Estás seguro que quieres crear un equipo con los estudiantes:{" "}
                 {studentNames.map((s) => `${s.name} ${s.last_name}`).join(", ")}?
               </Typography>
             </DialogContent>
@@ -390,7 +390,7 @@ const StudentForm = () => {
           </Dialog>
         </Root>
       ) : (
-        <ClosedAlert message="No se aceptan respuestas al formulario de grupos." />
+        <ClosedAlert message="No se aceptan respuestas al formulario de equipos." />
       )}
       <MySnackbar
         open={notification.open}

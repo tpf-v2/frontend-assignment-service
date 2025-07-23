@@ -173,7 +173,7 @@ const transformEventData = (data) => {
         const groups = await getMyGroupsToReview(user, period.id);
         setUserGroupsToReview(groups.sort((a, b) => a.id - b.id));
       } catch (error) {
-        console.error("Error al obtener los grupos: ", error);
+        console.error("Error al obtener los equipos: ", error);
       } finally {
         setLoadingReviews(false);
       }
@@ -205,7 +205,7 @@ const transformEventData = (data) => {
     }
 
     if (userGroups.length === 0) {
-      return <Typography>No hay grupos.</Typography>;
+      return <Typography>No hay equipos.</Typography>;
     }
 
     return userGroups.map((group) => (
@@ -218,7 +218,7 @@ const transformEventData = (data) => {
           setSelectedMenu(`Grupo ${group.group_number}`);
         }}
       >
-        Grupo {group.group_number}
+        Equipo {group.group_number}
       </ListItemStyled>
     ));
   };
@@ -236,7 +236,7 @@ const transformEventData = (data) => {
     }
 
     if (userGroupsToReview.length === 0) {
-      return <Typography>No hay grupos.</Typography>;
+      return <Typography>No hay equipos.</Typography>;
     }
 
     return userGroupsToReview.map((group) => (
@@ -251,7 +251,7 @@ const transformEventData = (data) => {
           setSelectedMenu("Revisiones");
         }}
       >
-        Grupo {group.group_number}
+        Equipo {group.group_number}
       </ListItemStyled>
     ));
   };
@@ -266,13 +266,13 @@ const transformEventData = (data) => {
 
   const contentMap = {
     Inicio: <Inicio />,
-    "Mis Grupos": <div>Contenido del Formulario de Fechas</div>,
+    "Mis Equipos": <div>Contenido del Formulario de Fechas</div>,
     "Seleccionar Disponibilidad": <AvailabilityCalendar />,
     "Fechas de presentación": <TutorEvents events={events} loading={loadingEvents}></TutorEvents>,
     Revisiones: selectedGroupReview ? (
       <GroupReview group={selectedGroupReview} />
     ) : (
-      <div>Selecciona un grupo para ver las revisiones</div>
+      <div>Selecciona un equipo para ver las revisiones</div>
     ),
   };
 
@@ -311,10 +311,10 @@ const transformEventData = (data) => {
                   Inicio
                 </ListItemStyled>
                 <Divider />
-                {/* Asignaciones - Mis Grupos */}
+                {/* Asignaciones - Mis Equipos */}
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    Mis Grupos
+                    Mis Equipos
                   </AccordionSummary>
                   <AccordionDetails>{renderGroups()}</AccordionDetails>
                 </Accordion>
