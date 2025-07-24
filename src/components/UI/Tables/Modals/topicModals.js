@@ -76,18 +76,18 @@ export const TopicModals = ({
                   fullWidth
                   margin="normal"
                   label="Titulo"
-                  value={item["name"] || ""}
+                  value={item.name || ""}
                   required
                   onChange={(e) => setItem({ ...item, name: e.target.value })}
                 />
                 <InputLabel>Seleccionar categoria</InputLabel>
                 <Select
                   value={
-                    item["category"] || ""
+                    item.category?.name || ""
                   }
                   label="Categorías"
                   onChange={(e) =>
-                    setItem({ ...item, category: e.target.value })
+                    setItem({ ...item, category: {name: e.target.value} })
                   }
                   margin="normal"
       
@@ -159,7 +159,7 @@ export const TopicModals = ({
     
       // Este true del final es solo temporal hasta que exista el endpoint de editar tema.
       const editTopicModal = () => {
-        return innerActionTopicModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar", true)
+        return innerActionTopicModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar", false) // AUX ELIMINAR ESTE BOOL!!!
       };
 
       return (

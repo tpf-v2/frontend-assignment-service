@@ -180,7 +180,7 @@ const ParentTable = ({
     }
   };
 
-  const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, setReducer) => {
+  const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, setReducer) => {    
     const item = await apiEditFunction(originalEditedItemId, period.id, editedItem, user);
     setEditedItem({});
     setOriginalEditedItemId(null);
@@ -298,6 +298,7 @@ const ParentTable = ({
     });
   });
 
+  console.log("Items: ", items);
   if (loading) return <Typography variant="h6">Cargando...</Typography>;
   const categories = title === TableType.TOPICS ? getCategories(items) : [];
   return (
