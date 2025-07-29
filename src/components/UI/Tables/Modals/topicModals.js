@@ -48,7 +48,7 @@ export const TopicModals = ({
         setParentItem: setParentItem
     });
 
-    /////// Modals de Estudiante ///////   
+    /////// Modals ///////   
     const innerActionTopicModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, titleText, confirmButtonText, disableBcEndpointDoesNotExistYet=false) => {
         return (
           <Dialog open={bool} onClose={handleCloseModal} maxWidth="sm" fullWidth>
@@ -80,7 +80,7 @@ export const TopicModals = ({
                   required
                   onChange={(e) => setItem({ ...item, name: e.target.value })}
                 />
-                <InputLabel>Seleccionar categoria</InputLabel>
+                <InputLabel>Seleccionar categoría</InputLabel>
                 <Select
                   value={
                     item.category?.name || ""
@@ -96,7 +96,7 @@ export const TopicModals = ({
                   fullWidth
                 >
                   <MenuItem key="" value="" disabled>
-                    Seleccionar categoria
+                    Seleccionar categoría
                   </MenuItem>
                   {categories.map((category) => (
                     <MenuItem key={category} value={category}>
@@ -110,7 +110,7 @@ export const TopicModals = ({
                   value={
                     item["tutor_email"] || ""
                   }
-                  label="Email del tutor"
+                  label="Email de tutor"
                   onChange={(e) =>
                     setItem({ ...item, tutor_email: e.target.value })
                   }
