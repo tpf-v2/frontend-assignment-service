@@ -49,7 +49,7 @@ export const TopicModals = ({
     });
 
     /////// Modals ///////   
-    const innerActionTopicModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, titleText, confirmButtonText, disableBcEndpointDoesNotExistYet=false) => {
+    const innerActionTopicModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, titleText, confirmButtonText) => {
         return (
           <Dialog open={bool} onClose={handleCloseModal} maxWidth="sm" fullWidth>
             <DialogTitle
@@ -144,7 +144,7 @@ export const TopicModals = ({
                 <Button onClick={handleCloseModal} variant="outlined" color="error">
                   Cancelar
                 </Button>
-                <Button type="submit" disabled={disableBcEndpointDoesNotExistYet} variant="contained" color="primary">
+                <Button type="submit" variant="contained" color="primary">
                   {confirmButtonText}
                 </Button>
               </DialogActions>
@@ -159,7 +159,7 @@ export const TopicModals = ({
     
       // Este true del final es solo temporal hasta que exista el endpoint de editar tema.
       const editTopicModal = () => {
-        return innerActionTopicModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar", false) // AUX ELIMINAR ESTE BOOL!!!
+        return innerActionTopicModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar");
       };
 
       return (
