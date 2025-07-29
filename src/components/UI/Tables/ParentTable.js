@@ -298,9 +298,9 @@ const ParentTable = ({
     });
   });
 
-  console.log("Items: ", items);
   if (loading) return <Typography variant="h6">Cargando...</Typography>;
-  const categories = title === TableType.TOPICS ? getCategories(items) : [];
+  const categories = title === TableType.TOPICS ? getCategories(data) : []; // debe ser sobre "data" y no otra variable.
+
   return (
     <>
       <Container maxWidth="lg">
