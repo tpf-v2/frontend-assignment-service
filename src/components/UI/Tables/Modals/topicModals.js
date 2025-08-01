@@ -157,7 +157,6 @@ export const TopicModals = ({
         return innerActionTopicModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar Nuevo", "Agregar");
       };
     
-      // Este true del final es solo temporal hasta que exista el endpoint de editar tema.
       const editTopicModal = () => {
         return innerActionTopicModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar");
       };
