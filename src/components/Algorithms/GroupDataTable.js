@@ -186,26 +186,19 @@ const GroupDataTable = () => {
             >
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ fontWeight: "bold" }}>
-                    Equipo número
-                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Equipo número</TableCell>
+
+                  <TableCell sx={{ fontWeight: "bold" }}>Padrón</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>Nombre</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>Apellido</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Padrón</TableCell>
+
                   <TableCell sx={{ fontWeight: "bold" }}>Tutor</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>
-                    Tema asignado
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>
-                    Preferencia 1
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>
-                    Preferencia 2
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>
-                    Preferencia 3
-                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Tema asignado</TableCell>
+
+                  <TableCell sx={{ fontWeight: "bold" }}>Preferencia 1</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Preferencia 2</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Preferencia 3</TableCell>
                 </TableRow>
               </TableHead>
 
@@ -215,6 +208,7 @@ const GroupDataTable = () => {
                     <TableRow sx={{ backgroundColor: "#f0f0f0" }}>
                       <TableCell colSpan={10} align="center"></TableCell>
                     </TableRow>
+                    {/* Table content */}
                     <TableCell
                       rowSpan={group.students?.length + 1}
                       align="center"
@@ -223,10 +217,10 @@ const GroupDataTable = () => {
                     </TableCell>
                     {group.students.map((student, index) => (
                       <TableRow key={student.id}>
+                        <TableCell>{student.id}</TableCell>
                         <TableCell>{student.name}</TableCell>
                         <TableCell>{student.last_name}</TableCell>
                         <TableCell>{student.email}</TableCell>
-                        <TableCell>{student.id}</TableCell>
                         <>
                           {index === 0 && (
                             <TableCell
