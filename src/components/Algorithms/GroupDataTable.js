@@ -9,10 +9,13 @@ import {
   TableRow,
   TextField,
   Button,
+  Collapse,
+  Box
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Box } from "@mui/system";
+//import { Box } from "@mui/system";
+import ExpandableCell from "../ExpandableCell";
 
 // Componente para la tabla de equipos
 const GroupDataTable = () => {
@@ -154,6 +157,8 @@ const GroupDataTable = () => {
     URL.revokeObjectURL(url);
   };
 
+  const [showExtraColumns, setShowExtraColumns] = useState(false);
+
   return (
     <Box>
       {loading ? (
@@ -178,6 +183,11 @@ const GroupDataTable = () => {
           >
             Descargar CSV
           </Button>
+
+          <Button onClick={() => setShowExtraColumns(prev => !prev)}>
+            {showExtraColumns ? "Ocultar preferencias" : "Mostrar preferencias"}
+          </Button>
+
           <TableContainer component={Paper}>
             <Table
               stickyHeader
@@ -185,7 +195,7 @@ const GroupDataTable = () => {
               aria-label="simple table"
             >
               <TableHead>
-                <TableRow>
+                <TableRow sx={{ backgroundColor: (theme) => theme.palette.action.hover }}>
                   <TableCell sx={{ fontWeight: "bold" }}>Equipo número</TableCell>
 
                   <TableCell sx={{ fontWeight: "bold" }}>Padrón</TableCell>
@@ -196,9 +206,38 @@ const GroupDataTable = () => {
                   <TableCell sx={{ fontWeight: "bold" }}>Tutor</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>Tema asignado</TableCell>
 
-                  <TableCell sx={{ fontWeight: "bold" }}>Preferencia 1</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Preferencia 2</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Preferencia 3</TableCell>
+                    
+                  {/*<TableCell 
+                    sx={{
+                      fontWeight: "bold",
+                      transition: 'all 0.5s ease',
+                      opacity: showExtraColumns ? 1 : 0,
+                      transform: showExtraColumns ? 'scaleX(1)' : 'scaleX(0)',
+                      transformOrigin: 'left',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      width: showExtraColumns ? 'auto' : 0,
+                      padding: showExtraColumns ? '16px' : 0,
+                    }}
+                  >*/}
+                  <ExpandableCell show={showExtraColumns} isHeader>
+                      Preferencia 1
+                  </ExpandableCell>
+                  <ExpandableCell show={showExtraColumns} isHeader>
+                      Preferencia 2
+                  </ExpandableCell>
+                  <ExpandableCell show={showExtraColumns} isHeader>
+                      Preferencia 3
+                  </ExpandableCell>
+                  
+
+                  <TableCell sx={{ fontWeight: "bold" }}>
+                    <Button onClick={() => setShowExtraColumns(prev => !prev)}>
+                      {showExtraColumns ? "Ocultar preferencias" : "Mostrar preferencias"}
+                    </Button>
+                  </TableCell>
+                  
+                  
                 </TableRow>
               </TableHead>
 
@@ -222,6 +261,7 @@ const GroupDataTable = () => {
                         <TableCell>{student.last_name}</TableCell>
                         <TableCell>{student.email}</TableCell>
                         <>
+                          {/* index 0 para renderizar esto una vez por fila de equipo (y no una por estudiante) */}
                           {index === 0 && (
                             <TableCell
                               rowSpan={group.students.length}
@@ -243,46 +283,69 @@ const GroupDataTable = () => {
                           )}
                           {index === 0 && (
                             <>
-                              { (!group.preferred_topics || (group.preferred_topics.length === 0)) ? (
-                                <>
-                                  <TableCell
-                                    rowSpan={group.students.length}
-                                    align="center"
-                                  >
-                                    {"N/A"}
-                                  </TableCell>
-                                  <TableCell
-                                    rowSpan={group.students.length}
-                                    align="center"
-                                  >
-                                    {"N/A"}
-                                  </TableCell>
-                                  <TableCell
-                                    rowSpan={group.students.length}
-                                    align="center"
-                                  >
-                                    {"N/A"}
-                                  </TableCell>
-                                </>
-                              ) : (
-                                <>
-                                  <TableCell rowSpan={group.students.length}>
-                                    {getTopicNameById(
-                                      group.preferred_topics[0]
-                                    ) || ""}
-                                  </TableCell>
-                                  <TableCell rowSpan={group.students.length}>
-                                    {getTopicNameById(
-                                      group.preferred_topics[1]
-                                    ) || ""}
-                                  </TableCell>
-                                  <TableCell rowSpan={group.students.length}>
-                                    {getTopicNameById(
-                                      group.preferred_topics[2]
-                                    ) || ""}
-                                  </TableCell>
-                                </>
-                              )}
+                                { (!group.preferred_topics || (group.preferred_topics.length === 0)) ? (
+                                  <>
+                                    {/*<TableCell
+                                      rowSpan={group.students.length}
+                                      align="center"
+                                    >
+                                      {"N/A"}
+                                    </TableCell>
+                                    <TableCell
+                                      rowSpan={group.students.length}
+                                      align="center"
+                                    >
+                                      {"N/A"}
+                                    </TableCell>
+                                    <TableCell
+                                      rowSpan={group.students.length}
+                                      align="center"
+                                    >
+                                      {"N/A"}
+                                    </TableCell>
+                                    */}
+
+
+                                    <ExpandableCell show={showExtraColumns} rowSpan={group.students.length} align="center">
+                                      {"N/A"}
+                                    </ExpandableCell>
+                                    <ExpandableCell show={showExtraColumns} rowSpan={group.students.length} align="center">
+                                      {"N/A"}
+                                    </ExpandableCell>
+                                    <ExpandableCell show={showExtraColumns} rowSpan={group.students.length} align="center">
+                                      {"N/A"}
+                                    </ExpandableCell>
+                                    
+
+
+                                  </>
+                                ) : (
+                                  
+
+                                  <>
+
+                                    <ExpandableCell show={showExtraColumns} rowSpan={group.students.length}>
+                                      {getTopicNameById(
+                                        group.preferred_topics[0]
+                                      ) || ""}
+                                    </ExpandableCell>
+
+                                    <ExpandableCell show={showExtraColumns} rowSpan={group.students.length}>
+                                      {getTopicNameById(
+                                        group.preferred_topics[1]
+                                      ) || ""}
+                                    </ExpandableCell>
+
+                                    <ExpandableCell show={showExtraColumns} rowSpan={group.students.length}>
+                                      {getTopicNameById(
+                                        group.preferred_topics[2]
+                                      ) || ""}
+                                    </ExpandableCell>
+                                  </>
+
+
+
+                                )}
                             </>
                           )}
                         </>
