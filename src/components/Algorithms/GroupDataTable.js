@@ -213,6 +213,7 @@ const GroupDataTable = () => {
 
   const [showExtraColumns, setShowExtraColumns] = useState(false);
 
+  console.log("--- filteredGroups:", filteredGroups);
   return (
     <Box>
       {loading ? (

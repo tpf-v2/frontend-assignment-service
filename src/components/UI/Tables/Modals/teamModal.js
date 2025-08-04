@@ -99,7 +99,7 @@ export const TeamModal = ({
                   autoFocus
                   margin="normal"
                   label="Padrón integrante 1"
-                  value={item && item["students"] && item["students"][0] || ""}
+                  value={item && item["students"] && item["students"][0] && item["students"][0]["id"] || ""}
                   required
                   onChange={(e) =>
                     setItem({ ...item, student_id_1: parseInt(e.target.value) })
@@ -114,7 +114,7 @@ export const TeamModal = ({
                   autoFocus
                   margin="normal"
                   label="Padrón integrante 2"
-                  value={item && item["students"] && item["students"][1] || ""}
+                  value={item && item["students"] && item["students"][1] && item["students"][1]["id"] || ""}
                   required
                   onChange={(e) =>
                     setItem({ ...item, student_id_2: parseInt(e.target.value) })
@@ -129,7 +129,7 @@ export const TeamModal = ({
                   autoFocus
                   margin="normal"
                   label="Padrón integrante 3"
-                  value={item && item["students"] && item["students"][2] || ""}
+                  value={item && item["students"] && item["students"][2] && item["students"][2]["id"] || ""}
                   required
                   onChange={(e) =>
                     setItem({ ...item, student_id_3: parseInt(e.target.value) })
@@ -144,7 +144,7 @@ export const TeamModal = ({
                   autoFocus
                   margin="normal"
                   label="Padrón integrante 4"
-                  value={item && item["students"] && item["students"][3] || ""}
+                  value={item && item["students"] && item["students"][3] && item["students"][3]["id"] || ""}
                   required
                   onChange={(e) =>
                     setItem({ ...item, student_id_4: parseInt(e.target.value) })
@@ -159,7 +159,7 @@ export const TeamModal = ({
                       name="topic2"
                       value={item.topic?.name || "Sin asignar!!! VERRRRRR"}
                       onChange={(e) =>
-                        setItem({ ...item, topic_id: 1 }) 
+                        setItem({ ...item, topic_id: item.topic?.id }) 
                       }
                       label="Tema"
                       required
