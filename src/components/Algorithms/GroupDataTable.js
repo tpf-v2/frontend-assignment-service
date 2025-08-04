@@ -78,7 +78,7 @@ const GroupDataTable = () => {
     setOriginalEditedItemId(null);
     setNotification({
       open: true,
-      message: `Se editó Equipo||''} exitosamente`,
+      message: `Se editó Equipo exitosamente`,
       status: "success",
     });
     setData((prevData) =>

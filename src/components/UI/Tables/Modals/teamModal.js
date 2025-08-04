@@ -132,10 +132,13 @@ export const TeamModal = ({
                   autoFocus
                   margin="normal"
                   label="Padrón integrante 1"
-                  value={item && item["students"] && item["students"][0] && item["students"][0]["id"] || ""}
+                  value={item?.students?.[0].id || ""}
                   required
                   onChange={(e) =>
-                    setItem({ ...item, student_id_1: parseInt(e.target.value) })
+                    {const newStudents = [...item.students];
+                        newStudents[0] = { ...newStudents[0], id: parseInt(e.target.value) };
+                        setItem({ ...item, students: newStudents });
+                        }
                   }
                 />
                 <NumericFormat
@@ -146,9 +149,13 @@ export const TeamModal = ({
                   autoFocus
                   margin="normal"
                   label="Padrón integrante 2"
-                  value={item && item["students"] && item["students"][1] && item["students"][1]["id"] || ""}
+                  value={item?.students?.[1].id || ""}
                   onChange={(e) =>
-                    setItem({ ...item, student_id_2: parseInt(e.target.value) })
+                    //setItem({ ...item, item.students.[1].id: parseInt(e.target.value) })
+                    {const newStudents = [...item.students];
+                    newStudents[1] = { ...newStudents[1], id: parseInt(e.target.value) };
+                    setItem({ ...item, students: newStudents });
+                    }
                   }
                 />
                 <NumericFormat
@@ -159,9 +166,12 @@ export const TeamModal = ({
                   autoFocus
                   margin="normal"
                   label="Padrón integrante 3"
-                  value={item && item["students"] && item["students"][2] && item["students"][2]["id"] || ""}
+                  value={item?.students?.[2].id || ""}
                   onChange={(e) =>
-                    setItem({ ...item, student_id_3: parseInt(e.target.value) })
+                    {const newStudents = [...item.students];
+                        newStudents[2] = { ...newStudents[2], id: parseInt(e.target.value) };
+                        setItem({ ...item, students: newStudents });
+                    }
                   }
                 />
                 <NumericFormat
@@ -172,10 +182,15 @@ export const TeamModal = ({
                   autoFocus
                   margin="normal"
                   label="Padrón integrante 4"
-                  value={item && item["students"] && item["students"][3] && item["students"][3]["id"] || ""}
+                  value={item?.students?.[3].id || ""}
                   onChange={(e) =>
-                    setItem({ ...item, student_id_4: parseInt(e.target.value) })
+                    {const newStudents = [...item.students];
+                        newStudents[3] = { ...newStudents[3], id: parseInt(e.target.value) };
+                        setItem({ ...item, students: newStudents });
+                    }
                   }
+                  // Aux:
+                  // Pero no confiar, VER qué pasa con el orden de students, viene desde el back. [].
                 />
 
                 {/* Tema y tutor */} {/* aux: los copypasteo de StudentForm */}
