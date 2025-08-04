@@ -21,6 +21,7 @@ import ExpandableCell from "../ExpandableCell";
 import { TeamModal } from "../UI/Tables/Modals/teamModal";
 import { setGroups } from "../../redux/slices/groupsSlice";
 import { editGroup } from "../../api/sendGroupForm";
+import MySnackbar from "../UI/MySnackBar";
 
 // Componente para la tabla de equipos
 const GroupDataTable = () => {
@@ -60,10 +61,10 @@ const GroupDataTable = () => {
       await editItemInGenericTable(editGroup, editedItem, setEditedItem, setGroups);
     } catch (err) {
       const title="groups";
-      console.error(`Error when editing new ${title}:`, err);
+      console.error(`Error when editing ${title}:`, err);
       setNotification({
         open: true,
-        message: `Error al editar Equipo||''}.`,
+        message: `Error al editar Equipo.`,
         status: "error",
       });
     } finally {
@@ -91,6 +92,9 @@ const GroupDataTable = () => {
     message: "",
     status: "",
   });
+  const handleSnackbarClose = () => {
+    setNotification({ ...notification, open: false });
+  };
   //////////////////// fin lo necesario para edit ///////
 
   useEffect(() => {
@@ -214,6 +218,8 @@ const GroupDataTable = () => {
   const [showExtraColumns, setShowExtraColumns] = useState(false);
 
   console.log("--- filteredGroups:", filteredGroups);
+  console.log("--- tutoressss:", tutors);
+
   return (
     <Box>
       {loading ? (
@@ -407,6 +413,12 @@ const GroupDataTable = () => {
             topics={topics}
             tutors={tutors}
           />  
+          <MySnackbar
+            open={notification.open}
+            handleClose={handleSnackbarClose}
+            message={notification.message}
+            status={notification.status}
+          />
         </>
 
 

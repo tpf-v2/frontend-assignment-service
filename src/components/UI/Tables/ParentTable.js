@@ -207,7 +207,7 @@ const ParentTable = ({
         await editItemInGenericTable(editTopic, editedItem, setEditedItem, setTopics);
       }
     } catch (err) {
-      console.error(`Error when editing new ${title}:`, err);
+      console.error(`Error when editing ${title}:`, err);
       setNotification({
         open: true,
         message: `Error al editar ${TableTypeSingularLabel[title]||''}.`,

@@ -45,10 +45,22 @@ export const editGroup = async (groupId, periodId, groupToEdit, user) => {
 
   // Con esto enviamos Exactamente los campos que el back espera (y excluimos el id, que ya está
   // como path param)
+  const studentsInput = groupToEdit.students;
+  
+  const intStudentIds = studentsInput
+  .map(s => s.id)
+  .filter(id => Number.isInteger(id));
+  
+  console.log("int:", intStudentIds);
+  console.log("input:", studentsInput);
+  // if (intStudentIds.length !== studentsInput.length){
+  //   return; // <--- nop, esto sale sin informar error.
+  // };
+
   const sendableGroupToEdit = {
-    "students_ids": [groupToEdit.student_id_1, groupToEdit.student_id_2, groupToEdit.student_id_3, groupToEdit.student_id_4],
+    "students_ids": intStudentIds,
     "tutor_email": groupToEdit.tutor_email,
-    "topic_id": groupToEdit.topic_id,
+    "topic_id": groupToEdit.topic.id,
   };
   
   try {
