@@ -10,12 +10,17 @@ import {
   TextField,
   Button,
   Collapse,
-  Box
+  Box,
+  Stack
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 //import { Box } from "@mui/system";
 import ExpandableCell from "../ExpandableCell";
+
+import { TeamModal } from "../UI/Tables/Modals/teamModal";
+import { setGroups } from "../../redux/slices/groupsSlice";
+import { editGroup } from "../../api/sendGroupForm";
 
 // Componente para la tabla de equipos
 const GroupDataTable = () => {
@@ -38,6 +43,44 @@ const GroupDataTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [loading, setLoading] = useState(true);
+
+  //const [openAddModal, setOpenAddModal] = useState(false);
+  // Editar equipo
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [originalEditedItemId, setOriginalEditedItemId] = useState(null);
+  const [itemToPassToModal, setItemToPassToModal] = useState(null);
+  // Aux: Editar equipo, la traigo copypaste, veré de refactorizar para reutilizar después []
+  const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal) => {
+    try {
+      await editItemInGenericTable(editGroup, editedItem, setEditedItem, setGroups);
+    } catch (err) {
+      const title="groups";
+      console.error(`Error when editing new ${title}:`, err);
+      setNotification({
+        open: true,
+        message: `Error al editar Equipo||''}.`,
+        status: "error",
+      });
+    } finally {
+      handleCloseEditModal(true);
+    }
+  };
+  const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, setReducer) => {    
+    const item = await apiEditFunction(originalEditedItemId, period.id, editedItem, user);
+    setEditedItem({});
+    setOriginalEditedItemId(null);
+    setNotification({
+      open: true,
+      message: `Se editó Equipo||''} exitosamente`,
+      status: "success",
+    });
+    setData((prevData) =>
+      prevData.map((existingItem) => (existingItem.id === originalEditedItemId ? item : existingItem))
+    );
+    dispatch(setReducer((prevData) =>
+      prevData.map((existingItem) => (existingItem.id === originalEditedItemId ? item : existingItem)))
+    );
+  };
 
   useEffect(() => {
     if (groups.length > 0) {
@@ -206,20 +249,6 @@ const GroupDataTable = () => {
                   <TableCell sx={{ fontWeight: "bold" }}>Tutor</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>Tema asignado</TableCell>
 
-                    
-                  {/*<TableCell 
-                    sx={{
-                      fontWeight: "bold",
-                      transition: 'all 0.5s ease',
-                      opacity: showExtraColumns ? 1 : 0,
-                      transform: showExtraColumns ? 'scaleX(1)' : 'scaleX(0)',
-                      transformOrigin: 'left',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      width: showExtraColumns ? 'auto' : 0,
-                      padding: showExtraColumns ? '16px' : 0,
-                    }}
-                  >*/}
                   <ExpandableCell show={showExtraColumns} isHeader>
                       Preferencia 1
                   </ExpandableCell>
@@ -231,12 +260,13 @@ const GroupDataTable = () => {
                   </ExpandableCell>
                   
 
-                  <TableCell sx={{ fontWeight: "bold" }}>
+                  {/*<TableCell sx={{ fontWeight: "bold" }}>
                     <Button onClick={() => setShowExtraColumns(prev => !prev)}>
                       {showExtraColumns ? "Ocultar preferencias" : "Mostrar preferencias"}
                     </Button>
-                  </TableCell>
+                  </TableCell>*/}
                   
+                  <TableCell sx={{ fontWeight: "bold" }}>Acciones</TableCell>
                   
                 </TableRow>
               </TableHead>
@@ -281,31 +311,12 @@ const GroupDataTable = () => {
                               {group.topic ? group.topic.name : "Sin asignar"}
                             </TableCell>
                           )}
+
+                          {/* Las tres preferencias */}
                           {index === 0 && (
                             <>
                                 { (!group.preferred_topics || (group.preferred_topics.length === 0)) ? (
                                   <>
-                                    {/*<TableCell
-                                      rowSpan={group.students.length}
-                                      align="center"
-                                    >
-                                      {"N/A"}
-                                    </TableCell>
-                                    <TableCell
-                                      rowSpan={group.students.length}
-                                      align="center"
-                                    >
-                                      {"N/A"}
-                                    </TableCell>
-                                    <TableCell
-                                      rowSpan={group.students.length}
-                                      align="center"
-                                    >
-                                      {"N/A"}
-                                    </TableCell>
-                                    */}
-
-
                                     <ExpandableCell show={showExtraColumns} rowSpan={group.students.length} align="center">
                                       {"N/A"}
                                     </ExpandableCell>
@@ -315,15 +326,9 @@ const GroupDataTable = () => {
                                     <ExpandableCell show={showExtraColumns} rowSpan={group.students.length} align="center">
                                       {"N/A"}
                                     </ExpandableCell>
-                                    
-
-
                                   </>
                                 ) : (
-                                  
-
                                   <>
-
                                     <ExpandableCell show={showExtraColumns} rowSpan={group.students.length}>
                                       {getTopicNameById(
                                         group.preferred_topics[0]
@@ -342,13 +347,32 @@ const GroupDataTable = () => {
                                       ) || ""}
                                     </ExpandableCell>
                                   </>
-
-
-
                                 )}
                             </>
                           )}
                         </>
+
+                        {/* Copypasteo desde ParentTable esta sección de los botones, ver [] */}
+                        <TableCell>
+                          <Stack direction="row" spacing={1}>                          
+                            <Button
+                              onClick={() => {setOpenEditModal(true); setItemToPassToModal(group)}}
+                              style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
+                              >
+                              Editar
+                            </Button>
+                          
+                            {false && (
+                              <Button
+                                onClick={() => handleDelete(item.id)}
+                                style={{ backgroundColor: "red", color: "white" }}
+                                >
+                                Eliminar
+                              </Button>
+                            )}
+                          </Stack>
+                        </TableCell>
+
                       </TableRow>
                     ))}
                   </React.Fragment>
@@ -356,8 +380,25 @@ const GroupDataTable = () => {
               </TableBody>
             </Table>
           </TableContainer>
+
+          <TeamModal 
+            openEditModal={openEditModal}
+            setOpenEditModal={setOpenEditModal}
+            
+            handleEditItem={handleEditItem}
+            originalEditedItemId={originalEditedItemId}
+            setOriginalEditedItemId={setOriginalEditedItemId}
+            item={itemToPassToModal}
+            setParentItem={setItemToPassToModal}
+
+            topics={topics}
+            tutors={tutors}
+          />  
         </>
+
+
       )}
+
     </Box>
   );
 };
