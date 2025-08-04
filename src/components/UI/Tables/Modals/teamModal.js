@@ -50,6 +50,28 @@ export const TeamModal = ({
           setParentItem: setParentItem
       });
 
+      // AUX: ESTAS FUNCIONES DEBERÍAN SER IMPORTABLES []
+      // Función para obtener el nombre del topic por su id
+      const getTopicNameById = (id) => {
+        const topic = topics.find((t) => t.id === id);
+        return topic ? topic.name : ""; // Si no encuentra el topic, mostrar 'Desconocido'
+      };
+      // Función para obtener el nombre del tutor por su id
+        const getTutorNameById = (id, periodId) => {
+            const tutor = tutors.find(
+            (t) =>
+                t.tutor_periods &&
+                t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
+            );
+            return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
+        };
+    // AUX
+    const getTopicById = (id) => {
+        const topic = topics.find((t) => t.id === id);
+        return topic ? topic : ""; // Si no encuentra el topic, mostrar 'Desconocido'
+      };
+
+
       /////// Modals ///////
       // Aux: este modal va a ser el de editar directamente, y no existirá por ahora Add acá.
       // Conservo la estructura solo x comodidad / analogía con otros archivos de modals. Ver dsp []
@@ -104,7 +126,6 @@ export const TeamModal = ({
                   onChange={(e) =>
                     setItem({ ...item, student_id_1: parseInt(e.target.value) })
                   }
-                  disabled={disableEditId}
                 />
                 <NumericFormat
                   fullWidth
@@ -119,7 +140,6 @@ export const TeamModal = ({
                   onChange={(e) =>
                     setItem({ ...item, student_id_2: parseInt(e.target.value) })
                   }
-                  disabled={disableEditId}
                 />
                 <NumericFormat
                   fullWidth
@@ -134,7 +154,6 @@ export const TeamModal = ({
                   onChange={(e) =>
                     setItem({ ...item, student_id_3: parseInt(e.target.value) })
                   }
-                  disabled={disableEditId}
                 />
                 <NumericFormat
                   fullWidth
@@ -149,25 +168,23 @@ export const TeamModal = ({
                   onChange={(e) =>
                     setItem({ ...item, student_id_4: parseInt(e.target.value) })
                   }
-                  disabled={disableEditId}
                 />
 
                 {/* Tema y tutor */} {/* aux: los copypasteo de StudentForm */}
                 <FormControl fullWidth variant="outlined" margin="normal">
-                    <InputLabel>Tema 2</InputLabel>
+                    <InputLabel>Tema</InputLabel>
                     <Select
-                      name="topic2"
-                      value={item.topic?.name || "Sin asignar!!! VERRRRRR"}
+                      value={item.topic?.id || "Sin asignar!!! VERRRRRR _acá no es donde se muestra"}
                       onChange={(e) =>
-                        setItem({ ...item, topic_id: item.topic?.id }) 
+                        setItem({ ...item, topic: getTopicById(e.target.value) })
                       }
                       label="Tema"
                       required
                     >
                       {topics.map((topic) => (
                         <MenuItem
-                          key={topic.name}
-                          value={topic.name}
+                          key={topic.id}
+                          value={topic.id}
                         >
                           {topic.name}
                         </MenuItem>
@@ -178,10 +195,10 @@ export const TeamModal = ({
                 <InputLabel margin="normal">Seleccionar tutor</InputLabel>
                 <Select
                   margin="normal"
-                  value={item.tutor_period_id || "VERRRRR cómo mostrar su NyA"}
-                  label="Email de tutor"
+                  value={item.tutor_email || "VERRRRR cómo mostrar su NyA"}
+                  label="Tutor"
                   onChange={(e) =>
-                    setItem({ ...item, tutor_email: "a@b.c" })
+                    setItem({ ...item, tutor_email: e.target.value })
                   }
                   required
                   fullWidth
@@ -190,8 +207,8 @@ export const TeamModal = ({
                     Seleccionar tutor
                   </MenuItem>
                   {tutors.map((tutor) => (
-                    <MenuItem key={tutor.id} value={tutor.email}>
-                      {tutor.email}
+                    <MenuItem key={tutor.email} value={tutor.email}>
+                      {getTutorNameById(tutor.email)}
                     </MenuItem>
                   ))}
                 </Select>
@@ -204,33 +221,30 @@ export const TeamModal = ({
                   fullWidth
                   margin="normal"
                   label="Preferencia 1"
-                  value={item["name"] || ""}
-                  required
-                  onChange={(e) => setItem({ ...item, name: e.target.value })}
-
+                  value={item?.preferred_topics?.[0]
+                    ? getTopicNameById(item.preferred_topics[0])
+                    : ""}
+                  disabled
                 />
                 <TextField
                   variant="outlined"
                   fullWidth
                   margin="normal"
                   label="Preferencia 2"
-                  value={item["last_name"] || ""}
-                  required
-                  onChange={(e) =>
-                    setItem({ ...item, last_name: e.target.value })
-                  }
+                  value={item?.preferred_topics?.[1]
+                    ? getTopicNameById(item.preferred_topics[1])
+                    : ""}
+                  disabled
                 />
                 <TextField
-                  type="email"
                   fullWidth
                   margin="normal"
                   label="Preferencia 3"
                   variant="outlined"
-                  value={item["email"] || ""}
-                  onChange={(e) =>
-                    setItem({ ...item, email: e.target.value })
-                  }
-                  required
+                  value={item?.preferred_topics?.[2]
+                    ? getTopicNameById(item.preferred_topics[2])
+                    : ""}
+                  disabled
                 />
               </DialogContent>
 
