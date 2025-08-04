@@ -147,7 +147,6 @@ export const TeamModal = ({
                   margin="normal"
                   label="Padrón integrante 2"
                   value={item && item["students"] && item["students"][1] && item["students"][1]["id"] || ""}
-                  required
                   onChange={(e) =>
                     setItem({ ...item, student_id_2: parseInt(e.target.value) })
                   }
@@ -161,7 +160,6 @@ export const TeamModal = ({
                   margin="normal"
                   label="Padrón integrante 3"
                   value={item && item["students"] && item["students"][2] && item["students"][2]["id"] || ""}
-                  required
                   onChange={(e) =>
                     setItem({ ...item, student_id_3: parseInt(e.target.value) })
                   }
@@ -175,7 +173,6 @@ export const TeamModal = ({
                   margin="normal"
                   label="Padrón integrante 4"
                   value={item && item["students"] && item["students"][3] && item["students"][3]["id"] || ""}
-                  required
                   onChange={(e) =>
                     setItem({ ...item, student_id_4: parseInt(e.target.value) })
                   }
