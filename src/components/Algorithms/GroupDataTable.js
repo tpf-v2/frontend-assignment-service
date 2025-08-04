@@ -14,7 +14,7 @@ import {
   Stack
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 //import { Box } from "@mui/system";
 import ExpandableCell from "../ExpandableCell";
 
@@ -44,11 +44,16 @@ const GroupDataTable = () => {
 
   const [loading, setLoading] = useState(true);
 
+  ////////// Inicio lo necesario para editar equipo, Revisar []
+  const user = useSelector((state) => state.user);
   //const [openAddModal, setOpenAddModal] = useState(false);
   // Editar equipo
   const [openEditModal, setOpenEditModal] = useState(false);
   const [originalEditedItemId, setOriginalEditedItemId] = useState(null);
   const [itemToPassToModal, setItemToPassToModal] = useState(null);
+  
+  const [data, setData] = useState([]);
+  const dispatch = useDispatch();
   // Aux: Editar equipo, la traigo copypaste, veré de refactorizar para reutilizar después []
   const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal) => {
     try {
@@ -81,6 +86,12 @@ const GroupDataTable = () => {
       prevData.map((existingItem) => (existingItem.id === originalEditedItemId ? item : existingItem)))
     );
   };
+  const [notification, setNotification] = useState({
+    open: false,
+    message: "",
+    status: "",
+  });
+  //////////////////// fin lo necesario para edit ///////
 
   useEffect(() => {
     if (groups.length > 0) {
@@ -353,25 +364,26 @@ const GroupDataTable = () => {
                         </>
 
                         {/* Copypasteo desde ParentTable esta sección de los botones, ver [] */}
-                        <TableCell>
-                          <Stack direction="row" spacing={1}>                          
-                            <Button
-                              onClick={() => {setOpenEditModal(true); setItemToPassToModal(group)}}
-                              style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
-                              >
-                              Editar
-                            </Button>
-                          
-                            {false && (
+                        {index === 0 && (
+                          <TableCell rowSpan={group.students.length}>
+                            <Stack direction="row" spacing={1}>                          
                               <Button
-                                onClick={() => handleDelete(item.id)}
-                                style={{ backgroundColor: "red", color: "white" }}
+                                onClick={() => {setOpenEditModal(true); setItemToPassToModal(group)}}
+                                style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
                                 >
-                                Eliminar
+                                Editar
                               </Button>
-                            )}
-                          </Stack>
-                        </TableCell>
+                            
+                              {false && (
+                                <Button
+                                  style={{ backgroundColor: "red", color: "white" }}
+                                  >
+                                  Eliminar
+                                </Button>
+                              )}
+                            </Stack>
+                          </TableCell>
+                        )}
 
                       </TableRow>
                     ))}
