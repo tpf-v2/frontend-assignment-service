@@ -58,6 +58,7 @@ const GroupDataTable = () => {
   // Aux: Editar equipo, la traigo copypaste, veré de refactorizar para reutilizar después []
   const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal) => {
     try {
+      editedItem.tutor_email = getTutorEmailByTutorPeriodId(editedItem.tutor_period_id, period.id);
       await editItemInGenericTable(editGroup, editedItem, setEditedItem, setGroups);
     } catch (err) {
       const title="groups";
@@ -95,6 +96,16 @@ const GroupDataTable = () => {
   const handleSnackbarClose = () => {
     setNotification({ ...notification, open: false });
   };
+  /////
+  // Formato
+  const getTutorEmailByTutorPeriodId = (id, periodId) => {
+    const tutor = tutors.find(
+    (t) =>
+        t.tutor_periods &&
+        t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
+    );
+    return tutor ? tutor.email : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
+  };    
   //////////////////// fin lo necesario para edit ///////
 
   useEffect(() => {
@@ -412,6 +423,7 @@ const GroupDataTable = () => {
 
             topics={topics}
             tutors={tutors}
+            periodId={period.id}
           />  
           <MySnackbar
             open={notification.open}

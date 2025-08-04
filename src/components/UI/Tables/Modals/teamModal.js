@@ -29,7 +29,8 @@ export const TeamModal = ({
   item, // recibido del parent, y su set para flushearlo al salir
   setParentItem,
   topics,
-  tutors
+  tutors,
+  periodId
   
 }) => {
 
@@ -65,11 +66,21 @@ export const TeamModal = ({
             );
             return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
         };
+        
     // AUX
     const getTopicById = (id) => {
         const topic = topics.find((t) => t.id === id);
         return topic ? topic : ""; // Si no encuentra el topic, mostrar 'Desconocido'
       };
+    // Función para obtener el nombre del tutor por su id
+    const getTutorEmailByTutorPeriodId = (id, periodId) => {
+        const tutor = tutors.find(
+        (t) =>
+            t.tutor_periods &&
+            t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
+        );
+        return tutor ? tutor.email : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
+    };  
 
 
       /////// Modals ///////
@@ -174,7 +185,7 @@ export const TeamModal = ({
                 <FormControl fullWidth variant="outlined" margin="normal">
                     <InputLabel>Tema</InputLabel>
                     <Select
-                      value={item.topic?.id || "Sin asignar!!! VERRRRRR _acá no es donde se muestra"}
+                      value={item.topic?.id || ""}
                       onChange={(e) =>
                         setItem({ ...item, topic: getTopicById(e.target.value) })
                       }
@@ -195,10 +206,10 @@ export const TeamModal = ({
                 <InputLabel margin="normal">Seleccionar tutor</InputLabel>
                 <Select
                   margin="normal"
-                  value={item.tutor_email || "VERRRRR cómo mostrar su NyA"}
+                  value={item.tutor_period_id || ""}
                   label="Tutor"
                   onChange={(e) =>
-                    setItem({ ...item, tutor_email: e.target.value })
+                    setItem({ ...item, tutor_period_id: e.target.value })
                   }
                   required
                   fullWidth
@@ -206,11 +217,17 @@ export const TeamModal = ({
                   <MenuItem key="" value="" disabled>
                     Seleccionar tutor
                   </MenuItem>
-                  {tutors.map((tutor) => (
-                    <MenuItem key={tutor.email} value={tutor.email}>
-                      {getTutorNameById(tutor.email)}
-                    </MenuItem>
-                  ))}
+                  {tutors.map((tutor) => {
+                    const tp = tutor.tutor_periods.find((tp) => tp.period_id === periodId);
+                    if (!tp) return null; // ignorar si no hay uno del period pedido
+
+                    return (
+                        <MenuItem key={tp.id} value={tp.id}>
+                        {tutor.email}
+                        </MenuItem>
+                    );
+                    })}
+
                 </Select>
 
 
@@ -268,6 +285,14 @@ export const TeamModal = ({
       const editTeamModal = () => {
         return innerActionTeamModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar", true)
       }
+
+    //   console.log("HOLAAAA");
+    //   console.log("tutor ids", tutors.map(t => t.tutor_periods?.id));
+    //   if (item) {
+
+    //       console.log("item.tutor_period_id", item.tutor_period_id);
+    //   }
+          
 
   return (
     <>
