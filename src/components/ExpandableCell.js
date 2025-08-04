@@ -33,10 +33,10 @@ function ExpandableCell({ show, rowSpan, children, isHeader = false }) {
 
         // A VER 
 
-        wordBreak: "break-word",    
+        //wordBreak: "break-word",    
 
         width: show ? "auto" : 0,
-        minWidth: show ? 100 : 0,
+        minWidth: show ? 200 : 0,
         maxWidth: show ? 200 : 0,
         //padding: show ? (isHeader ? "16px" : undefined) : 0,
       }}
