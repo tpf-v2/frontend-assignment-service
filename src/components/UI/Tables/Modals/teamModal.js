@@ -92,7 +92,17 @@ export const TeamModal = ({
       // Conservo la estructura solo x comodidad / analogía con otros archivos de modals. Ver dsp []
       const innerActionTeamModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText, disableEditId=false) => {
         return (
-          <Dialog open={bool} onClose={handleCloseModal} maxWidth={false} fullWidth>
+          <Dialog open={bool} onClose={handleCloseModal} maxWidth={false} fullWidth PaperProps={{
+            style: {
+              height: "90vh",
+              maxHeight: "90vh", // Limita la altura máxima para que no desborde
+              
+              borderRadius: "8px",
+              width: '1000px', //
+              maxWidth: '90vw', // opcional, por si en pantallas chicas
+            },
+          }}
+          >
             <DialogTitle
               sx={{
                 fontWeight: "bold",
@@ -102,7 +112,7 @@ export const TeamModal = ({
                 padding: "16px 24px",
               }}
             >
-              {TitleText} Equipo
+              {TitleText} Equipo {item.group_number}
             </DialogTitle>
             <form
               onSubmit={(e) => {
@@ -111,7 +121,8 @@ export const TeamModal = ({
               }}
             >
               <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
-              <NumericFormat
+                {/*Equipo {item.group_number}*/}
+              {/*<NumericFormat
                   fullWidth
                   allowNegative={false}
                   customInput={TextField}
@@ -125,18 +136,20 @@ export const TeamModal = ({
                     setItem({ ...item, id: parseInt(e.target.value) })
                   }
                   disabled
-                />
+                />*/}
                 {/* Campos editables */}
                 <Grid container spacing={2}>
                 {/* Columna izquierda */}
                   <Grid item xs={6} md={6}>
-                    {/* Integrantes */}
-                    <Typography variant="h6" gutterBottom>
+                    {/* Integrantes */}                    
+                    {/*<Typography variant="h6" gutterBottom>
                       Integrantes
-                    </Typography>
+                    </Typography>*/
+                    }
+                    <InputLabel>Integrantes</InputLabel>
                     {/* Integrante 1 */}
                     <Grid container spacing={2} sx={{ marginBottom: 2 }}>
-                      <Grid item xs={2}>
+                      <Grid item xs={3}>
                         <NumericFormat
                           //fullWidth
                           allowNegative={false}
@@ -155,12 +168,12 @@ export const TeamModal = ({
                           }
                         />
                       </Grid>
-                      <Grid item xs={10}>
+                      <Grid item xs={9}>
                         <TextField
                           variant="outlined"
-                          //fullWidth
+                          fullWidth
                           margin="normal"
-                          label="Nombre"
+                          label="Nombre y Apellido"
                           value={`${item.students?.[0]?.name || ""} ${item.students?.[0]?.last_name || ""}`}
                           required
                           onChange={(e) => setItem({ ...item, name: e.target.value })} // [] NO, VER.
@@ -227,6 +240,7 @@ export const TeamModal = ({
                   <Grid item xs={6} md={6}>
 
                   {/* Tema y tutor */} {/* aux: los copypasteo de StudentForm */}
+                  <InputLabel>Tema y Tutor/a</InputLabel>
                   <FormControl fullWidth variant="outlined" margin="normal">
                       <InputLabel>Tema</InputLabel>
                       <Select
@@ -281,6 +295,7 @@ export const TeamModal = ({
 
 
                   {/* Las tres preferencias, no editables */}
+                  <InputLabel>Preferencias</InputLabel>
                   <TextField
                     variant="outlined"
                     fullWidth
