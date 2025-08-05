@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { NumericFormat } from "react-number-format";
 import { useOpenCloseStateModalLogic } from "./useOpenCloseStateModalLogic";
+import Grid from "@mui/material/Grid";
 
 /* Modals para Agregar y Editar un/a estudiante */
 export const TeamModal = ({
@@ -90,7 +91,7 @@ export const TeamModal = ({
       // Conservo la estructura solo x comodidad / analogía con otros archivos de modals. Ver dsp []
       const innerActionTeamModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText, disableEditId=false) => {
         return (
-          <Dialog open={bool} onClose={handleCloseModal} maxWidth="sm" fullWidth>
+          <Dialog open={bool} onClose={handleCloseModal} maxWidth={false} fullWidth>
             <DialogTitle
               sx={{
                 fontWeight: "bold",
@@ -125,160 +126,184 @@ export const TeamModal = ({
                   disabled
                 />
                 {/* Campos editables */}
-                {/* Integrantes */}
-                <NumericFormat
-                  fullWidth
-                  allowNegative={false}
-                  customInput={TextField}
-                  variant="outlined"
-                  autoFocus
-                  margin="normal"
-                  label="Padrón integrante 1"
-                  value={item?.students?.[0].id || ""}
-                  required
-                  onChange={(e) =>
-                    {const newStudents = [...item.students];
-                        newStudents[0] = { ...newStudents[0], id: parseInt(e.target.value) };
+                <Grid container spacing={2}>
+                {/* Columna izquierda */}
+                  <Grid item xs={12} md={6}>
+                    {/* Integrantes */}
+                    
+                    <NumericFormat
+                      //fullWidth
+                      allowNegative={false}
+                      customInput={TextField}
+                      variant="outlined"
+                      autoFocus
+                      margin="normal"
+                      label="Padrón integrante 1"
+                      value={item?.students?.[0].id || ""}
+                      required
+                      onChange={(e) =>
+                        {const newStudents = [...item.students];
+                            newStudents[0] = { ...newStudents[0], id: parseInt(e.target.value) };
+                            setItem({ ...item, students: newStudents });
+                            }
+                      }
+                    />
+                    <TextField
+                      variant="outlined"
+                      //fullWidth
+                      margin="normal"
+                      label="Nombre"
+                      value={item?.students?.[0].name || ""}
+                      required
+                      onChange={(e) => setItem({ ...item, name: e.target.value })} // [] NO, VER.
+                    />
+
+
+
+                    <NumericFormat
+                      //fullWidth
+                      allowNegative={false}
+                      customInput={TextField}
+                      variant="outlined"
+                      autoFocus
+                      margin="normal"
+                      label="Padrón integrante 2"
+                      value={item?.students?.[1].id || ""}
+                      onChange={(e) =>
+                        {const newStudents = [...item.students];
+                        newStudents[1] = { ...newStudents[1], id: parseInt(e.target.value) };
                         setItem({ ...item, students: newStudents });
                         }
-                  }
-                />
-                <NumericFormat
-                  fullWidth
-                  allowNegative={false}
-                  customInput={TextField}
-                  variant="outlined"
-                  autoFocus
-                  margin="normal"
-                  label="Padrón integrante 2"
-                  value={item?.students?.[1].id || ""}
-                  onChange={(e) =>
-                    {const newStudents = [...item.students];
-                    newStudents[1] = { ...newStudents[1], id: parseInt(e.target.value) };
-                    setItem({ ...item, students: newStudents });
-                    }
-                  }
-                />
-                <NumericFormat
-                  fullWidth
-                  allowNegative={false}
-                  customInput={TextField}
-                  variant="outlined"
-                  autoFocus
-                  margin="normal"
-                  label="Padrón integrante 3"
-                  value={item?.students?.[2].id || ""}
-                  onChange={(e) =>
-                    {const newStudents = [...item.students];
-                        newStudents[2] = { ...newStudents[2], id: parseInt(e.target.value) };
-                        setItem({ ...item, students: newStudents });
-                    }
-                  }
-                />
-                <NumericFormat
-                  fullWidth
-                  allowNegative={false}
-                  customInput={TextField}
-                  variant="outlined"
-                  autoFocus
-                  margin="normal"
-                  label="Padrón integrante 4"
-                  value={item?.students?.[3].id || ""}
-                  onChange={(e) =>
-                    {const newStudents = [...item.students];
-                        newStudents[3] = { ...newStudents[3], id: parseInt(e.target.value) };
-                        setItem({ ...item, students: newStudents });
-                    }
-                  }
-                  // Aux:
-                  // Pero no confiar, VER qué pasa con el orden de students, viene desde el back. [].
-                />
-
-                {/* Tema y tutor */} {/* aux: los copypasteo de StudentForm */}
-                <FormControl fullWidth variant="outlined" margin="normal">
-                    <InputLabel>Tema</InputLabel>
-                    <Select
-                      value={item.topic?.id || ""}
-                      onChange={(e) =>
-                        setItem({ ...item, topic: getTopicById(e.target.value) })
                       }
-                      label="Tema"
+                    />
+                    <NumericFormat
+                      //fullWidth
+                      allowNegative={false}
+                      customInput={TextField}
+                      variant="outlined"
+                      autoFocus
+                      margin="normal"
+                      label="Padrón integrante 3"
+                      value={item?.students?.[2].id || ""}
+                      onChange={(e) =>
+                        {const newStudents = [...item.students];
+                            newStudents[2] = { ...newStudents[2], id: parseInt(e.target.value) };
+                            setItem({ ...item, students: newStudents });
+                        }
+                      }
+                    />
+                    <NumericFormat
+                      //fullWidth
+                      allowNegative={false}
+                      customInput={TextField}
+                      variant="outlined"
+                      autoFocus
+                      margin="normal"
+                      label="Padrón integrante 4"
+                      value={item?.students?.[3].id || ""}
+                      onChange={(e) =>
+                        {const newStudents = [...item.students];
+                            newStudents[3] = { ...newStudents[3], id: parseInt(e.target.value) };
+                            setItem({ ...item, students: newStudents });
+                        }
+                      }
+                      // Aux:
+                      // Pero no confiar, VER qué pasa con el orden de students, viene desde el back. [].
+                    />
+
+                  </Grid>
+
+                  {/* Columna derecha */}
+                  <Grid item xs={12} md={6}>
+
+                  {/* Tema y tutor */} {/* aux: los copypasteo de StudentForm */}
+                  <FormControl fullWidth variant="outlined" margin="normal">
+                      <InputLabel>Tema</InputLabel>
+                      <Select
+                        value={item.topic?.id || ""}
+                        onChange={(e) =>
+                          setItem({ ...item, topic: getTopicById(e.target.value) })
+                        }
+                        label="Tema"
+                        required
+                      >
+                        {topics.map((topic) => (
+                          <MenuItem
+                            key={topic.id}
+                            value={topic.id}
+                          >
+                            {topic.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  
+                  <FormControl fullWidth variant="outlined" margin="normal">
+                    {<InputLabel margin="normal">Tutor/a</InputLabel>
+                    }
+                    <Select
+                      margin="normal"
+                      value={item.tutor_period_id || ""}
+                      label="Tutor"
+                      onChange={(e) =>
+                        setItem({ ...item, tutor_period_id: e.target.value })
+                      }
                       required
+                      fullWidth
                     >
-                      {topics.map((topic) => (
-                        <MenuItem
-                          key={topic.id}
-                          value={topic.id}
-                        >
-                          {topic.name}
-                        </MenuItem>
-                      ))}
+                      <MenuItem key="" value="" disabled>
+                        Seleccionar tutor
+                      </MenuItem>
+                      {tutors.map((tutor) => {
+                        const tp = tutor.tutor_periods.find((tp) => tp.period_id === periodId);
+                        if (!tp) return null; // ignorar si no hay uno del period pedido
+
+                        return (
+                            <MenuItem key={tp.id} value={tp.id}>
+                            {tutor.name} {tutor.last_name}
+                            </MenuItem>
+                        );
+                        })}
+
                     </Select>
                   </FormControl>
-                
-                <FormControl fullWidth variant="outlined" margin="normal">
-                  {<InputLabel margin="normal">Tutor/a</InputLabel>
-                  }
-                  <Select
-                    margin="normal"
-                    value={item.tutor_period_id || ""}
-                    label="Tutor"
-                    onChange={(e) =>
-                      setItem({ ...item, tutor_period_id: e.target.value })
-                    }
-                    required
+
+
+
+                  {/* Las tres preferencias, no editables */}
+                  <TextField
+                    variant="outlined"
                     fullWidth
-                  >
-                    <MenuItem key="" value="" disabled>
-                      Seleccionar tutor
-                    </MenuItem>
-                    {tutors.map((tutor) => {
-                      const tp = tutor.tutor_periods.find((tp) => tp.period_id === periodId);
-                      if (!tp) return null; // ignorar si no hay uno del period pedido
+                    margin="normal"
+                    label="Preferencia 1"
+                    value={item?.preferred_topics?.[0]
+                      ? getTopicNameById(item.preferred_topics[0])
+                      : ""}
+                    disabled
+                  />
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    label="Preferencia 2"
+                    value={item?.preferred_topics?.[1]
+                      ? getTopicNameById(item.preferred_topics[1])
+                      : ""}
+                    disabled
+                  />
+                  <TextField
+                    fullWidth
+                    margin="normal"
+                    label="Preferencia 3"
+                    variant="outlined"
+                    value={item?.preferred_topics?.[2]
+                      ? getTopicNameById(item.preferred_topics[2])
+                      : ""}
+                    disabled
+                  />
+                  </Grid>
 
-                      return (
-                          <MenuItem key={tp.id} value={tp.id}>
-                          {tutor.name} {tutor.last_name}
-                          </MenuItem>
-                      );
-                      })}
-
-                  </Select>
-                </FormControl>
-
-
-
-                {/* Las tres preferencias, no editables */}
-                <TextField
-                  variant="outlined"
-                  fullWidth
-                  margin="normal"
-                  label="Preferencia 1"
-                  value={item?.preferred_topics?.[0]
-                    ? getTopicNameById(item.preferred_topics[0])
-                    : ""}
-                  disabled
-                />
-                <TextField
-                  variant="outlined"
-                  fullWidth
-                  margin="normal"
-                  label="Preferencia 2"
-                  value={item?.preferred_topics?.[1]
-                    ? getTopicNameById(item.preferred_topics[1])
-                    : ""}
-                  disabled
-                />
-                <TextField
-                  fullWidth
-                  margin="normal"
-                  label="Preferencia 3"
-                  variant="outlined"
-                  value={item?.preferred_topics?.[2]
-                    ? getTopicNameById(item.preferred_topics[2])
-                    : ""}
-                  disabled
-                />
+                </Grid> 
               </DialogContent>
 
               <DialogActions>
