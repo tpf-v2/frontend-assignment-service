@@ -35,16 +35,6 @@ export const sendGroupForm = async (period, payload, existingGroup, user) => {
   }
 };
 
-// const getTutorEmailByTutorPeriodId = (id, periodId) => {
-//   const tutor = tutors.find(
-//   (t) =>
-//       t.tutor_periods &&
-//       t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
-//   );
-//   return tutor ? tutor.email : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
-// };  
-//getTutorEmailByTutorPeriodId(groupToEdit.tutor_period_id, periodId),
-
 export const editGroup = async (groupId, periodId, groupToEdit, user) => {
   const config = {
       headers: {

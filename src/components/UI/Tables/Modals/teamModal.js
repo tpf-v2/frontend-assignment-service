@@ -57,7 +57,7 @@ export const TeamModal = ({
         const topic = topics.find((t) => t.id === id);
         return topic ? topic.name : ""; // Si no encuentra el topic, mostrar 'Desconocido'
       };
-      // Función para obtener el nombre del tutor por su id
+      // Función para obtener el nombre del tutor por su tutor period id
         const getTutorNameById = (id, periodId) => {
             const tutor = tutors.find(
             (t) =>
@@ -80,7 +80,9 @@ export const TeamModal = ({
             t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
         );
         return tutor ? tutor.email : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
-    };  
+    };
+
+
 
 
       /////// Modals ///////
@@ -151,7 +153,6 @@ export const TeamModal = ({
                   label="Padrón integrante 2"
                   value={item?.students?.[1].id || ""}
                   onChange={(e) =>
-                    //setItem({ ...item, item.students.[1].id: parseInt(e.target.value) })
                     {const newStudents = [...item.students];
                     newStudents[1] = { ...newStudents[1], id: parseInt(e.target.value) };
                     setItem({ ...item, students: newStudents });
@@ -215,32 +216,35 @@ export const TeamModal = ({
                     </Select>
                   </FormControl>
                 
-                <InputLabel margin="normal">Seleccionar tutor</InputLabel>
-                <Select
-                  margin="normal"
-                  value={item.tutor_period_id || ""}
-                  label="Tutor"
-                  onChange={(e) =>
-                    setItem({ ...item, tutor_period_id: e.target.value })
+                <FormControl fullWidth variant="outlined" margin="normal">
+                  {<InputLabel margin="normal">Tutor/a</InputLabel>
                   }
-                  required
-                  fullWidth
-                >
-                  <MenuItem key="" value="" disabled>
-                    Seleccionar tutor
-                  </MenuItem>
-                  {tutors.map((tutor) => {
-                    const tp = tutor.tutor_periods.find((tp) => tp.period_id === periodId);
-                    if (!tp) return null; // ignorar si no hay uno del period pedido
+                  <Select
+                    margin="normal"
+                    value={item.tutor_period_id || ""}
+                    label="Tutor"
+                    onChange={(e) =>
+                      setItem({ ...item, tutor_period_id: e.target.value })
+                    }
+                    required
+                    fullWidth
+                  >
+                    <MenuItem key="" value="" disabled>
+                      Seleccionar tutor
+                    </MenuItem>
+                    {tutors.map((tutor) => {
+                      const tp = tutor.tutor_periods.find((tp) => tp.period_id === periodId);
+                      if (!tp) return null; // ignorar si no hay uno del period pedido
 
-                    return (
-                        <MenuItem key={tp.id} value={tp.id}>
-                        {tutor.email}
-                        </MenuItem>
-                    );
-                    })}
+                      return (
+                          <MenuItem key={tp.id} value={tp.id}>
+                          {tutor.name} {tutor.last_name}
+                          </MenuItem>
+                      );
+                      })}
 
-                </Select>
+                  </Select>
+                </FormControl>
 
 
 
@@ -296,15 +300,7 @@ export const TeamModal = ({
     
       const editTeamModal = () => {
         return innerActionTeamModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar", true)
-      }
-
-    //   console.log("HOLAAAA");
-    //   console.log("tutor ids", tutors.map(t => t.tutor_periods?.id));
-    //   if (item) {
-
-    //       console.log("item.tutor_period_id", item.tutor_period_id);
-    //   }
-          
+      }          
 
   return (
     <>
