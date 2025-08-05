@@ -11,7 +11,8 @@ import {
     MenuItem,
     InputLabel,
     //
-    FormControl
+    FormControl,
+    Typography
 } from "@mui/material";
 import { NumericFormat } from "react-number-format";
 import { useOpenCloseStateModalLogic } from "./useOpenCloseStateModalLogic";
@@ -128,38 +129,47 @@ export const TeamModal = ({
                 {/* Campos editables */}
                 <Grid container spacing={2}>
                 {/* Columna izquierda */}
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={6} md={6}>
                     {/* Integrantes */}
-                    
-                    <NumericFormat
-                      //fullWidth
-                      allowNegative={false}
-                      customInput={TextField}
-                      variant="outlined"
-                      autoFocus
-                      margin="normal"
-                      label="Padrón integrante 1"
-                      value={item?.students?.[0].id || ""}
-                      required
-                      onChange={(e) =>
-                        {const newStudents = [...item.students];
-                            newStudents[0] = { ...newStudents[0], id: parseInt(e.target.value) };
-                            setItem({ ...item, students: newStudents });
-                            }
-                      }
-                    />
-                    <TextField
-                      variant="outlined"
-                      //fullWidth
-                      margin="normal"
-                      label="Nombre"
-                      value={item?.students?.[0].name || ""}
-                      required
-                      onChange={(e) => setItem({ ...item, name: e.target.value })} // [] NO, VER.
-                    />
+                    <Typography variant="h6" gutterBottom>
+                      Integrantes
+                    </Typography>
+                    {/* Integrante 1 */}
+                    <Grid container spacing={2} sx={{ marginBottom: 2 }}>
+                      <Grid item xs={2}>
+                        <NumericFormat
+                          //fullWidth
+                          allowNegative={false}
+                          customInput={TextField}
+                          variant="outlined"
+                          autoFocus
+                          margin="normal"
+                          label="Padrón"
+                          value={item?.students?.[0].id || ""}
+                          required
+                          onChange={(e) =>
+                            {const newStudents = [...item.students];
+                                newStudents[0] = { ...newStudents[0], id: parseInt(e.target.value) };
+                                setItem({ ...item, students: newStudents });
+                                }
+                          }
+                        />
+                      </Grid>
+                      <Grid item xs={10}>
+                        <TextField
+                          variant="outlined"
+                          //fullWidth
+                          margin="normal"
+                          label="Nombre"
+                          value={`${item.students?.[0]?.name || ""} ${item.students?.[0]?.last_name || ""}`}
+                          required
+                          onChange={(e) => setItem({ ...item, name: e.target.value })} // [] NO, VER.
+                        />
+                      </Grid>
 
+                    </Grid>
 
-
+                    {/* Integrante 2 - generalizar */}
                     <NumericFormat
                       //fullWidth
                       allowNegative={false}
@@ -177,7 +187,7 @@ export const TeamModal = ({
                       }
                     />
                     <NumericFormat
-                      //fullWidth
+                      fullWidth
                       allowNegative={false}
                       customInput={TextField}
                       variant="outlined"
@@ -193,7 +203,7 @@ export const TeamModal = ({
                       }
                     />
                     <NumericFormat
-                      //fullWidth
+                      fullWidth
                       allowNegative={false}
                       customInput={TextField}
                       variant="outlined"
@@ -214,7 +224,7 @@ export const TeamModal = ({
                   </Grid>
 
                   {/* Columna derecha */}
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={6} md={6}>
 
                   {/* Tema y tutor */} {/* aux: los copypasteo de StudentForm */}
                   <FormControl fullWidth variant="outlined" margin="normal">
