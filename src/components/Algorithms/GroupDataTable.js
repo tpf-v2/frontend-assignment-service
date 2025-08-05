@@ -247,18 +247,28 @@ const GroupDataTable = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             sx={{ marginBottom: 2 }}
           />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={downloadCSV}
-            sx={{ marginBottom: 2 }}
+          <Box
+            sx={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              marginBottom: 2 
+            }}
           >
-            Descargar CSV
-          </Button>
+            
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={downloadCSV}
+              sx={{ marginBottom: 2 }}
+            >
+              Descargar CSV
+            </Button>
 
-          <Button onClick={() => setShowExtraColumns(prev => !prev)}>
-            {showExtraColumns ? "Ocultar preferencias" : "Mostrar preferencias"}
-          </Button>
+            <Button variant="outlined" color="primary" 
+              onClick={() => setShowExtraColumns(prev => !prev)}>
+              {showExtraColumns ? "Ocultar preferencias" : "Mostrar preferencias"}
+            </Button>
+          </Box>
 
           <TableContainer component={Paper}>
             <Table
