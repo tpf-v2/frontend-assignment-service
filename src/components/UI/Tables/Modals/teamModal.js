@@ -146,6 +146,10 @@ export const TeamModal = ({
                       Integrantes
                     </Typography>*/
                     }
+
+                    {////////////////////////////////////////////////
+
+                    }
                     <InputLabel>Integrantes</InputLabel>
                     {/* Integrante 1 */}
                     <Grid container spacing={2} sx={{ marginBottom: 2 }}>
@@ -286,63 +290,11 @@ export const TeamModal = ({
                       </Grid>
 
                     </Grid>
-
-                    {/*//////////////////////////////////
                     */
-                    }
-                    {/* Integrante 2 - generalizar */}
-                    {/*<NumericFormat
-                      //fullWidth
-                      allowNegative={false}
-                      customInput={TextField}
-                      variant="outlined"
-                      autoFocus
-                      margin="normal"
-                      label="Padrón integrante 2"
-                      value={item?.students?.[1].id || ""}
-                      onChange={(e) =>
-                        {const newStudents = [...item.students];
-                        newStudents[1] = { ...newStudents[1], id: parseInt(e.target.value) };
-                        setItem({ ...item, students: newStudents });
-                        }
-                      }
-                    />
-                    <NumericFormat
-                      fullWidth
-                      allowNegative={false}
-                      customInput={TextField}
-                      variant="outlined"
-                      autoFocus
-                      margin="normal"
-                      label="Padrón integrante 3"
-                      value={item?.students?.[2].id || ""}
-                      onChange={(e) =>
-                        {const newStudents = [...item.students];
-                            newStudents[2] = { ...newStudents[2], id: parseInt(e.target.value) };
-                            setItem({ ...item, students: newStudents });
-                        }
-                      }
-                    />
-                    <NumericFormat
-                      fullWidth
-                      allowNegative={false}
-                      customInput={TextField}
-                      variant="outlined"
-                      autoFocus
-                      margin="normal"
-                      label="Padrón integrante 4"
-                      value={item?.students?.[3].id || ""}
-                      onChange={(e) =>
-                        {const newStudents = [...item.students];
-                            newStudents[3] = { ...newStudents[3], id: parseInt(e.target.value) };
-                            setItem({ ...item, students: newStudents });
-                        }
-                      }
-                      // Aux:
-                      // Pero no confiar, VER qué pasa con el orden de students, viene desde el back. [].
-                    />
-                      */}
-
+                    {/*
+                    // Aux:
+                    // Pero no confiar, VER qué pasa con el orden de students, viene desde el back. [].
+                    */}
                   </Grid>
 
                   {/* Columna derecha */}
