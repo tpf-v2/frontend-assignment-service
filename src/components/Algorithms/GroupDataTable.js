@@ -65,7 +65,7 @@ const GroupDataTable = () => {
       console.error(`Error when editing ${title}:`, err);
       setNotification({
         open: true,
-        message: `Error al editar Equipo.`,
+        message: `Error al editar equipo.`,
         status: "error",
       });
     } finally {
@@ -78,7 +78,7 @@ const GroupDataTable = () => {
     setOriginalEditedItemId(null);
     setNotification({
       open: true,
-      message: `Se editó Equipo exitosamente`,
+      message: `Se editó equipo exitosamente`,
       status: "success",
     });
     setData((prevData) =>

@@ -12,11 +12,13 @@ import {
     InputLabel,
     //
     FormControl,
-    Typography
+    Typography,
+    Fab
 } from "@mui/material";
 import { NumericFormat } from "react-number-format";
 import { useOpenCloseStateModalLogic } from "./useOpenCloseStateModalLogic";
 import Grid from "@mui/material/Grid";
+import AddIcon from "@mui/icons-material/Add";
 
 /* Modals para Agregar y Editar un/a estudiante */
 export const TeamModal = ({
@@ -151,7 +153,7 @@ export const TeamModal = ({
 
                     }
                     <InputLabel>Integrantes</InputLabel>
-                    {/* Integrante 1 */}                    
+                    {/* Integrantes */}                    
                     {item?.students?.map((student, index) => (
                       <Grid container spacing={2} sx={{ marginBottom: 2 }}>
                         <Grid item xs={3}>
@@ -170,7 +172,7 @@ export const TeamModal = ({
                                   newStudents[index] = { ...newStudents[index], id: parseInt(e.target.value) };
                                   setItem({ ...item, students: newStudents });
                                   }
-                            }
+                            }                            
                           />
                         </Grid>
                         <Grid item xs={9}>
@@ -180,15 +182,33 @@ export const TeamModal = ({
                             margin="normal"
                             label="Nombre y Apellido"
                             value={`${item.students?.[index]?.name || ""} ${item.students?.[index]?.last_name || ""}`}
-                            //required
-                            onChange={(e) => setItem({ ...item, name: e.target.value })} // [] NO, VER.
+                            disabled
                           />
-                        </Grid>
-
-                        </Grid>
-
+                        </Grid>                        
+                      </Grid>
                     ))}
-                    <InputLabel> Fin probandooooo</InputLabel>                    
+
+                    <Grid container spacing={2} sx={{ marginBottom: 2 }}>
+                      {item?.students?.length < 4 && (
+                          <Grid item xs={12}>                            
+                            <Button
+                              fullWidth
+                              variant="outlined"
+                              aria-label="add"
+                              startIcon={<AddIcon/>}
+                              onClick={() => {
+                                const newStudents = [...item.students, { id: "", name: "", last_name: "" }];
+                                setItem({ ...item, students: newStudents });
+                              }}                              
+                            >
+
+                              Agregar Integrante
+                            </Button>
+
+                          </Grid>                          
+                      )} 
+                    </Grid>
+                    
                     {/*
                     // Aux:
                     // Pero no confiar, VER qué pasa con el orden de students, viene desde el back. [].
