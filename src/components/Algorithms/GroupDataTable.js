@@ -41,6 +41,10 @@ const GroupDataTable = () => {
     .map(({ version, rehydrated, ...rest }) => rest)
     .filter((item) => Object.keys(item).length > 0);
 
+  const students = Object.values(useSelector((state) => state.students))
+  .map(({ version, rehydrated, ...rest }) => rest)
+  .filter(item => Object.keys(item).length > 0);
+
   const [searchTerm, setSearchTerm] = useState("");
 
   const [loading, setLoading] = useState(true);
@@ -433,6 +437,7 @@ const GroupDataTable = () => {
 
             topics={topics}
             tutors={tutors}
+            students={students}
             periodId={period.id}
           />  
           <MySnackbar

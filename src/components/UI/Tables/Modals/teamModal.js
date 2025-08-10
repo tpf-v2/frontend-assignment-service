@@ -13,7 +13,8 @@ import {
     //
     FormControl,
     Typography,
-    Fab
+    Fab,
+    Autocomplete
 } from "@mui/material";
 import { NumericFormat } from "react-number-format";
 import { useOpenCloseStateModalLogic } from "./useOpenCloseStateModalLogic";
@@ -34,6 +35,7 @@ export const TeamModal = ({
   setParentItem,
   topics,
   tutors,
+  students,
   periodId
   
 }) => {
@@ -148,46 +150,39 @@ export const TeamModal = ({
                       Integrantes
                     </Typography>*/
                     }
-
-                    {////////////////////////////////////////////////
-
-                    }
-                    <InputLabel>Integrantes</InputLabel>
+                    
                     {/* Integrantes */}                    
+                    <InputLabel sx={{ mb: 2 }}>Integrantes</InputLabel> {/* mb = marginBottom */}
                     {item?.students?.map((student, index) => (
-                      <Grid container spacing={2} sx={{ marginBottom: 2 }}>
-                        <Grid item xs={3}>
-                          <NumericFormat
-                            //fullWidth
-                            allowNegative={false}
-                            customInput={TextField}
-                            variant="outlined"
-                            autoFocus={index===0}
-                            margin="normal"
-                            label="Padrón"
-                            value={item?.students?.[index].id || ""}
-                            //required
-                            onChange={(e) =>
-                              {const newStudents = [...item.students];
-                                  newStudents[index] = { ...newStudents[index], id: parseInt(e.target.value) };
-                                  setItem({ ...item, students: newStudents });
-                                  }
-                            }                            
-                          />
+                      <>                     
+                        <Grid container spacing={2} sx={{ marginBottom: 2 }}>
+                          <Grid item xs={12}>                          
+                            <Autocomplete
+                              disablePortal
+                              //options={students.id }
+                              //options={`${students?.id || ""} - ${students?.name || ""} ${students?.last_name || ""}`}
+                              //options={students}
+                              options={students || []}
+                              getOptionLabel={(option) => option.id? `${option.id} - ${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
+                              sx={{ width: '100%' }}
+                              renderInput={(students) => <TextField {...students}
+                                                            label=""/>}
+                              onChange={(event, newValue) => {
+                                const newStudents = item.students ? [...item.students] : [];
+                                if (newValue) {
+                                  newStudents[index] = newValue;
+                                } else {
+                                  newStudents[index] = { id: "", name: "", last_name: "" } // dejarlo vacío al quitar la selección
+                                }
+                                setItem({ ...item, students: newStudents });
+                              }}
+                              value={item?.students ? item.students[index] : null}
+                            />
+                          </Grid>
                         </Grid>
-                        <Grid item xs={9}>
-                          <TextField
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            label="Nombre y Apellido"
-                            value={`${item.students?.[index]?.name || ""} ${item.students?.[index]?.last_name || ""}`}
-                            disabled
-                          />
-                        </Grid>                        
-                      </Grid>
+                      </>
                     ))}
-
+                    
                     <Grid container spacing={2} sx={{ marginBottom: 2 }}>
                       {item?.students?.length < 4 && (
                           <Grid item xs={12}>                            
@@ -208,7 +203,7 @@ export const TeamModal = ({
                           </Grid>                          
                       )} 
                     </Grid>
-                    
+
                     {/*
                     // Aux:
                     // Pero no confiar, VER qué pasa con el orden de students, viene desde el back. [].
