@@ -151,146 +151,44 @@ export const TeamModal = ({
 
                     }
                     <InputLabel>Integrantes</InputLabel>
-                    {/* Integrante 1 */}
-                    <Grid container spacing={2} sx={{ marginBottom: 2 }}>
-                      <Grid item xs={3}>
-                        <NumericFormat
-                          //fullWidth
-                          allowNegative={false}
-                          customInput={TextField}
-                          variant="outlined"
-                          autoFocus
-                          margin="normal"
-                          label="Padrón"
-                          value={item?.students?.[0].id || ""}
-                          //required
-                          onChange={(e) =>
-                            {const newStudents = [...item.students];
-                                newStudents[0] = { ...newStudents[0], id: parseInt(e.target.value) };
-                                setItem({ ...item, students: newStudents });
-                                }
-                          }
-                        />
-                      </Grid>
-                      <Grid item xs={9}>
-                        <TextField
-                          variant="outlined"
-                          fullWidth
-                          margin="normal"
-                          label="Nombre y Apellido"
-                          value={`${item.students?.[0]?.name || ""} ${item.students?.[0]?.last_name || ""}`}
-                          //required
-                          onChange={(e) => setItem({ ...item, name: e.target.value })} // [] NO, VER.
-                        />
-                      </Grid>
+                    {/* Integrante 1 */}                    
+                    {item?.students?.map((student, index) => (
+                      <Grid container spacing={2} sx={{ marginBottom: 2 }}>
+                        <Grid item xs={3}>
+                          <NumericFormat
+                            //fullWidth
+                            allowNegative={false}
+                            customInput={TextField}
+                            variant="outlined"
+                            autoFocus={index===0}
+                            margin="normal"
+                            label="Padrón"
+                            value={item?.students?.[index].id || ""}
+                            //required
+                            onChange={(e) =>
+                              {const newStudents = [...item.students];
+                                  newStudents[index] = { ...newStudents[index], id: parseInt(e.target.value) };
+                                  setItem({ ...item, students: newStudents });
+                                  }
+                            }
+                          />
+                        </Grid>
+                        <Grid item xs={9}>
+                          <TextField
+                            variant="outlined"
+                            fullWidth
+                            margin="normal"
+                            label="Nombre y Apellido"
+                            value={`${item.students?.[index]?.name || ""} ${item.students?.[index]?.last_name || ""}`}
+                            //required
+                            onChange={(e) => setItem({ ...item, name: e.target.value })} // [] NO, VER.
+                          />
+                        </Grid>
 
-                    </Grid>
+                        </Grid>
 
-                    {/* Integrante 2 */}
-                    <Grid container spacing={2} sx={{ marginBottom: 2 }}>
-                      <Grid item xs={3}>
-                        <NumericFormat
-                          //fullWidth
-                          allowNegative={false}
-                          customInput={TextField}
-                          variant="outlined"
-                          autoFocus
-                          margin="normal"
-                          label="Padrón"
-                          value={item?.students?.[1].id || ""}
-                          //required
-                          onChange={(e) =>
-                            {const newStudents = [...item.students];
-                                newStudents[1] = { ...newStudents[1], id: parseInt(e.target.value) };
-                                setItem({ ...item, students: newStudents });
-                                }
-                          }
-                        />
-                      </Grid>
-                      <Grid item xs={9}>
-                        <TextField
-                          variant="outlined"
-                          fullWidth
-                          margin="normal"
-                          label="Nombre y Apellido"
-                          value={`${item.students?.[1]?.name || ""} ${item.students?.[1]?.last_name || ""}`}
-                          //required
-                          onChange={(e) => setItem({ ...item, name: e.target.value })} // [] NO, VER.
-                        />
-                      </Grid>
-
-                    </Grid>
-
-                    {/* Integrante 3 */}
-                    <Grid container spacing={2} sx={{ marginBottom: 2 }}>
-                      <Grid item xs={3}>
-                        <NumericFormat
-                          //fullWidth
-                          allowNegative={false}
-                          customInput={TextField}
-                          variant="outlined"
-                          autoFocus
-                          margin="normal"
-                          label="Padrón"
-                          value={item?.students?.[2].id || ""}
-                          //required
-                          onChange={(e) =>
-                            {const newStudents = [...item.students];
-                                newStudents[2] = { ...newStudents[2], id: parseInt(e.target.value) };
-                                setItem({ ...item, students: newStudents });
-                                }
-                          }
-                        />
-                      </Grid>
-                      <Grid item xs={9}>
-                        <TextField
-                          variant="outlined"
-                          fullWidth
-                          margin="normal"
-                          label="Nombre y Apellido"
-                          value={`${item.students?.[2]?.name || ""} ${item.students?.[2]?.last_name || ""}`}
-                          //required
-                          onChange={(e) => setItem({ ...item, name: e.target.value })} // [] NO, VER.
-                        />
-                      </Grid>
-
-                    </Grid>
-
-                    {/* Integrante 4 */}
-                    <Grid container spacing={2} sx={{ marginBottom: 2 }}>
-                      <Grid item xs={3}>
-                        <NumericFormat
-                          //fullWidth
-                          allowNegative={false}
-                          customInput={TextField}
-                          variant="outlined"
-                          autoFocus
-                          margin="normal"
-                          label="Padrón"
-                          value={item?.students?.[3].id || ""}
-                          //required
-                          onChange={(e) =>
-                            {const newStudents = [...item.students];
-                                newStudents[3] = { ...newStudents[3], id: parseInt(e.target.value) };
-                                setItem({ ...item, students: newStudents });
-                                }
-                          }
-                        />
-                      </Grid>
-                      <Grid item xs={9}>
-                        <TextField
-                          variant="outlined"
-                          fullWidth
-                          margin="normal"
-                          label="Nombre y Apellido"
-                          value={`${item.students?.[3]?.name || ""} ${item.students?.[3]?.last_name || ""}`}
-                          //required
-                          onChange={(e) => setItem({ ...item, name: e.target.value })} // [] NO, VER.
-                        />
-                      </Grid>
-
-                    </Grid>
-                    */
+                    ))}
+                    <InputLabel> Fin probandooooo</InputLabel>                    
                     {/*
                     // Aux:
                     // Pero no confiar, VER qué pasa con el orden de students, viene desde el back. [].
