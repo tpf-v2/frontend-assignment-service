@@ -51,7 +51,7 @@ const GroupDataTable = () => {
 
   ////////// Inicio lo necesario para editar equipo, Revisar []
   const user = useSelector((state) => state.user);
-  //const [openAddModal, setOpenAddModal] = useState(false);
+  const [openConfirmEditModal, setOpenConfirmEditModal] = useState(false); // [] aux: los voy a pasar en el lugar del add, VOLVER
   // Editar equipo
   const [openEditModal, setOpenEditModal] = useState(false);
   const [originalEditedItemId, setOriginalEditedItemId] = useState(null);
@@ -60,10 +60,10 @@ const GroupDataTable = () => {
   const [data, setData] = useState([]);
   const dispatch = useDispatch();
   // Aux: Editar equipo, la traigo copypaste, veré de refactorizar para reutilizar después []
-  const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal) => {
+  const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal, confirm_option=false) => {
     try {
       editedItem.tutor_email = getTutorEmailByTutorPeriodId(editedItem.tutor_period_id, period.id);
-      await editItemInGenericTable(editGroup, editedItem, setEditedItem, setGroups);
+      await editItemInGenericTable(editGroup, editedItem, setEditedItem, setGroups, confirm_option);
     } catch (err) {
       const title="groups";
       console.error(`Error when editing ${title}:`, err);
@@ -72,12 +72,25 @@ const GroupDataTable = () => {
         message: `Error al editar equipo.`,
         status: "error",
       });
+
+      // Probando, hay que abrir otro modal o alert para mostrar el msj (que no me acuerdo si devolví desde el back)
+      // y pedirle confirmación (entonces mandar el confirm en true) o cancelar y no hacer nada.
+      if (err.response?.status===409) {
+        setNotification({
+          open: true,
+          message: `Error al editar equipo: fue conflicccccttttt!.`,
+          status: "error",
+        });
+
+        setOpenConfirmEditModal(true);
+        
+      }
     } finally {
       handleCloseEditModal(true);
     }
   };
-  const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, setReducer) => {    
-    const item = await apiEditFunction(originalEditedItemId, period.id, editedItem, user);
+  const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, setReducer, confirm_option=false) => {    
+    const item = await apiEditFunction(originalEditedItemId, period.id, editedItem, user, confirm_option);
     setEditedItem({});
     setOriginalEditedItemId(null);
     setNotification({
@@ -101,6 +114,11 @@ const GroupDataTable = () => {
     setNotification({ ...notification, open: false });
   };
   /////
+  // Confirmar edición con bool true
+  const handleConfirmEditOnConflict = async (editedItem, setEditedItem, handleCloseEditModal, confirm_option=true) => {
+    await handleEditItem(editedItem, setEditedItem, handleCloseEditModal, true);
+  };
+  //////
   // Formato
   const getTutorEmailByTutorPeriodId = (id, periodId) => {
     const tutor = tutors.find(
@@ -434,6 +452,10 @@ const GroupDataTable = () => {
             setOriginalEditedItemId={setOriginalEditedItemId}
             item={itemToPassToModal}
             setParentItem={setItemToPassToModal}
+
+            openAddModal={openConfirmEditModal}
+            setOpenAddModal={setOpenConfirmEditModal}
+            handleAddItem={handleConfirmEditOnConflict}
 
             topics={topics}
             tutors={tutors}

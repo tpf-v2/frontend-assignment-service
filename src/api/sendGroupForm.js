@@ -35,7 +35,7 @@ export const sendGroupForm = async (period, payload, existingGroup, user) => {
   }
 };
 
-export const editGroup = async (groupId, periodId, groupToEdit, user) => {
+export const editGroup = async (groupId, periodId, groupToEdit, user, confirm_move_student=false) => {
   const config = {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -61,6 +61,7 @@ export const editGroup = async (groupId, periodId, groupToEdit, user) => {
     "students_ids": intStudentIds,
     "tutor_email": groupToEdit.tutor_email, //getTutorEmailByTutorPeriodId(groupToEdit.tutor_period_id, periodId),
     "topic_id": groupToEdit.topic.id,
+    "confirm_move_student": confirm_move_student,
   };
   
   try {
@@ -69,6 +70,7 @@ export const editGroup = async (groupId, periodId, groupToEdit, user) => {
       return response.data;
   } catch (err) {
       console.error(`Error when editing group: ${err}`)
-      throw new Error(err);
+      //throw new Error(err);
+      throw err;
   }
 };

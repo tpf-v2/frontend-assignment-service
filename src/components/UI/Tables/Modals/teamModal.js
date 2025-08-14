@@ -23,11 +23,11 @@ import AddIcon from "@mui/icons-material/Add";
 
 /* Modals para Agregar y Editar un/a estudiante */
 export const TeamModal = ({
-  //openAddModal, // bools para ver si se debe abrir cada modal
+  openAddModal, // bools para ver si se debe abrir cada modal
   openEditModal,
-  //setOpenAddModal, // necesarias para cerrar los modals
+  setOpenAddModal, // necesarias para cerrar los modals
   setOpenEditModal,
-  //handleAddItem, // las acciones al clickear confirmar desde cada modal
+  handleAddItem, // las acciones al clickear confirmar desde cada modal
   handleEditItem,
   originalEditedItemId, // para pasárselo a la función que habla con la api al confirmar, y su set para el handle
   setOriginalEditedItemId,
@@ -324,12 +324,68 @@ export const TeamModal = ({
     
       const editTeamModal = () => {
         return innerActionTeamModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar", true)
-      }          
+      }
+      
+      const confirmEditOnConflictTeamModal = () => {
+        // Aux: Tengo que crear el useState nuevo (bool open) desde afuera xq desde afuera lo voy a cerrar, y manejar eso
+        // y pasarle el msg para mostrarlo acá adentro
+        // Tmb falta la función que repite la request pero con un true
+
+        // Aux, tiene que ser obviamente un parámetro real y no esta cosa horrible (:
+        const res = {"detail":["Estudiante 103944 - JOAQUIN EMANUEL HETREA ya se encuentra en equipo 135","Estudiante 99779 - JUAN IGNACIO KRISTAL ya se encuentra en equipo 148"]};
+        const message = res.detail;
+        return innerConfirmEditOnConflictModal(openAddModal, handleCloseAddModal, message, handleAddItem, editedItem, setEditedItem, "", "Confirmar")
+      }
+      ////////////
+      const innerConfirmEditOnConflictModal = (bool, handleCloseModal, message, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {
+        return (
+          <Dialog open={bool} onClose={handleCloseModal} maxWidth={false}>
+            <DialogTitle
+              sx={{
+                fontWeight: "bold",
+                textAlign: "center",
+                backgroundColor: "#f5f5f5",
+                color: "#333",
+                padding: "16px 24px",
+              }}
+            >
+              Conflicto al Intentar Editar Equipo {item.group_number}
+            </DialogTitle>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault(); // previene el reload del form
+                handleConfirmAction(item, setItem, handleCloseModal);
+              }}
+            >
+              <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
+                
+                {/* Mostrar el / los errores */}
+                
+                    <ul>
+                      {message?.map((conflict_error, index) => (
+                        <li key={index}>{conflict_error}</li>
+                      ))}
+                    </ul>
+                    Confirmar eliminará cada estudiante de su actual equipo y lo agregará a este equipo.
+                    ¿Confirmar la edición?
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseModal} variant="outlined" color="error">
+                  Cancelar
+                </Button>
+                <Button type="submit" variant="contained" color="primary">
+                  {ConfirmButtonText}
+                </Button>
+              </DialogActions>
+            </form>
+          </Dialog>
+        )};
 
   return (
     <>
       {/*addTeamModal()*/};
       {editTeamModal()};
+      {confirmEditOnConflictTeamModal()};
     </>
   )
 }
