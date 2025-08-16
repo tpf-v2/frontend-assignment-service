@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Button,
     TextField,
@@ -40,6 +40,7 @@ export const TeamModal = ({
   
 }) => {
 
+      console.log("--- VIENDO DESDE ADENTRO, EL BOOL: ",openAddModal);
       // Creo los estados, gestiono handle open, y obtengo los handle close.
       const {
         newItem,
@@ -96,7 +97,7 @@ export const TeamModal = ({
       // Conservo la estructura solo x comodidad / analogía con otros archivos de modals. Ver dsp []
       const innerActionTeamModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText, disableEditId=false) => {
         return (
-          <Dialog open={bool} onClose={handleCloseModal} maxWidth={false} fullWidth PaperProps={{
+          <Dialog open={bool} maxWidth={false} fullWidth PaperProps={{
             style: {
               height: "90vh",
               maxHeight: "90vh", // Limita la altura máxima para que no desborde
@@ -325,6 +326,31 @@ export const TeamModal = ({
       const editTeamModal = () => {
         return innerActionTeamModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar", true)
       }
+
+      const handleCloseBothModals = () => {
+        // "add" (confirm modal)
+        setNewItem({})
+        setOpenAddModal(false);
+        //setParentItem(false);
+
+        // edit
+        setEditedItem({})
+        setOpenEditModal(false);
+        setParentItem(false);
+      };
+      const handleCloseConfirmModal = () => {
+        console.log("--- HOLAAA, DESDE TEAM MODAL, BOOL:", openAddModal);
+        setNewItem({}); // a esto no lo uso en este caso, se puede borrar esta línea
+        setOpenAddModal(false);
+        //setParentItem(false); // este item
+        console.log("--- DESDE TEAM MODAL, CERRÉ SUPUESTAMENTE EL BOOL:", openAddModal);
+      };
+
+      const handleCloseEditModalWithoutFlushingEditedItem = () => {
+        //setEditedItem({})
+        setOpenEditModal(false);
+        setParentItem(false);
+      };
       
       const confirmEditOnConflictTeamModal = () => {
         // Aux: Tengo que crear el useState nuevo (bool open) desde afuera xq desde afuera lo voy a cerrar, y manejar eso
@@ -334,10 +360,14 @@ export const TeamModal = ({
         // Aux, tiene que ser obviamente un parámetro real y no esta cosa horrible (:
         const res = {"detail":["Estudiante 103944 - JOAQUIN EMANUEL HETREA ya se encuentra en equipo 135","Estudiante 99779 - JUAN IGNACIO KRISTAL ya se encuentra en equipo 148"]};
         const message = res.detail;
-        return innerConfirmEditOnConflictModal(openAddModal, handleCloseAddModal, message, handleAddItem, editedItem, setEditedItem, "", "Confirmar")
+        //return innerConfirmEditOnConflictModal(openAddModal, handleCloseBothModals, message, handleAddItem, editedItem, setEditedItem, "", "Confirmar")
+        //return innerConfirmEditOnConflictModal(openAddModal, handleCloseAddModal, message, handleAddItem, editedItem, setEditedItem, "", "Confirmar") // cierra el de abajo y no éste
+        console.log("--- VIENDO DESDE ADENTRO OTRA VEZ, EL BOOL: ",openAddModal);
+        //return innerConfirmEditOnConflictModal(openAddModal, handleCloseConfirmModal, handleCloseEditModal, message, handleAddItem, editedItem, setEditedItem, "", "Confirmar") // da error en inglés de que studentsInput es undefined, xq editedItem se flusheó
+        return innerConfirmEditOnConflictModal(openAddModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, message, handleAddItem, editedItem, setEditedItem, "", "Confirmar")
       }
       ////////////
-      const innerConfirmEditOnConflictModal = (bool, handleCloseModal, message, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {
+      const innerConfirmEditOnConflictModal = (bool, handleCloseModal, handleCloseEditModal, message, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {
         return (
           <Dialog open={bool} onClose={handleCloseModal} maxWidth={false}>
             <DialogTitle
@@ -373,7 +403,7 @@ export const TeamModal = ({
                 <Button onClick={handleCloseModal} variant="outlined" color="error">
                   Cancelar
                 </Button>
-                <Button type="submit" variant="contained" color="primary">
+                <Button type="submit" onClick={handleCloseEditModal} variant="contained" color="primary">
                   {ConfirmButtonText}
                 </Button>
               </DialogActions>

@@ -64,6 +64,11 @@ const GroupDataTable = () => {
     try {
       editedItem.tutor_email = getTutorEmailByTutorPeriodId(editedItem.tutor_period_id, period.id);
       await editItemInGenericTable(editGroup, editedItem, setEditedItem, setGroups, confirm_option);
+      
+      // Close modal de edición en caso de éxito
+      handleCloseEditModal();
+      setOriginalEditedItemId(null); // AUX: Agrego esto acá.
+      setEditedItem({}); /////
     } catch (err) {
       const title="groups";
       console.error(`Error when editing ${title}:`, err);
@@ -72,9 +77,11 @@ const GroupDataTable = () => {
         message: `Error al editar equipo.`,
         status: "error",
       });
+      console.log("--- CONFLICTO, VOY A ABRIR EL MODAL DE CONFIRMACIÓN ACTUALMENTE CERRADO". openConfirmEditModal);
 
       // Probando, hay que abrir otro modal o alert para mostrar el msj (que no me acuerdo si devolví desde el back)
       // y pedirle confirmación (entonces mandar el confirm en true) o cancelar y no hacer nada.
+      // Si hay conflicto, no cerrar el modal de edición. Abrir cartel de confirmación y si se cancela
       if (err.response?.status===409) {
         setNotification({
           open: true,
@@ -83,16 +90,15 @@ const GroupDataTable = () => {
         });
 
         setOpenConfirmEditModal(true);
+        console.log("--- HE ABIERTO EL MODAL DE CONFIRMACIÓN". openConfirmEditModal);
         
       }
     } finally {
-      handleCloseEditModal(true);
+      
     }
   };
   const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, setReducer, confirm_option=false) => {    
     const item = await apiEditFunction(originalEditedItemId, period.id, editedItem, user, confirm_option);
-    setEditedItem({});
-    setOriginalEditedItemId(null);
     setNotification({
       open: true,
       message: `Se editó equipo exitosamente`,
@@ -116,8 +122,15 @@ const GroupDataTable = () => {
   /////
   // Confirmar edición con bool true
   const handleConfirmEditOnConflict = async (editedItem, setEditedItem, handleCloseEditModal, confirm_option=true) => {
-    await handleEditItem(editedItem, setEditedItem, handleCloseEditModal, true);
+    try {
+      console.log("--- CONFIRMAR API CALL A PUNTO DE HACERSE");
+      await handleEditItem(editedItem, setEditedItem, handleCloseEditModal, true);
+      console.log("--- CONFIRMAR API CALL HECHA");
+    } catch(err) {
+      console.log("--- CONFIRMAR API CALL ERRÓNEA:", err);
+    }
   };
+  console.log("--- HOLA ----- MODAL DE CONFIRMACIÓN, abierto?:". openConfirmEditModal);
   //////
   // Formato
   const getTutorEmailByTutorPeriodId = (id, periodId) => {
