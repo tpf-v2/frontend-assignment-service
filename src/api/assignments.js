@@ -14,8 +14,14 @@ export const incompleteGroups = async (user, period) => {
   };
 
   try {
-    const url = `${BASE_URL}/assignments/incomplete-groups?period_id=${period.id}`;
+    const url = `${BASE_URL}/assignments/incomplete-groups?period_id=${period.id}&mode=async`;
     const response = await axios.post(url, {}, config);
+
+    if (response.data && response.data.task_id && response.data.socketio_deliver) {
+      const result = await waitForAsyncTask(response.data.task_id, user.token);
+      return result;
+    }
+
     return response;
   } catch (error) {
     throw new Error(error);
