@@ -95,7 +95,7 @@ const GroupDataTable = () => {
     }
   };
   const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, setReducer, confirm_option=false) => {    
-    const item = await apiEditFunction(originalEditedItemId, period.id, editedItem, user, confirm_option);
+    const item = await apiEditFunction(editedItem.id, period.id, editedItem, user, confirm_option);
     setNotification({
       open: true,
       message: `Se editó equipo exitosamente`,

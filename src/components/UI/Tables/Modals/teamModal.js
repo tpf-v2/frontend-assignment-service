@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import {
     Button,
     TextField,
@@ -27,8 +28,6 @@ export const TeamModal = ({
   setOpenEditModal,
   handleAddItem, // las acciones al clickear confirmar desde cada modal
   handleEditItem,
-  originalEditedItemId, // para pasárselo a la función que habla con la api al confirmar, y su set para el handle
-  setOriginalEditedItemId,
   item, // recibido del parent, y su set para flushearlo al salir
   setParentItem,
   conflictMsg, // para pasarle el msg de la response del back al modal de conflicto, y su set
@@ -39,23 +38,15 @@ export const TeamModal = ({
   periodId
   
 }) => {
-      // Creo los estados, gestiono handle open, y obtengo los handle close.
-      // Aux: no se usaría esto, solo traer el const del editedItem para acá y lo demás no es relevante.
-      const {
-        newItem,
-        setNewItem,
-        editedItem,
-        setEditedItem,
-        handleCloseAddModal,
-        handleCloseEditModal
-      } = useOpenCloseStateModalLogic({
-          openEditModal: openEditModal,
-          item: item,
-          setOpenAddModal: setOpenEditModal, // AUXXXX
-          setOpenEditModal: setOpenEditModal,
-          setOriginalEditedItemId: setOriginalEditedItemId,
-          setParentItem: setParentItem
-      });
+
+      const [editedItem, setEditedItem] = useState({});          
+      // Esto hace de handle open edit
+      useEffect(() => {
+        if (!openEditModal) return;
+
+        setEditedItem(item); 
+
+      }, [openEditModal, item]);      
 
       // AUX: ESTAS FUNCIONES DEBERÍAN SER IMPORTABLES []
       // Función para obtener el nombre del topic por su id
@@ -288,17 +279,22 @@ export const TeamModal = ({
           </Dialog>
         )
       };
-    
-      const editTeamModal = () => {
-        return innerActionTeamModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar", true)
-      }
-
+        
       const handleCloseConfirmModal = () => {
-        setNewItem({}); // a esto no lo uso en este caso, se puede borrar esta línea
         setOpenAddModal(false);
         //setParentItem(false); // este item
         setConflictMsg([]);        
       };
+
+      const handleCloseEditModal = () => {
+        setEditedItem({})
+        setOpenEditModal(false);
+        setParentItem(false);
+      };
+      
+      const editTeamModal = () => {
+        return innerActionTeamModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar", true)
+      }
 
       const handleCloseEditModalWithoutFlushingEditedItem = () => {
         //setEditedItem({})
