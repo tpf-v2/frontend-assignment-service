@@ -50,7 +50,7 @@ const GroupDataTable = () => {
 
   ////////// Inicio lo necesario para editar equipo, Revisar []
   const user = useSelector((state) => state.user);
-  const [openConfirmEditModal, setOpenConfirmEditModal] = useState(false); // [] aux: los voy a pasar en el lugar del add, VOLVER
+  const [openConfirmEditModal, setOpenConfirmEditModal] = useState(false);
   const [conflictsMessage, setConflictsMessage] = useState([]);
   // Editar equipo
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -459,9 +459,9 @@ const GroupDataTable = () => {
             item={itemToPassToModal}
             setParentItem={setItemToPassToModal}
 
-            openAddModal={openConfirmEditModal}
-            setOpenAddModal={setOpenConfirmEditModal}
-            handleAddItem={handleConfirmEditOnConflict}
+            openConfirmModal={openConfirmEditModal}
+            setOpenConfirmModal={setOpenConfirmEditModal}
+            handleConfirm={handleConfirmEditOnConflict}
 
             conflictMsg={conflictsMessage}
             setConflictMsg={setConflictsMessage}

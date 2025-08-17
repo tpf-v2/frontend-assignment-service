@@ -19,23 +19,22 @@ import { useOpenCloseStateModalLogic } from "./useOpenCloseStateModalLogic";
 import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
 
-/* Modals para Agregar y Editar un/a estudiante */
-// To-Do revisar estas props, alguna(s) sobra(n).
+/* Modals para Editar un equipo y Confirmar la edición en caso de conflicto */
 export const TeamModal = ({
-  openAddModal, // bools para ver si se debe abrir cada modal
-  openEditModal,
-  setOpenAddModal, // necesarias para cerrar los modals
-  setOpenEditModal,
-  handleAddItem, // las acciones al clickear confirmar desde cada modal
-  handleEditItem,
+  openEditModal, // bools para ver si se debe abrir cada modal
+  openConfirmModal,
+  setOpenEditModal, // necesarias para cerrar los modals
+  setOpenConfirmModal,
+  handleEditItem, // las acciones al clickear confirmar desde cada modal
+  handleConfirm,
   item, // recibido del parent, y su set para flushearlo al salir
   setParentItem,
   conflictMsg, // para pasarle el msg de la response del back al modal de conflicto, y su set
   setConflictMsg,
-  topics,
+  topics, // para buscar su email etc a partir de otros datos
   tutors,
   students,
-  periodId
+  periodId // para identificar el dato correcto en esas búsquedas
   
 }) => {
 
@@ -281,7 +280,7 @@ export const TeamModal = ({
       };
         
       const handleCloseConfirmModal = () => {
-        setOpenAddModal(false);
+        setOpenConfirmModal(false);
         //setParentItem(false); // este item
         setConflictMsg([]);        
       };
@@ -303,11 +302,11 @@ export const TeamModal = ({
       };
       
       const confirmEditOnConflictTeamModal = () => {
-        //return innerConfirmEditOnConflictModal(openAddModal, handleCloseBothModals, message, handleAddItem, editedItem, setEditedItem, "", "Confirmar")
-        //return innerConfirmEditOnConflictModal(openAddModal, handleCloseAddModal, message, handleAddItem, editedItem, setEditedItem, "", "Confirmar") // cierra el de abajo y no éste
-        console.log("--- VIENDO DESDE ADENTRO OTRA VEZ, EL BOOL: ",openAddModal);
-        //return innerConfirmEditOnConflictModal(openAddModal, handleCloseConfirmModal, handleCloseEditModal, message, handleAddItem, editedItem, setEditedItem, "", "Confirmar") // da error en inglés de que studentsInput es undefined, xq editedItem se flusheó
-        return innerConfirmEditOnConflictModal(openAddModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, handleAddItem, editedItem, setEditedItem, "", "Confirmar")
+        //return innerConfirmEditOnConflictModal(openConfirmModal, handleCloseBothModals, message, handleConfirm, editedItem, setEditedItem, "", "Confirmar")
+        //return innerConfirmEditOnConflictModal(openConfirmModal, handleCloseAddModal, message, handleConfirm, editedItem, setEditedItem, "", "Confirmar") // cierra el de abajo y no éste
+        console.log("--- VIENDO DESDE ADENTRO OTRA VEZ, EL BOOL: ",openConfirmModal);
+        //return innerConfirmEditOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModal, message, handleConfirm, editedItem, setEditedItem, "", "Confirmar") // da error en inglés de que studentsInput es undefined, xq editedItem se flusheó
+        return innerConfirmEditOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, handleConfirm, editedItem, setEditedItem, "", "Confirmar")
       }
       
       const innerConfirmEditOnConflictModal = (bool, handleCloseModal, handleCloseEditModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {
