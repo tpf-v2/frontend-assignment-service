@@ -9,7 +9,6 @@ import {
   TableRow,
   TextField,
   Button,
-  Collapse,
   Box,
   Stack
 } from "@mui/material";
@@ -52,6 +51,7 @@ const GroupDataTable = () => {
   ////////// Inicio lo necesario para editar equipo, Revisar []
   const user = useSelector((state) => state.user);
   const [openConfirmEditModal, setOpenConfirmEditModal] = useState(false); // [] aux: los voy a pasar en el lugar del add, VOLVER
+  const [conflictsMessage, setConflictsMessage] = useState([]);
   // Editar equipo
   const [openEditModal, setOpenEditModal] = useState(false);
   const [originalEditedItemId, setOriginalEditedItemId] = useState(null);
@@ -70,31 +70,28 @@ const GroupDataTable = () => {
       setOriginalEditedItemId(null); // AUX: Agrego esto acá.
       setEditedItem({}); /////
     } catch (err) {
-      const title="groups";
+      const title="team";
       console.error(`Error when editing ${title}:`, err);
       setNotification({
         open: true,
         message: `Error al editar equipo.`,
         status: "error",
       });
-      console.log("--- CONFLICTO, VOY A ABRIR EL MODAL DE CONFIRMACIÓN ACTUALMENTE CERRADO". openConfirmEditModal);
+      console.log("--- CONFLICTO, VOY A ABRIR EL MODAL DE CONFIRMACIÓN ACTUALMENTE CERRADO", openConfirmEditModal);
 
-      // Probando, hay que abrir otro modal o alert para mostrar el msj (que no me acuerdo si devolví desde el back)
-      // y pedirle confirmación (entonces mandar el confirm en true) o cancelar y no hacer nada.
-      // Si hay conflicto, no cerrar el modal de edición. Abrir cartel de confirmación y si se cancela
+      // Si hay conflicto, no cerrar el modal de edición; abrir cartel de confirmación
+      // y si se confirma, se reenvía la request (conservar los datos a enviar) pero con un bool en true
       if (err.response?.status===409) {
         setNotification({
           open: true,
-          message: `Error al editar equipo: fue conflicccccttttt!.`,
-          status: "error",
+          message: `Advertencia: Conflicto al editar equipo.`,
+          status: "warning",
         });
+        //console.log("conflict:", err.response.data.detail);
 
+        setConflictsMessage(err.response?.data?.detail || []);
         setOpenConfirmEditModal(true);
-        console.log("--- HE ABIERTO EL MODAL DE CONFIRMACIÓN". openConfirmEditModal);
-        
       }
-    } finally {
-      
     }
   };
   const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, setReducer, confirm_option=false) => {    
@@ -130,7 +127,6 @@ const GroupDataTable = () => {
       console.log("--- CONFIRMAR API CALL ERRÓNEA:", err);
     }
   };
-  console.log("--- HOLA ----- MODAL DE CONFIRMACIÓN, abierto?:". openConfirmEditModal);
   //////
   // Formato
   const getTutorEmailByTutorPeriodId = (id, periodId) => {
@@ -262,9 +258,6 @@ const GroupDataTable = () => {
   };
 
   const [showExtraColumns, setShowExtraColumns] = useState(false);
-
-  console.log("--- filteredGroups:", filteredGroups);
-  console.log("--- tutoressss:", tutors);
 
   return (
     <Box>
@@ -469,6 +462,9 @@ const GroupDataTable = () => {
             openAddModal={openConfirmEditModal}
             setOpenAddModal={setOpenConfirmEditModal}
             handleAddItem={handleConfirmEditOnConflict}
+
+            conflictMsg={conflictsMessage}
+            setConflictMsg={setConflictsMessage}
 
             topics={topics}
             tutors={tutors}

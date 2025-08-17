@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
     Button,
     TextField,
@@ -12,16 +12,14 @@ import {
     InputLabel,
     //
     FormControl,
-    Typography,
-    Fab,
     Autocomplete
 } from "@mui/material";
-import { NumericFormat } from "react-number-format";
 import { useOpenCloseStateModalLogic } from "./useOpenCloseStateModalLogic";
 import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
 
 /* Modals para Agregar y Editar un/a estudiante */
+// To-Do revisar estas props, alguna(s) sobra(n).
 export const TeamModal = ({
   openAddModal, // bools para ver si se debe abrir cada modal
   openEditModal,
@@ -33,15 +31,16 @@ export const TeamModal = ({
   setOriginalEditedItemId,
   item, // recibido del parent, y su set para flushearlo al salir
   setParentItem,
+  conflictMsg, // para pasarle el msg de la response del back al modal de conflicto, y su set
+  setConflictMsg,
   topics,
   tutors,
   students,
   periodId
   
 }) => {
-
-      console.log("--- VIENDO DESDE ADENTRO, EL BOOL: ",openAddModal);
       // Creo los estados, gestiono handle open, y obtengo los handle close.
+      // Aux: no se usaría esto, solo traer el const del editedItem para acá y lo demás no es relevante.
       const {
         newItem,
         setNewItem,
@@ -89,12 +88,9 @@ export const TeamModal = ({
         return tutor ? tutor.email : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
     };
 
-
-
-
       /////// Modals ///////
-      // Aux: este modal va a ser el de editar directamente, y no existirá por ahora Add acá.
-      // Conservo la estructura solo x comodidad / analogía con otros archivos de modals. Ver dsp []
+      // Este modal va a ser el de editar directamente, y no existirá Add acá.
+      // Conservo la estructura solo x comodidad / analogía con otros archivos de modals.
       const innerActionTeamModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText, disableEditId=false) => {
         return (
           <Dialog open={bool} maxWidth={false} fullWidth PaperProps={{
@@ -125,32 +121,11 @@ export const TeamModal = ({
                 handleConfirmAction(item, setItem, handleCloseModal);
               }}
             >
-              <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
-                {/*Equipo {item.group_number}*/}
-              {/*<NumericFormat
-                  fullWidth
-                  allowNegative={false}
-                  customInput={TextField}
-                  variant="outlined"
-                  autoFocus
-                  margin="normal"
-                  label="Equipo número"
-                  value={item["id"] || ""}
-                  required
-                  onChange={(e) =>
-                    setItem({ ...item, id: parseInt(e.target.value) })
-                  }
-                  disabled
-                />*/}
+              <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>        
                 {/* Campos editables */}
                 <Grid container spacing={2}>
                 {/* Columna izquierda */}
                   <Grid item xs={6} md={6}>
-                    {/* Integrantes */}                    
-                    {/*<Typography variant="h6" gutterBottom>
-                      Integrantes
-                    </Typography>*/
-                    }
                     
                     {/* Integrantes */}                    
                     <InputLabel sx={{ mb: 2 }}>Integrantes</InputLabel> {/* mb = marginBottom */}
@@ -160,9 +135,6 @@ export const TeamModal = ({
                           <Grid item xs={12}>                          
                             <Autocomplete
                               disablePortal
-                              //options={students.id }
-                              //options={`${students?.id || ""} - ${students?.name || ""} ${students?.last_name || ""}`}
-                              //options={students}
                               options={students || []}
                               getOptionLabel={(option) => option.id? `${option.id} - ${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
                               sx={{ width: '100%' }}
@@ -197,7 +169,6 @@ export const TeamModal = ({
                                 setItem({ ...item, students: newStudents });
                               }}                              
                             >
-
                               Agregar Integrante
                             </Button>
 
@@ -268,7 +239,6 @@ export const TeamModal = ({
                   </FormControl>
 
 
-
                   {/* Las tres preferencias, no editables */}
                   <InputLabel>Preferencias</InputLabel>
                   <TextField
@@ -318,32 +288,16 @@ export const TeamModal = ({
           </Dialog>
         )
       };
-
-      const addTeamModal = () => {
-        // To-Doreturn innerActionStudentModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar", "Agregar")
-      }
     
       const editTeamModal = () => {
         return innerActionTeamModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar", true)
       }
 
-      const handleCloseBothModals = () => {
-        // "add" (confirm modal)
-        setNewItem({})
-        setOpenAddModal(false);
-        //setParentItem(false);
-
-        // edit
-        setEditedItem({})
-        setOpenEditModal(false);
-        setParentItem(false);
-      };
       const handleCloseConfirmModal = () => {
-        console.log("--- HOLAAA, DESDE TEAM MODAL, BOOL:", openAddModal);
         setNewItem({}); // a esto no lo uso en este caso, se puede borrar esta línea
         setOpenAddModal(false);
         //setParentItem(false); // este item
-        console.log("--- DESDE TEAM MODAL, CERRÉ SUPUESTAMENTE EL BOOL:", openAddModal);
+        setConflictMsg([]);        
       };
 
       const handleCloseEditModalWithoutFlushingEditedItem = () => {
@@ -353,21 +307,14 @@ export const TeamModal = ({
       };
       
       const confirmEditOnConflictTeamModal = () => {
-        // Aux: Tengo que crear el useState nuevo (bool open) desde afuera xq desde afuera lo voy a cerrar, y manejar eso
-        // y pasarle el msg para mostrarlo acá adentro
-        // Tmb falta la función que repite la request pero con un true
-
-        // Aux, tiene que ser obviamente un parámetro real y no esta cosa horrible (:
-        const res = {"detail":["Estudiante 103944 - JOAQUIN EMANUEL HETREA ya se encuentra en equipo 135","Estudiante 99779 - JUAN IGNACIO KRISTAL ya se encuentra en equipo 148"]};
-        const message = res.detail;
         //return innerConfirmEditOnConflictModal(openAddModal, handleCloseBothModals, message, handleAddItem, editedItem, setEditedItem, "", "Confirmar")
         //return innerConfirmEditOnConflictModal(openAddModal, handleCloseAddModal, message, handleAddItem, editedItem, setEditedItem, "", "Confirmar") // cierra el de abajo y no éste
         console.log("--- VIENDO DESDE ADENTRO OTRA VEZ, EL BOOL: ",openAddModal);
         //return innerConfirmEditOnConflictModal(openAddModal, handleCloseConfirmModal, handleCloseEditModal, message, handleAddItem, editedItem, setEditedItem, "", "Confirmar") // da error en inglés de que studentsInput es undefined, xq editedItem se flusheó
-        return innerConfirmEditOnConflictModal(openAddModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, message, handleAddItem, editedItem, setEditedItem, "", "Confirmar")
+        return innerConfirmEditOnConflictModal(openAddModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, handleAddItem, editedItem, setEditedItem, "", "Confirmar")
       }
-      ////////////
-      const innerConfirmEditOnConflictModal = (bool, handleCloseModal, handleCloseEditModal, message, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {
+      
+      const innerConfirmEditOnConflictModal = (bool, handleCloseModal, handleCloseEditModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {
         return (
           <Dialog open={bool} onClose={handleCloseModal} maxWidth={false}>
             <DialogTitle
@@ -392,7 +339,7 @@ export const TeamModal = ({
                 {/* Mostrar el / los errores */}
                 
                     <ul>
-                      {message?.map((conflict_error, index) => (
+                      {conflictMsg?.map((conflict_error, index) => (
                         <li key={index}>{conflict_error}</li>
                       ))}
                     </ul>
