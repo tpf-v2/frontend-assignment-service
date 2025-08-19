@@ -42,7 +42,7 @@ export const StudentModals = ({
           setParentItem: setParentItem
       });
 
-      /////// Modals de Estudiante ///////
+      /////// Modals ///////
       const innerActionStudentModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText, disableEditId=false) => {
         return (
           <Dialog open={bool} onClose={handleCloseModal} maxWidth="sm" fullWidth>

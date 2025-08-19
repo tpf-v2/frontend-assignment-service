@@ -48,8 +48,8 @@ export const TopicModals = ({
         setParentItem: setParentItem
     });
 
-    /////// Modals de Estudiante ///////   
-    const innerActionTopicModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, titleText, confirmButtonText, disableBcEndpointDoesNotExistYet=false) => {
+    /////// Modals ///////   
+    const innerActionTopicModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, titleText, confirmButtonText) => {
         return (
           <Dialog open={bool} onClose={handleCloseModal} maxWidth="sm" fullWidth>
             <DialogTitle
@@ -76,18 +76,18 @@ export const TopicModals = ({
                   fullWidth
                   margin="normal"
                   label="Titulo"
-                  value={item["name"] || ""}
+                  value={item.name || ""}
                   required
                   onChange={(e) => setItem({ ...item, name: e.target.value })}
                 />
-                <InputLabel>Seleccionar categoria</InputLabel>
+                <InputLabel>Seleccionar categoría</InputLabel>
                 <Select
                   value={
-                    item["category"] || ""
+                    item.category?.name || ""
                   }
                   label="Categorías"
                   onChange={(e) =>
-                    setItem({ ...item, category: e.target.value })
+                    setItem({ ...item, category: {name: e.target.value} })
                   }
                   margin="normal"
       
@@ -96,7 +96,7 @@ export const TopicModals = ({
                   fullWidth
                 >
                   <MenuItem key="" value="" disabled>
-                    Seleccionar categoria
+                    Seleccionar categoría
                   </MenuItem>
                   {categories.map((category) => (
                     <MenuItem key={category} value={category}>
@@ -110,7 +110,7 @@ export const TopicModals = ({
                   value={
                     item["tutor_email"] || ""
                   }
-                  label="Email del tutor"
+                  label="Email de tutor"
                   onChange={(e) =>
                     setItem({ ...item, tutor_email: e.target.value })
                   }
@@ -144,7 +144,7 @@ export const TopicModals = ({
                 <Button onClick={handleCloseModal} variant="outlined" color="error">
                   Cancelar
                 </Button>
-                <Button type="submit" disabled={disableBcEndpointDoesNotExistYet} variant="contained" color="primary">
+                <Button type="submit" variant="contained" color="primary">
                   {confirmButtonText}
                 </Button>
               </DialogActions>
@@ -157,9 +157,8 @@ export const TopicModals = ({
         return innerActionTopicModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar Nuevo", "Agregar");
       };
     
-      // Este true del final es solo temporal hasta que exista el endpoint de editar tema.
       const editTopicModal = () => {
-        return innerActionTopicModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar", true)
+        return innerActionTopicModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar");
       };
 
       return (
