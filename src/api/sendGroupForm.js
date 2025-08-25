@@ -35,7 +35,7 @@ export const sendGroupForm = async (period, payload, existingGroup, user) => {
   }
 };
 
-export const editGroup = async (groupId, periodId, groupToEdit, user, confirm_move_student=false) => {
+export const editGroup = async (groupId, periodId, groupToEdit, user, confirm_move=false) => {
   const config = {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -61,7 +61,7 @@ export const editGroup = async (groupId, periodId, groupToEdit, user, confirm_mo
     "students_ids": intStudentIds,
     "tutor_email": groupToEdit.tutor_email, //getTutorEmailByTutorPeriodId(groupToEdit.tutor_period_id, periodId),
     "topic_id": groupToEdit.topic.id,
-    "confirm_move_student": confirm_move_student,
+    "confirm_move": confirm_move,
   };
   
   try {
@@ -69,7 +69,7 @@ export const editGroup = async (groupId, periodId, groupToEdit, user, confirm_mo
       const response = await axios.patch(url, sendableGroupToEdit, config);
       return response.data;
   } catch (err) {
-      console.error(`Error when editing group: ${err}`)
+      console.error(`Error when editing team: ${err}`)
       //throw new Error(err);
       throw err;
   }

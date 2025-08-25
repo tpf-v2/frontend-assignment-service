@@ -15,7 +15,6 @@ import {
     FormControl,
     Autocomplete
 } from "@mui/material";
-import { useOpenCloseStateModalLogic } from "./useOpenCloseStateModalLogic";
 import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -50,6 +49,7 @@ export const TeamModal = ({
       // AUX: ESTAS FUNCIONES DEBERÍAN SER IMPORTABLES []
       // Función para obtener el nombre del topic por su id
       const getTopicNameById = (id) => {
+        if (id === "") return // AUX: agrego esta línea, para usar la función desde el modal de confirm, puedo mandarle "" si no tenía tema asignado.
         const topic = topics.find((t) => t.id === id);
         return topic ? topic.name : ""; // Si no encuentra el topic, mostrar 'Desconocido'
       };
@@ -332,14 +332,41 @@ export const TeamModal = ({
               <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
                 
                 {/* Mostrar el / los errores */}
-                
+
+                {conflictMsg?.student_conflicts?.length > 0 && (
+                  <div>
+                    <h4>Estudiantes</h4>
                     <ul>
-                      {conflictMsg?.map((conflict_error, index) => (
+                      {conflictMsg?.student_conflicts?.map((conflict_error, index) => (
                         <li key={index}>{conflict_error}</li>
                       ))}
                     </ul>
-                    Confirmar eliminará cada estudiante de su actual equipo y lo agregará a este equipo.
-                    ¿Confirmar la edición?
+                    Confirmar eliminará cada estudiante de su actual equipo y lo agregará a este equipo.                    
+                  </div>
+                )}
+
+                {conflictMsg?.topic_conflicts?.length > 0 && (
+                  <div>
+                    <h4>Tema</h4>                    
+                    <ul>
+                      {conflictMsg?.topic_conflicts?.map((conflict_error, index) => (
+                        <li key={index}>{conflict_error} {getTopicNameById(item.topic?.id)}</li>
+                      ))}
+                    </ul>
+                    Confirmar eliminará el tema de su actual equipo y lo asignará a este equipo.
+                  </div>
+                )}
+
+                {conflictMsg?.empty_delete_team && (<div>
+                  <h4>Equipo vacío</h4>
+                  <ul>
+                      <li>Se eliminarán todos los integrantes de este equipo</li>                    
+                  </ul>
+                  Confirmar desasignará todos los integrantes de este equipo y eliminará el equipo.
+                </div>
+                )}
+                
+                <p><strong>¿Confirmar la edición?</strong></p>
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleCloseModal} variant="outlined" color="error">
