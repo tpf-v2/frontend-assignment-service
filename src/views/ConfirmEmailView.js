@@ -6,7 +6,7 @@ import {
   Paper,
   Button,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/system";
 import BackgroundContainer from "../components/UI/BackgroundContainer.js";
 import EmailIcon from '@mui/icons-material/Email';
@@ -55,4 +55,4 @@ const ConfirmEmailView = () => {
   );
 };
 
-export default ConfirmEmailView; 
+export default ConfirmEmailView;

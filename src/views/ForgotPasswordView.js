@@ -6,7 +6,6 @@ import {
   Typography,
   Box,
   Paper,
-  Divider,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { styled } from "@mui/system";
@@ -133,4 +132,4 @@ const ForgotPasswordView = () => {
   );
 };
 
-export default ForgotPasswordView; 
+export default ForgotPasswordView;
