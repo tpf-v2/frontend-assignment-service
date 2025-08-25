@@ -65,3 +65,16 @@ export const requestPasswordReset = async (email) => {
         }
     }
 };
+
+export const resetPasswordWithToken = async (password, token) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/reset-password-confirm`, { password, token });
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            throw new Error(error.response.data.detail || 'Error al restablecer contraseña. El token puede haber expirado.');
+        } else {
+            throw new Error('Error de red o del servidor');
+        }
+    }
+};
