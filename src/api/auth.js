@@ -52,3 +52,29 @@ export const authenticateUser = (email, password) => async (dispatch) => {
         }
     }
 }
+
+export const requestPasswordReset = async (email) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/request-password-reset`, { email });
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            throw new Error(error.response.data.detail || 'Error al solicitar recuperación de contraseña');
+        } else {
+            throw new Error('Error de red o del servidor');
+        }
+    }
+};
+
+export const resetPasswordWithToken = async (password, token) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/reset-password-with-token`, { "new_password": password, token });
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            throw new Error(error.response.data.detail || 'Error al restablecer contraseña. El token puede haber expirado.');
+        } else {
+            throw new Error('Error de red o del servidor');
+        }
+    }
+};
