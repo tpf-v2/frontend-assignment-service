@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Container,
   TextField,
@@ -6,14 +6,12 @@ import {
   Typography,
   Box,
   Paper,
-  Divider,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { styled } from "@mui/system";
 import BackgroundContainer from "../components/UI/BackgroundContainer.js";
-import { authenticateUser } from "../api/auth.js"; // Importa las funciones desde auth.js
-import { useDispatch, useSelector } from "react-redux";
 import MySnackbar from "../components/UI/MySnackBar.js";
+import { requestPasswordReset } from "../api/auth.js";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -30,20 +28,10 @@ const Title = styled(Typography)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-const LoginView = () => {
+const ForgotPasswordView = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setloading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const user = useSelector((state) => state.user);
-
-  useEffect(() => {
-    if (user?.token) {
-      navigate("/home");
-    }
-  }, [user]);
 
   const [notification, setNotification] = useState({
     open: false,
@@ -56,25 +44,34 @@ const LoginView = () => {
   };
 
   const handleSubmit = async (e) => {
-    setloading(true);
     e.preventDefault();
+    setLoading(true);
 
-    if (email && password) {
+    if (email) {
       try {
-        await dispatch(authenticateUser(email, password));
-        navigate("/home");
-      } catch (error) {
-        console.error("Error when logging in", error);
+        await requestPasswordReset(email);
+        
         setNotification({
           open: true,
-          message: "Nombre de usuario o contraseña incorrectos",
+          message: "Se ha enviado un email con las instrucciones para recuperar tu contraseña",
+          status: "success",
+        });
+        
+        // Navegar a página de confirmación después de un delay
+        setTimeout(() => {
+          navigate("/confirm-email");
+        }, 2000);
+        
+      } catch (error) {
+        console.error("Error al solicitar recuperación de contraseña", error);
+        setNotification({
+          open: true,
+          message: error.message || "Error al enviar el email. Verifica que el email sea correcto.",
           status: "error",
         });
       } finally {
-        setloading(false);
+        setLoading(false);
       }
-    } else {
-      // navigate('/form-selection');
     }
   };
 
@@ -83,8 +80,12 @@ const LoginView = () => {
       <BackgroundContainer />
       <Root>
         <Box textAlign="center">
-          <Title variant="h4">Iniciar Sesión</Title>
+          <Title variant="h4">Recuperar Contraseña</Title>
+          <Typography variant="body1" color="textSecondary" sx={{ marginBottom: 3 }}>
+            Ingresa tu email y te enviaremos un link para restablecer tu contraseña
+          </Typography>
         </Box>
+        
         <form onSubmit={handleSubmit}>
           <TextField
             label="Email"
@@ -96,16 +97,6 @@ const LoginView = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <TextField
-            label="Contraseña"
-            type="password"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
           <ButtonStyled
             disabled={loading}
             variant="contained"
@@ -113,43 +104,22 @@ const LoginView = () => {
             type="submit"
             fullWidth
           >
-            {loading ? "Cargando ..." : "Iniciar Sesión"}
+            {loading ? "Enviando..." : "Enviar Email de Recuperación"}
           </ButtonStyled>
         </form>
 
-        <Box textAlign="center" sx={{ marginTop: 2 }}>
+        <Box textAlign="center" sx={{ marginTop: 3 }}>
           <Link
-            to="/forgot-password"
+            to="/"
             style={{
               color: '#1976d2',
               textDecoration: 'none',
               fontSize: '14px'
             }}
           >
-            ¿Olvidaste tu contraseña?
+            ← Volver al login
           </Link>
         </Box>
-
-        <Divider sx={{ marginTop: 3, marginBottom: 2 }} />
-        <Typography
-          variant="body2"
-          align="center"
-          color="textSecondary"
-          sx={{ marginTop: 2 }}
-        >
-          Este sitio es un Trabajo Profesional de Ing. Informática.{" "}
-          <Link
-            href="#"
-            onClick={(e) => {
-              e.preventDefault(); // Evita que se recargue la página
-              navigate("/credits");
-            }}
-            underline="hover"
-            color="primary"
-          >
-            Ver créditos
-          </Link>
-        </Typography>
 
         <MySnackbar
           open={notification.open}
@@ -162,4 +132,4 @@ const LoginView = () => {
   );
 };
 
-export default LoginView;
+export default ForgotPasswordView;
