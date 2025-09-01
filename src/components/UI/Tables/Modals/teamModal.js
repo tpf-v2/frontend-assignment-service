@@ -360,7 +360,7 @@ export const TeamModal = ({
                 {conflictMsg?.empty_delete_team && (<div>
                   <h4>Equipo vacío</h4>
                   <ul>
-                      <li>Se eliminarán todos los integrantes de este equipo</li>                    
+                      <li>Se desasignarán todos los integrantes de este equipo</li>                    
                   </ul>
                   Confirmar desasignará todos los integrantes de este equipo y eliminará el equipo.
                 </div>

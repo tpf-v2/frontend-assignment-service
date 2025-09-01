@@ -44,7 +44,11 @@ const GroupDataTable = () => {
   .map(({ version, rehydrated, ...rest }) => rest)
   .filter(item => Object.keys(item).length > 0);
 
+  const [showExtraColumns, setShowExtraColumns] = useState(false);
+
   const [searchTerm, setSearchTerm] = useState("");
+  const [showNoTopic, setShowNoTopic] = useState(false);
+  const [showNoTutor, setShowNoTutor] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -172,8 +176,24 @@ const GroupDataTable = () => {
     return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
   };
 
-  // Filtrar equipos según el término de búsqueda
-  const filteredGroups = groups.filter(
+  ///// Opciones de búsqueda y filtrado /////
+  const handleShowTeamsWithNoTopic = () => {
+    setShowNoTopic(prev => !prev)
+  };
+
+  const handleShowTeamsWithNoTutor = () => {
+    setShowNoTutor(prev => !prev)
+  };
+  
+  const showTeamsWithNoTopic = (teams) => {
+    return showNoTopic ? teams.filter((team) => !team.topic) : teams
+  };
+  const showTeamsWithNoTutor = (teams) => {
+    console.log("--- teams:", teams);
+    return showNoTutor ? teams.filter((team) => !team.tutor_period_id) : teams
+  };
+  // Filtrar equipos según el término de búsqueda Contemplando si se clickeó el botón de showNoTopics
+  const filteredTeamsBySearchTerm = groups.filter(
     (group) =>
       group.students.some(
         (student) =>
@@ -191,7 +211,9 @@ const GroupDataTable = () => {
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
   );
-
+  // Obtengo solo los que no tienen topic y/o tutor, o bien conservo lo que ya tenía, según el bool
+  const filteredGroups = showTeamsWithNoTopic(showTeamsWithNoTutor(filteredTeamsBySearchTerm));
+  
   // Función para descargar los datos en formato CSV
   const downloadCSV = () => {
     const csvRows = [];
@@ -208,7 +230,7 @@ const GroupDataTable = () => {
         "Preferencia 2",
         "Preferencia 3",
       ].join(",")
-    );
+    );    
 
     filteredGroups.forEach((group) => {
       group.students.forEach((student, index) => {
@@ -257,8 +279,6 @@ const GroupDataTable = () => {
     URL.revokeObjectURL(url);
   };
 
-  const [showExtraColumns, setShowExtraColumns] = useState(false);
-
   return (
     <Box>
       {loading ? (
@@ -292,8 +312,27 @@ const GroupDataTable = () => {
               Descargar CSV
             </Button>
 
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleShowTeamsWithNoTopic}
+              sx={{ marginBottom: 2 }}
+            >
+              {showNoTopic ? "Mostrar todos los equipos" : "Mostrar equipos sin tema"}
+            </Button>
+
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleShowTeamsWithNoTutor}
+              sx={{ marginBottom: 2 }}
+            >
+              {showNoTutor ? "Mostrar todos los equipos" : "Mostrar equipos sin tutor"}
+            </Button>
+
             <Button variant="outlined" color="primary" 
-              onClick={() => setShowExtraColumns(prev => !prev)}>
+              onClick={() => setShowExtraColumns(prev => !prev)}
+              sx={{ marginBottom: 2 }}>
               {showExtraColumns ? "Ocultar preferencias" : "Mostrar preferencias"}
             </Button>
           </Box>
