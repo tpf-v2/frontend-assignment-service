@@ -171,9 +171,6 @@ const StudentHomeView = () => {
         )}
       </Box>
       <Box sx={{ flex: 2 }}>
-        <Typography variant="h4" align="center" gutterBottom>
-          {period}
-        </Typography>
         <Box>
           {loading ? ( // Mostrar CircularProgress si está cargando
             <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
