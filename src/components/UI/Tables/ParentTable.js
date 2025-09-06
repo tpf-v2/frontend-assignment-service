@@ -33,6 +33,7 @@ import { StudentModals } from "./Modals/studentModals";
 import { TutorModals } from "./Modals/tutorModals";
 import { TopicModals } from "./Modals/topicModals";
 import { addCapacityToTutors } from "../../../utils/addCapacityToTutors";
+import { DeleteConfirmationModal } from "./Modals/deleteConfirmationModal";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -74,6 +75,7 @@ const ParentTable = ({
   const [openEditModal, setOpenEditModal] = useState(false);
   const [originalEditedItemId, setOriginalEditedItemId] = useState(null);
   const [itemToPassToModal, setItemToPassToModal] = useState(null);
+  const [openConfirmDeleteModal, setOpenConfirmDeleteModal] = useState(false);
 
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
@@ -219,19 +221,29 @@ const ParentTable = ({
     
   };
 
-  const handleDelete = async (id) => {
+  const handleDeleteItem = async (id) => {
     try {
+      console.log("Entrando a handleDeleteItem para");
+      console.log("   id:", id);
+      console.log("   title:", title);
+      console.log("   endpoint:", endpoint);
+      
       // Call deleteResponse to remove the record
       await deleteRow(endpoint, id, user);
       // Filter the data state to remove the deleted item
       setData((prevData) => prevData.filter((item) => item.id !== id));
       setNotification({
         open: true,
-        message: `Eliminado con exito!`,
+        message: `Se eliminó exitosamente`,
         status: "success",
       });
     } catch (error) {
       console.error("Error deleting item:", error);
+      setNotification({
+        open: true,
+        message: `Error al eliminar ${TableTypeSingularLabel[title]||''}.`,
+        status: "error",
+      });
     }
   };
 
@@ -366,7 +378,7 @@ const ParentTable = ({
                         )}
                         {enableDelete && (
                           <Button
-                            onClick={() => handleDelete(item.id)}
+                            onClick={() => {setOpenConfirmDeleteModal(true); setItemToPassToModal(item)}}
                             style={{ backgroundColor: "red", color: "white" }}
                             >
                             Eliminar
@@ -427,6 +439,16 @@ const ParentTable = ({
           categories={categories}
         />
       };
+      {title === 'Respuestas' && (
+        <DeleteConfirmationModal
+          openModal={openConfirmDeleteModal}
+          setOpenModal={setOpenConfirmDeleteModal}
+          handleDelete={handleDeleteItem}
+          item={itemToPassToModal}
+          setParentItem={setItemToPassToModal}
+          itemTypeName={"respuesta"}
+        />
+      )};
       <MySnackbar
         open={notification.open}
         handleClose={handleSnackbarClose}
