@@ -360,7 +360,9 @@ const ParentTable = ({
                   {columns.map((column, index) => (
                     <TableCell key={index}>{column}</TableCell>
                   ))}
-                  <TableCell>Acciones</TableCell>
+                  {(enableEdit || enableDelete) &&
+                    <TableCell>Acciones</TableCell>
+                  }
                 </TableRow>
               </TableHead>
               {/* --- Content --- */}
@@ -385,9 +387,9 @@ const ParentTable = ({
                             >
                             Eliminar
                           </Button>
-                        )}
+                        )}                        
                       </Stack>
-                    </TableCell> }
+                    </TableCell> }                    
                   </TableRow>
                 ))}
               </TableBody>
