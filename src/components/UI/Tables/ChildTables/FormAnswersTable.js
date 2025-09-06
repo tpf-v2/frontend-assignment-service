@@ -26,7 +26,7 @@ const FormAnswersTable = () => {
 
   return (
     <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint}
-     renderRow={renderRow} enableEdit={false} />
+     renderRow={renderRow} enableEdit={false} enableDelete={false} />
   );
 };
 
