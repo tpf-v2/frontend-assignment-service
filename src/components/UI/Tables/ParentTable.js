@@ -221,13 +221,13 @@ const ParentTable = ({
     
   };
 
-  const handleDeleteItem = async (id) => {
+  const handleDeleteItem = async (id, handleClose) => {
     try {
       console.log("Entrando a handleDeleteItem para");
       console.log("   id:", id);
       console.log("   title:", title);
       console.log("   endpoint:", endpoint);
-      
+
       // Call deleteResponse to remove the record
       await deleteRow(endpoint, id, user);
       // Filter the data state to remove the deleted item
@@ -244,6 +244,8 @@ const ParentTable = ({
         message: `Error al eliminar ${TableTypeSingularLabel[title]||''}.`,
         status: "error",
       });
+    } finally {
+      handleClose();
     }
   };
 
@@ -438,17 +440,15 @@ const ParentTable = ({
           tutors={tutors}
           categories={categories}
         />
-      };
-      {title === 'Respuestas' && (
-        <DeleteConfirmationModal
-          openModal={openConfirmDeleteModal}
-          setOpenModal={setOpenConfirmDeleteModal}
-          handleDelete={handleDeleteItem}
-          item={itemToPassToModal}
-          setParentItem={setItemToPassToModal}
-          itemTypeName={"respuesta"}
-        />
-      )};
+      };      
+      <DeleteConfirmationModal
+        openModal={openConfirmDeleteModal}
+        setOpenModal={setOpenConfirmDeleteModal}
+        handleDelete={handleDeleteItem}
+        item={itemToPassToModal}
+        setParentItem={setItemToPassToModal}
+        itemTypeName={TableTypeSingularLabel[title]||''}
+      />      
       <MySnackbar
         open={notification.open}
         handleClose={handleSnackbarClose}

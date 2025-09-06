@@ -46,7 +46,7 @@ export const DeleteConfirmationModal = ({
             <form
               onSubmit={(e) => {
                 e.preventDefault(); // previene el reload del form
-                handleConfirmAction(item.id);
+                handleConfirmAction(item.id, handleCloseModal);                
               }}
             >
               <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
