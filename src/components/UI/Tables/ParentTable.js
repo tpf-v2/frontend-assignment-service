@@ -174,7 +174,7 @@ const ParentTable = ({
       console.error(`Error when adding new ${title}:`, err);
       setNotification({
         open: true,
-        message: `Error al agregar ${TableTypeSingularLabel[title]||''}.`,
+        message: `Error al agregar ${TableTypeSingularLabel[title]||''}`,
         status: "error",
       });
     } finally {
@@ -212,7 +212,7 @@ const ParentTable = ({
       console.error(`Error when editing new ${title}:`, err);
       setNotification({
         open: true,
-        message: `Error al editar ${TableTypeSingularLabel[title]||''}.`,
+        message: `Error al editar ${TableTypeSingularLabel[title]||''}`,
         status: "error",
       });
     } finally {
@@ -234,14 +234,14 @@ const ParentTable = ({
       setData((prevData) => prevData.filter((item) => item.id !== id));
       setNotification({
         open: true,
-        message: `Se eliminó exitosamente`,
+        message: `Se eliminó ${TableTypeSingularLabel[title]||''} exitosamente`,
         status: "success",
       });
     } catch (error) {
       console.error("Error deleting item:", error);
       setNotification({
         open: true,
-        message: `Error al eliminar ${TableTypeSingularLabel[title]||''}.`,
+        message: `Error al eliminar ${TableTypeSingularLabel[title]||''}`,
         status: "error",
       });
     } finally {
