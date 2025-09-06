@@ -13,7 +13,7 @@ import * as Sentry from "@sentry/react";
 if (process.env.REACT_APP_SENTRY_ENABLED == "true") {
   console.info("Sentry is enabled");
   Sentry.init({
-    environment: process.env.NODE_ENV,
+    environment: process.env.REACT_APP_SENTRY_ENVIRONMENT,
     dsn: process.env.REACT_APP_SENTRY_DSN,
     // Setting this option to true will send default PII data to Sentry.
     // For example, automatic IP address collection on events
