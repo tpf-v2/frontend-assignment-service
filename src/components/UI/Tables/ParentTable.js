@@ -340,7 +340,7 @@ const ParentTable = ({
             </Button>
             {/* {(AddButtonComponent && topicsCond) && <AddButtonComponent />} */}
 
-            {title !== "Respuestas" && (
+            {title !== TableType.RESPONSES && (
               <Box>
                 <Fab
                   size="small"
