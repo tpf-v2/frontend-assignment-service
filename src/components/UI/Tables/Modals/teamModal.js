@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
+const CLEARSTRING = "Eliminar integrante";
 
 /* Modals para Editar un equipo y Confirmar la edición en caso de conflicto */
 export const TeamModal = ({
@@ -122,12 +123,13 @@ export const TeamModal = ({
                     {item?.students?.map((student, index) => (
                                         
                       <Grid container spacing={2} sx={{ marginBottom: 2 }}>
-                        <Grid item xs={12}>                          
+                        <Grid item xs={12}>
                           <Autocomplete
                             disablePortal
                             options={students || []}
                             getOptionLabel={(option) => option.id? `${option.id} - ${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
-                            sx={{ width: '100%' }}                            
+                            sx={{ width: '100%' }}
+                            clearText={CLEARSTRING}
                             renderInput={(students) => <TextField {...students}
                                                           label=""/>}
                             onChange={(event, newValue) => {
