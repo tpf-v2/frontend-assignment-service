@@ -120,30 +120,30 @@ export const TeamModal = ({
                     {/* Integrantes */}                    
                     <InputLabel sx={{ mb: 2 }}>Integrantes</InputLabel> {/* mb = marginBottom */}
                     {item?.students?.map((student, index) => (
-                      <>                     
-                        <Grid container spacing={2} sx={{ marginBottom: 2 }}>
-                          <Grid item xs={12}>                          
-                            <Autocomplete
-                              disablePortal
-                              options={students || []}
-                              getOptionLabel={(option) => option.id? `${option.id} - ${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
-                              sx={{ width: '100%' }}
-                              renderInput={(students) => <TextField {...students}
-                                                            label=""/>}
-                              onChange={(event, newValue) => {
-                                const newStudents = item.students ? [...item.students] : [];
-                                if (newValue) {
-                                  newStudents[index] = newValue;
-                                } else {
-                                  newStudents[index] = { id: "", name: "", last_name: "" } // dejarlo vacío al quitar la selección
-                                }
-                                setItem({ ...item, students: newStudents });
-                              }}
-                              value={item?.students ? item.students[index] : null}
-                            />
-                          </Grid>
+                                        
+                      <Grid container spacing={2} sx={{ marginBottom: 2 }}>
+                        <Grid item xs={12}>                          
+                          <Autocomplete
+                            disablePortal
+                            options={students || []}
+                            getOptionLabel={(option) => option.id? `${option.id} - ${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
+                            sx={{ width: '100%' }}                            
+                            renderInput={(students) => <TextField {...students}
+                                                          label=""/>}
+                            onChange={(event, newValue) => {
+                              const newStudents = item.students ? [...item.students] : [];
+                              if (newValue) {
+                                newStudents[index] = newValue;
+                              } else {
+                                newStudents[index] = { id: "", name: "", last_name: "" } // dejarlo vacío al quitar la selección
+                              }
+                              setItem({ ...item, students: newStudents });
+                            }}
+                            value={item?.students ? item.students[index] : null}
+                          />
                         </Grid>
-                      </>
+                      </Grid>
+                      
                     ))}
                     
                     <Grid container spacing={2} sx={{ marginBottom: 2 }}>
@@ -382,9 +382,9 @@ export const TeamModal = ({
 
   return (
     <>
-      {/*addTeamModal()*/};
-      {editTeamModal()};
-      {confirmEditOnConflictTeamModal()};
+      {/*addTeamModal()*/}
+      {editTeamModal()}
+      {confirmEditOnConflictTeamModal()}
     </>
   )
 }

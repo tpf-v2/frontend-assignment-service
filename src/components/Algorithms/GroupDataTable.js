@@ -363,14 +363,7 @@ const GroupDataTable = () => {
                   </ExpandableCell>
                   <ExpandableCell show={showExtraColumns} isHeader>
                       Preferencia 3
-                  </ExpandableCell>
-                  
-
-                  {/*<TableCell sx={{ fontWeight: "bold" }}>
-                    <Button onClick={() => setShowExtraColumns(prev => !prev)}>
-                      {showExtraColumns ? "Ocultar preferencias" : "Mostrar preferencias"}
-                    </Button>
-                  </TableCell>*/}
+                  </ExpandableCell>                  
                   
                   <TableCell sx={{ fontWeight: "bold" }}>Acciones</TableCell>
                   
@@ -396,7 +389,7 @@ const GroupDataTable = () => {
                         <TableCell>{student.name}</TableCell>
                         <TableCell>{student.last_name}</TableCell>
                         <TableCell>{student.email}</TableCell>
-                        <>
+                        
                           {/* index 0 para renderizar esto una vez por fila de equipo (y no una por estudiante) */}
                           {index === 0 && (
                             <TableCell
@@ -420,44 +413,42 @@ const GroupDataTable = () => {
 
                           {/* Las tres preferencias */}
                           {index === 0 && (
+                            
+                            (!group.preferred_topics || (group.preferred_topics.length === 0)) ? (
                             <>
-                                { (!group.preferred_topics || (group.preferred_topics.length === 0)) ? (
-                                  <>
-                                    <ExpandableCell show={showExtraColumns} rowSpan={group.students.length} align="center">
-                                      {"N/A"}
-                                    </ExpandableCell>
-                                    <ExpandableCell show={showExtraColumns} rowSpan={group.students.length} align="center">
-                                      {"N/A"}
-                                    </ExpandableCell>
-                                    <ExpandableCell show={showExtraColumns} rowSpan={group.students.length} align="center">
-                                      {"N/A"}
-                                    </ExpandableCell>
-                                  </>
-                                ) : (
-                                  <>
-                                    <ExpandableCell show={showExtraColumns} rowSpan={group.students.length}>
-                                      {getTopicNameById(
-                                        group.preferred_topics[0]
-                                      ) || ""}
-                                    </ExpandableCell>
-
-                                    <ExpandableCell show={showExtraColumns} rowSpan={group.students.length}>
-                                      {getTopicNameById(
-                                        group.preferred_topics[1]
-                                      ) || ""}
-                                    </ExpandableCell>
-
-                                    <ExpandableCell show={showExtraColumns} rowSpan={group.students.length}>
-                                      {getTopicNameById(
-                                        group.preferred_topics[2]
-                                      ) || ""}
-                                    </ExpandableCell>
-                                  </>
-                                )}
+                              <ExpandableCell show={showExtraColumns} rowSpan={group.students.length} align="center">
+                                {"N/A"}
+                              </ExpandableCell>
+                              <ExpandableCell show={showExtraColumns} rowSpan={group.students.length} align="center">
+                                {"N/A"}
+                              </ExpandableCell>
+                              <ExpandableCell show={showExtraColumns} rowSpan={group.students.length} align="center">
+                                {"N/A"}
+                              </ExpandableCell>
                             </>
-                          )}
-                        </>
+                          ) : (
+                            <>
+                              <ExpandableCell show={showExtraColumns} rowSpan={group.students.length}>
+                                {getTopicNameById(
+                                  group.preferred_topics[0]
+                                ) || ""}
+                              </ExpandableCell>
 
+                              <ExpandableCell show={showExtraColumns} rowSpan={group.students.length}>
+                                {getTopicNameById(
+                                  group.preferred_topics[1]
+                                ) || ""}
+                              </ExpandableCell>
+
+                              <ExpandableCell show={showExtraColumns} rowSpan={group.students.length}>
+                                {getTopicNameById(
+                                  group.preferred_topics[2]
+                                ) || ""}
+                              </ExpandableCell>
+                            </>
+                          )                            
+                          )}
+                        
                         {/* Copypasteo desde ParentTable esta sección de los botones, ver [] */}
                         {index === 0 && (
                           <TableCell rowSpan={group.students.length}>
@@ -517,12 +508,10 @@ const GroupDataTable = () => {
             status={notification.status}
           />
         </>
-
-
       )}
 
     </Box>
-  );
+  )
 };
 
 export default GroupDataTable;
