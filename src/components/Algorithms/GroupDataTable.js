@@ -19,7 +19,7 @@ import ExpandableCell from "../ExpandableCell";
 
 import { TeamModal } from "../UI/Tables/Modals/teamModal";
 import { setGroups } from "../../redux/slices/groupsSlice";
-import { editGroup } from "../../api/sendGroupForm";
+import { editTeam } from "../../api/sendGroupForm";
 import MySnackbar from "../UI/MySnackBar";
 import { getTableData } from "../../api/handleTableData";
 
@@ -46,7 +46,7 @@ const GroupDataTable = () => {
   .filter(item => Object.keys(item).length > 0);
 
   const [allTopics, setAllTopics] = useState({csvTopics: topics, customTopics: []});
-  const [data, setData] = useState(groups);
+  const [data, setData] = useState(groups); // teams
 
   const [showExtraColumns, setShowExtraColumns] = useState(false);
 
@@ -98,12 +98,12 @@ const GroupDataTable = () => {
   const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal, confirm_option=false) => {
     try {
       editedItem.tutor_email = getTutorEmailByTutorPeriodId(editedItem.tutor_period_id, period.id);
-      await editItemInGenericTable(editGroup, editedItem, setEditedItem, setGroups, confirm_option);
+      await editItemInGenericTable(editTeam, editedItem, setEditedItem, setGroups, confirm_option);
       
       // Close modal de edición en caso de éxito
       handleCloseEditModal();
       setOriginalEditedItemId(null); // AUX: Agrego esto acá.
-      setEditedItem({}); // necesario para el segundo modal, el de confirm.
+      setEditedItem({}); // necesario para el segundo modal, el de confirm.      
     } catch (err) {
       const title="team";
       console.error(`Error when editing ${title}:`, err);
@@ -129,18 +129,18 @@ const GroupDataTable = () => {
     }
   };
   const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, setReducer, confirm_option=false) => {    
-    const item = await apiEditFunction(editedItem.id, period.id, editedItem, user, confirm_option);
+    const changes = await apiEditFunction(editedItem.id, period.id, editedItem, user, confirm_option);
     setNotification({
       open: true,
       message: `Se editó equipo exitosamente`,
       status: "success",
     });
+    // Si es éxito, hay que adaptar los datos de la lista a mostrar en la tabla
+    // AUX: EN CONSTRUCCIÓN - ESTO ADAPTA EL EQUIPO ACTUAL SEGÚN LO QUE MANDÉ PERO
+    // TIENE TMB QUE ADAPTAR LOS 'EQUIPOS ANTERIORES' SI HABÍA CONFLICTO, back debe responder
     setData((prevData) =>
-      prevData.map((existingItem) => (existingItem.id === originalEditedItemId ? item : existingItem))
-    );
-    dispatch(setReducer((prevData) =>
-      prevData.map((existingItem) => (existingItem.id === originalEditedItemId ? item : existingItem)))
-    );
+      prevData.map((existingTeam) => (existingTeam.id === editedItem.id ? editedItem : existingTeam))
+    );    
   };
   const [notification, setNotification] = useState({
     open: false,

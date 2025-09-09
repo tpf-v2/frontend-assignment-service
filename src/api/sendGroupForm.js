@@ -35,7 +35,7 @@ export const sendGroupForm = async (period, payload, existingGroup, user) => {
   }
 };
 
-export const editGroup = async (groupId, periodId, groupToEdit, user, confirm_move=false) => {
+export const editTeam = async (groupId, periodId, teamToEdit, user, confirm_move=false) => {
   const config = {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -45,7 +45,7 @@ export const editGroup = async (groupId, periodId, groupToEdit, user, confirm_mo
 
   // Con esto enviamos Exactamente los campos que el back espera (y excluimos el id, que ya está
   // como path param)
-  const studentsInput = groupToEdit.students;
+  const studentsInput = teamToEdit.students;
   
   const intStudentIds = studentsInput
   .map(s => s.id)
@@ -57,16 +57,16 @@ export const editGroup = async (groupId, periodId, groupToEdit, user, confirm_mo
   //   return; // <--- nop, esto sale sin informar error.
   // };
 
-  const sendableGroupToEdit = {
+  const sendableTeamToEdit = {
     "students_ids": intStudentIds,
-    "tutor_email": groupToEdit.tutor_email, //getTutorEmailByTutorPeriodId(groupToEdit.tutor_period_id, periodId),
-    "topic_id": groupToEdit.topic.id,
+    "tutor_email": teamToEdit.tutor_email, //getTutorEmailByTutorPeriodId(groupToEdit.tutor_period_id, periodId),
+    "topic_id": teamToEdit.topic.id,
     "confirm_move": confirm_move,
-  };
-  
+  };  
+
   try {
       const url = `${BASE_URL}/groups/${groupId}/periods/${periodId}`;
-      const response = await axios.patch(url, sendableGroupToEdit, config);
+      const response = await axios.patch(url, sendableTeamToEdit, config);
       return response.data;
   } catch (err) {
       console.error(`Error when editing team: ${err}`)
