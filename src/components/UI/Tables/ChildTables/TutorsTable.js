@@ -33,8 +33,10 @@ const TutorsTable = () => {
     </>
   );
 
+  const customCsvUri = `/tutors/tutors.csv?period_id=${period}`;
+
   return (
-    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} items={tutors}/>
+    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} items={tutors} customCsvUri={customCsvUri}/>
   );
 };
 
