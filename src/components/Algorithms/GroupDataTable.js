@@ -135,12 +135,28 @@ const GroupDataTable = () => {
       message: `Se editó equipo exitosamente`,
       status: "success",
     });
-    // Si es éxito, hay que adaptar los datos de la lista a mostrar en la tabla
-    // AUX: EN CONSTRUCCIÓN - ESTO ADAPTA EL EQUIPO ACTUAL SEGÚN LO QUE MANDÉ PERO
-    // TIENE TMB QUE ADAPTAR LOS 'EQUIPOS ANTERIORES' SI HABÍA CONFLICTO, back debe responder
-    setData((prevData) =>
-      prevData.map((existingTeam) => (existingTeam.id === editedItem.id ? editedItem : existingTeam))
-    );    
+    // Si es éxito, hay que adaptar los datos de la lista a mostrar en la tabla    
+    setData((prevData) => {
+      let updated = [...prevData];
+
+      // Reemplazar o agregar los equipos editados
+      changes.edited.forEach((team) => {
+        const idx = updated.findIndex((prevDataTeam) => prevDataTeam.id === team.id);
+        if (idx >= 0) {
+          // reemplazo si ya existía
+          updated[idx] = team;
+        } else {
+          // o agrego si no estaba en la lista
+          updated.push(team);
+        }
+      });
+
+      // Eliminar equipos borrados (me quedo con los equipos que No incluye la lista de deleted)
+      updated = updated.filter((prevDataTeam) => !changes.deleted.includes(prevDataTeam.id));
+
+      return updated;
+    });
+              
   };
   const [notification, setNotification] = useState({
     open: false,
