@@ -21,6 +21,7 @@ import { TeamModal } from "../UI/Tables/Modals/teamModal";
 import { setGroups } from "../../redux/slices/groupsSlice";
 import { editGroup } from "../../api/sendGroupForm";
 import MySnackbar from "../UI/MySnackBar";
+import { getTableData } from "../../api/handleTableData";
 
 // Componente para la tabla de equipos
 const GroupDataTable = () => {
@@ -44,6 +45,21 @@ const GroupDataTable = () => {
   .map(({ version, rehydrated, ...rest }) => rest)
   .filter(item => Object.keys(item).length > 0);
 
+  const [allTopics, setAllTopics] = useState(topics);
+  // const addCustomTopicsToAllTopics = () => {
+  //   // Workaround a que el back no los devuelva
+  //   // agrego los temas de quienes pusieron "Ya tengo tema y tutor"
+  //   const customTopics = groups.filter(team => !topics.some(t => t.id === team.topic.id))
+  //   .map(team => team.topic);
+  //   console.log("### Custom topics:", customTopics);
+  //   setAllTopics((prevData) => [...prevData, ...customTopics]);
+  // }
+  const customTopics = groups.filter(team => !topics.some(t => t.id === team.topic.id))
+    .map(team => team.topic);
+    console.log("### Custom topics:", customTopics);
+  const constAllTopics = topics.concat(customTopics);
+
+
   const [showExtraColumns, setShowExtraColumns] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -61,18 +77,62 @@ const GroupDataTable = () => {
   const [originalEditedItemId, setOriginalEditedItemId] = useState(null);
   const [itemToPassToModal, setItemToPassToModal] = useState(null);
   
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(groups);
   const dispatch = useDispatch();
+
+  /// Los useEffect los pongo acá
+  const endpoint = `/teams/?period=${period.id}`;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseData = await getTableData(endpoint, user);
+        
+        console.log("Response data:", responseData);
+        setData(responseData);
+        
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false); // Handle error
+      }
+    };
+
+    fetchData();
+  }, [endpoint, user]);
+
+  // useEffect(() => {
+  //   // if (groups.length > 0) {
+  //   //   setLoading(false);      
+  //   // }
+  //   if (data.length > 0) {
+  //     setLoading(false);      
+  //   }
+  // }, [data]);
+
+  // useEffect(() => {
+  //   // Configurar un temporizador de 3 segundos
+  //   const timer = setTimeout(() => {
+  //     setLoading(false);
+  //   }, 3000);
+
+  //   // Limpiar el temporizador si el componente se desmonta
+  //   return () => clearTimeout(timer);
+  // }, []);
+  /// fin useEffect
   // Aux: Editar equipo, la traigo copypaste, veré de refactorizar para reutilizar después []
   const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal, confirm_option=false) => {
     try {
+      console.log("#### DESDE AFUERA, item completo:", editedItem);
+      console.log("   - desde afuera tmb, topic:", editedItem.topic.id);
+      console.log("   - y desde afuera tmb, get name da:", getTopicNameById(editedItem.topic.id));
       editedItem.tutor_email = getTutorEmailByTutorPeriodId(editedItem.tutor_period_id, period.id);
       await editItemInGenericTable(editGroup, editedItem, setEditedItem, setGroups, confirm_option);
       
       // Close modal de edición en caso de éxito
       handleCloseEditModal();
       setOriginalEditedItemId(null); // AUX: Agrego esto acá.
-      setEditedItem({}); /////
+      setEditedItem({}); ///// para el segundo modal, el de confirm.
     } catch (err) {
       const title="team";
       console.error(`Error when editing ${title}:`, err);
@@ -141,26 +201,11 @@ const GroupDataTable = () => {
     );
     return tutor ? tutor.email : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
   };    
-  //////////////////// fin lo necesario para edit ///////
-
-  useEffect(() => {
-    if (groups.length > 0) {
-      setLoading(false);
-    }
-  }, [groups]);
-
-  useEffect(() => {
-    // Configurar un temporizador de 3 segundos
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-
-    // Limpiar el temporizador si el componente se desmonta
-    return () => clearTimeout(timer);
-  }, []);
+  //////////////////// fin lo necesario para edit ///////  
 
 
   // Función para obtener el nombre del topic por su id
+  // aux: se usa solo para preferencias, no es problema que use topics
   const getTopicNameById = (id) => {
     const topic = topics.find((t) => t.id === id);
     return topic ? topic.name : ""; // Si no encuentra el topic, mostrar 'Desconocido'
@@ -175,6 +220,18 @@ const GroupDataTable = () => {
     );
     return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
   };
+
+  if (loading)
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="300px"
+      >
+        <CircularProgress />
+      </Box>
+    );
 
   ///// Opciones de búsqueda y filtrado /////
   const handleShowTeamsWithNoTopic = () => {
@@ -193,27 +250,27 @@ const GroupDataTable = () => {
     return showNoTutor ? teams.filter((team) => !team.tutor_period_id) : teams
   };
   // Filtrar equipos según el término de búsqueda Contemplando si se clickeó el botón de showNoTopics
-  const filteredTeamsBySearchTerm = groups.filter(
-    (group) =>
-      group.students.some(
+  const filteredTeamsBySearchTerm = data.filter(
+    (team) =>
+      team?.students?.some(
         (student) =>
           student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           student.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           student.email.toLowerCase().includes(searchTerm.toLowerCase())
       ) ||
-      getTutorNameById(group.tutor_period_id, period.id)
+      getTutorNameById(team?.tutor_period_id, period.id)
         .toLowerCase()
         .includes(searchTerm.toLowerCase()) || // Filtrar por tutor
-      (group.topic
-        ? group.topic.name.toLowerCase().includes(searchTerm.toLowerCase())
+      (team.topic
+        ? team.topic.name.toLowerCase().includes(searchTerm.toLowerCase())
         : false) || // Filtrar por tema
-      String(group.group_number)
+      String(team.group_number)
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
   );
   // Obtengo solo los que no tienen topic y/o tutor, o bien conservo lo que ya tenía, según el bool
-  const filteredGroups = showTeamsWithNoTopic(showTeamsWithNoTutor(filteredTeamsBySearchTerm));
-  
+  const filteredTeams = showTeamsWithNoTopic(showTeamsWithNoTutor(filteredTeamsBySearchTerm));
+  console.log("filteredTeams:", filteredTeams);
   // Función para descargar los datos en formato CSV
   const downloadCSV = () => {
     const csvRows = [];
@@ -232,34 +289,34 @@ const GroupDataTable = () => {
       ].join(",")
     );    
 
-    filteredGroups.forEach((group) => {
-      group.students.forEach((student, index) => {
-        group.preferred_topics = group.preferred_topics ? group.preferred_topics : [];
+    filteredTeams.forEach((team) => {
+      team.students?.forEach((student, index) => {
+        team.preferred_topics = team.preferred_topics ? team.preferred_topics : [];
         const row = [
-          index === 0 ? group.id : "",
+          index === 0 ? team.id : "",
           student.name,
           student.last_name,
           student.email,
           student.id,
           index === 0
-            ? getTutorNameById(group.tutor_period_id, period.id) ||
+            ? getTutorNameById(team.tutor_period_id, period.id) ||
               "Sin asignar"
             : "",
           index === 0
-            ? group.topic
-              ? group.topic.name.replace(/,/g, " ")
+            ? team.topic
+              ? team.topic.name.replace(/,/g, " ")
               : "Sin asignar"
             : "",
           index === 0
-            ? getTopicNameById(group.preferred_topics[0]).replace(/,/g, " ") ||
+            ? getTopicNameById(team.preferred_topics[0]).replace(/,/g, " ") ||
               ""
             : "",
           index === 0
-            ? getTopicNameById(group.preferred_topics[1]).replace(/,/g, " ") ||
+            ? getTopicNameById(team.preferred_topics[1]).replace(/,/g, " ") ||
               ""
             : "",
           index === 0
-            ? getTopicNameById(group.preferred_topics[2]).replace(/,/g, " ") ||
+            ? getTopicNameById(team.preferred_topics[2]).replace(/,/g, " ") ||
               ""
             : "",
         ].join(",");
@@ -278,6 +335,8 @@ const GroupDataTable = () => {
     a.click();
     URL.revokeObjectURL(url);
   };
+
+  console.log("--- Desde afuera, allTopics:", allTopics);
 
   return (
     <Box>
@@ -371,19 +430,19 @@ const GroupDataTable = () => {
               </TableHead>
 
               <TableBody>
-                {filteredGroups.map((group) => (
-                  <React.Fragment key={group.id}>
+                {filteredTeams.map((team) => (
+                  <React.Fragment key={team.id}>
                     <TableRow sx={{ backgroundColor: "#f0f0f0" }}>
                       <TableCell colSpan={10} align="center"></TableCell>
                     </TableRow>
                     {/* Table content */}
                     <TableCell
-                      rowSpan={group.students?.length + 1}
+                      rowSpan={team.students?.length + 1}
                       align="center"
                     >
-                      {group.group_number}
+                      {team.group_number}
                     </TableCell>
-                    {group.students.map((student, index) => (
+                    {team.students?.map((student, index) => (
                       <TableRow key={student.id}>
                         <TableCell>{student.id}</TableCell>
                         <TableCell>{student.name}</TableCell>
@@ -393,56 +452,56 @@ const GroupDataTable = () => {
                           {/* index 0 para renderizar esto una vez por fila de equipo (y no una por estudiante) */}
                           {index === 0 && (
                             <TableCell
-                              rowSpan={group.students.length}
+                              rowSpan={team.students.length}
                               align="center"
                             >
                               {getTutorNameById(
-                                group.tutor_period_id,
+                                team.tutor_period_id,
                                 period.id
                               ) || "Sin asignar"}
                             </TableCell>
                           )}
                           {index === 0 && (
                             <TableCell
-                              rowSpan={group.students.length}
+                              rowSpan={team.students.length}
                               align="center"
                             >
-                              {group.topic ? group.topic.name : "Sin asignar"}
+                              {team.topic ? team.topic.name : "Sin asignar"}
                             </TableCell>
                           )}
 
                           {/* Las tres preferencias */}
                           {index === 0 && (
                             
-                            (!group.preferred_topics || (group.preferred_topics.length === 0)) ? (
+                            (!team.preferred_topics || (team.preferred_topics.length === 0)) ? (
                             <>
-                              <ExpandableCell show={showExtraColumns} rowSpan={group.students.length} align="center">
+                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length} align="center">
                                 {"N/A"}
                               </ExpandableCell>
-                              <ExpandableCell show={showExtraColumns} rowSpan={group.students.length} align="center">
+                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length} align="center">
                                 {"N/A"}
                               </ExpandableCell>
-                              <ExpandableCell show={showExtraColumns} rowSpan={group.students.length} align="center">
+                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length} align="center">
                                 {"N/A"}
                               </ExpandableCell>
                             </>
                           ) : (
                             <>
-                              <ExpandableCell show={showExtraColumns} rowSpan={group.students.length}>
+                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length}>
                                 {getTopicNameById(
-                                  group.preferred_topics[0]
+                                  team.preferred_topics[0]
                                 ) || ""}
                               </ExpandableCell>
 
-                              <ExpandableCell show={showExtraColumns} rowSpan={group.students.length}>
+                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length}>
                                 {getTopicNameById(
-                                  group.preferred_topics[1]
+                                  team.preferred_topics[1]
                                 ) || ""}
                               </ExpandableCell>
 
-                              <ExpandableCell show={showExtraColumns} rowSpan={group.students.length}>
+                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length}>
                                 {getTopicNameById(
-                                  group.preferred_topics[2]
+                                  team.preferred_topics[2]
                                 ) || ""}
                               </ExpandableCell>
                             </>
@@ -451,10 +510,10 @@ const GroupDataTable = () => {
                         
                         {/* Copypasteo desde ParentTable esta sección de los botones, ver [] */}
                         {index === 0 && (
-                          <TableCell rowSpan={group.students.length}>
+                          <TableCell rowSpan={team.students.length}>
                             <Stack direction="row" spacing={1}>                          
                               <Button
-                                onClick={() => {setOpenEditModal(true); setItemToPassToModal(group)}}
+                                onClick={() => {setOpenEditModal(true); setItemToPassToModal(team)}}
                                 style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
                                 >
                                 Editar
@@ -496,7 +555,8 @@ const GroupDataTable = () => {
             conflictMsg={conflictsMessage}
             setConflictMsg={setConflictsMessage}
 
-            topics={topics}
+            //topics={allTopics}
+            topics={constAllTopics}            
             tutors={tutors}
             students={students}
             periodId={period.id}
