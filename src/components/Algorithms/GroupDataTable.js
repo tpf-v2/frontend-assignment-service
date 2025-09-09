@@ -433,7 +433,7 @@ const GroupDataTable = () => {
                 {filteredTeams.map((team) => (
                   <React.Fragment key={team.id}>
                     <TableRow sx={{ backgroundColor: "#f0f0f0" }}>
-                      <TableCell colSpan={10} align="center"></TableCell>
+                      <TableCell colSpan={12} align="center"></TableCell>
                     </TableRow>
                     {/* Table content */}
                     <TableCell

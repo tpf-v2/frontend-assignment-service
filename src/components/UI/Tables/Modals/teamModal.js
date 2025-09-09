@@ -305,7 +305,7 @@ export const TeamModal = ({
       }
       
       const confirmEditOnConflictTeamModal = () => {
-        // Usa el editedItem, por lo que en el medio, no se debe haber flusheado editedItem (ej hay que no cerrar el modal anterior)
+        // Usa el editedItem, por lo que en el medio, no se debe haber flusheado editedItem (ej hay que no cerrar (desde afuera) el modal anterior si hay conflicto)
         // Además, luego de Confirmar se necesita usar desde afuera al editedItem por lo que no hay que flushearlo desde acá sino afuera
         console.log("--- VIENDO DESDE ADENTRO OTRA VEZ, EL BOOL: ",openConfirmModal);
         //return innerConfirmEditOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModal, message, handleConfirm, editedItem, setEditedItem, "", "Confirmar") // da error en inglés de que studentsInput es undefined, xq editedItem se flusheó
