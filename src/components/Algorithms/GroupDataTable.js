@@ -46,17 +46,7 @@ const GroupDataTable = () => {
   .filter(item => Object.keys(item).length > 0);
 
   const [allTopics, setAllTopics] = useState({csvTopics: topics, customTopics: []});
-  //const [customTopics, setCustomTopics] = useState();
-  // const addCustomTopicsToAllTopics = () => {
-  //   // Workaround a que el back no los devuelva
-  //   // agrego los temas de quienes pusieron "Ya tengo tema y tutor"
-  //   const customTopics = groups.filter(team => !topics.some(t => t.id === team.topic.id))
-  //   .map(team => team.topic);
-  //   console.log("### Custom topics:", customTopics);
-  //   setAllTopics((prevData) => [...prevData, ...customTopics]);
-  // }  
-  
-  //const constAllTopics = topics.concat(customTopics);
+  const [data, setData] = useState(groups);
 
   const [showExtraColumns, setShowExtraColumns] = useState(false);
 
@@ -75,10 +65,9 @@ const GroupDataTable = () => {
   const [originalEditedItemId, setOriginalEditedItemId] = useState(null);
   const [itemToPassToModal, setItemToPassToModal] = useState(null);
   
-  const [data, setData] = useState(groups);
   const dispatch = useDispatch();
 
-  /// Los useEffect los pongo acá
+  /// useEffect
   const endpoint = `/groups/?period=${period.id}`;
 
   useEffect(() => {
@@ -89,13 +78,11 @@ const GroupDataTable = () => {
         // Workaround a que el back no los devuelva: temas de "Ya tengo tema y tutor":
         const customTopics = groups.filter(team => !topics.some(t => t.id === team.topic.id))
         .map(team => team.topic);
-        console.log("### Custom topics:", customTopics);
         setAllTopics({csvTopics: topics, customTopics: customTopics});
         
-        console.log("Response data:", responseData);
         setData(responseData);
-        
         setLoading(false);
+
       } catch (error) {
         console.error("Error fetching data:", error);
         setLoading(false); // Handle error
@@ -105,39 +92,18 @@ const GroupDataTable = () => {
     fetchData();
   }, [endpoint, user]);
   //}, [endpoint, user, groups, topics]);
-
-  // useEffect(() => {
-  //   // if (groups.length > 0) {
-  //   //   setLoading(false);      
-  //   // }
-  //   if (data.length > 0) {
-  //     setLoading(false);      
-  //   }
-  // }, [data]);
-
-  // useEffect(() => {
-  //   // Configurar un temporizador de 3 segundos
-  //   const timer = setTimeout(() => {
-  //     setLoading(false);
-  //   }, 3000);
-
-  //   // Limpiar el temporizador si el componente se desmonta
-  //   return () => clearTimeout(timer);
-  // }, []);
   /// fin useEffect
+
   // Aux: Editar equipo, la traigo copypaste, veré de refactorizar para reutilizar después []
   const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal, confirm_option=false) => {
     try {
-      console.log("#### DESDE AFUERA, item completo:", editedItem);
-      console.log("   - desde afuera tmb, topic:", editedItem.topic.id);
-      console.log("   - y desde afuera tmb, get name da:", getTopicNameById(editedItem.topic.id));
       editedItem.tutor_email = getTutorEmailByTutorPeriodId(editedItem.tutor_period_id, period.id);
       await editItemInGenericTable(editGroup, editedItem, setEditedItem, setGroups, confirm_option);
       
       // Close modal de edición en caso de éxito
       handleCloseEditModal();
       setOriginalEditedItemId(null); // AUX: Agrego esto acá.
-      setEditedItem({}); ///// para el segundo modal, el de confirm.
+      setEditedItem({}); // necesario para el segundo modal, el de confirm.
     } catch (err) {
       const title="team";
       console.error(`Error when editing ${title}:`, err);
@@ -156,7 +122,6 @@ const GroupDataTable = () => {
           message: `Advertencia: Conflicto al editar equipo.`,
           status: "warning",
         });
-        //console.log("conflict:", err.response.data.detail);
 
         setConflictsMessage(err.response?.data?.detail || []);
         setOpenConfirmEditModal(true);
@@ -341,15 +306,10 @@ const GroupDataTable = () => {
     URL.revokeObjectURL(url);
   };
 
-  console.log("--- Desde afuera, allTopics:", allTopics);
+  console.log("allTopics:", allTopics);
 
   return (
-    <Box>
-      {loading ? (
-            <Box display="flex" justifyContent="center" alignItems="center">
-              <CircularProgress />
-            </Box>
-      ) : (
+    <Box>      
         <>
           <TextField
             label="Buscar"
@@ -561,7 +521,6 @@ const GroupDataTable = () => {
             setConflictMsg={setConflictsMessage}
 
             topics={allTopics}
-            //topics={constAllTopics}            
             tutors={tutors}
             students={students}
             periodId={period.id}
@@ -573,8 +532,6 @@ const GroupDataTable = () => {
             status={notification.status}
           />
         </>
-      )}
-
     </Box>
   )
 };
