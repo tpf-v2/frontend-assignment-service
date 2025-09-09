@@ -31,8 +31,8 @@ export const TeamModal = ({
   setParentItem,
   conflictMsg, // para pasarle el msg de la response del back al modal de conflicto, y su set
   setConflictMsg,
-  topics, // para buscar su email etc a partir de otros datos
-  tutors,
+  topics, // desglosado en csvTopics y customTopics para que los custom se muestren pero No sean seleccionables
+  tutors, // para buscar su email etc a partir de otros datos
   students,
   periodId // para identificar el dato correcto en esas búsquedas
   
@@ -51,7 +51,7 @@ export const TeamModal = ({
       // Función para obtener el nombre del topic por su id
       const getTopicNameById = (id) => {
         if (id === "") return // AUX: agrego esta línea, para usar la función desde el modal de confirm, puedo mandarle "" si no tenía tema asignado.
-        const topic = topics.find((t) => t.id === id);
+        const topic = topics.csvTopics?.find((t) => t.id === id);        
         return topic ? topic.name : ""; // Si no encuentra el topic, mostrar 'Desconocido'
       };
       // Función para obtener el nombre del tutor por su tutor period id
@@ -66,7 +66,7 @@ export const TeamModal = ({
         
     // AUX
     const getTopicById = (id) => {
-        const topic = topics.find((t) => t.id === id);
+        const topic = topics.csvTopics?.find((t) => t.id === id);
         return topic ? topic : ""; // Si no encuentra el topic, mostrar 'Desconocido'
       };
     // Función para obtener el nombre del tutor por su id
@@ -189,7 +189,7 @@ export const TeamModal = ({
                         label="Tema"
                         required
                       >
-                        {topics.map((topic) => (
+                        {topics.csvTopics.map((topic) => (
                           <MenuItem
                             key={topic.id}
                             value={topic.id}
@@ -197,6 +197,14 @@ export const TeamModal = ({
                             {topic.name}
                           </MenuItem>
                         ))}
+
+                        {/* Si el valor actual es un custom, agregarlo como opción (no seleccionable)
+                            para que se pueda mostrar como valor inicial al abrir el modal*/}
+                        {item.topic && !topics.csvTopics.some(t => t.id === item.topic.id) && (
+                          <MenuItem key={item.topic.id} value={item.topic.id} disabled>
+                            {item.topic.name}
+                          </MenuItem>
+                        )}
                       </Select>
                     </FormControl>
                   

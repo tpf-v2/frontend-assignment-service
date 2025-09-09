@@ -45,7 +45,8 @@ const GroupDataTable = () => {
   .map(({ version, rehydrated, ...rest }) => rest)
   .filter(item => Object.keys(item).length > 0);
 
-  const [allTopics, setAllTopics] = useState(topics);
+  const [allTopics, setAllTopics] = useState({csvTopics: topics, customTopics: []});
+  //const [customTopics, setCustomTopics] = useState();
   // const addCustomTopicsToAllTopics = () => {
   //   // Workaround a que el back no los devuelva
   //   // agrego los temas de quienes pusieron "Ya tengo tema y tutor"
@@ -53,12 +54,9 @@ const GroupDataTable = () => {
   //   .map(team => team.topic);
   //   console.log("### Custom topics:", customTopics);
   //   setAllTopics((prevData) => [...prevData, ...customTopics]);
-  // }
-  const customTopics = groups.filter(team => !topics.some(t => t.id === team.topic.id))
-    .map(team => team.topic);
-    console.log("### Custom topics:", customTopics);
-  const constAllTopics = topics.concat(customTopics);
-
+  // }  
+  
+  //const constAllTopics = topics.concat(customTopics);
 
   const [showExtraColumns, setShowExtraColumns] = useState(false);
 
@@ -81,12 +79,18 @@ const GroupDataTable = () => {
   const dispatch = useDispatch();
 
   /// Los useEffect los pongo acá
-  const endpoint = `/teams/?period=${period.id}`;
+  const endpoint = `/groups/?period=${period.id}`;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const responseData = await getTableData(endpoint, user);
+
+        // Workaround a que el back no los devuelva: temas de "Ya tengo tema y tutor":
+        const customTopics = groups.filter(team => !topics.some(t => t.id === team.topic.id))
+        .map(team => team.topic);
+        console.log("### Custom topics:", customTopics);
+        setAllTopics({csvTopics: topics, customTopics: customTopics});
         
         console.log("Response data:", responseData);
         setData(responseData);
@@ -100,6 +104,7 @@ const GroupDataTable = () => {
 
     fetchData();
   }, [endpoint, user]);
+  //}, [endpoint, user, groups, topics]);
 
   // useEffect(() => {
   //   // if (groups.length > 0) {
@@ -555,8 +560,8 @@ const GroupDataTable = () => {
             conflictMsg={conflictsMessage}
             setConflictMsg={setConflictsMessage}
 
-            //topics={allTopics}
-            topics={constAllTopics}            
+            topics={allTopics}
+            //topics={constAllTopics}            
             tutors={tutors}
             students={students}
             periodId={period.id}
