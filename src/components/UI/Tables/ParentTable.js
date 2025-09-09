@@ -35,6 +35,10 @@ import { TopicModals } from "./Modals/topicModals";
 import { addCapacityToTutors } from "../../../utils/addCapacityToTutors";
 import { DeleteConfirmationModal } from "./Modals/deleteConfirmationModal";
 
+import validateUrl from "../../../services/validateUrl";
+
+const BASE_URL = process.env.REACT_APP_API_URL;
+
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(4),
   padding: theme.spacing(4),
@@ -58,8 +62,9 @@ const ParentTable = ({
   endpoint,
   renderRow,
   items,
+  customCsvUri,
   enableEdit = true,
-  enableDelete = true
+  enableDelete = true,
 }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -260,32 +265,47 @@ const ParentTable = ({
     setSearchTerm(event.target.value);
   };
 
-  const downloadCSV = () => {
-    const csvRows = [];
+  const downloadCSV = async () => {
+    let url = null;
+    const isCustomCsvUriValid = await validateUrl(`${BASE_URL}${customCsvUri}`);
+    if (isCustomCsvUriValid) {
+      const dataUrl = `${BASE_URL}${customCsvUri}`;
+      const response = await fetch(dataUrl, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${user.token}`
+        }
+      });
 
-    // Headers
-    csvRows.push(columns.join(","));
+      const blob = new Blob([await response.text()], { type: "text/csv" });
+      url = URL.createObjectURL(blob);
+    } else {
+      const csvRows = [];
 
-    // Data
-    data.forEach((item) => {
-      const unnestedItem = unnestKeys(item);
-      const row = columns
-        .map((column) => {
-          const value = unnestedItem[rowKeys[column]]; // Obtener el valor
+      // Headers
+      csvRows.push(columns.join(","));
 
-          // Verificar si el valor es un array
-          if (Array.isArray(value)) {
-            return value.join(" || ").replace(/,/g, " "); // Unir los elementos del array usando ';'
-          }
-          return String(value).replace(/,/g, " ");
-        })
-        .join(",");
-      csvRows.push(row);
-    });
+      // Data
+      data.forEach((item) => {
+        const unnestedItem = unnestKeys(item);
+        const row = columns
+          .map((column) => {
+            const value = unnestedItem[rowKeys[column]]; // Obtener el valor
 
-    // Crear un blob y descargar
-    const blob = new Blob([csvRows.join("\n")], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
+            // Verificar si el valor es un array
+            if (Array.isArray(value)) {
+              return value.join(" || ").replace(/,/g, " "); // Unir los elementos del array usando ';'
+            }
+            return String(value).replace(/,/g, " ");
+          })
+          .join(",");
+        csvRows.push(row);
+      });
+
+      // Crear un blob y descargar
+      const blob = new Blob([csvRows.join("\n")], { type: "text/csv" });
+      url = URL.createObjectURL(blob);
+    }
 
     const a = document.createElement("a");
     a.setAttribute("href", url);
@@ -295,7 +315,10 @@ const ParentTable = ({
       title.toLowerCase().replace(" ", "_").concat(".csv")
     );
     a.click();
-    URL.revokeObjectURL(url);
+
+    if (!isCustomCsvUriValid) {
+      URL.revokeObjectURL(url);
+    }
   };
   
   // Filtrado mejorado
