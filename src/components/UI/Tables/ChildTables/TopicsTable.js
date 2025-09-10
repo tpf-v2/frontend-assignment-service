@@ -28,9 +28,10 @@ const TopicsTable = () => {
     </>
   );
 
+  const customCsvUri = `/topics/topics.csv?period_id=${period.id}`;
 
   return (
-    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} items={topics} enableEdit={true}/>
+    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} items={topics} enableEdit={true} customCsvUri={customCsvUri}/>
   );
 };
 
