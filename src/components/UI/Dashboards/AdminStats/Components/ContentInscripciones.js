@@ -48,14 +48,16 @@ const ContentInscripciones = ({
       const numStudents = group.students.length;
   
       // Verificar el número de estudiantes y agregar al gráfico
-      if (numStudents === 1) {
-        dashboardData.answersChart[0].cantidad += 1; // equipos con 1 estudiante
-      } else if (numStudents === 2) {
-        dashboardData.answersChart[1].cantidad += 1; // equipos con 2 estudiantes
-      } else if (numStudents === 3) {
-        dashboardData.answersChart[2].cantidad += 1; // equipos con 3 estudiantes
-      } else if (numStudents === 4) {
-        dashboardData.answersChart[3].cantidad += 1; // equipos con 4 estudiantes
+      if (dashboardData) { // PATCH: this would cause exception if dashboardData was null / loading = true
+        if (numStudents === 1) {
+          dashboardData.answersChart[0].cantidad += 1; // equipos con 1 estudiante
+        } else if (numStudents === 2) {
+          dashboardData.answersChart[1].cantidad += 1; // equipos con 2 estudiantes
+        } else if (numStudents === 3) {
+          dashboardData.answersChart[2].cantidad += 1; // equipos con 3 estudiantes
+        } else if (numStudents === 4) {
+          dashboardData.answersChart[3].cantidad += 1; // equipos con 4 estudiantes
+        }
       }
     });
   }
