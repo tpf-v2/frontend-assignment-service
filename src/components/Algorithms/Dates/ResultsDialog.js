@@ -94,6 +94,7 @@ const ResultsDialog = ({
         sx={{ maxHeight: "90vh", backgroundColor: "#f4f6f8" }}
       >
         <CalendarStyled
+          messages = {{next: "Siguiente",previous: "Atrás",today: "Hoy"}}
           localizer={localizer}
           onSelectSlot={handleSelectSlot}
           onSelectEvent={handleSelectEvent}

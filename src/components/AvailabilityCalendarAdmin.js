@@ -188,7 +188,6 @@ const AvailabilityCalendarAdmin = () => {
           selecciónalo de nuevo.
         </Typography>
       </DescriptionBox>
-
       {!loading ? (
         <CalendarStyled
           localizer={localizer}
@@ -226,6 +225,7 @@ const AvailabilityCalendarAdmin = () => {
               return false;
             }
           }}
+          messages = {{next: "Siguiente",previous: "Atrás",today: "Hoy"}}
         />
       ) : (
         <Box
