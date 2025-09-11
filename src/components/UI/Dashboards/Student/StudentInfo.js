@@ -10,6 +10,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
 
 const StudentInfo = () => {
   const user = useSelector((state) => state.user);
+  const period = useSelector((state) => state.user.period_id);
   return (
     <StyledCard>
       <CardContent>
@@ -39,6 +40,12 @@ const StudentInfo = () => {
             Tutor:
           </Typography>
           {user.tutor || "Sin asignar aún"}
+        </Typography>
+        <Typography color="text.primary">
+          <Typography component="span" color="text.primary" fontWeight="bold" marginRight={1}>
+            Cursada:
+          </Typography>
+          {period || "Sin asignar aún"}
         </Typography>
       </CardContent>
     </StyledCard>
