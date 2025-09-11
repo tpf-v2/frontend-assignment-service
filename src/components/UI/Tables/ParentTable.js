@@ -223,11 +223,6 @@ const ParentTable = ({
 
   const handleDeleteItem = async (id, handleClose) => {
     try {
-      console.log("Entrando a handleDeleteItem para");
-      console.log("   id:", id);
-      console.log("   title:", title);
-      console.log("   endpoint:", endpoint);
-
       // Call deleteResponse to remove the record
       await deleteRow(endpoint, id, user);
       // Filter the data state to remove the deleted item
