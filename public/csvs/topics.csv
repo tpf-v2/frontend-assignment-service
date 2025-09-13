@@ -1,10 +1,9 @@
-TEMA,CATEGORIA,TUTOR,CAPACIDAD
-Tema 1,Numero,tutor1@fi.uba.ar,1
-Tema 2,Numero,tutor2@fi.uba.ar,2
-Tema 3,Numero,tutor3@fi.uba.ar,3
-Tema A,Letra,tutor1@fi.uba.ar,1
-Tema B,Letra,tutor2@fi.uba.ar,2
-Tema C,Letra,tutor3@fi.uba.ar,3
-Tema Facil,Palabra,tutor1@fi.uba.ar,1
-Tema Medio,Palabra,tutor2@fi.uba.ar,2
-Tema Dificil,Palabra,tutor3@fi.uba.ar,3
+TEMA,CATEGORIA,TUTOR_MAIL,CAPACIDAD
+Blockchain & NFT,Inteligencia Artificial y temas afines,hmerlino@fi.uba.ar,1
+Trading Algorítmico,Inteligencia Artificial y temas afines,hmerlino@fi.uba.ar,1
+Birrómetro: Hidrómetro digital para la elaboración de cerveza,default,jcabrera@fi.uba.ar,1
+PyLab,default,aservetto@fi.uba.ar,1
+Sistema de Apoyo a Cultivos Hidropónicos,default,jcabrera@fi.uba.ar,1
+Aplicación para cultivos hidropónicos,default,jcabrera@fi.uba.ar,1
+Simulación para Arquitecturas RISC,default,aservetto@fi.uba.ar,1
+Mímir: Sistema de monitoreo para cultivos hidropónicos,default,jcabrera@fi.uba.ar,1
