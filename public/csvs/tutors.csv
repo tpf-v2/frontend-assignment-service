@@ -1,4 +1,33 @@
-NOMBRE,APELLIDO,DNI,MAIL,CAPACIDAD
-Tutor,Prueba 1,10000001,tutor1@fi.uba.ar,4
-Tutor,Prueba 2,10000002,tutor2@fi.uba.ar,4
-Tutor,Prueba 3,10000003,tutor3@fi.uba.ar,4
+NOMBRE,APELLIDO,MAIL,CAPACIDAD
+Ariel,Scarpinelli,ascarpinelli@fi.uba.ar,1
+Arturo,Servetto,aservetto@fi.uba.ar,3
+Damián,Martinelli,damianmarti@gmail.com,2
+Facundo,Caram,fcaram@fi.uba.ar,1
+Maia,Naftali,mnaftali@fi.uba.ar,2
+Silvia,Ramos,silviaadrianaramos@gmail.com,1
+Mariano,Méndez,marianomendez@fi.uba.ar,8
+Alejandro,Molinari,amolinari@fi.uba.ar,4
+Bruno,Lanzillotta,blanzillotta@fi.uba.ar,3
+Diego,García Jaime,dgarciajaime@fi.uba.ar,3
+Gabriel,Piñeiro,gpineiro@fi.uba.ar,5
+Gustavo,Carolo,gustavocarolo@gmail.com,2
+Jorge,Ierache,jierache@fi.uba.ar,4
+José Luis,Cabrera,jcabrera@fi.uba.ar,3
+Marcos,Saladino,msaladino@fi.uba.ar,3
+Diego,Montaldo,dmontal@fi.uba.ar,1
+Nicolás,Páez,npaez@fi.uba.ar,1
+Cesar,Caiafa,ccaiafa@fi.uba.ar,2
+Carlos,Fontela,cfontela@fi.uba.ar,1
+Pablo,Deymonaz,pdeymon@fi.uba.ar,1
+Hernan,Merlino,hmerlino@fi.uba.ar,2
+Agustín,Perrotta,aperrotta@fi.uba.ar,2
+Fernando,Chaure,fchaure@fi.uba.ar,2
+Maria Alejandra,Ochoa,maochoa@fi.uba.ar,3
+María Mercedes,Madeira,mmadeira@fi.uba.ar,4
+Mauro,Ciancio,mauro.ciancio@gmail.com,3
+Pablo,Cosso,pcosso@fi.uba.ar,3
+Edgardo,Marchi,emarchi@fi.uba.ar,2
+Martin,Buchwald,mbuchwald@fi.uba.ar,3
+Emmanuel Eduardo,Espina,eespina@fi.uba.ar,2
+Alejandro,Turri,alejandroturri20@gmail.com,1
+María Pilar,Gaddi,mgaddi@fi.uba.ar,1
