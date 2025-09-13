@@ -59,6 +59,7 @@ const CalendarSection = ({ events, defaultDate, loadingDates }) => {
           {events ? (
             <>
               <CalendarStyled
+                messages = {{next: "Siguiente",previous: "Atrás",today: "Hoy"}}
                 localizer={localizer}
                 events={events}
                 selectable

@@ -33,6 +33,7 @@ import { StudentModals } from "./Modals/studentModals";
 import { TutorModals } from "./Modals/tutorModals";
 import { TopicModals } from "./Modals/topicModals";
 import { addCapacityToTutors } from "../../../utils/addCapacityToTutors";
+import { DeleteConfirmationModal } from "./Modals/deleteConfirmationModal";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -74,6 +75,7 @@ const ParentTable = ({
   const [openEditModal, setOpenEditModal] = useState(false);
   const [originalEditedItemId, setOriginalEditedItemId] = useState(null);
   const [itemToPassToModal, setItemToPassToModal] = useState(null);
+  const [openConfirmDeleteModal, setOpenConfirmDeleteModal] = useState(false);
 
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
@@ -172,7 +174,7 @@ const ParentTable = ({
       console.error(`Error when adding new ${title}:`, err);
       setNotification({
         open: true,
-        message: `Error al agregar ${TableTypeSingularLabel[title]||''}.`,
+        message: `Error al agregar ${TableTypeSingularLabel[title]||''}`,
         status: "error",
       });
     } finally {
@@ -210,7 +212,7 @@ const ParentTable = ({
       console.error(`Error when editing new ${title}:`, err);
       setNotification({
         open: true,
-        message: `Error al editar ${TableTypeSingularLabel[title]||''}.`,
+        message: `Error al editar ${TableTypeSingularLabel[title]||''}`,
         status: "error",
       });
     } finally {
@@ -219,7 +221,7 @@ const ParentTable = ({
     
   };
 
-  const handleDelete = async (id) => {
+  const handleDeleteItem = async (id, handleClose) => {
     try {
       // Call deleteResponse to remove the record
       await deleteRow(endpoint, id, user);
@@ -227,11 +229,18 @@ const ParentTable = ({
       setData((prevData) => prevData.filter((item) => item.id !== id));
       setNotification({
         open: true,
-        message: `Eliminado con exito!`,
+        message: `Se eliminó ${TableTypeSingularLabel[title]||''} exitosamente`,
         status: "success",
       });
     } catch (error) {
       console.error("Error deleting item:", error);
+      setNotification({
+        open: true,
+        message: `Error al eliminar ${TableTypeSingularLabel[title]||''}`,
+        status: "error",
+      });
+    } finally {
+      handleClose();
     }
   };
 
@@ -326,7 +335,7 @@ const ParentTable = ({
             </Button>
             {/* {(AddButtonComponent && topicsCond) && <AddButtonComponent />} */}
 
-            {title !== "Respuestas" && (
+            {title !== TableType.RESPONSES && (
               <Box>
                 <Fab
                   size="small"
@@ -346,7 +355,9 @@ const ParentTable = ({
                   {columns.map((column, index) => (
                     <TableCell key={index}>{column}</TableCell>
                   ))}
-                  <TableCell>Acciones</TableCell>
+                  {(enableEdit || enableDelete) &&
+                    <TableCell>Acciones</TableCell>
+                  }
                 </TableRow>
               </TableHead>
               {/* --- Content --- */}
@@ -366,14 +377,14 @@ const ParentTable = ({
                         )}
                         {enableDelete && (
                           <Button
-                            onClick={() => handleDelete(item.id)}
+                            onClick={() => {setOpenConfirmDeleteModal(true); setItemToPassToModal(item)}}
                             style={{ backgroundColor: "red", color: "white" }}
                             >
                             Eliminar
                           </Button>
-                        )}
+                        )}                        
                       </Stack>
-                    </TableCell> }
+                    </TableCell> }                    
                   </TableRow>
                 ))}
               </TableBody>
@@ -426,7 +437,15 @@ const ParentTable = ({
           tutors={tutors}
           categories={categories}
         />
-      };
+      };      
+      <DeleteConfirmationModal
+        openModal={openConfirmDeleteModal}
+        setOpenModal={setOpenConfirmDeleteModal}
+        handleDelete={handleDeleteItem}
+        item={itemToPassToModal}
+        setParentItem={setItemToPassToModal}
+        itemTypeName={TableTypeSingularLabel[title]||''}
+      />      
       <MySnackbar
         open={notification.open}
         handleClose={handleSnackbarClose}
