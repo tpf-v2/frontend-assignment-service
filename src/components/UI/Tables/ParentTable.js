@@ -35,10 +35,6 @@ import { TopicModals } from "./Modals/topicModals";
 import { addCapacityToTutors } from "../../../utils/addCapacityToTutors";
 import { DeleteConfirmationModal } from "./Modals/deleteConfirmationModal";
 
-import validateUrl from "../../../services/validateUrl";
-
-const BASE_URL = process.env.REACT_APP_API_URL;
-
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(4),
   padding: theme.spacing(4),
@@ -62,7 +58,8 @@ const ParentTable = ({
   endpoint,
   renderRow,
   items,
-  customCsvUri,
+  csvColumns,
+  csvRowKeys,
   enableEdit = true,
   enableDelete = true,
 }) => {
@@ -88,6 +85,9 @@ const ParentTable = ({
   .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
   .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
   const tutors = addCapacityToTutors(tutorsWithoutCapacityField, period);
+
+  csvRowKeys = csvRowKeys || rowKeys;
+  csvColumns = csvColumns || columns;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -267,65 +267,48 @@ const ParentTable = ({
 
   const downloadCSV = async () => {
     let url = null;
-    const isCustomCsvUriValid = await validateUrl(`${BASE_URL}${customCsvUri}`);
-    if (isCustomCsvUriValid) {
-      const dataUrl = `${BASE_URL}${customCsvUri}`;
-      const response = await fetch(dataUrl, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${user.token}`
-        }
-      });
+    const csvRows = [];
 
-      const blob = new Blob([await response.text()], { type: "text/csv" });
-      url = URL.createObjectURL(blob);
-    } else {
-      const csvRows = [];
+    // Headers
+    csvRows.push(csvColumns.join(","));
 
-      // Headers
-      csvRows.push(columns.join(","));
+    // Data
+    data.forEach((item) => {
+      const unnestedItem = unnestKeys(item);
+      const row = csvColumns
+        .map((column) => {
+          const value = unnestedItem[csvRowKeys[column]]; // Obtener el valor
+          // Verificar si el valor es un array
+          if (Array.isArray(value)) {
+            return value.join(" || ").replace(/,/g, " "); // Unir los elementos del array usando ';'
+          }
+          return String(value).replace(/,/g, " ");
+        })
+        .join(",");
+      csvRows.push(row);
+    });
 
-      // Data
-      data.forEach((item) => {
-        const unnestedItem = unnestKeys(item);
-        const row = columns
-          .map((column) => {
-            const value = unnestedItem[rowKeys[column]]; // Obtener el valor
-
-            // Verificar si el valor es un array
-            if (Array.isArray(value)) {
-              return value.join(" || ").replace(/,/g, " "); // Unir los elementos del array usando ';'
-            }
-            return String(value).replace(/,/g, " ");
-          })
-          .join(",");
-        csvRows.push(row);
-      });
-
-      // Crear un blob y descargar
-      const blob = new Blob([csvRows.join("\n")], { type: "text/csv" });
-      url = URL.createObjectURL(blob);
-    }
+    // Crear un blob y descargar
+    const blob = new Blob([csvRows.join("\n")], { type: "text/csv" });
+    url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
     a.setAttribute("href", url);
-
+  
     a.setAttribute(
       "download",
       title.toLowerCase().replace(" ", "_").concat(".csv")
     );
     a.click();
-
-    if (!isCustomCsvUriValid) {
-      URL.revokeObjectURL(url);
-    }
-  };
   
+    URL.revokeObjectURL(url);
+  }
+
   // Filtrado mejorado
   const filteredData = data.filter((item) => {
-    return columns.some((column) => {
+    return csvColumns.some((column) => {
       const unnestedItem = unnestKeys(item);
-      const itemValue = unnestedItem[rowKeys[column]] || ""; // Utiliza el mapeo
+      const itemValue = unnestedItem[csvRowKeys[column]] || ""; // Utiliza el mapeo
       return String(itemValue).toLowerCase().includes(searchTerm.toLowerCase());
     });
   });
