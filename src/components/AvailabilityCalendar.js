@@ -54,7 +54,7 @@ const AvailabilityCalendar = () => {
   const [defaultDate, setDefaultDate] = useState(null); // Estado para la fecha predeterminada
 
   const [loading, setLoading] = useState(true);
-  const messages = {next: "Siguiente",previous: "Atras",today: "Hoy"}
+  const messages = {next: "Siguiente",previous: "Atrás",today: "Hoy"}
 
   useEffect(() => {
     const fetchData = async () => {
