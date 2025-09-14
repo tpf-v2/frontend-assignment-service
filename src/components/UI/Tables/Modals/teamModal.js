@@ -47,37 +47,19 @@ export const TeamModal = ({
 
       }, [openEditModal, item]);      
 
-      // AUX: ESTAS FUNCIONES DEBERÍAN SER IMPORTABLES []
+      // To-Do: Estas funciones deberían ser importables
       // Función para obtener el nombre del topic por su id
       const getTopicNameById = (id) => {
         if (id === "") return // AUX: agrego esta línea, para usar la función desde el modal de confirm, puedo mandarle "" si no tenía tema asignado.
         const topic = topics.csvTopics?.find((t) => t.id === id);        
         return topic ? topic.name : ""; // Si no encuentra el topic, mostrar 'Desconocido'
       };
-      // Función para obtener el nombre del tutor por su tutor period id
-        const getTutorNameById = (id, periodId) => {
-            const tutor = tutors.find(
-            (t) =>
-                t.tutor_periods &&
-                t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
-            );
-            return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
-        };
         
-    // AUX
-    const getTopicById = (id) => {
+      // Nueva función, para obtener el objeto topic
+      const getTopicById = (id) => {
         const topic = topics.csvTopics?.find((t) => t.id === id);
         return topic ? topic : ""; // Si no encuentra el topic, mostrar 'Desconocido'
       };
-    // Función para obtener el nombre del tutor por su id
-    const getTutorEmailByTutorPeriodId = (id, periodId) => {
-        const tutor = tutors.find(
-        (t) =>
-            t.tutor_periods &&
-            t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
-        );
-        return tutor ? tutor.email : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
-    };
 
       /////// Modals ///////
       // Este modal va a ser el de editar directamente (hay add en StudentForm).

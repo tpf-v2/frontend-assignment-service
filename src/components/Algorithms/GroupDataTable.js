@@ -1,3 +1,6 @@
+/// Este archivo es similar a ParentTable, pero tanto el contenido de la tabla que se renderiza como
+// el flujo de editar equipo (con dos modales, analizando si hubo o no conflicto) es diferente a ParentTable,
+// por lo que se optó por mantener los archivos separados en pos de la legibilidad.
 import {
   CircularProgress,
   Paper,
@@ -13,7 +16,7 @@ import {
   Stack
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import ExpandableCell from "../ExpandableCell";
 
 import { TeamModal } from "../UI/Tables/Modals/teamModal";
@@ -44,6 +47,9 @@ const GroupDataTable = () => {
   .map(({ version, rehydrated, ...rest }) => rest)
   .filter(item => Object.keys(item).length > 0);
 
+  const user = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(true);
+
   const [allTopics, setAllTopics] = useState({csvTopics: topics, customTopics: []});
   const [data, setData] = useState(groups); // teams
 
@@ -53,19 +59,13 @@ const GroupDataTable = () => {
   const [showNoTopic, setShowNoTopic] = useState(false);
   const [showNoTutor, setShowNoTutor] = useState(false);
 
-  const [loading, setLoading] = useState(true);
-
-  ////////// Inicio lo necesario para editar equipo, Revisar []
-  const user = useSelector((state) => state.user);
   const [openConfirmEditModal, setOpenConfirmEditModal] = useState(false);
   const [conflictsMessage, setConflictsMessage] = useState([]);
-  // Editar equipo
+
   const [openEditModal, setOpenEditModal] = useState(false);
   const [itemToPassToModal, setItemToPassToModal] = useState(null);
-  
-  const dispatch = useDispatch();
 
-  /// useEffect
+  // useEffect
   const endpoint = `/groups/?period=${period.id}`;
 
   useEffect(() => {
@@ -90,9 +90,8 @@ const GroupDataTable = () => {
     fetchData();
   }, [endpoint, user]);
   //}, [endpoint, user, groups, topics]);
-  /// fin useEffect
 
-  // Aux: Editar equipo, la traigo copypaste, veré de refactorizar para reutilizar después []
+  // Editar equipo
   const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal, confirm_option=false) => {
     try {
       editedItem.tutor_email = getTutorEmailByTutorPeriodId(editedItem.tutor_period_id, period.id);
@@ -162,13 +161,13 @@ const GroupDataTable = () => {
   const handleSnackbarClose = () => {
     setNotification({ ...notification, open: false });
   };
-  /////
+  
   // Confirmar edición con bool true
   const handleConfirmEditOnConflict = async (editedItem, setEditedItem, handleCloseEditModal, confirm_option=true) => {
     await handleEditItem(editedItem, setEditedItem, handleCloseEditModal, true);
   };
-  //////
-  // Formato
+  
+  // Formato para el endpoint
   const getTutorEmailByTutorPeriodId = (id, periodId) => {
     const tutor = tutors.find(
     (t) =>
@@ -176,9 +175,7 @@ const GroupDataTable = () => {
         t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
     );
     return tutor ? tutor.email : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
-  };    
-  //////////////////// fin lo necesario para edit ///////  
-
+  };
 
   // Función para obtener el nombre del topic por su id
   // aux: se usa solo para preferencias, no es problema que use topics
@@ -222,7 +219,6 @@ const GroupDataTable = () => {
     return showNoTopic ? teams.filter((team) => !team.topic) : teams
   };
   const showTeamsWithNoTutor = (teams) => {
-    console.log("--- teams:", teams);
     return showNoTutor ? teams.filter((team) => !team.tutor_period_id) : teams
   };
   // Filtrar equipos según el término de búsqueda
@@ -246,7 +242,6 @@ const GroupDataTable = () => {
   );
   // Contemplo si se clickeó botones de showNoX: obtengo solo los que no tienen topic y/o tutor, o bien conservo lo que ya tenía, según el bool
   const filteredTeams = showTeamsWithNoTopic(showTeamsWithNoTutor(filteredTeamsBySearchTerm));
-  console.log("filteredTeams:", filteredTeams);
   // Función para descargar los datos en formato CSV
   const downloadCSV = () => {
     const csvRows = [];
@@ -311,8 +306,6 @@ const GroupDataTable = () => {
     a.click();
     URL.revokeObjectURL(url);
   };
-
-  console.log("allTopics:", allTopics);
 
   return (
     <Box>      
