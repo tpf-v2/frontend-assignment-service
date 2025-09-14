@@ -25,6 +25,7 @@ import { useMemo } from 'react';
 import browser from '../services/browserDetect';
 import BrowserWarning from './BrowserWarning';
 import { CalendarInterval } from "./CalendarInterval";
+import CommonCalendar from "./CommonCalendar"
 
 // Localizador de momento
 moment.tz.setDefault('America/Argentina/Buenos Aires')
@@ -189,42 +190,14 @@ const AvailabilityCalendarAdmin = () => {
         </Typography>
       </DescriptionBox>
       {!loading ? (
-        <CalendarStyled
-          messages = {{next: "Siguiente",previous: "Atrás",today: "Hoy"}}
-          localizer={localizer}
-          events={events}
-          selectable
-          onSelectSlot={handleSelectSlot}
-          onSelectEvent={handleSelectEvent}
-          views={["week"]}
-          defaultView="week"
-          timeslots={1}
-          step={60}
-          showMultiDayTimes
-          defaultDate={defaultDate || new Date()}
-          culture={"es"}
-          style={{ height: "500px", margin: "50px" }}
-          min={new Date(0, 0, 0, 9, 0, 0)} // Comienza a las 9 AM
-          max={new Date(0, 0, 0, 21, 0, 0)} // Termina a las 9 PM
-          formats={formats}
-          components={{
-            month: {
-              header: () => null,
-            },
-          }}
-          dayPropGetter={(date) => {
-            const day = date.getDay();
-            if (day === 0 || day === 6) {
-              return { style: { display: "none" } }; // Ocultar este día
-            }
-            return {};
-          }}
-          onNavigation={(date) => {
-            const day = date.getDay();
-            if (day === 0 || day === 6) {
-              return false;
-            }
-          }}
+        
+  
+        <CommonCalendar
+          defaultDate={defaultDate}
+          userAvailability={events}
+          handleSelectSlot={handleSelectSlot}
+          handleSelectEvent={handleSelectEvent}
+          slotPropGetter={null}
         />
       ) : (
         <Box
