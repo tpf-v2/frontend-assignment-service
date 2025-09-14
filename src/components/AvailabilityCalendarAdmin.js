@@ -14,7 +14,6 @@ import {
   putAvailability,
 } from "../api/handleAvailability";
 import {
-  CalendarStyled,
   AvailabilityContainer,
   DescriptionBox,
 } from "../styles/AvailabilityCalendarStyle";
