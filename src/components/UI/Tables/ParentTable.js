@@ -266,7 +266,6 @@ const ParentTable = ({
   };
 
   const downloadCSV = async () => {
-    let url = null;
     const csvRows = [];
 
     // Headers
@@ -290,7 +289,7 @@ const ParentTable = ({
 
     // Crear un blob y descargar
     const blob = new Blob([csvRows.join("\n")], { type: "text/csv" });
-    url = URL.createObjectURL(blob);
+    const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
     a.setAttribute("href", url);
