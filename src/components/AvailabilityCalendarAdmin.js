@@ -190,6 +190,7 @@ const AvailabilityCalendarAdmin = () => {
       </DescriptionBox>
       {!loading ? (
         <CalendarStyled
+          messages = {{next: "Siguiente",previous: "Atrás",today: "Hoy"}}
           localizer={localizer}
           events={events}
           selectable
@@ -214,7 +215,6 @@ const AvailabilityCalendarAdmin = () => {
           dayPropGetter={(date) => {
             const day = date.getDay();
             if (day === 0 || day === 6) {
-              // sábado y domingo
               return { style: { display: "none" } }; // Ocultar este día
             }
             return {};
@@ -225,7 +225,6 @@ const AvailabilityCalendarAdmin = () => {
               return false;
             }
           }}
-          messages = {{next: "Siguiente",previous: "Atrás",today: "Hoy"}}
         />
       ) : (
         <Box
