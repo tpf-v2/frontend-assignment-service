@@ -1,33 +1,4 @@
 NOMBRE,APELLIDO,MAIL,CAPACIDAD
-Ariel,Scarpinelli,**************@fi.uba.ar,1
-Arturo,Servetto,*************@fi.uba.ar,3
-Damián,Martinelli,*******i@gmail.com,2
-Facundo,Caram,*********@fi.uba.ar,1
-Maia,Naftali,*********@fi.uba.ar,2
-Silvia,Ramos,**********s@gmail.com,1
-Mariano,Méndez,****************@fi.uba.ar,8
-Alejandro,Molinari,*********@fi.uba.ar,4
-Bruno,Lanzillotta,*********@fi.uba.ar,3
-Diego,García Jaime,*********@fi.uba.ar,3
-Gabriel,Piñeiro,*********@fi.uba.ar,5
-Gustavo,Carolo,***********@gmail.com,2
-Jorge,Ierache,*********@fi.uba.ar,4
-José Luis,Cabrera,*********@fi.uba.ar,3
-Marcos,Saladino,*********@fi.uba.ar,3
-Diego,Montaldo,*********@fi.uba.ar,1
-Nicolás,Páez,*********@fi.uba.ar,1
-Cesar,Caiafa,*********@fi.uba.ar,2
-Carlos,Fontela,*********@fi.uba.ar,1
-Pablo,Deymonaz,*********@fi.uba.ar,1
-Hernan,Merlino,*********@fi.uba.ar,2
-Agustín,Perrotta,*********@fi.uba.ar,2
-Fernando,Chaure,*********@fi.uba.ar,2
-Maria Alejandra,Ochoa,*********@fi.uba.ar,3
-María Mercedes,Madeira,*********@fi.uba.ar,4
-Mauro,Ciancio,mauro.ciancio@gmail.com,3
-Pablo,Cosso,*********@fi.uba.ar,3
-Edgardo,Marchi,*********@fi.uba.ar,2
-Martin,Buchwald,*********@fi.uba.ar,3
-Emmanuel Eduardo,Espina,*********@fi.uba.ar,2
-Alejandro,Turri,alejandroturri20@gmail.com,1
-María Pilar,Gaddi,*********@fi.uba.ar,1
+Tutor,Prueba 1,tutor1@fi.uba.ar,4
+Tutor,Prueba 2,tutor2@fi.uba.ar,4
+Tutor,Prueba 3,tutor3@fi.uba.ar,4
