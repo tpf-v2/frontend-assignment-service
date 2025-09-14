@@ -91,9 +91,6 @@ const CalendarSection = ({ events, defaultDate, loadingDates }) => {
                 style={style}
                 min={new Date(0, 0, 0, 9, 0, 0)}
                 max={new Date(0, 0, 0, 21, 0, 0)}
-                eventPropGetter={(event) => ({
-                  style: eventStyle(event),
-                })}
                 formats={formats}
                 components={{
                   month: {
@@ -107,6 +104,9 @@ const CalendarSection = ({ events, defaultDate, loadingDates }) => {
                   }
                   return {};
                 }}
+                eventPropGetter={(event) => ({
+                  style: eventStyle(event),
+                })}
               />
 
               {/* Dialog para mostrar la información del evento */}
