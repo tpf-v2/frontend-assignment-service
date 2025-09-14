@@ -61,7 +61,6 @@ const GroupDataTable = () => {
   const [conflictsMessage, setConflictsMessage] = useState([]);
   // Editar equipo
   const [openEditModal, setOpenEditModal] = useState(false);
-  const [originalEditedItemId, setOriginalEditedItemId] = useState(null);
   const [itemToPassToModal, setItemToPassToModal] = useState(null);
   
   const dispatch = useDispatch();
@@ -100,8 +99,7 @@ const GroupDataTable = () => {
       await editItemInGenericTable(editTeam, editedItem, setEditedItem, setGroups, confirm_option);
       
       // Close modal de edición en caso de éxito
-      handleCloseEditModal();
-      setOriginalEditedItemId(null); // AUX: Agrego esto acá.
+      handleCloseEditModal();      
       setEditedItem({}); // necesario para el segundo modal, el de confirm.      
     } catch (err) {
       const title="team";
@@ -513,11 +511,9 @@ const GroupDataTable = () => {
 
           <TeamModal 
             openEditModal={openEditModal}
-            setOpenEditModal={setOpenEditModal}
-            
+            setOpenEditModal={setOpenEditModal}            
             handleEditItem={handleEditItem}
-            originalEditedItemId={originalEditedItemId}
-            setOriginalEditedItemId={setOriginalEditedItemId}
+            
             item={itemToPassToModal}
             setParentItem={setItemToPassToModal}
 
