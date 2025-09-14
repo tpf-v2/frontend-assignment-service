@@ -50,16 +50,10 @@ export const editTeam = async (groupId, periodId, teamToEdit, user, confirm_move
   const intStudentIds = studentsInput
   .map(s => s.id)
   .filter(id => Number.isInteger(id));
-  
-  console.log("int:", intStudentIds);
-  console.log("input:", studentsInput);
-  // if (intStudentIds.length !== studentsInput.length){
-  //   return; // <--- nop, esto sale sin informar error.
-  // };
 
   const sendableTeamToEdit = {
     "students_ids": intStudentIds,
-    "tutor_email": teamToEdit.tutor_email, //getTutorEmailByTutorPeriodId(groupToEdit.tutor_period_id, periodId),
+    "tutor_email": teamToEdit.tutor_email,
     "topic_id": teamToEdit.topic.id,
     "confirm_move": confirm_move,
   };  
@@ -70,7 +64,6 @@ export const editTeam = async (groupId, periodId, teamToEdit, user, confirm_move
       return response.data;
   } catch (err) {
       console.error(`Error when editing team: ${err}`)
-      //throw new Error(err);
       throw err;
   }
 };

@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-//import { Box } from "@mui/system";
 import ExpandableCell from "../ExpandableCell";
 
 import { TeamModal } from "../UI/Tables/Modals/teamModal";
@@ -84,7 +83,7 @@ const GroupDataTable = () => {
         setLoading(false);
 
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching teams data:", error);
         setLoading(false); // Handle error
       }
     };
@@ -112,7 +111,6 @@ const GroupDataTable = () => {
         message: `Error al editar equipo.`,
         status: "error",
       });
-      console.log("--- CONFLICTO, VOY A ABRIR EL MODAL DE CONFIRMACIÓN ACTUALMENTE CERRADO", openConfirmEditModal);
 
       // Si hay conflicto, no cerrar el modal de edición; abrir cartel de confirmación
       // y si se confirma, se reenvía la request (conservar los datos a enviar) pero con un bool en true
@@ -146,7 +144,7 @@ const GroupDataTable = () => {
           // reemplazo si ya existía
           updated[idx] = team;
         } else {
-          // o agrego si no estaba en la lista
+          // o agrego si no estaba en la lista [aux: por qué no estaría en la lista si es un edit y no un add?]
           updated.push(team);
         }
       });
@@ -169,13 +167,7 @@ const GroupDataTable = () => {
   /////
   // Confirmar edición con bool true
   const handleConfirmEditOnConflict = async (editedItem, setEditedItem, handleCloseEditModal, confirm_option=true) => {
-    try {
-      console.log("--- CONFIRMAR API CALL A PUNTO DE HACERSE");
-      await handleEditItem(editedItem, setEditedItem, handleCloseEditModal, true);
-      console.log("--- CONFIRMAR API CALL HECHA");
-    } catch(err) {
-      console.log("--- CONFIRMAR API CALL ERRÓNEA:", err);
-    }
+    await handleEditItem(editedItem, setEditedItem, handleCloseEditModal, true);
   };
   //////
   // Formato
@@ -235,7 +227,7 @@ const GroupDataTable = () => {
     console.log("--- teams:", teams);
     return showNoTutor ? teams.filter((team) => !team.tutor_period_id) : teams
   };
-  // Filtrar equipos según el término de búsqueda Contemplando si se clickeó el botón de showNoTopics
+  // Filtrar equipos según el término de búsqueda
   const filteredTeamsBySearchTerm = data.filter(
     (team) =>
       team?.students?.some(
@@ -254,7 +246,7 @@ const GroupDataTable = () => {
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
   );
-  // Obtengo solo los que no tienen topic y/o tutor, o bien conservo lo que ya tenía, según el bool
+  // Contemplo si se clickeó botones de showNoX: obtengo solo los que no tienen topic y/o tutor, o bien conservo lo que ya tenía, según el bool
   const filteredTeams = showTeamsWithNoTopic(showTeamsWithNoTutor(filteredTeamsBySearchTerm));
   console.log("filteredTeams:", filteredTeams);
   // Función para descargar los datos en formato CSV
@@ -489,7 +481,7 @@ const GroupDataTable = () => {
                           )                            
                           )}
                         
-                        {/* Copypasteo desde ParentTable esta sección de los botones, ver [] */}
+                        {/* Sección de los botones */}
                         {index === 0 && (
                           <TableCell rowSpan={team.students.length}>
                             <Stack direction="row" spacing={1}>                          

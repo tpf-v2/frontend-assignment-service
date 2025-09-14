@@ -80,7 +80,7 @@ export const TeamModal = ({
     };
 
       /////// Modals ///////
-      // Este modal va a ser el de editar directamente, y no existirá Add acá.
+      // Este modal va a ser el de editar directamente (hay add en StudentForm).
       // Conservo la estructura solo x comodidad / analogía con otros archivos de modals.
       const innerEditTeamModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText, disableEditId=false) => {
         return (
@@ -119,7 +119,7 @@ export const TeamModal = ({
                   <Grid item xs={6} md={6}>
                     
                     {/* Integrantes */}                    
-                    <InputLabel sx={{ mb: 2 }}>Integrantes</InputLabel> {/* mb = marginBottom */}
+                    <InputLabel sx={{ mb: 2 }}>Integrantes</InputLabel>
                     {item?.students?.map((student, index) => (
                                         
                       <Grid container spacing={2} sx={{ marginBottom: 2 }}>
@@ -177,7 +177,7 @@ export const TeamModal = ({
                   {/* Columna derecha */}
                   <Grid item xs={6} md={6}>
 
-                  {/* Tema y tutor */} {/* aux: los copypasteo de StudentForm */}
+                  {/* Tema y tutor */}
                   <InputLabel>Tema y Tutor/a</InputLabel>
                   <FormControl fullWidth variant="outlined" margin="normal">
                       <InputLabel>Tema</InputLabel>
@@ -291,12 +291,10 @@ export const TeamModal = ({
         
       const handleCloseConfirmModal = () => {
         setOpenConfirmModal(false);
-        //setParentItem(false); // este item
         setConflictMsg([]);        
       };
 
       const handleCloseEditModalWithoutFlushingEditedItem = () => {
-        //setEditedItem({})
         setOpenEditModal(false);
         setParentItem(false);
       };
@@ -315,8 +313,6 @@ export const TeamModal = ({
       const confirmEditOnConflictTeamModal = () => {
         // Usa el editedItem, por lo que en el medio, no se debe haber flusheado editedItem (ej hay que no cerrar (desde afuera) el modal anterior si hay conflicto)
         // Además, luego de Confirmar se necesita usar desde afuera al editedItem por lo que no hay que flushearlo desde acá sino afuera
-        console.log("--- VIENDO DESDE ADENTRO OTRA VEZ, EL BOOL: ",openConfirmModal);
-        //return innerConfirmEditOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModal, message, handleConfirm, editedItem, setEditedItem, "", "Confirmar") // da error en inglés de que studentsInput es undefined, xq editedItem se flusheó
         return innerConfirmEditOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, handleConfirm, editedItem, setEditedItem, "", "Confirmar")
       }
       
@@ -393,7 +389,6 @@ export const TeamModal = ({
 
   return (
     <>
-      {/*addTeamModal()*/}
       {editTeamModal()}
       {confirmEditOnConflictTeamModal()}
     </>
