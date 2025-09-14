@@ -265,7 +265,7 @@ const ParentTable = ({
     setSearchTerm(event.target.value);
   };
 
-  const downloadCSV = async () => {
+  const downloadCSV = () => {
     const csvRows = [];
 
     // Headers
