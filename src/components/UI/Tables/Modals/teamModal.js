@@ -45,7 +45,10 @@ export const TeamModal = ({
 
         setEditedItem(item); 
 
-      }, [openEditModal, item]);      
+      }, [openEditModal, item]);
+
+      const [editLoading, setEditLoading] = useState(false);
+      const [confirmLoading, setConfirmLoading] = useState(false);
 
       // To-Do: Estas funciones deberían ser importables
       // Función para obtener el nombre del topic por su id
@@ -64,7 +67,7 @@ export const TeamModal = ({
       /////// Modals ///////
       // Este modal va a ser el de editar directamente (hay add en StudentForm).
       // Conservo la estructura solo x comodidad / analogía con otros archivos de modals.
-      const innerEditTeamModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText, disableEditId=false) => {
+      const innerEditTeamModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText, disableEditId=false) => {        
         return (
           <Dialog open={bool} onClose={handleCloseModal} maxWidth={false} fullWidth PaperProps={{
             style: {
@@ -89,9 +92,16 @@ export const TeamModal = ({
               {TitleText} Equipo {item.group_number}
             </DialogTitle>
             <form
-              onSubmit={(e) => {
-                e.preventDefault(); // previene el reload del form
-                handleConfirmAction(item, setItem, handleCloseModal);
+              onSubmit={async (e) => {
+                e.preventDefault(); // previene el reload del form                
+                
+                if (editLoading) return;
+                setEditLoading(true);
+                try {
+                  await handleConfirmAction(item, setItem, handleCloseModal);
+                } finally {
+                  setEditLoading(false);
+                }
               }}
             >
               <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>        
@@ -257,8 +267,8 @@ export const TeamModal = ({
                 <Button onClick={handleCloseModal} variant="outlined" color="error">
                   Cancelar
                 </Button>
-                <Button type="submit" variant="contained" color="primary">
-                  {ConfirmButtonText}
+                <Button type="submit" variant="contained" color="primary" disabled={editLoading}>
+                  {editLoading ? "Guardando..." : ConfirmButtonText}
                 </Button>
               </DialogActions>
             </form>
@@ -293,7 +303,7 @@ export const TeamModal = ({
         return innerConfirmEditOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, handleConfirm, editedItem, setEditedItem, "", "Confirmar")
       }
       
-      const innerConfirmEditOnConflictModal = (bool, handleCloseModal, handleCloseEditModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {
+      const innerConfirmEditOnConflictModal = (bool, handleCloseModal, handleCloseEditModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {        
         return (
           <Dialog open={bool} onClose={handleCloseModal} maxWidth={false}>
             <DialogTitle
@@ -308,9 +318,16 @@ export const TeamModal = ({
               Conflicto al Intentar Editar Equipo {item.group_number}
             </DialogTitle>
             <form
-              onSubmit={(e) => {
-                e.preventDefault(); // previene el reload del form
-                handleConfirmAction(item, setItem, handleCloseModal);
+              onSubmit={ async (e) => {
+                e.preventDefault(); // previene el reload del form                
+
+                if (confirmLoading) return;
+                setConfirmLoading(true);
+                try {
+                  await handleConfirmAction(item, setItem, handleCloseModal);
+                } finally {
+                  setConfirmLoading(false);
+                }
               }}
             >
               <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
@@ -356,8 +373,8 @@ export const TeamModal = ({
                 <Button onClick={handleCloseModal} variant="outlined" color="error">
                   Cancelar
                 </Button>
-                <Button type="submit" onClick={handleCloseEditModal} variant="contained" color="primary">
-                  {ConfirmButtonText}
+                <Button type="submit" onClick={handleCloseEditModal} variant="contained" color="primary" disabled={confirmLoading}>
+                  {confirmLoading ? "Confirmando..." : ConfirmButtonText}
                 </Button>
               </DialogActions>
             </form>
