@@ -66,7 +66,7 @@ export const TeamModal = ({
       // Conservo la estructura solo x comodidad / analogía con otros archivos de modals.
       const innerEditTeamModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText, disableEditId=false) => {
         return (
-          <Dialog open={bool} maxWidth={false} fullWidth PaperProps={{
+          <Dialog open={bool} onClose={handleCloseModal} maxWidth={false} fullWidth PaperProps={{
             style: {
               height: "90vh",
               maxHeight: "90vh", // Limita la altura máxima para que no desborde
@@ -149,11 +149,6 @@ export const TeamModal = ({
                           </Grid>                          
                       )} 
                     </Grid>
-
-                    {/*
-                    // Aux:
-                    // Pero no confiar, VER qué pasa con el orden de students, viene desde el back. [].
-                    */}
                   </Grid>
 
                   {/* Columna derecha */}

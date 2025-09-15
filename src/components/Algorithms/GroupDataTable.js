@@ -138,10 +138,10 @@ const GroupDataTable = () => {
       changes.edited.forEach((team) => {
         const idx = updated.findIndex((prevDataTeam) => prevDataTeam.id === team.id);
         if (idx >= 0) {
-          // reemplazo si ya existía
+          // reenplazar si ya existía
           updated[idx] = team;
         } else {
-          // o agrego si no estaba en la lista [aux: por qué no estaría en la lista si es un edit y no un add?]
+          // o agregar si no estaba en la lista (no debería darse este caso en un edit en realidad)
           updated.push(team);
         }
       });
