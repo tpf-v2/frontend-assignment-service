@@ -15,6 +15,14 @@ const TopicsTable = () => {
     'Tema': 'name',
     'Categoría': 'category.name',
   };
+
+  const csvColumns = ['TEMA', 'CATEGORIA', "TUTOR_MAIL", "CAPACIDAD"];
+  const csvRowKeys = {
+    'TEMA': 'name',
+    'CATEGORIA': 'category.name',
+    'TUTOR_MAIL': 'tutor_email',
+    'CAPACIDAD': 'capacity',
+  };
   
   const topics = Object.values(useSelector((state) => state.topics))
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
@@ -28,9 +36,8 @@ const TopicsTable = () => {
     </>
   );
 
-
   return (
-    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} items={topics} enableEdit={true}/>
+    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} items={topics} enableEdit={true} csvColumns={csvColumns} csvRowKeys={csvRowKeys}/>
   );
 };
 

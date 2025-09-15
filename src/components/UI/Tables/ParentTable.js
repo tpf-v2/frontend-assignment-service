@@ -58,8 +58,10 @@ const ParentTable = ({
   endpoint,
   renderRow,
   items,
+  csvColumns,
+  csvRowKeys,
   enableEdit = true,
-  enableDelete = true
+  enableDelete = true,
 }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -83,6 +85,9 @@ const ParentTable = ({
   .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
   .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
   const tutors = addCapacityToTutors(tutorsWithoutCapacityField, period);
+
+  csvRowKeys = csvRowKeys || rowKeys;
+  csvColumns = csvColumns || columns;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -264,15 +269,14 @@ const ParentTable = ({
     const csvRows = [];
 
     // Headers
-    csvRows.push(columns.join(","));
+    csvRows.push(csvColumns.join(","));
 
     // Data
     data.forEach((item) => {
       const unnestedItem = unnestKeys(item);
-      const row = columns
+      const row = csvColumns
         .map((column) => {
-          const value = unnestedItem[rowKeys[column]]; // Obtener el valor
-
+          const value = unnestedItem[csvRowKeys[column]]; // Obtener el valor
           // Verificar si el valor es un array
           if (Array.isArray(value)) {
             return value.join(" || ").replace(/,/g, " "); // Unir los elementos del array usando ';'
@@ -289,20 +293,21 @@ const ParentTable = ({
 
     const a = document.createElement("a");
     a.setAttribute("href", url);
-
+  
     a.setAttribute(
       "download",
       title.toLowerCase().replace(" ", "_").concat(".csv")
     );
     a.click();
-    URL.revokeObjectURL(url);
-  };
   
+    URL.revokeObjectURL(url);
+  }
+
   // Filtrado mejorado
   const filteredData = data.filter((item) => {
-    return columns.some((column) => {
+    return csvColumns.some((column) => {
       const unnestedItem = unnestKeys(item);
-      const itemValue = unnestedItem[rowKeys[column]] || ""; // Utiliza el mapeo
+      const itemValue = unnestedItem[csvRowKeys[column]] || ""; // Utiliza el mapeo
       return String(itemValue).toLowerCase().includes(searchTerm.toLowerCase());
     });
   });

@@ -11,13 +11,21 @@ const TutorsTable = () => {
   const endpoint = `/tutors/periods/${period}`;
   const title = TableType.TUTORS;
   
-  const columns = ['ID', 'Nombre', 'Apellido', 'Email'];
+  const columns = ['ID', 'Nombre', 'Apellido', 'Email', 'Capacidad'];
   const rowKeys = {
     'ID': 'id',
     'Nombre': 'name',
     'Apellido': 'last_name',
     'Email': 'email'
   };
+
+  const csvColumns = ['NOMBRE', 'APELLIDO', 'MAIL', 'CAPACIDAD'];
+  const csvRowKeys = {
+    'NOMBRE': 'name',
+    'APELLIDO': 'last_name',
+    'MAIL': 'email',
+    'CAPACIDAD': 'capacity'
+  }
 
   const tutorsWithoutCapacityField = Object.values(useSelector((state) => state.tutors))
   .map(({ version, rehydrated, ...rest }) => rest)
@@ -30,11 +38,12 @@ const TutorsTable = () => {
       <TableCell>{item.name}</TableCell>
       <TableCell>{item.last_name}</TableCell>
       <TableCell>{item.email}</TableCell>
+      <TableCell>{item.capacity}</TableCell>
     </>
   );
 
   return (
-    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} items={tutors}/>
+    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} items={tutors} csvColumns={csvColumns} csvRowKeys={csvRowKeys}/>
   );
 };
 
