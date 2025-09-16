@@ -21,13 +21,14 @@ const CLEARSTRING = "Eliminar integrante";
 
 /* Modals para Editar un equipo y Confirmar la edición en caso de conflicto */
 export const TeamModal = ({
-  openAddModal,
-  setOpenAddModal,
-  openEditModal, // bools para ver si se debe abrir cada modal
+  openAddModal, // bools para ver si se debe abrir cada modal
+  openEditModal,
   openConfirmModal,
-  setOpenEditModal, // necesarias para cerrar los modals
+  setOpenAddModal,  // necesarias para cerrar los modals
+  setOpenEditModal,
   setOpenConfirmModal,
-  handleEditItem, // las acciones al clickear confirmar desde cada modal
+  handleAddItem, // las acciones al clickear confirmar desde cada modal
+  handleEditItem,
   handleConfirm,
   item, // recibido del parent, y su set para flushearlo al salir
   setParentItem,
@@ -277,6 +278,10 @@ export const TeamModal = ({
             </form>
           </Dialog>
         )
+      };
+      const handleCloseAddModal = () => {
+        setOpenAddModal(false);
+        setNewItem({students: []});
       };
         
       const handleCloseConfirmModal = () => {
@@ -566,7 +571,7 @@ export const TeamModal = ({
 
       const addTeamModal = () => {
         // Usa el editedItem para guardar el resultado de las ediciones a enviar <-- esto es copypaste, supongo que sería un newItem
-        return innerAddTeamModal(openAddModal, {}, {}, newItem, setNewItem, "Agregar", "Guardar", true)
+        return innerAddTeamModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar", "Guardar", true)
       }
 
   return (

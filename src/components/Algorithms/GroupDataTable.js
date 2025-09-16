@@ -22,7 +22,7 @@ import ExpandableCell from "../ExpandableCell";
 
 import { TeamModal } from "../UI/Tables/Modals/teamModal";
 import { setGroups } from "../../redux/slices/groupsSlice";
-import { editTeam } from "../../api/sendGroupForm";
+import { editTeam, addTeam } from "../../api/sendGroupForm";
 import MySnackbar from "../UI/MySnackBar";
 import { getTableData } from "../../api/handleTableData";
 import AddIcon from "@mui/icons-material/Add";
@@ -94,6 +94,37 @@ const GroupDataTable = () => {
     fetchData();
   }, [endpoint, user]);
   //}, [endpoint, user, groups, topics]);
+
+  // Agregar equipo
+  const handleAddItem = async (newItem, setNewItem, handleCloseAddModal) => {
+    try {      
+      await addItemToGenericTable(addTeam, newItem, setNewItem, {});
+    } catch (err) {
+      console.error(`Error when adding new team:`, err);
+      setNotification({
+        open: true,
+        //message: `Error al agregar ${TableTypeSingularLabel[title]||''}.`,        
+        message: `Error al agregar equipo.`,
+        status: "error",
+      });
+    } finally {
+      handleCloseAddModal(true);
+    }
+  };
+  const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, setReducer) => {
+    newItem.tutor_email = getTutorEmailByTutorPeriodId(newItem.tutor_period_id, period.id);
+    const item = await apiAddFunction(newItem, user, period.id); // add
+    setNewItem({});
+    setNotification({
+      open: true,
+      //message: `Se agregó ${TableTypeSingularLabel[title]||''} exitosamente`, // 'estudiante', etc
+      message: `Se agregó equipo exitosamente`, // 'estudiante', etc
+      status: "success",
+    });
+    setData((prevData) => [...prevData, item]);
+    //dispatch(setReducer((prevData) => [...prevData, item])); // set
+
+  };
 
   // Editar equipo
   const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal, confirm_option=false) => {
@@ -518,6 +549,7 @@ const GroupDataTable = () => {
           <TeamModal
             openAddModal={openAddModal}
             setOpenAddModal={setOpenAddModal}
+            handleAddItem={handleAddItem}
 
             openEditModal={openEditModal}
             setOpenEditModal={setOpenEditModal}            
