@@ -21,6 +21,8 @@ const CLEARSTRING = "Eliminar integrante";
 
 /* Modals para Editar un equipo y Confirmar la edición en caso de conflicto */
 export const TeamModal = ({
+  openAddModal,
+  setOpenAddModal,
   openEditModal, // bools para ver si se debe abrir cada modal
   openConfirmModal,
   setOpenEditModal, // necesarias para cerrar los modals
@@ -39,6 +41,7 @@ export const TeamModal = ({
 }) => {
 
       const [editedItem, setEditedItem] = useState({});          
+      const [newItem, setNewItem] = useState({students: []});    
       // Esto hace de handle open edit
       useEffect(() => {
         if (!openEditModal) return;
@@ -381,8 +384,194 @@ export const TeamModal = ({
           </Dialog>
         )};
 
+      /////////////
+      //// Add ////
+      // Es todo lo mismo, salvo el título (no lleva item.id), y que no voy a mostrar acá las 3 preferencias
+      // El loading tiene que ser un atributo
+      const innerAddTeamModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText, disableEditId=false) => {        
+        return (
+          <Dialog open={bool} onClose={handleCloseModal} maxWidth={false} fullWidth PaperProps={{
+            style: {
+              height: "90vh",
+              maxHeight: "90vh", // Limita la altura máxima para que no desborde
+              
+              borderRadius: "8px",
+              width: '1000px', //
+              maxWidth: '90vw', // opcional, por si en pantallas chicas
+            },
+          }}
+          >
+            <DialogTitle
+              sx={{
+                fontWeight: "bold",
+                textAlign: "center",
+                backgroundColor: "#f5f5f5",
+                color: "#333",
+                padding: "16px 24px",
+              }}
+            >
+              {TitleText} Equipo
+            </DialogTitle>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault(); // previene el reload del form                
+                
+                if (editLoading) return;
+                setEditLoading(true);
+                try {
+                  await handleConfirmAction(item, setItem, handleCloseModal);
+                } finally {
+                  setEditLoading(false);
+                }
+              }}
+            >
+              <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>        
+                {/* Campos a cargar */}
+                <Grid container spacing={2}>
+                {/* Columna izquierda */}
+                  <Grid item xs={6} md={6}>
+                    
+                    {/* Integrantes */}                    
+                    <InputLabel sx={{ mb: 2 }}>Integrantes</InputLabel>
+                    {item?.students?.map((student, index) => (
+                                        
+                      <Grid container spacing={2} sx={{ marginBottom: 2 }}>
+                        <Grid item xs={12}>
+                          <Autocomplete
+                            disablePortal
+                            options={students || []}
+                            getOptionLabel={(option) => option.id? `${option.id} - ${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
+                            sx={{ width: '100%' }}
+                            clearText={CLEARSTRING}
+                            renderInput={(students) => <TextField {...students}
+                                                          label=""/>}
+                            onChange={(event, newValue) => {
+                              const newStudents = item.students ? [...item.students] : [];
+                              if (newValue) {
+                                newStudents[index] = newValue;
+                              } else {
+                                newStudents[index] = { id: "", name: "", last_name: "" } // dejarlo vacío al quitar la selección
+                              }
+                              setItem({ ...item, students: newStudents });
+                            }}
+                            value={item?.students ? item.students[index] : null}
+                          />
+                        </Grid>
+                      </Grid>
+                      
+                    ))}
+                    
+                    <Grid container spacing={2} sx={{ marginBottom: 2 }}>
+                      {item?.students?.length < 4 && (
+                          <Grid item xs={12}>                            
+                            <Button
+                              fullWidth
+                              variant="outlined"
+                              aria-label="add"
+                              startIcon={<AddIcon/>}
+                              onClick={() => {
+                                const newStudents = [...item.students, { id: "", name: "", last_name: "" }];
+                                setItem({ ...item, students: newStudents });
+                              }}                              
+                            >
+                              Agregar Integrante
+                            </Button>
+
+                          </Grid>                          
+                      )} 
+                    </Grid>
+                  </Grid>
+
+                  {/* Columna derecha */}
+                  <Grid item xs={6} md={6}>
+
+                  {/* Tema y tutor */}
+                  <InputLabel>Tema y Tutor/a</InputLabel>
+                  <FormControl fullWidth variant="outlined" margin="normal">
+                      <InputLabel>Tema</InputLabel>
+                      <Select
+                        value={item.topic?.id || ""}
+                        onChange={(e) =>
+                          setItem({ ...item, topic: getTopicById(e.target.value) })
+                        }
+                        label="Tema"
+                        required
+                      >
+                        {topics.csvTopics.map((topic) => (
+                          <MenuItem
+                            key={topic.id}
+                            value={topic.id}
+                          >
+                            {topic.name}
+                          </MenuItem>
+                        ))}
+
+                        {/* Si el valor actual es un custom, agregarlo como opción (no seleccionable)
+                            para que se pueda mostrar como valor inicial al abrir el modal*/}
+                        {item.topic && !topics.csvTopics.some(t => t.id === item.topic.id) && (
+                          <MenuItem key={item.topic.id} value={item.topic.id} disabled>
+                            {item.topic.name}
+                          </MenuItem>
+                        )}
+                      </Select>
+                    </FormControl>
+                  
+                  <FormControl fullWidth variant="outlined" margin="normal">
+                    {<InputLabel margin="normal">Tutor/a</InputLabel>
+                    }
+                    <Select
+                      margin="normal"
+                      value={item.tutor_period_id || ""}
+                      label="Tutor"
+                      onChange={(e) =>
+                        setItem({ ...item, tutor_period_id: e.target.value })
+                      }
+                      required
+                      fullWidth
+                    >
+                      <MenuItem key="" value="" disabled>
+                        Seleccionar tutor
+                      </MenuItem>
+                      {tutors.map((tutor) => {
+                        const tp = tutor.tutor_periods.find((tp) => tp.period_id === periodId);
+                        if (!tp) return null; // ignorar si no hay uno del period pedido
+
+                        return (
+                            <MenuItem key={tp.id} value={tp.id}>
+                            {tutor.name} {tutor.last_name}
+                            </MenuItem>
+                        );
+                        })}
+
+                    </Select>
+                  </FormControl>
+                  {/* Las tres preferencias, no editables */}                  
+                  </Grid>
+
+                </Grid> 
+              </DialogContent>
+
+              <DialogActions>
+                <Button onClick={handleCloseModal} variant="outlined" color="error">
+                  Cancelar
+                </Button>
+                <Button type="submit" variant="contained" color="primary" disabled={editLoading}>
+                  {editLoading ? "Guardando..." : ConfirmButtonText}
+                </Button>
+              </DialogActions>
+            </form>
+          </Dialog>
+        )
+      };
+
+      const addTeamModal = () => {
+        // Usa el editedItem para guardar el resultado de las ediciones a enviar <-- esto es copypaste, supongo que sería un newItem
+        return innerAddTeamModal(openAddModal, {}, {}, newItem, setNewItem, "Agregar", "Guardar", true)
+      }
+
   return (
     <>
+      {addTeamModal()}
       {editTeamModal()}
       {confirmEditOnConflictTeamModal()}
     </>

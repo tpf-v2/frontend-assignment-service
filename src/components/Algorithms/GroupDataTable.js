@@ -12,6 +12,7 @@ import {
   TableRow,
   TextField,
   Button,
+  Fab,
   Box,
   Stack
 } from "@mui/material";
@@ -24,6 +25,7 @@ import { setGroups } from "../../redux/slices/groupsSlice";
 import { editTeam } from "../../api/sendGroupForm";
 import MySnackbar from "../UI/MySnackBar";
 import { getTableData } from "../../api/handleTableData";
+import AddIcon from "@mui/icons-material/Add";
 
 // Componente para la tabla de equipos
 const GroupDataTable = () => {
@@ -64,6 +66,8 @@ const GroupDataTable = () => {
 
   const [openEditModal, setOpenEditModal] = useState(false);
   const [itemToPassToModal, setItemToPassToModal] = useState(null);
+
+  const [openAddModal, setOpenAddModal] = useState(false);
 
   // useEffect
   const endpoint = `/groups/?period=${period.id}`;
@@ -358,6 +362,15 @@ const GroupDataTable = () => {
               sx={{ marginBottom: 2 }}>
               {showExtraColumns ? "Ocultar preferencias" : "Mostrar preferencias"}
             </Button>
+
+            <Fab
+              size="small"
+              color="primary"
+              aria-label="add"                  
+              onClick={() => setOpenAddModal(true)}
+            >
+              <AddIcon />
+            </Fab>
           </Box>
 
           <TableContainer component={Paper}>
@@ -502,7 +515,10 @@ const GroupDataTable = () => {
             </Table>
           </TableContainer>
 
-          <TeamModal 
+          <TeamModal
+            openAddModal={openAddModal}
+            setOpenAddModal={setOpenAddModal}
+
             openEditModal={openEditModal}
             setOpenEditModal={setOpenEditModal}            
             handleEditItem={handleEditItem}
