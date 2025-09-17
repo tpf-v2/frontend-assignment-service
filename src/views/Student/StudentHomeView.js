@@ -91,7 +91,7 @@ const StudentHomeView = () => {
             phase: "Entrega Intermedia",
             tasks: [
               {
-                title: !!group.intermediate_assigment_date ? "Enviado" : "No enviado",
+                title: !!group.intermediate_assigment_date ? "Enviada" : "No enviada",
                 completed:
                   !!group.intermediate_assigment_date,
               },
@@ -101,7 +101,7 @@ const StudentHomeView = () => {
             phase: "Entrega Final",
             tasks: [
               {
-                title: !!group.final_report_date ? "Enviado" : "No enviado",
+                title: !!group.final_report_date ? "Enviada" : "No enviada",
                 completed: !!group.final_report_date,
               }
             ],
