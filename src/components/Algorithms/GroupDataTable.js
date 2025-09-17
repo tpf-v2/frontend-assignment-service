@@ -77,8 +77,10 @@ const GroupDataTable = () => {
       try {
         const responseData = await getTableData(endpoint, user);
 
+        console.log("groups recibidos:", groups.map(g => ({id: g.id, "topic.id": g.topic?.id})));
+
         // Workaround a que el back no los devuelva: temas de "Ya tengo tema y tutor":
-        const customTopics = groups.filter(team => !topics.some(t => t.id === team.topic.id))
+        const customTopics = groups?.filter(team => !topics.some(t => t.id === team.topic?.id))
         .map(team => team.topic);
         setAllTopics({csvTopics: topics, customTopics: customTopics});
         
@@ -99,6 +101,8 @@ const GroupDataTable = () => {
   const handleAddItem = async (newItem, setNewItem, handleCloseAddModal) => {
     try {      
       await addItemToGenericTable(addTeam, newItem, setNewItem, {});
+      handleCloseAddModal(true);
+      setNewItem({students:[]}); // necesario para el segundo modal, el de confirm.// <-- copypasteo esto acá, revisar en el modal
     } catch (err) {
       console.error(`Error when adding new team:`, err);
       setNotification({
@@ -107,8 +111,21 @@ const GroupDataTable = () => {
         message: `Error al agregar equipo.`,
         status: "error",
       });
+
+      // Si hay conflicto, no cerrar el modal de edición; abrir cartel de confirmación
+      // y si se confirma, se reenvía la request (conservar los datos a enviar) pero con un bool en true
+      if (err.response?.status===409) {
+        setNotification({
+          open: true,
+          message: `Advertencia: Conflicto al editar equipo.`,
+          status: "warning",
+        });
+
+        setConflictsMessage(err.response?.data?.detail || []);
+        setOpenConfirmEditModal(true);
+      }
     } finally {
-      handleCloseAddModal(true);
+      
     }
   };
   const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, setReducer) => {
@@ -121,7 +138,10 @@ const GroupDataTable = () => {
       message: `Se agregó equipo exitosamente`, // 'estudiante', etc
       status: "success",
     });
+
+    console.log("--- por actualizar con setData, antes:", data);
     setData((prevData) => [...prevData, item]);
+    console.log("--- actualizado con setData, dsp:", data);
     //dispatch(setReducer((prevData) => [...prevData, item])); // set
 
   };
@@ -341,6 +361,8 @@ const GroupDataTable = () => {
     a.click();
     URL.revokeObjectURL(url);
   };
+
+  console.log("--- filteredTeams:", filteredTeams);
 
   return (
     <Box>      
