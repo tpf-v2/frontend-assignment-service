@@ -34,3 +34,36 @@ export const sendGroupForm = async (period, payload, existingGroup, user) => {
     return error.response
   }
 };
+
+export const editTeam = async (groupId, periodId, teamToEdit, user, confirm_move=false) => {
+  const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+
+
+  // Con esto enviamos Exactamente los campos que el back espera (y excluimos el id, que ya está
+  // como path param)
+  const studentsInput = teamToEdit.students;
+  
+  const intStudentIds = studentsInput
+  .map(s => s.id)
+  .filter(id => Number.isInteger(id));
+
+  const sendableTeamToEdit = {
+    "students_ids": intStudentIds,
+    "tutor_email": teamToEdit.tutor_email,
+    "topic_id": teamToEdit.topic.id,
+    "confirm_move": confirm_move,
+  };  
+
+  try {
+      const url = `${BASE_URL}/groups/${groupId}/periods/${periodId}`;
+      const response = await axios.patch(url, sendableTeamToEdit, config);
+      return response.data;
+  } catch (err) {
+      console.error(`Error when editing team: ${err}`)
+      throw err;
+  }
+};
