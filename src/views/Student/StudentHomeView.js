@@ -58,19 +58,19 @@ const StudentHomeView = () => {
         }
 
         setGroup(group);
-
+        const form_completed = userData.form_answered || (userData.topic && userData.tutor)
+        const topic_completed = userData.topic && userData.tutor
         setMilestones([
           {
             phase: "Inscripción",
             tasks: [
               {
-                title: "Formulario enviado",
-                completed:
-                  userData.form_answered || (userData.topic && userData.tutor),
+                title: form_completed ? "Formulario enviado" : "Formulario no enviado",
+                completed: form_completed,
               },
               {
-                title: "Tema y tutor asignado",
-                completed: userData.topic && userData.tutor,
+                title: topic_completed ? "Tema y tutor asignado" : "Tema sin asignar",
+                completed: topic_completed,
               },
             ],
           },
@@ -78,11 +78,11 @@ const StudentHomeView = () => {
             phase: "Anteproyecto",
             tasks: [
               {
-                title: "Entrega de archivo",
+                title: !!group.pre_report_date ? "Enviado" : "No enviado",
                 completed: !!group.pre_report_date,
               },
               {
-                title: "Revisión de un tutor",
+                title: group.pre_report_approved ?  "Revisión terminada" : "Revisión de tutor",
                 completed: group.pre_report_approved,
               },
             ],
@@ -91,7 +91,7 @@ const StudentHomeView = () => {
             phase: "Entrega Intermedia",
             tasks: [
               {
-                title: "Entregado",
+                title: !!group.intermediate_assigment_date ? "Enviada" : "No enviada",
                 completed:
                   !!group.intermediate_assigment_date,
               },
@@ -101,7 +101,7 @@ const StudentHomeView = () => {
             phase: "Entrega Final",
             tasks: [
               {
-                title: "Entregado",
+                title: !!group.final_report_date ? "Enviada" : "No enviada",
                 completed: !!group.final_report_date,
               }
             ],
@@ -171,9 +171,6 @@ const StudentHomeView = () => {
         )}
       </Box>
       <Box sx={{ flex: 2 }}>
-        <Typography variant="h4" align="center" gutterBottom>
-          {period}
-        </Typography>
         <Box>
           {loading ? ( // Mostrar CircularProgress si está cargando
             <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>

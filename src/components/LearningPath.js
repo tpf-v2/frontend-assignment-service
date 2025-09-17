@@ -66,7 +66,7 @@ const LearningPath = ({ group_id, group }) => {
             phase: "Anteproyecto",
             tasks: [
               {
-                title: "Entregado",
+                title: group.pre_report_date !== null ? "Enviado" : "No enviado",
                 completed: group.pre_report_date !== null ? true : false,
               },
               { title: "Revisado", completed: group.pre_report_approved },
@@ -76,7 +76,7 @@ const LearningPath = ({ group_id, group }) => {
             phase: "Entrega Intermedia",
             tasks: [
               {
-                title: "Entregado",
+                title: group.intermediate_assigment_date !== null ? "Enviado" : "No enviado",
                 completed: group.intermediate_assigment_date !== null ? true : false,
               }
             ],
@@ -85,7 +85,7 @@ const LearningPath = ({ group_id, group }) => {
             phase: "Entrega Final",
             tasks: [
               {
-                title: "Entregado",
+                title: "Enviado",
                 completed: group.final_report_date !== null ? true : false,
               }
             ],
