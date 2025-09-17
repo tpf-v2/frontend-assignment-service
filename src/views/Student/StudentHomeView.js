@@ -65,7 +65,7 @@ const StudentHomeView = () => {
             phase: "Inscripción",
             tasks: [
               {
-                title: form_completed ? "Formulario enviado" : "Formulario no entregado",
+                title: form_completed ? "Formulario enviado" : "Formulario no enviado",
                 completed: form_completed,
               },
               {
@@ -78,7 +78,7 @@ const StudentHomeView = () => {
             phase: "Anteproyecto",
             tasks: [
               {
-                title: !!group.pre_report_date ? "Entregado" : "No entregado",
+                title: !!group.pre_report_date ? "Enviado" : "No enviado",
                 completed: !!group.pre_report_date,
               },
               {
@@ -91,7 +91,7 @@ const StudentHomeView = () => {
             phase: "Entrega Intermedia",
             tasks: [
               {
-                title: !!group.intermediate_assigment_date ? "Entregado" : "No entregado",
+                title: !!group.intermediate_assigment_date ? "Enviado" : "No enviado",
                 completed:
                   !!group.intermediate_assigment_date,
               },
@@ -101,7 +101,7 @@ const StudentHomeView = () => {
             phase: "Entrega Final",
             tasks: [
               {
-                title: !!group.final_report_date ? "Entregado" : "No entregado",
+                title: !!group.final_report_date ? "Enviado" : "No enviado",
                 completed: !!group.final_report_date,
               }
             ],
