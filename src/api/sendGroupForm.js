@@ -37,7 +37,7 @@ export const sendGroupForm = async (period, payload, existingGroup, user) => {
 
 
 // inner
-export const createTeam = async (periodId, payload, config) => {
+export const createTeam = async (periodId, payload, config, confirm_move=false) => {
   
   //TO-DO dynamic period in QP // [query parameter? pero sí es un query parameter]
   const teamPayload = {
@@ -51,7 +51,9 @@ export const createTeam = async (periodId, payload, config) => {
     // Por convención, cuando se desea guardar al equipo con un tema determinado (sea porque Ya tiene tema y tutor, o porque
     // admin agrega al equipo manualmente), el tema a guardar se pone en topic_1
     topic: payload.topic_1,
-    tutor_email: payload.tutor_email
+    tutor_email: payload.tutor_email,
+
+    confirm_move: confirm_move,
   }
 
   teamPayload.students_ids = teamPayload.students_ids.filter(uid => uid);
@@ -59,7 +61,7 @@ export const createTeam = async (periodId, payload, config) => {
   return response;
 }
 
-export const addTeam = async (newItem, user, periodId) => {
+export const addTeam = async (newItem, user, periodId, confirm_move=false) => {
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -80,7 +82,7 @@ export const addTeam = async (newItem, user, periodId) => {
     
     tutor_email: newItem.tutor_email || null,
   };
-  return await createTeam(periodId, payload, config);
+  return await createTeam(periodId, payload, config, confirm_move);
 }
 
 export const editTeam = async (groupId, periodId, teamToEdit, user, confirm_move=false) => {

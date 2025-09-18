@@ -98,9 +98,9 @@ const GroupDataTable = () => {
   //}, [endpoint, user, groups, topics]);
 
   // Agregar equipo
-  const handleAddItem = async (newItem, setNewItem, handleCloseAddModal) => {
+  const handleAddItem = async (newItem, setNewItem, handleCloseAddModal, confirm_option=false) => {
     try {      
-      await addItemToGenericTable(addTeam, newItem, setNewItem, {});
+      await addItemToGenericTable(addTeam, newItem, setNewItem, {}, confirm_option);
       handleCloseAddModal(true);
       setNewItem({students:[]}); // necesario para el segundo modal, el de confirm.// <-- copypasteo esto acá, revisar en el modal
     } catch (err) {
@@ -121,16 +121,16 @@ const GroupDataTable = () => {
           status: "warning",
         });
 
+        // Acá hay que indicarle de alguna forma que se abrió para solucionar conflictos DE ADD
+        // set conflict type, o poner type y msg en un diccionario y abrirlo adentro
         setConflictsMessage(err.response?.data?.detail || []);
         setOpenConfirmEditModal(true);
       }
-    } finally {
-      
     }
   };
-  const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, setReducer) => {
+  const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, setReducer, confirm_option=false) => {
     newItem.tutor_email = getTutorEmailByTutorPeriodId(newItem.tutor_period_id, period.id);
-    const item = await apiAddFunction(newItem, user, period.id); // add
+    const item = await apiAddFunction(newItem, user, period.id, confirm_option); // add
     setNewItem({});
     setNotification({
       open: true,
@@ -219,6 +219,7 @@ const GroupDataTable = () => {
   
   // Confirmar edición con bool true
   const handleConfirmEditOnConflict = async (editedItem, setEditedItem, handleCloseEditModal, confirm_option=true) => {
+    // Esto capaz se puede hacer desde adentro
     await handleEditItem(editedItem, setEditedItem, handleCloseEditModal, true);
   };
   

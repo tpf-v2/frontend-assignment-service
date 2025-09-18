@@ -305,13 +305,14 @@ export const TeamModal = ({
         return innerEditTeamModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar", true)
       }
       
-      const confirmEditOnConflictTeamModal = () => {
+      const confirmOnConflictTeamModal = () => {
         // Usa el editedItem, por lo que en el medio, no se debe haber flusheado editedItem (ej hay que no cerrar (desde afuera) el modal anterior si hay conflicto)
         // Además, luego de Confirmar se necesita usar desde afuera al editedItem por lo que no hay que flushearlo desde acá sino afuera
-        return innerConfirmEditOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, handleConfirm, editedItem, setEditedItem, "", "Confirmar")
+        // AUX: acá un if type es edit hacer esto, else hacer lo mismo pero para add, y hay que agregar un blablawithputFlushing para add p q ande - #saludos me voy a cenar
+        return innerConfirmOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, handleConfirm, editedItem, setEditedItem, "Editar", "Confirmar")
       }
       
-      const innerConfirmEditOnConflictModal = (bool, handleCloseModal, handleCloseEditModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {        
+      const innerConfirmOnConflictModal = (bool, handleCloseModal, handleCloseEditModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {        
         return (
           <Dialog open={bool} onClose={handleCloseModal} maxWidth={false}>
             <DialogTitle
@@ -323,7 +324,7 @@ export const TeamModal = ({
                 padding: "16px 24px",
               }}
             >
-              Conflicto al Intentar Editar Equipo {item.group_number}
+              Conflicto al Intentar {TitleText} Equipo {item.group_number}
             </DialogTitle>
             <form
               onSubmit={ async (e) => {
@@ -332,7 +333,7 @@ export const TeamModal = ({
                 if (confirmLoading) return;
                 setConfirmLoading(true);
                 try {
-                  await handleConfirmAction(item, setItem, handleCloseModal);
+                  await handleConfirmAction(item, setItem, handleCloseModal);                  
                 } finally {
                   setConfirmLoading(false);
                 }
@@ -375,7 +376,7 @@ export const TeamModal = ({
                 </div>
                 )}
                 
-                <p><strong>¿Confirmar la edición?</strong></p>
+                <p><strong>¿Confirmar?</strong></p>
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleCloseModal} variant="outlined" color="error">
@@ -578,7 +579,7 @@ export const TeamModal = ({
     <>
       {addTeamModal()}
       {editTeamModal()}
-      {confirmEditOnConflictTeamModal()}
+      {confirmOnConflictTeamModal()}
     </>
   )
 }
