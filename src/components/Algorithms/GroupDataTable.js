@@ -130,7 +130,8 @@ const GroupDataTable = () => {
   };
   const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, setReducer, confirm_option=false) => {
     newItem.tutor_email = getTutorEmailByTutorPeriodId(newItem.tutor_period_id, period.id);
-    const item = await apiAddFunction(newItem, user, period.id, confirm_option); // add
+    const changes = await apiAddFunction(newItem, user, period.id, confirm_option); // add
+    console.log("--- changes post add:", changes);
     setNewItem({});
     setNotification({
       open: true,
@@ -140,7 +141,8 @@ const GroupDataTable = () => {
     });
 
     console.log("--- por actualizar con setData, antes:", data);
-    setData((prevData) => [...prevData, item]);
+    //setData((prevData) => [...prevData, item]);
+    setData((prevData) => adaptListWithApiResponse(prevData, changes));
     console.log("--- actualizado con setData, dsp:", data);
     //dispatch(setReducer((prevData) => [...prevData, item])); // set
 
@@ -186,27 +188,7 @@ const GroupDataTable = () => {
       status: "success",
     });
     // Si es éxito, hay que adaptar los datos de la lista a mostrar en la tabla    
-    setData((prevData) => {
-      let updated = [...prevData];
-
-      // Reemplazar o agregar los equipos editados
-      changes.edited.forEach((team) => {
-        const idx = updated.findIndex((prevDataTeam) => prevDataTeam.id === team.id);
-        if (idx >= 0) {
-          // reenplazar si ya existía
-          updated[idx] = team;
-        } else {
-          // o agregar si no estaba en la lista (no debería darse este caso en un edit en realidad)
-          updated.push(team);
-        }
-      });
-
-      // Eliminar equipos borrados (me quedo con los equipos que No incluye la lista de deleted)
-      updated = updated.filter((prevDataTeam) => !changes.deleted.includes(prevDataTeam.id));
-
-      return updated;
-    });
-              
+    setData((prevData) => adaptListWithApiResponse(prevData, changes));
   };
   const [notification, setNotification] = useState({
     open: false,
@@ -222,6 +204,34 @@ const GroupDataTable = () => {
     // Esto capaz se puede hacer desde adentro
     await handleEditItem(editedItem, setEditedItem, handleCloseEditModal, true);
   };
+
+  // Adaptar la lista de equipos que se muestra en la tabla, con el resultado del add/edición
+  const adaptListWithApiResponse = (prevData, changes) => {
+    let updated = [...prevData];
+
+    // Agregar si hay equipo nuevo
+    if (changes.added){
+      updated.push(...changes.added); // "extend" versión javascript
+    }
+
+    // Reemplazar o agregar los equipos editados
+    changes.edited?.forEach((team) => {
+      const idx = updated.findIndex((prevDataTeam) => prevDataTeam.id === team.id);
+      if (idx >= 0) {
+        // reenplazar si ya existía
+        updated[idx] = team;
+      } else {
+        // o agregar si no estaba en la lista (no debería darse este caso en un edit en realidad)
+        updated.push(team);
+      }
+    });
+
+    // Eliminar equipos borrados (me quedo con los equipos que No incluye la lista de deleted)
+    // (obs: el campo deleted existe siempre, es vacío si no se eliminó nada)
+    updated = updated.filter((prevDataTeam) => !changes.deleted.includes(prevDataTeam.id));
+
+    return updated;
+  }
   
   // Formato para el endpoint
   const getTutorEmailByTutorPeriodId = (id, periodId) => {

@@ -37,6 +37,8 @@ export const sendGroupForm = async (period, payload, existingGroup, user) => {
 
 
 // inner
+// NOTAR que devuelve "response" y no "response.data". Lo mantengo tal cual por compatibilidad
+// con el sendGroupForm.
 export const createTeam = async (periodId, payload, config, confirm_move=false) => {
   
   //TO-DO dynamic period in QP // [query parameter? pero sí es un query parameter]
@@ -82,7 +84,8 @@ export const addTeam = async (newItem, user, periodId, confirm_move=false) => {
     
     tutor_email: newItem.tutor_email || null,
   };
-  return await createTeam(periodId, payload, config, confirm_move);
+  const response = await createTeam(periodId, payload, config, confirm_move);
+  return response.data;
 }
 
 export const editTeam = async (groupId, periodId, teamToEdit, user, confirm_move=false) => {
