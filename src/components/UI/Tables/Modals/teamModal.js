@@ -348,12 +348,13 @@ export const TeamModal = ({
 
                 if (confirmLoading) return;
                 setConfirmLoading(true);
-                try {
+                try {                  
                   // cerramos el modal de confirm
-                  handleCloseModal();
+                  //handleCloseModal();
                   // undefined xq no necesitamos que ese handle cierre ningún modal, ya lo cerramos recién
+                  
                   // El true llega hasta la api call y confirma los conflictos! :)
-                  await handleActionToConfirm(item, setItem, undefined, true);
+                  await handleActionToConfirm(item, setItem, handleCloseModal, true);
                 } finally {
                   setConfirmLoading(false);
                 }
