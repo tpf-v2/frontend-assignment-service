@@ -17,8 +17,7 @@ import {
 import StatCard from "./StatCard";
 import DownloadIcon from "@mui/icons-material/Download";
 import { useDispatch, useSelector } from "react-redux";
-import { updateGroup } from "../../../../../api/updateGroups";
-import { setGroups } from "../../../../../redux/slices/groupsSlice";
+import { useParams } from "react-router-dom";
 
 const ContentPublicPdfProjects = ({
   loadingProjects,
@@ -26,6 +25,8 @@ const ContentPublicPdfProjects = ({
   downloadFile,
   projectType,
 }) => {
+  const [period, setPeriod] = useState(useParams().period);
+
   let groupsData = Object.values(useSelector((state) => state.groups))
     .sort((a, b) => a.id - b.id)
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
@@ -34,10 +35,7 @@ const ContentPublicPdfProjects = ({
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
   const user = useSelector((state) => state.user);
-  const period = useSelector((state) => state.period);
-  const [selectedReviewers, setSelectedReviewers] = useState({});
   const dispatch = useDispatch();
-
   if (loadingProjects) {
     return (
       <Box
@@ -55,41 +53,28 @@ const ContentPublicPdfProjects = ({
     const group = groupsData?.find((g) => g.id === id);
     return group ? group : null;
   };
-  const handleReviewerChange = async (deliveryId, reviewerId) => {
-    setSelectedReviewers({
-      ...selectedReviewers,
-      [deliveryId]: reviewerId,
-    });
-    // Obtener el equipo y crear una copia modificable
-    const updatedGroup = { ...getGroupById(parseInt(deliveryId, 10)) };
 
-    if (updatedGroup) {
-      // Asignar el reviewerId a la copia del equipo
-      updatedGroup.reviewer_id = reviewerId;
-
-      // Llamar al backend para actualizar el equipo
-      await updateGroup(user, period.id, updatedGroup);
-
-      // Crear una nueva lista de equipos actualizados
-      const updatedGroups = groupsData.map((group) =>
-        group.id === updatedGroup.id ? updatedGroup : group
-      );
-
-      // Despachar la actualización solo del equipo modificado en Redux
-      dispatch(setGroups(updatedGroups));
-    }
+  // Función para obtener el nombre del tutor por su id
+  const TrygetTutorNameById = (gData, entrega, period) => {
+    let _find = gData.find((g) => parseInt(getGroup(entrega.name)) === g.id)?.tutor_period_id
+    console.log("find: ", _find)
+    console.log("period: ", period)
+    let ret = getTutorNameById(_find, period)
+    console.log(ret)
+    return ret
   };
+  const getTutorNameById = (id, periodId) => {
+    console.log(tutors)
+    console.log(periodId)
+    console.log(id)
+    const tutor = tutors.find(
+      (t) =>
+        t.tutor_periods &&
+        t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
+    );
 
-      // Función para obtener el nombre del tutor por su id
-      const getTutorNameById = (id, periodId) => {
-        const tutor = tutors.find(
-          (t) =>
-            t.tutor_periods &&
-            t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
-        );
-    
-        return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
-      };
+    return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
+  };
 
   function getGroup(path) {
     const parts = path.split("/");
@@ -137,56 +122,16 @@ const ContentPublicPdfProjects = ({
                 <TableRow key={index}>
                   <TableCell>{getGroupNumber(entrega.name)}</TableCell>
                   <TableCell>
-                    {getTutorNameById(
-                      groupsData.find(
-                        (g) => parseInt(getGroup(entrega.name)) === g.id
-                      )?.tutor_period_id, period.id
-                    )}
+                    {TrygetTutorNameById(groupsData, entrega, period)}
                   </TableCell>
                   <TableCell>
-                    {projectType === "initial"
-                      ? groupsData.find(
-                          (g) => parseInt(getGroup(entrega.name)) === g.id
-                        )?.pre_report_title ||
-                        `Anteproyecto Equipo ${getGroupNumber(entrega.name)}`
-                      : groupsData.find(
+                    {groupsData.find(
                           (g) => parseInt(getGroup(entrega.name)) === g.id
                         )?.final_report_title ||
                         `Proyecto Final Equipo ${getGroupNumber(entrega.name)}`}
                   </TableCell>
 
                   <TableCell>{entrega.description ? entrega.description : "<i>Sin descripción</i>"}</TableCell>
-                  {projectType === "initial" && (
-                    <TableCell>
-                      <Select
-                        value={
-                          selectedReviewers[getGroup(entrega.name)]
-                            ? selectedReviewers[getGroup(entrega.name)]
-                            : getGroupById(parseInt(getGroup(entrega.name), 10))
-                                ?.reviewer_id === 0
-                            ? ""
-                            : getGroupById(parseInt(getGroup(entrega.name), 10))
-                                ?.reviewer_id
-                        }
-                        onChange={(e) =>
-                          handleReviewerChange(
-                            getGroup(entrega.name),
-                            e.target.value
-                          )
-                        }
-                        displayEmpty
-                      >
-                        <MenuItem value="" disabled>
-                          Seleccionar Revisor
-                        </MenuItem>
-                        {tutors.map((tutor) => (
-                          <MenuItem key={tutor.id} value={tutor.id}>
-                            {tutor.name} {tutor.last_name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </TableCell>
-                  )}
                   <TableCell>
                     <IconButton
                       onClick={() => downloadFile(getGroup(entrega.name), getGroupNumber(entrega.name))}

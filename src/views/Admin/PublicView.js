@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setTopics } from "../../redux/slices/topicsSlice";
 import { setTutors } from "../../redux/slices/tutorsSlice";
 import { getTableData } from "../../api/handleTableData";
 import { getDashboardData } from "../../api/dashboardStats";
 import { Container, Box, Grid, Paper } from "@mui/material";
-import Sidebar from "../../components/Sidebar";
-import ContentPdfProjects from "../../components/UI/Dashboards/AdminStats/Components/ContentAnteproyecto";
 import { setGroups } from "../../redux/slices/groupsSlice";
 import { downloadProject, getPublicProjects } from "../../api/handleProjects";
 import { setStudents } from "../../redux/slices/studentsSlice";
@@ -27,14 +25,13 @@ const PublicPDFView = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const period = useSelector((state) => state.period);
   const tutors = useSelector((state) => state.tutors);
   const students = useSelector((state) => state.students);
   const topics = useSelector((state) => state.topics);
 
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [loadingAnteproyectos, setLoadingAnteproyectos] = useState(true);
+  const [period, setPeriod] = useState(useParams().period);
   const [loadingFinalProjects, setLoadingFinalProjects] = useState(true);
 
   const [selectedMenu, setSelectedMenu] = useState("Inicio");
@@ -44,13 +41,15 @@ const PublicPDFView = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const data = await getDashboardData(period.id, user);
+        const data = await getDashboardData(period, user);
+        console.log(data.tutors)
         dispatch(setTopics(data.topics));
         dispatch(setTutors(data.tutors));
         dispatch(setStudents(data.students));
         setDashboardData(data);
+        console.log(tutors)
 
-        const endpoint = `/groups/?period=${period.id}`;
+        const endpoint = `/groups/?period=${period}`;
         const groupsData = await getTableData(endpoint, user);
         dispatch(setGroups(groupsData));
       } catch (error) {
@@ -69,7 +68,7 @@ useEffect(() => {
     setLoadingFinalProjects(true);
     const finalProjectsData = await getPublicProjects(
       user,
-      period.id,
+      period,
       'final'
     );
     if (finalProjectsData) {
@@ -84,7 +83,7 @@ useEffect(() => {
 
   const downloadFinalFile = async (groupId, groupNumber) => {
     try {
-      await downloadProject(groupId, user, period.id, "final", groupNumber);
+      await downloadProject(groupId, user, period, "final", groupNumber);
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }
