@@ -117,7 +117,7 @@ const GroupDataTable = () => {
       if (err.response?.status===409) {
         setNotification({
           open: true,
-          message: `Advertencia: Conflicto al editar equipo.`,
+          message: `Advertencia: Conflicto al agregar equipo.`,
           status: "warning",
         });
 
