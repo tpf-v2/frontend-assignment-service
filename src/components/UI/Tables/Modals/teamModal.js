@@ -77,7 +77,7 @@ export const TeamModal = ({
       /////// Modals ///////
       // Este modal va a ser el de editar directamente (hay add en StudentForm).
       // Conservo la estructura solo x comodidad / analogía con otros archivos de modals.
-      const innerEditTeamModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText, disableEditId=false) => {        
+      const innerEditTeamModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {        
         return (
           <Dialog open={bool} onClose={handleCloseModal} maxWidth={false} fullWidth PaperProps={{
             style: {
@@ -312,7 +312,7 @@ export const TeamModal = ({
       
       const editTeamModal = () => {
         // Usa el editedItem para guardar el resultado de las ediciones a enviar
-        return innerEditTeamModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar", true)
+        return innerEditTeamModal(openEditModal, handleCloseEditModal, handleEditItem, editedItem, setEditedItem, "Editar", "Guardar")
       }
       
       const confirmOnConflictTeamModal = () => {
@@ -326,8 +326,6 @@ export const TeamModal = ({
         } else if (conflicts?.operation == "edit") {
           return innerConfirmOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, handleEditItem, editedItem, setEditedItem, "Editar", "Confirmar");
         }
-
-        //return innerConfirmOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, handleConfirm, editedItem, setEditedItem, "Editar", "Confirmar");
       }
       
       const innerConfirmOnConflictModal = (bool, handleCloseModal, handleCloseFirstModal, handleActionToConfirm, item, setItem, TitleText, ConfirmButtonText) => {        
@@ -416,7 +414,7 @@ export const TeamModal = ({
       //// Add ////
       // Es todo lo mismo, salvo el título (no lleva item.id), y que no voy a mostrar acá las 3 preferencias
       // El loading tiene que ser un atributo
-      const innerAddTeamModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText, disableEditId=false) => {        
+      const innerAddTeamModal = (bool, handleCloseModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {        
         return (
           <Dialog open={bool} onClose={handleCloseModal} maxWidth={false} fullWidth PaperProps={{
             style: {
@@ -593,8 +591,8 @@ export const TeamModal = ({
       };
 
       const addTeamModal = () => {
-        // Usa el editedItem para guardar el resultado de las ediciones a enviar <-- esto es copypaste, supongo que sería un newItem
-        return innerAddTeamModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar", "Guardar", true)
+        // Usa el newItem para guardar lo que va a enviar
+        return innerAddTeamModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar", "Guardar")
       }
 
   return (
