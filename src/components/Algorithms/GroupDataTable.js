@@ -62,7 +62,7 @@ const GroupDataTable = () => {
   const [showNoTutor, setShowNoTutor] = useState(false);
 
   const [openConfirmEditModal, setOpenConfirmEditModal] = useState(false);
-  const [conflictsMessage, setConflictsMessage] = useState([]);
+  const [conflictsMessage, setConflictsMessage] = useState({msg:[]});
 
   const [openEditModal, setOpenEditModal] = useState(false);
   const [itemToPassToModal, setItemToPassToModal] = useState(null);
@@ -123,7 +123,7 @@ const GroupDataTable = () => {
 
         // Acá hay que indicarle de alguna forma que se abrió para solucionar conflictos DE ADD
         // set conflict type, o poner type y msg en un diccionario y abrirlo adentro
-        setConflictsMessage(err.response?.data?.detail || []);
+        setConflictsMessage({operation: "add", msg: err.response?.data?.detail} || {operation: "add", msg:[]});
         setOpenConfirmEditModal(true);
       }
     }
@@ -174,8 +174,8 @@ const GroupDataTable = () => {
           message: `Advertencia: Conflicto al editar equipo.`,
           status: "warning",
         });
-
-        setConflictsMessage(err.response?.data?.detail || []);
+        
+        setConflictsMessage({operation: "edit", msg: err.response?.data?.detail} || {operation: "edit", msg:[]});
         setOpenConfirmEditModal(true);
       }
     }
@@ -595,7 +595,7 @@ const GroupDataTable = () => {
             setOpenConfirmModal={setOpenConfirmEditModal}
             handleConfirm={handleConfirmEditOnConflict}
 
-            conflictMsg={conflictsMessage}
+            conflicts={conflictsMessage}
             setConflictMsg={setConflictsMessage}
 
             topics={allTopics}

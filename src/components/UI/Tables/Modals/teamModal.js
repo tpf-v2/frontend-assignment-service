@@ -32,7 +32,7 @@ export const TeamModal = ({
   handleConfirm,
   item, // recibido del parent, y su set para flushearlo al salir
   setParentItem,
-  conflictMsg, // para pasarle el msg de la response del back al modal de conflicto, y su set
+  conflicts, // para pasarle el msg de la response del back al modal de conflicto, y su set
   setConflictMsg,
   topics, // desglosado en csvTopics y customTopics para que los custom se muestren pero No sean seleccionables
   tutors, // para buscar su email etc a partir de otros datos
@@ -283,10 +283,14 @@ export const TeamModal = ({
         setOpenAddModal(false);
         setNewItem({students: []});
       };
+
+      const handleCloseAddModalWithoutFlushingItem = () => {
+        setOpenAddModal(false);
+      };
         
       const handleCloseConfirmModal = () => {
         setOpenConfirmModal(false);
-        setConflictMsg([]);        
+        setConflictMsg({msg:[]});
       };
 
       const handleCloseEditModalWithoutFlushingEditedItem = () => {
@@ -309,7 +313,15 @@ export const TeamModal = ({
         // Usa el editedItem, por lo que en el medio, no se debe haber flusheado editedItem (ej hay que no cerrar (desde afuera) el modal anterior si hay conflicto)
         // Además, luego de Confirmar se necesita usar desde afuera al editedItem por lo que no hay que flushearlo desde acá sino afuera
         // AUX: acá un if type es edit hacer esto, else hacer lo mismo pero para add, y hay que agregar un blablawithputFlushing para add p q ande - #saludos me voy a cenar
-        return innerConfirmOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, handleConfirm, editedItem, setEditedItem, "Editar", "Confirmar")
+        // if (conflicts?.operation == "add") {
+          
+        //   return innerConfirmOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseAddModalWithoutFlushingItem, handleAddItem, newItem, setNewItem, "Agregar", "Confirmar");
+
+        // } else if (conflicts?.operation == "edit") {
+        //   return innerConfirmOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, handleEditItem, editedItem, setEditedItem, "Editar", "Confirmar");
+        // }
+
+        return innerConfirmOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, handleConfirm, editedItem, setEditedItem, "Editar", "Confirmar");
       }
       
       const innerConfirmOnConflictModal = (bool, handleCloseModal, handleCloseEditModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {        
@@ -333,7 +345,7 @@ export const TeamModal = ({
                 if (confirmLoading) return;
                 setConfirmLoading(true);
                 try {
-                  await handleConfirmAction(item, setItem, handleCloseModal);                  
+                  await handleConfirmAction(item, setItem, handleCloseModal);            
                 } finally {
                   setConfirmLoading(false);
                 }
@@ -343,11 +355,11 @@ export const TeamModal = ({
                 
                 {/* Mostrar el / los errores */}
 
-                {conflictMsg?.student_conflicts?.length > 0 && (
+                {conflicts?.msg?.student_conflicts?.length > 0 && (
                   <div>
                     <h4>Estudiantes</h4>
                     <ul>
-                      {conflictMsg?.student_conflicts?.map((conflict_error, index) => (
+                      {conflicts?.msg?.student_conflicts?.map((conflict_error, index) => (
                         <li key={index}>{conflict_error}</li>
                       ))}
                     </ul>
@@ -355,11 +367,11 @@ export const TeamModal = ({
                   </div>
                 )}
 
-                {conflictMsg?.topic_conflicts?.length > 0 && (
+                {conflicts?.msg?.topic_conflicts?.length > 0 && (
                   <div>
                     <h4>Tema</h4>                    
                     <ul>
-                      {conflictMsg?.topic_conflicts?.map((conflict_error, index) => (
+                      {conflicts?.msg?.topic_conflicts?.map((conflict_error, index) => (
                         <li key={index}>{conflict_error} {getTopicNameById(item.topic?.id)}</li>
                       ))}
                     </ul>
@@ -367,7 +379,7 @@ export const TeamModal = ({
                   </div>
                 )}
 
-                {conflictMsg?.empty_delete_team && (<div>
+                {conflicts?.msg?.empty_delete_team && (<div>
                   <h4>Equipo vacío</h4>
                   <ul>
                       <li>Se desasignarán todos los integrantes de este equipo</li>                    
