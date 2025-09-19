@@ -19,7 +19,12 @@ import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
 const CLEARSTRING = "Eliminar integrante";
 
-/* Modals para Editar un equipo y Confirmar la edición en caso de conflicto */
+/* Modals para Agregar equipo, Editar equipo, y Confirmar la edición en caso de conflicto.
+ * Puede ocasionarse conflicto sea durante el agregado o durante la edición.
+ * Se llama "primer modal" al modal de add o edit, y "segundo modal" al de confirm,
+ * ya que el primer modal continúa en pantalla en caso de haber conflictos, y el de confirm
+ * se muestra por encima, hasta que se confirme (o se cancele) la operación.
+ */
 export const TeamModal = ({
   openAddModal, // bools para ver si se debe abrir cada modal
   openEditModal,
@@ -29,10 +34,9 @@ export const TeamModal = ({
   setOpenConfirmModal,
   handleAddItem, // las acciones al clickear confirmar desde cada modal
   handleEditItem,
-  handleConfirm,
   item, // recibido del parent, y su set para flushearlo al salir
   setParentItem,
-  conflicts, // para pasarle el msg de la response del back al modal de conflicto, y su set
+  conflicts, // para ver si fue x add o edit, y obtener el msg informando qué conflictos hubo; y su set
   setConflictMsg,
   topics, // desglosado en csvTopics y customTopics para que los custom se muestren pero No sean seleccionables
   tutors, // para buscar su email etc a partir de otros datos
@@ -46,6 +50,8 @@ export const TeamModal = ({
       // Esto hace de handle open edit
       useEffect(() => {
         if (!openEditModal) return;
+        // Importante: No continuar si el item ha sido flusheado
+        if (!item || Object.keys(item).length === 0) return;
 
         setEditedItem(item); 
 
@@ -345,8 +351,11 @@ export const TeamModal = ({
                 if (confirmLoading) return;
                 setConfirmLoading(true);
                 try {
+                  // cerramos el modal de confirm
+                  handleCloseModal();
+                  // undefined xq no necesitamos que ese handle cierre ningún modal, ya lo cerramos recién
                   // El true llega hasta la api call y confirma los conflictos! :)
-                  await handleActionToConfirm(item, setItem, handleCloseModal, true);            
+                  await handleActionToConfirm(item, setItem, undefined, true);
                 } finally {
                   setConfirmLoading(false);
                 }

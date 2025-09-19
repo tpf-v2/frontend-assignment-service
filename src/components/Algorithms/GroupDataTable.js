@@ -61,12 +61,11 @@ const GroupDataTable = () => {
   const [showNoTopic, setShowNoTopic] = useState(false);
   const [showNoTutor, setShowNoTutor] = useState(false);
 
-  const [openConfirmEditModal, setOpenConfirmEditModal] = useState(false);
-  const [conflictsMessage, setConflictsMessage] = useState({msg:[]});
+  const [openConfirmModal, setOpenConfirmModal] = useState(false);
+  const [conflicts, setConflicts] = useState({msg:[]});
 
   const [openEditModal, setOpenEditModal] = useState(false);
   const [itemToPassToModal, setItemToPassToModal] = useState(null);
-
   const [openAddModal, setOpenAddModal] = useState(false);
 
   // useEffect
@@ -97,11 +96,14 @@ const GroupDataTable = () => {
   }, [endpoint, user]);
   //}, [endpoint, user, groups, topics]);
 
-  // Agregar equipo
-  const handleAddItem = async (newItem, setNewItem, handleCloseAddModal, confirm_option=false) => {
+  // Agregar equipo. El first modal es en este caso el modal de add.
+  // Es llamada desde TeamModals: primera vez queda bool en false; luego, si hay conflictos, con bool en true.
+  const handleAddItem = async (newItem, setNewItem, handleCloseFirstModal=undefined, confirm_option=false) => {
     try {      
       await addItemToGenericTable(addTeam, newItem, setNewItem, {}, confirm_option);
-      handleCloseAddModal(true);
+      if (handleCloseFirstModal) {
+        handleCloseFirstModal(); // Esto cierra el primer modal solo si no hubo conflicto
+      }      
       setNewItem({students:[]}); // necesario para el segundo modal, el de confirm.// <-- copypasteo esto acá, revisar en el modal
     } catch (err) {
       console.error(`Error when adding new team:`, err);
@@ -112,7 +114,7 @@ const GroupDataTable = () => {
         status: "error",
       });
 
-      // Si hay conflicto, no cerrar el modal de edición; abrir cartel de confirmación
+      // Si hay conflicto, no cerrar el modal de add; abrir cartel de confirmación
       // y si se confirma, se reenvía la request (conservar los datos a enviar) pero con un bool en true
       if (err.response?.status===409) {
         setNotification({
@@ -121,10 +123,9 @@ const GroupDataTable = () => {
           status: "warning",
         });
 
-        // Acá hay que indicarle de alguna forma que se abrió para solucionar conflictos DE ADD
-        // set conflict type, o poner type y msg en un diccionario y abrirlo adentro
-        setConflictsMessage({operation: "add", msg: err.response?.data?.detail} || {operation: "add", msg:[]});
-        setOpenConfirmEditModal(true);
+        // Indicamos que los conflictos fueron durante el add de un equipo, y abrimos el modal de confirmación
+        setConflicts({operation: "add", msg: err.response?.data?.detail} || {operation: "add", msg:[]});
+        setOpenConfirmModal(true);
       }
     }
   };
@@ -140,24 +141,24 @@ const GroupDataTable = () => {
       status: "success",
     });
 
-    console.log("--- por actualizar con setData, antes:", data);
-    //setData((prevData) => [...prevData, item]);
     setData((prevData) => adaptListWithApiResponse(prevData, changes));
-    console.log("--- actualizado con setData, dsp:", data);
     //dispatch(setReducer((prevData) => [...prevData, item])); // set
-
   };
 
-  // Editar equipo
-  const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal, confirm_option=false) => {
+  // Editar equipo. El first modal es en este caso el modal de editar.
+  // Es llamada desde TeamModals: primera vez queda bool en false; luego, si hay conflictos, con bool en true.
+  const handleEditItem = async (editedItem, setEditedItem, handleCloseFirstModal=undefined, confirm_option=false) => {
     try {
       editedItem.tutor_email = getTutorEmailByTutorPeriodId(editedItem.tutor_period_id, period.id);
       await editItemInGenericTable(editTeam, editedItem, setEditedItem, setGroups, confirm_option);
       
-      // Close modal de edición en caso de éxito
-      handleCloseEditModal();      
-      setEditedItem({}); // necesario para el segundo modal, el de confirm.      
-    } catch (err) {
+      // Close modal de edición en caso de éxito sin conflictos
+      if (handleCloseFirstModal) {
+        handleCloseFirstModal(); // esto cierra el primer modal (edit en este caso) si no hay conflictos
+      }
+      setEditedItem({}); // necesario para el segundo modal, el de confirm.
+      
+    } catch (err) {      
       const title="team";
       console.error(`Error when editing ${title}:`, err);
       setNotification({
@@ -175,8 +176,8 @@ const GroupDataTable = () => {
           status: "warning",
         });
         
-        setConflictsMessage({operation: "edit", msg: err.response?.data?.detail} || {operation: "edit", msg:[]});
-        setOpenConfirmEditModal(true);
+        setConflicts({operation: "edit", msg: err.response?.data?.detail} || {operation: "edit", msg:[]});
+        setOpenConfirmModal(true);
       }
     }
   };
@@ -197,12 +198,6 @@ const GroupDataTable = () => {
   });
   const handleSnackbarClose = () => {
     setNotification({ ...notification, open: false });
-  };
-  
-  // Confirmar edición con bool true
-  const handleConfirmEditOnConflict = async (editedItem, setEditedItem, handleCloseEditModal, confirm_option=true) => {
-    // Esto capaz se puede hacer desde adentro
-    await handleEditItem(editedItem, setEditedItem, handleCloseEditModal, true);
   };
 
   // Adaptar la lista de equipos que se muestra en la tabla, con el resultado del add/edición
@@ -591,12 +586,11 @@ const GroupDataTable = () => {
             item={itemToPassToModal}
             setParentItem={setItemToPassToModal}
 
-            openConfirmModal={openConfirmEditModal}
-            setOpenConfirmModal={setOpenConfirmEditModal}
-            handleConfirm={handleConfirmEditOnConflict}
+            openConfirmModal={openConfirmModal}
+            setOpenConfirmModal={setOpenConfirmModal}
 
-            conflicts={conflictsMessage}
-            setConflictMsg={setConflictsMessage}
+            conflicts={conflicts}
+            setConflictMsg={setConflicts}
 
             topics={allTopics}
             tutors={tutors}
