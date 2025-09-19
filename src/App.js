@@ -35,6 +35,7 @@ import { setStudents } from './redux/slices/studentsSlice';
 import { setTutors } from './redux/slices/tutorsSlice';
 import { setTopics } from './redux/slices/topicsSlice';
 import Credits from './views/CreditsView';
+import PublicPDFView from './views/Admin/PublicView';
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -91,6 +92,7 @@ const App = () => {
             <Route path="/credits" element={<Credits />} />
             {/* <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} /> */}
             <Route path="/dashboard/:period" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />
+            <Route path="/public/:period" element={<ProtectedRoute><PublicPDFView/></ProtectedRoute>} />
             <Route path="/table-view" element={<ProtectedRoute><ParentTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/students" element={<ProtectedRoute><StudentsTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/topics" element={<ProtectedRoute><TopicsTable /></ProtectedRoute>} />
