@@ -313,18 +313,18 @@ export const TeamModal = ({
         // Usa el editedItem, por lo que en el medio, no se debe haber flusheado editedItem (ej hay que no cerrar (desde afuera) el modal anterior si hay conflicto)
         // Además, luego de Confirmar se necesita usar desde afuera al editedItem por lo que no hay que flushearlo desde acá sino afuera
         // AUX: acá un if type es edit hacer esto, else hacer lo mismo pero para add, y hay que agregar un blablawithputFlushing para add p q ande - #saludos me voy a cenar
-        // if (conflicts?.operation == "add") {
+        if (conflicts?.operation == "add") {
           
-        //   return innerConfirmOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseAddModalWithoutFlushingItem, handleAddItem, newItem, setNewItem, "Agregar", "Confirmar");
+          return innerConfirmOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseAddModalWithoutFlushingItem, handleAddItem, newItem, setNewItem, "Agregar", "Confirmar");
 
-        // } else if (conflicts?.operation == "edit") {
-        //   return innerConfirmOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, handleEditItem, editedItem, setEditedItem, "Editar", "Confirmar");
-        // }
+        } else if (conflicts?.operation == "edit") {
+          return innerConfirmOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, handleEditItem, editedItem, setEditedItem, "Editar", "Confirmar");
+        }
 
-        return innerConfirmOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, handleConfirm, editedItem, setEditedItem, "Editar", "Confirmar");
+        //return innerConfirmOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, handleConfirm, editedItem, setEditedItem, "Editar", "Confirmar");
       }
       
-      const innerConfirmOnConflictModal = (bool, handleCloseModal, handleCloseEditModal, handleConfirmAction, item, setItem, TitleText, ConfirmButtonText) => {        
+      const innerConfirmOnConflictModal = (bool, handleCloseModal, handleCloseFirstModal, handleActionToConfirm, item, setItem, TitleText, ConfirmButtonText) => {        
         return (
           <Dialog open={bool} onClose={handleCloseModal} maxWidth={false}>
             <DialogTitle
@@ -345,7 +345,8 @@ export const TeamModal = ({
                 if (confirmLoading) return;
                 setConfirmLoading(true);
                 try {
-                  await handleConfirmAction(item, setItem, handleCloseModal);            
+                  // El true llega hasta la api call y confirma los conflictos! :)
+                  await handleActionToConfirm(item, setItem, handleCloseModal, true);            
                 } finally {
                   setConfirmLoading(false);
                 }
@@ -394,7 +395,7 @@ export const TeamModal = ({
                 <Button onClick={handleCloseModal} variant="outlined" color="error">
                   Cancelar
                 </Button>
-                <Button type="submit" onClick={handleCloseEditModal} variant="contained" color="primary" disabled={confirmLoading}>
+                <Button type="submit" onClick={handleCloseFirstModal} variant="contained" color="primary" disabled={confirmLoading}>
                   {confirmLoading ? "Confirmando..." : ConfirmButtonText}
                 </Button>
               </DialogActions>
