@@ -10,8 +10,9 @@ import { Container, Box, Grid, Paper } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
 import ContentPdfProjects from "../../components/UI/Dashboards/AdminStats/Components/ContentAnteproyecto";
 import { setGroups } from "../../redux/slices/groupsSlice";
-import { downloadProject, getProjects } from "../../api/handleProjects";
+import { downloadProject, getPublicProjects } from "../../api/handleProjects";
 import { setStudents } from "../../redux/slices/studentsSlice";
+import ContentPublicPdfProjects from "../../components/UI/Dashboards/AdminStats/Components/ContentPublicProjectPDFs";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -66,7 +67,7 @@ useEffect(() => {
     setSelectedMenu(menu);
     setShowUploadCSV(false);
     setLoadingFinalProjects(true);
-    const finalProjectsData = await getProjects(
+    const finalProjectsData = await getPublicProjects(
       user,
       period.id,
       'final'
@@ -91,7 +92,7 @@ useEffect(() => {
 
   const renderContent = () => {
     return (
-      <ContentPdfProjects
+      <ContentPublicPdfProjects
         loadingProjects={loadingFinalProjects}
         deliveries={deliveries}
         downloadFile={downloadFinalFile}
@@ -112,13 +113,6 @@ useEffect(() => {
       <Root>
         <Grid container spacing={3}>
           {/* Sidebar */}
-          <Grid item xs={3}>
-            <Sidebar
-              selectedMenu={selectedMenu}
-              handleNavigation={null}
-              period={period.id}
-            />
-          </Grid>
           {/* Contenido */}
           <Grid item xs={9}>
             <Box mt={2}>{renderContent()}</Box>

@@ -91,3 +91,19 @@ export const getProjects = async (user, period_id, projectType) => {
   
     return response.data;
   };
+
+export const getPublicProjects = async (user, period_id, projectType) => {
+    const projectName = projectType === 'final-project';
+
+    const config = {
+      params: {
+          period: period_id
+      },
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+  
+    const response = await axios.get(`${BASE_URL}/groups/public-final-project`, config);
+    return response.data;
+  };
