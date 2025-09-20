@@ -81,6 +81,7 @@ export const TeamModals = ({
       };
         
       // Nueva función, para obtener el objeto topic
+      // Ya no es necesaria desde que migramos a Autocomplete
       const getTopicById = (id) => {
         const topic = topics.csvTopics?.find((t) => t.id === id);
         return topic ? topic : ""; // Si no encuentra el topic, mostrar 'Desconocido'
@@ -210,7 +211,7 @@ export const TeamModals = ({
                           if (inputValue !== '' && !isExisting) {
                             filtered.push({
                               inputValue,
-                              title: `Crear tema: "${inputValue}"`,
+                              name: `Crear tema: "${inputValue}"`, //
                             });
                           }
                   
@@ -240,10 +241,20 @@ export const TeamModals = ({
                             // Else, fue una opción seleccionada de las existentes, la seteamos como de costumbre
                             setItem({ ...item, topic: newValue ?? null})
                           }
+                        }}                        
+                        renderOption={(props, option) => {
+                          if (option.inputValue) {
+                            return (
+                              <li {...props}>
+                                Crear tema: {option.inputValue}
+                              </li>
+                            );
+                          }
+                          return <li {...props}>{option?.name}</li>;
                         }}
 
-                      />                  
-                  
+                      />
+
                   <FormControl fullWidth variant="outlined" margin="normal">
                     {<InputLabel margin="normal">Tutor/a</InputLabel>
                     }
@@ -386,7 +397,8 @@ export const TeamModals = ({
               onSubmit={ async (e) => {
                 e.preventDefault(); // previene el reload del form                           
                 
-                if (!topicMoveDecision) return;
+                // Si hubo conflictos de tema y no se decidió nada, volver
+                if (conflicts?.msg?.topic_conflicts?.length > 0 && !topicMoveDecision) return;
                 if (confirmLoading) return;
                 setConfirmLoading(true);
                 try {                  
@@ -574,34 +586,70 @@ export const TeamModals = ({
 
                   {/* Tema y tutor */}
                   <InputLabel>Tema y Tutor/a</InputLabel>
-                  <FormControl fullWidth variant="outlined" margin="normal">
-                      <InputLabel>Tema</InputLabel>
-                      <Select
-                        value={item.topic?.id || ""}
-                        onChange={(e) =>
-                          setItem({ ...item, topic: getTopicById(e.target.value) })
-                        }
-                        label="Tema"
-                        required
-                      >
-                        {topics.csvTopics.map((topic) => (
-                          <MenuItem
-                            key={topic.id}
-                            value={topic.id}
-                          >
-                            {topic.name}
-                          </MenuItem>
-                        ))}
+                  <Autocomplete // Igual que en el modal de editar []
+                        disablePortal
+                        options={topics.csvTopics ?? []}
+                        // manera básica: getOptionLabel={(option) => option?.name ?? ""} // cómo mostrar el texto
+                        sx={{ width: '100%' }}
+                        isOptionEqualToValue={(option, value) => option?.id === value?.id} // <-- esto compara por id
+                        clearText="Desasignar tema"                        
+                        renderInput={(params) => <TextField {...params} label="Tema"/>} // label es la etiqueta a mostrar
+                        value={item?.topic ?? null} // la opción seteada actual
+                        
+                        // Agrego esto, adaptado de la doc, para permitir Crear tema (una option) que no existe, tipeando
+                        // (https://mui.com/material-ui/react-autocomplete/)
+                        filterOptions={(options, params) => {
+                          const filtered = filter(options, params);
+                  
+                          const { inputValue } = params;
+                          // Suggest the creation of a new value
+                          const isExisting = options.some((option) => inputValue === option.name);
+                          if (inputValue !== '' && !isExisting) {
+                            filtered.push({
+                              inputValue,
+                              name: `Crear tema: "${inputValue}"`, //
+                            });
+                          }
+                  
+                          return filtered;
+                        }}
+                        getOptionLabel={(option) => {
+                          // Value selected with enter, right from the input
+                          if (typeof option === 'string') {
+                            return option;
+                          }
+                          // Add "xxx" option created dynamically
+                          if (option.inputValue) {
+                            return option.inputValue;
+                          }
+                          // Regular option (lo que mostrábamos en el render básico)
+                          return option?.name ?? "";
+                        }}
+                        onChange={(event, newValue) => {
+                          // Si la opción fue un tema nuevo a crear, hay que crear el objeto topic que espera el back,
+                          // porque hasta ahora lo tipeado como option es solo texto
+                          if (typeof newValue === 'string') {
+                            setItem({...item, topic: {name: newValue}});
+                          } else if (newValue && newValue.inputValue) {
+                            // Create a new value from the user input
+                            setItem({...item, topic: {name: newValue.inputValue}});
+                          } else {
+                            // Else, fue una opción seleccionada de las existentes, la seteamos como de costumbre
+                            setItem({ ...item, topic: newValue ?? null})
+                          }
+                        }}                        
+                        renderOption={(props, option) => {
+                          if (option.inputValue) {
+                            return (
+                              <li {...props}>
+                                Crear tema: {option.inputValue}
+                              </li>
+                            );
+                          }
+                          return <li {...props}>{option?.name}</li>;
+                        }}
 
-                        {/* Si el valor actual es un custom, agregarlo como opción (no seleccionable)
-                            para que se pueda mostrar como valor inicial al abrir el modal*/}
-                        {item.topic && !topics.csvTopics.some(t => t.id === item.topic.id) && (
-                          <MenuItem key={item.topic.id} value={item.topic.id} disabled>
-                            {item.topic.name}
-                          </MenuItem>
-                        )}
-                      </Select>
-                    </FormControl>
+                      />
                   
                   <FormControl fullWidth variant="outlined" margin="normal">
                     {<InputLabel margin="normal">Tutor/a</InputLabel>
@@ -632,7 +680,10 @@ export const TeamModals = ({
 
                     </Select>
                   </FormControl>
-                  {/* Las tres preferencias, no editables */}                  
+                  {/* Las tres preferencias, no editables - resulta ser que sí las queremos editables []
+                    * No irán a este endpoint de add_team, es otro endpoint el de las answers.
+                  */}
+                 
                   </Grid>
 
                 </Grid> 
