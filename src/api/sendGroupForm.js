@@ -88,7 +88,7 @@ export const addTeam = async (newItem, user, periodId, confirm_move=false) => {
   return response.data;
 }
 
-export const editTeam = async (groupId, periodId, teamToEdit, user, confirm_move=false) => {
+export const editTeam = async (groupId, periodId, teamToEdit, user, confirm_move=false, confirm_topic_move=false) => {
   const config = {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -109,6 +109,7 @@ export const editTeam = async (groupId, periodId, teamToEdit, user, confirm_move
     "tutor_email": teamToEdit.tutor_email,
     "topic_id": teamToEdit.topic.id,
     "confirm_move": confirm_move,
+    "confirm_topic_move": confirm_topic_move,
   };  
 
   try {

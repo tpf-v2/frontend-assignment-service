@@ -362,8 +362,8 @@ export const TeamModals = ({
                   
                   // Obtenemos el bool según la decisión de quitar o conservar
                   const moveTopic = topicMoveDecision === "remove";
-                  // El true llega hasta la api call y confirma los conflictos! :) [AUX: HAY QUE USAR EL MOVETOPIC OBVIAMENTE]
-                  await handleActionToConfirm(item, setItem, handleCloseModal, true);
+                  // El true llega hasta la api call y confirma los conflictos! :)
+                  await handleActionToConfirm(item, setItem, handleCloseModal, true, moveTopic);
                 } finally {
                   setConfirmLoading(false);
                 }

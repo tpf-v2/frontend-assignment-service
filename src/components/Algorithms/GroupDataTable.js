@@ -98,8 +98,8 @@ const GroupDataTable = () => {
 
   // Agregar equipo. El first modal es en este caso el modal de add.
   // Es llamada desde TeamModals: primera vez queda bool en false; luego, si hay conflictos, con bool en true.
-  const handleAddItem = async (newItem, setNewItem, handleCloseFirstModal=undefined, confirm_option=false) => {
-    try {      
+  const handleAddItem = async (newItem, setNewItem, handleCloseFirstModal=undefined, confirm_option=false, confirm_topic_move=false) => {
+    try { // AUX: AGREGAR EL CAMPO CONFIRM_TOPIC_MOVE, QUE SOLO LO PUSE PARA NO ROMPER PERO AHORA NO HACE NADA.
       await addItemToGenericTable(addTeam, newItem, setNewItem, {}, confirm_option);
       if (handleCloseFirstModal) {
         handleCloseFirstModal(); // Esto cierra el primer modal solo si no hubo conflicto
@@ -147,10 +147,10 @@ const GroupDataTable = () => {
 
   // Editar equipo. El first modal es en este caso el modal de editar.
   // Es llamada desde TeamModals: primera vez queda bool en false; luego, si hay conflictos, con bool en true.
-  const handleEditItem = async (editedItem, setEditedItem, handleCloseFirstModal=undefined, confirm_option=false) => {
+  const handleEditItem = async (editedItem, setEditedItem, handleCloseFirstModal=undefined, confirm_option=false, confirm_topic_move=false) => {
     try {
       editedItem.tutor_email = getTutorEmailByTutorPeriodId(editedItem.tutor_period_id, period.id);
-      await editItemInGenericTable(editTeam, editedItem, setEditedItem, setGroups, confirm_option);
+      await editItemInGenericTable(editTeam, editedItem, setEditedItem, setGroups, confirm_option, confirm_topic_move);
       
       // Close modal de edición en caso de éxito sin conflictos
       if (handleCloseFirstModal) {
@@ -181,8 +181,8 @@ const GroupDataTable = () => {
       }
     }
   };
-  const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, setReducer, confirm_option=false) => {    
-    const changes = await apiEditFunction(editedItem.id, period.id, editedItem, user, confirm_option);
+  const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, setReducer, confirm_option=false, confirm_topic_move=false) => {    
+    const changes = await apiEditFunction(editedItem.id, period.id, editedItem, user, confirm_option, confirm_topic_move);
     setNotification({
       open: true,
       message: `Se editó equipo exitosamente`,
