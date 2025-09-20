@@ -13,7 +13,11 @@ import {
     InputLabel,
     //
     FormControl,
-    Autocomplete
+    Autocomplete,
+    //
+    RadioGroup,
+    Radio,
+    FormControlLabel
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
@@ -45,8 +49,8 @@ export const TeamModals = ({
   
 }) => {
 
-      const [editedItem, setEditedItem] = useState({});          
-      const [newItem, setNewItem] = useState({students: []});    
+      const [editedItem, setEditedItem] = useState({});    
+      const [newItem, setNewItem] = useState({students: []});
       // Esto hace de handle open edit
       useEffect(() => {
         if (!openEditModal) return;
@@ -59,6 +63,8 @@ export const TeamModals = ({
 
       const [editLoading, setEditLoading] = useState(false);
       const [confirmLoading, setConfirmLoading] = useState(false);
+
+      const [topicMoveDecision, setTopicMoveDecision] = useState(null);
 
       // To-Do: Estas funciones deberían ser importables
       // Función para obtener el nombre del topic por su id
@@ -344,8 +350,9 @@ export const TeamModals = ({
             </DialogTitle>
             <form
               onSubmit={ async (e) => {
-                e.preventDefault(); // previene el reload del form                
-
+                e.preventDefault(); // previene el reload del form                           
+                
+                if (!topicMoveDecision) return;
                 if (confirmLoading) return;
                 setConfirmLoading(true);
                 try {                  
@@ -353,7 +360,9 @@ export const TeamModals = ({
                   //handleCloseModal();
                   // undefined xq no necesitamos que ese handle cierre ningún modal, ya lo cerramos recién
                   
-                  // El true llega hasta la api call y confirma los conflictos! :)
+                  // Obtenemos el bool según la decisión de quitar o conservar
+                  const moveTopic = topicMoveDecision === "remove";
+                  // El true llega hasta la api call y confirma los conflictos! :) [AUX: HAY QUE USAR EL MOVETOPIC OBVIAMENTE]
                   await handleActionToConfirm(item, setItem, handleCloseModal, true);
                 } finally {
                   setConfirmLoading(false);
@@ -376,6 +385,15 @@ export const TeamModals = ({
                   </div>
                 )}
 
+                {conflicts?.msg?.empty_delete_team && (<div>
+                  <h4>Equipo vacío</h4>
+                  <ul>
+                      <li>Se desasignarán todos los integrantes de este equipo</li>                    
+                  </ul>
+                  Confirmar desasignará todos los integrantes de este equipo y eliminará el equipo.
+                </div>
+                )}
+
                 {conflicts?.msg?.topic_conflicts?.length > 0 && (
                   <div>
                     <h4>Tema</h4>                    
@@ -384,17 +402,25 @@ export const TeamModals = ({
                         <li key={index}>{conflict_error} {getTopicNameById(item.topic?.id)}</li>
                       ))}
                     </ul>
-                    Confirmar eliminará el tema de su actual equipo y lo asignará a este equipo.
+                    Confirmar asignará el tema a este equipo, y debería ¿quitarlo de su otro equipo o conservarlo también en su otro equipo?
+                    <RadioGroup
+                      value={topicMoveDecision}
+                      onChange={(e) => setTopicMoveDecision(e.target.value)}
+                    >
+                      <FormControlLabel
+                        value="remove"
+                        control={<Radio />}
+                        label="Quitar"
+                      />
+                      <FormControlLabel
+                        value="keep"
+                        control={<Radio />}
+                        label="Conservar"
+                      />
+                    </RadioGroup>
+                    {!topicMoveDecision && 
+                      <p style={{ color: "red" }}>Se debe seleccionar una opción sobre conflicto de tema.</p>}
                   </div>
-                )}
-
-                {conflicts?.msg?.empty_delete_team && (<div>
-                  <h4>Equipo vacío</h4>
-                  <ul>
-                      <li>Se desasignarán todos los integrantes de este equipo</li>                    
-                  </ul>
-                  Confirmar desasignará todos los integrantes de este equipo y eliminará el equipo.
-                </div>
                 )}
                 
                 <p><strong>¿Confirmar?</strong></p>
