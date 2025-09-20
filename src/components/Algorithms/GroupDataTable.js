@@ -99,8 +99,8 @@ const GroupDataTable = () => {
   // Agregar equipo. El first modal es en este caso el modal de add.
   // Es llamada desde TeamModals: primera vez queda bool en false; luego, si hay conflictos, con bool en true.
   const handleAddItem = async (newItem, setNewItem, handleCloseFirstModal=undefined, confirm_option=false, confirm_topic_move=false) => {
-    try { // AUX: AGREGAR EL CAMPO CONFIRM_TOPIC_MOVE, QUE SOLO LO PUSE PARA NO ROMPER PERO AHORA NO HACE NADA.
-      await addItemToGenericTable(addTeam, newItem, setNewItem, {}, confirm_option);
+    try {
+      await addItemToGenericTable(addTeam, newItem, setNewItem, {}, confirm_option, confirm_topic_move);
       if (handleCloseFirstModal) {
         handleCloseFirstModal(); // Esto cierra el primer modal solo si no hubo conflicto
       }      
@@ -129,7 +129,7 @@ const GroupDataTable = () => {
       }
     }
   };
-  const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, setReducer, confirm_option=false) => {
+  const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, setReducer, confirm_option=false, confirm_topic_move=false) => {
     newItem.tutor_email = getTutorEmailByTutorPeriodId(newItem.tutor_period_id, period.id);
     const changes = await apiAddFunction(newItem, user, period.id, confirm_option); // add
     console.log("--- changes post add:", changes);
