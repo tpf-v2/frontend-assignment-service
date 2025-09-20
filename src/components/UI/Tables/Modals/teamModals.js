@@ -64,7 +64,7 @@ export const TeamModals = ({
       const [editLoading, setEditLoading] = useState(false);
       const [confirmLoading, setConfirmLoading] = useState(false);
 
-      const [topicMoveDecision, setTopicMoveDecision] = useState(null);
+      const [topicMoveDecision, setTopicMoveDecision] = useState(undefined);
 
       // To-Do: Estas funciones deberían ser importables
       // Función para obtener el nombre del topic por su id
@@ -303,6 +303,7 @@ export const TeamModals = ({
       const handleCloseConfirmModal = () => {
         setOpenConfirmModal(false);
         setConflictMsg({msg:[]});
+        setTopicMoveDecision(undefined);
       };
 
       const handleCloseEditModalWithoutFlushingEditedItem = () => {
