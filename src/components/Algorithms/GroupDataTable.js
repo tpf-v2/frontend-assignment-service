@@ -77,6 +77,7 @@ const GroupDataTable = () => {
         const responseData = await getTableData(endpoint, user); // TEAMS
 
         console.log("groups recibidos:", groups.map(g => ({id: g.id, "topic.id": g.topic?.id})));
+        
         // Minor 'fix' xq admin envía tema copypasteado en csv (con != tutor) queda id repetido y eso rompe búsqueda de Autocomplete
         const uniqueTopics = Array.from(
           new Map((topics ?? []).map(t => [t.id, t])).values()

@@ -114,7 +114,11 @@ export const editTeam = async (groupId, periodId, teamToEdit, user, confirm_move
     "topic_id": teamToEdit.topic.id,
     "confirm_move": confirm_move,
     "confirm_topic_move": confirm_topic_move,
-  };  
+  };
+  // Editar equipo permite crear el tema, es por eso que en ese caso no existirá el topic id y sí su nombre
+  if (!teamToEdit.topic_id) {
+    sendableTeamToEdit["topic"] = teamToEdit.topic.name;
+  }
 
   try {
       const url = `${BASE_URL}/groups/${groupId}/periods/${periodId}`;

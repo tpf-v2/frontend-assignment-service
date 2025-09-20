@@ -191,22 +191,57 @@ export const TeamModals = ({
                   
                       <Autocomplete
                         disablePortal
-                        //options={[...topics.csvTopics, ... (!topics.csvTopics.some(t => t.id === item.topic?.id)) ? item.topic?.id : ""] || []}
-                        //options={[...topics.csvTopics, ...item.topic?? ""] || ""}
                         options={topics.csvTopics ?? []}
-                        getOptionLabel={(option) => option?.name ?? ""} // cómo mostrar el texto
-                        sx={{ width: '100%' }}                       
-
-                        //filterOptions={(option, params) => [option?.name ?? null]}
-
-
+                        // manera básica: getOptionLabel={(option) => option?.name ?? ""} // cómo mostrar el texto
+                        sx={{ width: '100%' }}
                         isOptionEqualToValue={(option, value) => option?.id === value?.id} // <-- esto compara por id
-                        clearText="Desasignar tema"
-                        onChange={(event, newValue) => {
-                          setItem({ ...item, topic: newValue ?? null})
-                        }}
+                        clearText="Desasignar tema"                        
                         renderInput={(params) => <TextField {...params} label="Tema"/>} // label es la etiqueta a mostrar
                         value={item?.topic ?? null} // la opción seteada actual
+                        
+                        // Agrego esto, adaptado de la doc, para permitir Crear tema (una option) que no existe, tipeando
+                        // (https://mui.com/material-ui/react-autocomplete/)
+                        filterOptions={(options, params) => {
+                          const filtered = filter(options, params);
+                  
+                          const { inputValue } = params;
+                          // Suggest the creation of a new value
+                          const isExisting = options.some((option) => inputValue === option.name);
+                          if (inputValue !== '' && !isExisting) {
+                            filtered.push({
+                              inputValue,
+                              title: `Crear tema: "${inputValue}"`,
+                            });
+                          }
+                  
+                          return filtered;
+                        }}
+                        getOptionLabel={(option) => {
+                          // Value selected with enter, right from the input
+                          if (typeof option === 'string') {
+                            return option;
+                          }
+                          // Add "xxx" option created dynamically
+                          if (option.inputValue) {
+                            return option.inputValue;
+                          }
+                          // Regular option (lo que mostrábamos en el render básico)
+                          return option?.name ?? "";
+                        }}
+                        onChange={(event, newValue) => {
+                          // Si la opción fue un tema nuevo a crear, hay que crear el objeto topic que espera el back,
+                          // porque hasta ahora lo tipeado como option es solo texto
+                          if (typeof newValue === 'string') {
+                            setItem({...item, topic: {name: newValue}});
+                          } else if (newValue && newValue.inputValue) {
+                            // Create a new value from the user input
+                            setItem({...item, topic: {name: newValue.inputValue}});
+                          } else {
+                            // Else, fue una opción seleccionada de las existentes, la seteamos como de costumbre
+                            setItem({ ...item, topic: newValue ?? null})
+                          }
+                        }}
+
                       />                  
                   
                   <FormControl fullWidth variant="outlined" margin="normal">
