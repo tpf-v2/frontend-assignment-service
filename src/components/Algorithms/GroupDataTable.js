@@ -20,7 +20,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ExpandableCell from "../ExpandableCell";
 
-import { TeamModal } from "../UI/Tables/Modals/teamModal";
+import { TeamModals } from "../UI/Tables/Modals/teamModals";
 import { setGroups } from "../../redux/slices/groupsSlice";
 import { editTeam, addTeam } from "../../api/sendGroupForm";
 import MySnackbar from "../UI/MySnackBar";
@@ -574,7 +574,7 @@ const GroupDataTable = () => {
             </Table>
           </TableContainer>
 
-          <TeamModal
+          <TeamModals
             openAddModal={openAddModal}
             setOpenAddModal={setOpenAddModal}
             handleAddItem={handleAddItem}

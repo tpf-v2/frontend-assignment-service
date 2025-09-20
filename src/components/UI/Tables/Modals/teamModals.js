@@ -25,7 +25,7 @@ const CLEARSTRING = "Eliminar integrante";
  * ya que el primer modal continúa en pantalla en caso de haber conflictos, y el de confirm
  * se muestra por encima, hasta que se confirme (o se cancele) la operación.
  */
-export const TeamModal = ({
+export const TeamModals = ({
   openAddModal, // bools para ver si se debe abrir cada modal
   openEditModal,
   openConfirmModal,
@@ -319,11 +319,11 @@ export const TeamModal = ({
         // Usa el editedItem, por lo que en el medio, no se debe haber flusheado editedItem (ej hay que no cerrar (desde afuera) el modal anterior si hay conflicto)
         // Además, luego de Confirmar se necesita usar desde afuera al editedItem por lo que no hay que flushearlo desde acá sino afuera
         // AUX: acá un if type es edit hacer esto, else hacer lo mismo pero para add, y hay que agregar un blablawithputFlushing para add p q ande - #saludos me voy a cenar
-        if (conflicts?.operation == "add") {
+        if (conflicts?.operation === "add") {
           
           return innerConfirmOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseAddModalWithoutFlushingItem, handleAddItem, newItem, setNewItem, "Agregar", "Confirmar");
 
-        } else if (conflicts?.operation == "edit") {
+        } else if (conflicts?.operation === "edit") {
           return innerConfirmOnConflictModal(openConfirmModal, handleCloseConfirmModal, handleCloseEditModalWithoutFlushingEditedItem, handleEditItem, editedItem, setEditedItem, "Editar", "Confirmar");
         }
       }
@@ -464,7 +464,7 @@ export const TeamModal = ({
                                         
                       <Grid container spacing={2} sx={{ marginBottom: 2 }}>
                         <Grid item xs={12}>
-                          <Autocomplete
+                          <Autocomplete              
                             disablePortal
                             options={students || []}
                             getOptionLabel={(option) => option.id? `${option.id} - ${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
