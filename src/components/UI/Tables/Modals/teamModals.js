@@ -13,15 +13,21 @@ import {
     InputLabel,
     //
     FormControl,
-    Autocomplete,
+    //Autocomplete,
     //
     RadioGroup,
     Radio,
-    FormControlLabel
+    FormControlLabel,
+    //createFilterOptions
+
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+const filter = createFilterOptions();
+
 const CLEARSTRING = "Eliminar integrante";
+
 
 /* Modals para Agregar equipo, Editar equipo, y Confirmar la edición en caso de conflicto.
  * Puede ocasionarse conflicto sea durante el agregado o durante la edición.
@@ -182,34 +188,26 @@ export const TeamModals = ({
 
                   {/* Tema y tutor */}
                   <InputLabel>Tema y Tutor/a</InputLabel>
-                  <FormControl fullWidth variant="outlined" margin="normal">
-                      <InputLabel>Tema</InputLabel>
-                      <Select
-                        value={item.topic?.id || ""}
-                        onChange={(e) =>
-                          setItem({ ...item, topic: getTopicById(e.target.value) })
-                        }
-                        label="Tema"
-                        required
-                      >
-                        {topics.csvTopics.map((topic) => (
-                          <MenuItem
-                            key={topic.id}
-                            value={topic.id}
-                          >
-                            {topic.name}
-                          </MenuItem>
-                        ))}
+                  
+                      <Autocomplete
+                        disablePortal
+                        //options={[...topics.csvTopics, ... (!topics.csvTopics.some(t => t.id === item.topic?.id)) ? item.topic?.id : ""] || []}
+                        //options={[...topics.csvTopics, ...item.topic?? ""] || ""}
+                        options={topics.csvTopics ?? []}
+                        getOptionLabel={(option) => option?.name ?? ""} // cómo mostrar el texto
+                        sx={{ width: '100%' }}                       
 
-                        {/* Si el valor actual es un custom, agregarlo como opción (no seleccionable)
-                            para que se pueda mostrar como valor inicial al abrir el modal*/}
-                        {item.topic && !topics.csvTopics.some(t => t.id === item.topic.id) && (
-                          <MenuItem key={item.topic.id} value={item.topic.id} disabled>
-                            {item.topic.name}
-                          </MenuItem>
-                        )}
-                      </Select>
-                    </FormControl>
+                        //filterOptions={(option, params) => [option?.name ?? null]}
+
+
+                        isOptionEqualToValue={(option, value) => option?.id === value?.id} // <-- esto compara por id
+                        clearText="Desasignar tema"
+                        onChange={(event, newValue) => {
+                          setItem({ ...item, topic: newValue ?? null})
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Tema"/>} // label es la etiqueta a mostrar
+                        value={item?.topic ?? null} // la opción seteada actual
+                      />                  
                   
                   <FormControl fullWidth variant="outlined" margin="normal">
                     {<InputLabel margin="normal">Tutor/a</InputLabel>
