@@ -135,10 +135,9 @@ const GroupDataTable = () => {
       }
     }
   };
-  const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, setReducer, confirm_option=false, confirm_topic_move=false) => {
+  const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, setReducer, confirm_option=false, confirm_topic_move=false) => {    
     newItem.tutor_email = getTutorEmailByTutorPeriodId(newItem.tutor_period_id, period.id);
     const changes = await apiAddFunction(newItem, user, period.id, confirm_option); // add
-    console.log("--- changes post add:", changes);
     setNewItem({});
     setNotification({
       open: true,

@@ -683,6 +683,26 @@ export const TeamModals = ({
                   {/* Las tres preferencias, no editables - resulta ser que sí las queremos editables []
                     * No irán a este endpoint de add_team, es otro endpoint el de las answers.
                   */}
+                  {/*
+                  <InputLabel>Preferencias</InputLabel>
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    label="Preferencia 1"
+                    value={item?.preferred_topics?.[0] ?? ""}
+                    disabled={false}
+                    onChange={(e) => {
+                      const newPreferredTopics = item.preferred_topics ? [...item.preferred_topics] : [];
+                      if (e.target.value) {
+                        newPreferredTopics[0] = e.target.value;
+                      } else {
+                        newPreferredTopics[0] = null // dejarlo vacío al quitar la selección
+                      }
+                      setItem({ ...item, preferred_topics: newPreferredTopics });
+                    }}
+                  />
+                   */}
                  
                   </Grid>
 
