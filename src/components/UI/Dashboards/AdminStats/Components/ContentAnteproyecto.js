@@ -242,7 +242,6 @@ const ContentPdfProjects = ({
               {selectedNoEntregaron && (
                 <>                
                 {groupsData.filter((g) => !g.pre_report_date).map((g, key) => (
-                  /////////
 
                   <TableRow key={g.id}>
                     <TableCell>{g.group_number}</TableCell>
@@ -262,14 +261,11 @@ const ContentPdfProjects = ({
                       <TableCell>
                         <Select
                           value={
-                            // acá me perdí, no sé qué va acá en este Select, pero lo voy a salvar con un disabled x ahora
                             selectedReviewers[g]
                               ? selectedReviewers[g]
-                              : g
-                                  ?.reviewer_id === 0
+                              : g.reviewer_id === 0
                               ? ""
-                              : g
-                                  ?.reviewer_id
+                              : g.reviewer_id
                           }
                           onChange={(e) =>
                             handleReviewerChange(
@@ -299,10 +295,7 @@ const ContentPdfProjects = ({
                       </IconButton>
                     </TableCell>
                   </TableRow>
-
-
-
-                  /////////
+                  
                 ))}
                 </>
                 
