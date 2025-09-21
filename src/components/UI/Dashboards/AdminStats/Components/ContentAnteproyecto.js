@@ -38,6 +38,12 @@ const ContentPdfProjects = ({
   const [selectedReviewers, setSelectedReviewers] = useState({});
   const dispatch = useDispatch();
 
+  const [selectedFilterData, setSelectedFilterData] = useState("");//(groupsData);
+  const [selectedEntregaron, setSelectedEntregaron] = useState(true);
+  const [selectedNoEntregaron, setSelectedNoEntregaron] = useState(false);
+  
+
+
   if (loadingProjects) {
     return (
       <Box
@@ -91,12 +97,12 @@ const ContentPdfProjects = ({
         return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
       };
 
-  function getGroup(path) {
+  function getTeam(path) {
     const parts = path.split("/");
     return parts[1]; // Devuelve el equipo
   }
 
-  function getGroupNumber(path) {
+  function getGroupNumber(path) { // To-Do: función importable (usada tmb en TopicTutor)
     const parts = path.split("/");
     const group = groupsData?.find((g) => g.id === parseInt(parts[1]));
     return group ? group.group_number : null;
@@ -120,6 +126,7 @@ const ContentPdfProjects = ({
               <StatCard
                 title="Equipos que entregaron"
                 value={loadingProjects ? -1 : deliveries.length}
+                onClick={() => setSelectedEntregaron(true)} // probando
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -128,6 +135,7 @@ const ContentPdfProjects = ({
                 value={
                   loadingProjects ? -1 : groupsData.length - deliveries.length
                 }
+                onClick={() => setSelectedNoEntregaron(true)} // probando
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -163,25 +171,25 @@ const ContentPdfProjects = ({
                   <CircularProgress />
                 </TableCell>
               </TableRow>
-            ) : (
+            ) : (              
               deliveries.map((entrega, index) => (
                 <TableRow key={index}>
                   <TableCell>{getGroupNumber(entrega.name)}</TableCell>
                   <TableCell>
                     {getTutorNameById(
                       groupsData.find(
-                        (g) => parseInt(getGroup(entrega.name)) === g.id
+                        (g) => parseInt(getTeam(entrega.name)) === g.id
                       )?.tutor_period_id, period.id
                     )}
                   </TableCell>
                   <TableCell>
                     {projectType === "initial"
                       ? groupsData.find(
-                          (g) => parseInt(getGroup(entrega.name)) === g.id
+                          (g) => parseInt(getTeam(entrega.name)) === g.id
                         )?.pre_report_title ||
                         `Anteproyecto Equipo ${getGroupNumber(entrega.name)}`
                       : groupsData.find(
-                          (g) => parseInt(getGroup(entrega.name)) === g.id
+                          (g) => parseInt(getTeam(entrega.name)) === g.id
                         )?.final_report_title ||
                         `Proyecto Final Equipo ${getGroupNumber(entrega.name)}`}
                   </TableCell>
@@ -191,17 +199,17 @@ const ContentPdfProjects = ({
                     <TableCell>
                       <Select
                         value={
-                          selectedReviewers[getGroup(entrega.name)]
-                            ? selectedReviewers[getGroup(entrega.name)]
-                            : getGroupById(parseInt(getGroup(entrega.name), 10))
+                          selectedReviewers[getTeam(entrega.name)]
+                            ? selectedReviewers[getTeam(entrega.name)]
+                            : getGroupById(parseInt(getTeam(entrega.name), 10))
                                 ?.reviewer_id === 0
                             ? ""
-                            : getGroupById(parseInt(getGroup(entrega.name), 10))
+                            : getGroupById(parseInt(getTeam(entrega.name), 10))
                                 ?.reviewer_id
                         }
                         onChange={(e) =>
                           handleReviewerChange(
-                            getGroup(entrega.name),
+                            getTeam(entrega.name),
                             e.target.value
                           )
                         }
@@ -220,7 +228,7 @@ const ContentPdfProjects = ({
                   )}
                   <TableCell>
                     <IconButton
-                      onClick={() => downloadFile(getGroup(entrega.name), getGroupNumber(entrega.name))}
+                      onClick={() => downloadFile(getTeam(entrega.name), getGroupNumber(entrega.name))}
                     >
                       <DownloadIcon />
                     </IconButton>
@@ -228,6 +236,7 @@ const ContentPdfProjects = ({
                 </TableRow>
               ))
             )}
+            
           </TableBody>
         </Table>
       </TableContainer>
