@@ -240,6 +240,76 @@ const ContentPdfProjects = ({
 
               )}
 
+
+              {selectedNoEntregaron && (
+                <>
+                {groupsData.filter((g) => !some(g.pre_report_date)).map((g, key) => (
+                  /////////
+
+                  <TableRow key={g.id}>
+                    <TableCell>{g.group_number}</TableCell>
+                    <TableCell>
+                      {getTutorNameById(g.tutor_period_id, period.id)}
+                    </TableCell>
+                    <TableCell>
+                      {projectType === "initial"
+                        ? g.pre_report_title ||
+                          `Anteproyecto Equipo ${g.group_number}`
+                        : g.final_report_title ||
+                          `Proyecto Final Equipo ${g.group_number}`}
+                    </TableCell>
+  
+                    <TableCell>{null}</TableCell>
+                    {projectType === "initial" && (
+                      <TableCell>
+                        <Select
+                          value={
+                            // acá me perdí, no sé qué va acá en este Select, pero lo voy a salvar con un disabled x ahora
+                            selectedReviewers[g]
+                              ? selectedReviewers[g]
+                              : g
+                                  ?.reviewer_id === 0
+                              ? ""
+                              : g
+                                  ?.reviewer_id
+                          }
+                          onChange={(e) =>
+                            handleReviewerChange(
+                              g,
+                              e.target.value
+                            )
+                          }
+                          displayEmpty
+                          disabled //agrego
+                        >
+                          <MenuItem value="" disabled>
+                            Seleccionar Revisor
+                          </MenuItem>
+                          {tutors.map((tutor) => (
+                            <MenuItem key={tutor.id} value={tutor.id}>
+                              {tutor.name} {tutor.last_name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </TableCell>
+                    )}
+                    <TableCell>
+                      <IconButton
+                        disabled
+                      >
+                        <DownloadIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+
+
+
+                  /////////
+                ))}
+                </>
+                
+              )}
+
               </>
 
               
