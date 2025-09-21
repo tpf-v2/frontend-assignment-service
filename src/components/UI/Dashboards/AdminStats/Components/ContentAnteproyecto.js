@@ -38,12 +38,9 @@ const ContentPdfProjects = ({
   const [selectedReviewers, setSelectedReviewers] = useState({});
   const dispatch = useDispatch();
 
-  const [selectedFilterData, setSelectedFilterData] = useState("");//(groupsData);
   const [selectedEntregaron, setSelectedEntregaron] = useState(true);
   const [selectedNoEntregaron, setSelectedNoEntregaron] = useState(false);
   
-
-
   if (loadingProjects) {
     return (
       <Box
@@ -126,7 +123,7 @@ const ContentPdfProjects = ({
               <StatCard
                 title="Equipos que entregaron"
                 value={loadingProjects ? -1 : deliveries.length}
-                onClick={() => setSelectedEntregaron(!selectedEntregaron)} 
+                onClick={() => {setSelectedEntregaron(true); setSelectedNoEntregaron(false)}} 
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -135,7 +132,7 @@ const ContentPdfProjects = ({
                 value={
                   loadingProjects ? -1 : groupsData.length - deliveries.length
                 }
-                onClick={() => setSelectedNoEntregaron(!selectedNoEntregaron)} 
+                onClick={() => {setSelectedEntregaron(false); setSelectedNoEntregaron(true)}} 
               />
             </Grid>
             <Grid item xs={12} sm={4}>
