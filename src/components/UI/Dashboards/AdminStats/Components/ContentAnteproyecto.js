@@ -126,7 +126,7 @@ const ContentPdfProjects = ({
               <StatCard
                 title="Equipos que entregaron"
                 value={loadingProjects ? -1 : deliveries.length}
-                onClick={() => setSelectedEntregaron(true)} // probando
+                onClick={() => setSelectedEntregaron(!selectedEntregaron)} 
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -135,13 +135,14 @@ const ContentPdfProjects = ({
                 value={
                   loadingProjects ? -1 : groupsData.length - deliveries.length
                 }
-                onClick={() => setSelectedNoEntregaron(true)} // probando
+                onClick={() => setSelectedNoEntregaron(!selectedNoEntregaron)} 
               />
             </Grid>
             <Grid item xs={12} sm={4}>
               <StatCard
                 title="Total de equipos"
                 value={loadingProjects ? -1 : groupsData.length}
+                onClick={() => {setSelectedEntregaron(true); setSelectedNoEntregaron(true)}}
               />
             </Grid>
           </Grid>
