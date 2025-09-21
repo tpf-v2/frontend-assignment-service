@@ -124,6 +124,7 @@ const ContentPdfProjects = ({
                 title="Equipos que entregaron"
                 value={loadingProjects ? -1 : deliveries.length}
                 onClick={() => {setSelectedEntregaron(true); setSelectedNoEntregaron(false)}} 
+                selected={selectedEntregaron}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -132,7 +133,8 @@ const ContentPdfProjects = ({
                 value={
                   loadingProjects ? -1 : groupsData.length - deliveries.length
                 }
-                onClick={() => {setSelectedEntregaron(false); setSelectedNoEntregaron(true)}} 
+                onClick={() => {setSelectedEntregaron(false); setSelectedNoEntregaron(true)}}
+                selected={selectedNoEntregaron}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -140,6 +142,7 @@ const ContentPdfProjects = ({
                 title="Total de equipos"
                 value={loadingProjects ? -1 : groupsData.length}
                 onClick={() => {setSelectedEntregaron(true); setSelectedNoEntregaron(true)}}
+                selected={selectedEntregaron && selectedNoEntregaron}
               />
             </Grid>
           </Grid>

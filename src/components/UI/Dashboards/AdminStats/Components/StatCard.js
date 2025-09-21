@@ -3,7 +3,7 @@ import { Paper, Typography, CircularProgress } from '@mui/material';
 import { styled } from '@mui/system';
 
 
-const StatCardStyled = styled(Paper)(({ theme }) => ({
+const StatCardStyled = styled(Paper)(({ theme, selected }) => ({
   // La sintaxis de acá arriba indica que propaga las props a Paper, por lo que puede usar onClick
   flex: '1 1 30%',
   margin: theme.spacing(1),
@@ -13,16 +13,23 @@ const StatCardStyled = styled(Paper)(({ theme }) => ({
   textAlign: 'center',
   // Mostrar a la tarjeta como clickeable (sin esto lo es, pero no se nota desde ui)
   cursor: 'pointer',
+
   transition: 'box-shadow 0.2s ease-in-out',
+  '&:hover': {
+    boxShadow: theme.shadows[6],
+  },
+    
+  // Recibo selected y pongo un indicador visual (borde inferior) según su valor
+  borderBottom: selected ? `4px solid #0072C6` : '4px solid transparent',
   '&:hover': {
     boxShadow: theme.shadows[6],
   },
 }));
 
 
-const StatCard = ({ title, value, onClick }) => {
+const StatCard = ({ title, value, onClick, selected }) => {
   return (
-    <StatCardStyled onClick={onClick}>
+    <StatCardStyled onClick={onClick} selected={selected}>
       <Typography variant="h6">{title}</Typography>
       {value === -1 ? (
         <CircularProgress />
