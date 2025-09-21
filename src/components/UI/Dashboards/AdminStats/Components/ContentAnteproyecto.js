@@ -171,70 +171,78 @@ const ContentPdfProjects = ({
                   <CircularProgress />
                 </TableCell>
               </TableRow>
-            ) : (              
-              deliveries.map((entrega, index) => (
-                <TableRow key={index}>
-                  <TableCell>{getGroupNumber(entrega.name)}</TableCell>
-                  <TableCell>
-                    {getTutorNameById(
-                      groupsData.find(
-                        (g) => parseInt(getTeam(entrega.name)) === g.id
-                      )?.tutor_period_id, period.id
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {projectType === "initial"
-                      ? groupsData.find(
-                          (g) => parseInt(getTeam(entrega.name)) === g.id
-                        )?.pre_report_title ||
-                        `Anteproyecto Equipo ${getGroupNumber(entrega.name)}`
-                      : groupsData.find(
-                          (g) => parseInt(getTeam(entrega.name)) === g.id
-                        )?.final_report_title ||
-                        `Proyecto Final Equipo ${getGroupNumber(entrega.name)}`}
-                  </TableCell>
-
-                  <TableCell>{formatDate(entrega.last_modified)}</TableCell>
-                  {projectType === "initial" && (
+            ) : (
+              <>
+              {selectedEntregaron && (//Si es equipos que sí entregaron, muestro lo que había, que al
+                deliveries.map((entrega, index) => ( // basarse en deliveries son justamente quienes sí entregaron
+                  <TableRow key={index}>
+                    <TableCell>{getGroupNumber(entrega.name)}</TableCell>
                     <TableCell>
-                      <Select
-                        value={
-                          selectedReviewers[getTeam(entrega.name)]
-                            ? selectedReviewers[getTeam(entrega.name)]
-                            : getGroupById(parseInt(getTeam(entrega.name), 10))
-                                ?.reviewer_id === 0
-                            ? ""
-                            : getGroupById(parseInt(getTeam(entrega.name), 10))
-                                ?.reviewer_id
-                        }
-                        onChange={(e) =>
-                          handleReviewerChange(
-                            getTeam(entrega.name),
-                            e.target.value
-                          )
-                        }
-                        displayEmpty
-                      >
-                        <MenuItem value="" disabled>
-                          Seleccionar Revisor
-                        </MenuItem>
-                        {tutors.map((tutor) => (
-                          <MenuItem key={tutor.id} value={tutor.id}>
-                            {tutor.name} {tutor.last_name}
-                          </MenuItem>
-                        ))}
-                      </Select>
+                      {getTutorNameById(
+                        groupsData.find(
+                          (g) => parseInt(getTeam(entrega.name)) === g.id
+                        )?.tutor_period_id, period.id
+                      )}
                     </TableCell>
-                  )}
-                  <TableCell>
-                    <IconButton
-                      onClick={() => downloadFile(getTeam(entrega.name), getGroupNumber(entrega.name))}
-                    >
-                      <DownloadIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))
+                    <TableCell>
+                      {projectType === "initial"
+                        ? groupsData.find(
+                            (g) => parseInt(getTeam(entrega.name)) === g.id
+                          )?.pre_report_title ||
+                          `Anteproyecto Equipo ${getGroupNumber(entrega.name)}`
+                        : groupsData.find(
+                            (g) => parseInt(getTeam(entrega.name)) === g.id
+                          )?.final_report_title ||
+                          `Proyecto Final Equipo ${getGroupNumber(entrega.name)}`}
+                    </TableCell>
+  
+                    <TableCell>{formatDate(entrega.last_modified)}</TableCell>
+                    {projectType === "initial" && (
+                      <TableCell>
+                        <Select
+                          value={
+                            selectedReviewers[getTeam(entrega.name)]
+                              ? selectedReviewers[getTeam(entrega.name)]
+                              : getGroupById(parseInt(getTeam(entrega.name), 10))
+                                  ?.reviewer_id === 0
+                              ? ""
+                              : getGroupById(parseInt(getTeam(entrega.name), 10))
+                                  ?.reviewer_id
+                          }
+                          onChange={(e) =>
+                            handleReviewerChange(
+                              getTeam(entrega.name),
+                              e.target.value
+                            )
+                          }
+                          displayEmpty
+                        >
+                          <MenuItem value="" disabled>
+                            Seleccionar Revisor
+                          </MenuItem>
+                          {tutors.map((tutor) => (
+                            <MenuItem key={tutor.id} value={tutor.id}>
+                              {tutor.name} {tutor.last_name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </TableCell>
+                    )}
+                    <TableCell>
+                      <IconButton
+                        onClick={() => downloadFile(getTeam(entrega.name), getGroupNumber(entrega.name))}
+                      >
+                        <DownloadIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                )) // cierra deliveries.map
+
+              )}
+
+              </>
+
+              
             )}
             
           </TableBody>
