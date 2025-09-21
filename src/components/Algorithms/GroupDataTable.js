@@ -1,3 +1,6 @@
+/// Este archivo es similar a ParentTable, pero tanto el contenido de la tabla que se renderiza como
+// el flujo de editar equipo (con dos modales, analizando si hubo o no conflicto) es diferente a ParentTable,
+// por lo que se optó por mantener los archivos separados en pos de la legibilidad.
 import {
   CircularProgress,
   Paper,
@@ -9,10 +12,20 @@ import {
   TableRow,
   TextField,
   Button,
+  Fab,
+  Box,
+  Stack
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Box } from "@mui/system";
+import ExpandableCell from "../ExpandableCell";
+
+import { TeamModals } from "../UI/Tables/Modals/teamModals";
+import { setGroups } from "../../redux/slices/groupsSlice";
+import { editTeam, addTeam } from "../../api/sendGroupForm";
+import MySnackbar from "../UI/MySnackBar";
+import { getTableData } from "../../api/handleTableData";
+import AddIcon from "@mui/icons-material/Add";
 
 // Componente para la tabla de equipos
 const GroupDataTable = () => {
@@ -32,28 +45,206 @@ const GroupDataTable = () => {
     .map(({ version, rehydrated, ...rest }) => rest)
     .filter((item) => Object.keys(item).length > 0);
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const students = Object.values(useSelector((state) => state.students))
+  .map(({ version, rehydrated, ...rest }) => rest)
+  .filter(item => Object.keys(item).length > 0);
 
+  const user = useSelector((state) => state.user);
   const [loading, setLoading] = useState(true);
 
+  const [allTopics, setAllTopics] = useState({csvTopics: topics, customTopics: []});
+  const [data, setData] = useState(groups); // teams
+
+  const [showExtraColumns, setShowExtraColumns] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showNoTopic, setShowNoTopic] = useState(false);
+  const [showNoTutor, setShowNoTutor] = useState(false);
+
+  const [openConfirmModal, setOpenConfirmModal] = useState(false);
+  const [conflicts, setConflicts] = useState({msg:[]});
+
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [itemToPassToModal, setItemToPassToModal] = useState(null);
+  const [openAddModal, setOpenAddModal] = useState(false);
+
+  // useEffect
+  const endpoint = `/groups/?period=${period.id}`;
+
   useEffect(() => {
-    if (groups.length > 0) {
-      setLoading(false);
+    const fetchData = async () => {
+      try {
+        const responseData = await getTableData(endpoint, user); // TEAMS
+
+        console.log("groups recibidos:", groups.map(g => ({id: g.id, "topic.id": g.topic?.id})));
+        
+        // Minor 'fix' xq admin envía tema copypasteado en csv (con != tutor) queda id repetido y eso rompe búsqueda de Autocomplete
+        const uniqueTopics = Array.from(
+          new Map((topics ?? []).map(t => [t.id, t])).values()
+        );
+        // Workaround a que el back no los devuelva: temas de "Ya tengo tema y tutor":
+        const customTopics = groups?.filter(team => !topics.some(t => t.id === team.topic?.id))
+        .map(team => team.topic);
+        setAllTopics({csvTopics: uniqueTopics, customTopics: customTopics});
+
+        console.log("--- uniqueTopics:", uniqueTopics);
+              
+        setData(responseData);
+        setLoading(false);
+
+      } catch (error) {
+        console.error("Error fetching teams data:", error);
+        setLoading(false); // Handle error
+      }
+    };
+
+    fetchData();
+  }, [endpoint, user]);
+  //}, [endpoint, user, groups, topics]);
+
+  // Agregar equipo. El first modal es en este caso el modal de add.
+  // Es llamada desde TeamModals: primera vez queda bool en false; luego, si hay conflictos, con bool en true.
+  const handleAddItem = async (newItem, setNewItem, handleCloseFirstModal=undefined, confirm_option=false, confirm_topic_move=false) => {
+    try {
+      await addItemToGenericTable(addTeam, newItem, setNewItem, {}, confirm_option, confirm_topic_move);
+      if (handleCloseFirstModal) {
+        handleCloseFirstModal(); // Esto cierra el primer modal solo si no hubo conflicto
+      }      
+      setNewItem({students:[]}); // necesario para el segundo modal, el de confirm.// <-- copypasteo esto acá, revisar en el modal
+    } catch (err) {
+      console.error(`Error when adding new team:`, err);
+      setNotification({
+        open: true,
+        //message: `Error al agregar ${TableTypeSingularLabel[title]||''}.`,        
+        message: `Error al agregar equipo.`,
+        status: "error",
+      });
+
+      // Si hay conflicto, no cerrar el modal de add; abrir cartel de confirmación
+      // y si se confirma, se reenvía la request (conservar los datos a enviar) pero con un bool en true
+      if (err.response?.status===409) {
+        setNotification({
+          open: true,
+          message: `Advertencia: Conflicto al agregar equipo.`,
+          status: "warning",
+        });
+
+        // Indicamos que los conflictos fueron durante el add de un equipo, y abrimos el modal de confirmación
+        setConflicts({operation: "add", msg: err.response?.data?.detail} || {operation: "add", msg:[]});
+        setOpenConfirmModal(true);
+      }
     }
-  }, [groups]);
+  };
+  const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, setReducer, confirm_option=false, confirm_topic_move=false) => {    
+    newItem.tutor_email = getTutorEmailByTutorPeriodId(newItem.tutor_period_id, period.id);
+    const changes = await apiAddFunction(newItem, user, period.id, confirm_option); // add
+    setNewItem({});
+    setNotification({
+      open: true,
+      //message: `Se agregó ${TableTypeSingularLabel[title]||''} exitosamente`, // 'estudiante', etc
+      message: `Se agregó equipo exitosamente`, // 'estudiante', etc
+      status: "success",
+    });
 
-  useEffect(() => {
-    // Configurar un temporizador de 3 segundos
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 3000);
+    setData((prevData) => adaptListWithApiResponse(prevData, changes));
+    //dispatch(setReducer((prevData) => [...prevData, item])); // set
+  };
 
-    // Limpiar el temporizador si el componente se desmonta
-    return () => clearTimeout(timer);
-  }, []);
+  // Editar equipo. El first modal es en este caso el modal de editar.
+  // Es llamada desde TeamModals: primera vez queda bool en false; luego, si hay conflictos, con bool en true.
+  const handleEditItem = async (editedItem, setEditedItem, handleCloseFirstModal=undefined, confirm_option=false, confirm_topic_move=false) => {
+    try {
+      editedItem.tutor_email = getTutorEmailByTutorPeriodId(editedItem.tutor_period_id, period.id);
+      await editItemInGenericTable(editTeam, editedItem, setEditedItem, setGroups, confirm_option, confirm_topic_move);
+      
+      // Close modal de edición en caso de éxito sin conflictos
+      if (handleCloseFirstModal) {
+        handleCloseFirstModal(); // esto cierra el primer modal (edit en este caso) si no hay conflictos
+      }
+      setEditedItem({}); // necesario para el segundo modal, el de confirm.
+      
+    } catch (err) {      
+      const title="team";
+      console.error(`Error when editing ${title}:`, err);
+      setNotification({
+        open: true,
+        message: `Error al editar equipo.`,
+        status: "error",
+      });
 
+      // Si hay conflicto, no cerrar el modal de edición; abrir cartel de confirmación
+      // y si se confirma, se reenvía la request (conservar los datos a enviar) pero con un bool en true
+      if (err.response?.status===409) {
+        setNotification({
+          open: true,
+          message: `Advertencia: Conflicto al editar equipo.`,
+          status: "warning",
+        });
+        
+        setConflicts({operation: "edit", msg: err.response?.data?.detail} || {operation: "edit", msg:[]});
+        setOpenConfirmModal(true);
+      }
+    }
+  };
+  const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, setReducer, confirm_option=false, confirm_topic_move=false) => {    
+    const changes = await apiEditFunction(editedItem.id, period.id, editedItem, user, confirm_option, confirm_topic_move);
+    setNotification({
+      open: true,
+      message: `Se editó equipo exitosamente`,
+      status: "success",
+    });
+    // Si es éxito, hay que adaptar los datos de la lista a mostrar en la tabla    
+    setData((prevData) => adaptListWithApiResponse(prevData, changes));
+  };
+  const [notification, setNotification] = useState({
+    open: false,
+    message: "",
+    status: "",
+  });
+  const handleSnackbarClose = () => {
+    setNotification({ ...notification, open: false });
+  };
+
+  // Adaptar la lista de equipos que se muestra en la tabla, con el resultado del add/edición
+  const adaptListWithApiResponse = (prevData, changes) => {
+    let updated = [...prevData];
+
+    // Agregar si hay equipo nuevo
+    if (changes.added){
+      updated.push(...changes.added); // "extend" versión javascript
+    }
+
+    // Reemplazar o agregar los equipos editados
+    changes.edited?.forEach((team) => {
+      const idx = updated.findIndex((prevDataTeam) => prevDataTeam.id === team.id);
+      if (idx >= 0) {
+        // reenplazar si ya existía
+        updated[idx] = team;
+      } else {
+        // o agregar si no estaba en la lista (no debería darse este caso en un edit en realidad)
+        updated.push(team);
+      }
+    });
+
+    // Eliminar equipos borrados (me quedo con los equipos que No incluye la lista de deleted)
+    // (obs: el campo deleted existe siempre, es vacío si no se eliminó nada)
+    updated = updated.filter((prevDataTeam) => !changes.deleted.includes(prevDataTeam.id));
+
+    return updated;
+  }
+  
+  // Formato para el endpoint
+  const getTutorEmailByTutorPeriodId = (id, periodId) => {
+    const tutor = tutors.find(
+    (t) =>
+        t.tutor_periods &&
+        t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
+    );
+    return tutor ? tutor.email : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
+  };
 
   // Función para obtener el nombre del topic por su id
+  // aux: se usa solo para preferencias, no es problema que use topics
   const getTopicNameById = (id) => {
     const topic = topics.find((t) => t.id === id);
     return topic ? topic.name : ""; // Si no encuentra el topic, mostrar 'Desconocido'
@@ -69,26 +260,54 @@ const GroupDataTable = () => {
     return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
   };
 
+  if (loading)
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="300px"
+      >
+        <CircularProgress />
+      </Box>
+    );
+
+  ///// Opciones de búsqueda y filtrado /////
+  const handleShowTeamsWithNoTopic = () => {
+    setShowNoTopic(prev => !prev)
+  };
+
+  const handleShowTeamsWithNoTutor = () => {
+    setShowNoTutor(prev => !prev)
+  };
+  
+  const showTeamsWithNoTopic = (teams) => {
+    return showNoTopic ? teams.filter((team) => !team.topic) : teams
+  };
+  const showTeamsWithNoTutor = (teams) => {
+    return showNoTutor ? teams.filter((team) => !team.tutor_period_id) : teams
+  };
   // Filtrar equipos según el término de búsqueda
-  const filteredGroups = groups.filter(
-    (group) =>
-      group.students.some(
+  const filteredTeamsBySearchTerm = data.filter(
+    (team) =>
+      team?.students?.some(
         (student) =>
           student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           student.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           student.email.toLowerCase().includes(searchTerm.toLowerCase())
       ) ||
-      getTutorNameById(group.tutor_period_id, period.id)
+      getTutorNameById(team?.tutor_period_id, period.id)
         .toLowerCase()
         .includes(searchTerm.toLowerCase()) || // Filtrar por tutor
-      (group.topic
-        ? group.topic.name.toLowerCase().includes(searchTerm.toLowerCase())
+      (team.topic
+        ? team.topic.name.toLowerCase().includes(searchTerm.toLowerCase())
         : false) || // Filtrar por tema
-      String(group.group_number)
+      String(team.group_number)
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
   );
-
+  // Contemplo si se clickeó botones de showNoX: obtengo solo los que no tienen topic y/o tutor, o bien conservo lo que ya tenía, según el bool
+  const filteredTeams = showTeamsWithNoTopic(showTeamsWithNoTutor(filteredTeamsBySearchTerm));
   // Función para descargar los datos en formato CSV
   const downloadCSV = () => {
     const csvRows = [];
@@ -105,36 +324,36 @@ const GroupDataTable = () => {
         "Preferencia 2",
         "Preferencia 3",
       ].join(",")
-    );
+    );    
 
-    filteredGroups.forEach((group) => {
-      group.students.forEach((student, index) => {
-        group.preferred_topics = group.preferred_topics ? group.preferred_topics : [];
+    filteredTeams.forEach((team) => {
+      team.students?.forEach((student, index) => {
+        team.preferred_topics = team.preferred_topics ? team.preferred_topics : [];
         const row = [
-          index === 0 ? group.id : "",
+          index === 0 ? team.id : "",
           student.name,
           student.last_name,
           student.email,
           student.id,
           index === 0
-            ? getTutorNameById(group.tutor_period_id, period.id) ||
+            ? getTutorNameById(team.tutor_period_id, period.id) ||
               "Sin asignar"
             : "",
           index === 0
-            ? group.topic
-              ? group.topic.name.replace(/,/g, " ")
+            ? team.topic
+              ? team.topic.name.replace(/,/g, " ")
               : "Sin asignar"
             : "",
           index === 0
-            ? getTopicNameById(group.preferred_topics[0]).replace(/,/g, " ") ||
+            ? getTopicNameById(team.preferred_topics[0]).replace(/,/g, " ") ||
               ""
             : "",
           index === 0
-            ? getTopicNameById(group.preferred_topics[1]).replace(/,/g, " ") ||
+            ? getTopicNameById(team.preferred_topics[1]).replace(/,/g, " ") ||
               ""
             : "",
           index === 0
-            ? getTopicNameById(group.preferred_topics[2]).replace(/,/g, " ") ||
+            ? getTopicNameById(team.preferred_topics[2]).replace(/,/g, " ") ||
               ""
             : "",
         ].join(",");
@@ -154,13 +373,10 @@ const GroupDataTable = () => {
     URL.revokeObjectURL(url);
   };
 
+  console.log("--- filteredTeams:", filteredTeams);
+
   return (
-    <Box>
-      {loading ? (
-            <Box display="flex" justifyContent="center" alignItems="center">
-              <CircularProgress />
-            </Box>
-      ) : (
+    <Box>      
         <>
           <TextField
             label="Buscar"
@@ -170,14 +386,57 @@ const GroupDataTable = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             sx={{ marginBottom: 2 }}
           />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={downloadCSV}
-            sx={{ marginBottom: 2 }}
+          <Box
+            sx={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              marginBottom: 2 
+            }}
           >
-            Descargar CSV
-          </Button>
+            
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={downloadCSV}
+              sx={{ marginBottom: 2 }}
+            >
+              Descargar CSV
+            </Button>
+
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleShowTeamsWithNoTopic}
+              sx={{ marginBottom: 2 }}
+            >
+              {showNoTopic ? "Mostrar todos los equipos" : "Mostrar equipos sin tema"}
+            </Button>
+
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleShowTeamsWithNoTutor}
+              sx={{ marginBottom: 2 }}
+            >
+              {showNoTutor ? "Mostrar todos los equipos" : "Mostrar equipos sin tutor"}
+            </Button>
+
+            <Button variant="outlined" color="primary" 
+              onClick={() => setShowExtraColumns(prev => !prev)}
+              sx={{ marginBottom: 2 }}>
+              {showExtraColumns ? "Ocultar preferencias" : "Mostrar preferencias"}
+            </Button>
+
+            <Fab
+              size="small"
+              color="primary"
+              aria-label="add"                  
+              onClick={() => setOpenAddModal(true)}
+            >
+              <AddIcon />
+            </Fab>
+          </Box>
+
           <TableContainer component={Paper}>
             <Table
               stickyHeader
@@ -185,113 +444,133 @@ const GroupDataTable = () => {
               aria-label="simple table"
             >
               <TableHead>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: "bold" }}>
-                    Equipo número
-                  </TableCell>
+                <TableRow sx={{ backgroundColor: (theme) => theme.palette.action.hover }}>
+                  <TableCell sx={{ fontWeight: "bold" }}>Equipo número</TableCell>
+
+                  <TableCell sx={{ fontWeight: "bold" }}>Padrón</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>Nombre</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>Apellido</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Padrón</TableCell>
+
                   <TableCell sx={{ fontWeight: "bold" }}>Tutor</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>
-                    Tema asignado
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>
-                    Preferencia 1
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>
-                    Preferencia 2
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>
-                    Preferencia 3
-                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Tema asignado</TableCell>
+
+                  <ExpandableCell show={showExtraColumns} isHeader>
+                      Preferencia 1
+                  </ExpandableCell>
+                  <ExpandableCell show={showExtraColumns} isHeader>
+                      Preferencia 2
+                  </ExpandableCell>
+                  <ExpandableCell show={showExtraColumns} isHeader>
+                      Preferencia 3
+                  </ExpandableCell>                  
+                  
+                  <TableCell sx={{ fontWeight: "bold" }}>Acciones</TableCell>
+                  
                 </TableRow>
               </TableHead>
 
               <TableBody>
-                {filteredGroups.map((group) => (
-                  <React.Fragment key={group.id}>
+                {filteredTeams.map((team) => (
+                  <React.Fragment key={team.id}>
                     <TableRow sx={{ backgroundColor: "#f0f0f0" }}>
-                      <TableCell colSpan={10} align="center"></TableCell>
+                      <TableCell colSpan={12} align="center"></TableCell>
                     </TableRow>
+                    {/* Table content */}
                     <TableCell
-                      rowSpan={group.students?.length + 1}
+                      rowSpan={team.students?.length + 1}
                       align="center"
                     >
-                      {group.group_number}
+                      {team.group_number}
                     </TableCell>
-                    {group.students.map((student, index) => (
+                    {team.students?.map((student, index) => (
                       <TableRow key={student.id}>
+                        <TableCell>{student.id}</TableCell>
                         <TableCell>{student.name}</TableCell>
                         <TableCell>{student.last_name}</TableCell>
                         <TableCell>{student.email}</TableCell>
-                        <TableCell>{student.id}</TableCell>
-                        <>
+                        
+                          {/* index 0 para renderizar esto una vez por fila de equipo (y no una por estudiante) */}
                           {index === 0 && (
                             <TableCell
-                              rowSpan={group.students.length}
+                              rowSpan={team.students.length}
                               align="center"
                             >
                               {getTutorNameById(
-                                group.tutor_period_id,
+                                team.tutor_period_id,
                                 period.id
                               ) || "Sin asignar"}
                             </TableCell>
                           )}
                           {index === 0 && (
                             <TableCell
-                              rowSpan={group.students.length}
+                              rowSpan={team.students.length}
                               align="center"
                             >
-                              {group.topic ? group.topic.name : "Sin asignar"}
+                              {team.topic ? team.topic.name : "Sin asignar"}
                             </TableCell>
                           )}
+
+                          {/* Las tres preferencias */}
                           {index === 0 && (
+                            
+                            (!team.preferred_topics || (team.preferred_topics.length === 0)) ? (
                             <>
-                              { (!group.preferred_topics || (group.preferred_topics.length === 0)) ? (
-                                <>
-                                  <TableCell
-                                    rowSpan={group.students.length}
-                                    align="center"
-                                  >
-                                    {"N/A"}
-                                  </TableCell>
-                                  <TableCell
-                                    rowSpan={group.students.length}
-                                    align="center"
-                                  >
-                                    {"N/A"}
-                                  </TableCell>
-                                  <TableCell
-                                    rowSpan={group.students.length}
-                                    align="center"
-                                  >
-                                    {"N/A"}
-                                  </TableCell>
-                                </>
-                              ) : (
-                                <>
-                                  <TableCell rowSpan={group.students.length}>
-                                    {getTopicNameById(
-                                      group.preferred_topics[0]
-                                    ) || ""}
-                                  </TableCell>
-                                  <TableCell rowSpan={group.students.length}>
-                                    {getTopicNameById(
-                                      group.preferred_topics[1]
-                                    ) || ""}
-                                  </TableCell>
-                                  <TableCell rowSpan={group.students.length}>
-                                    {getTopicNameById(
-                                      group.preferred_topics[2]
-                                    ) || ""}
-                                  </TableCell>
-                                </>
-                              )}
+                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length} align="center">
+                                {"N/A"}
+                              </ExpandableCell>
+                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length} align="center">
+                                {"N/A"}
+                              </ExpandableCell>
+                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length} align="center">
+                                {"N/A"}
+                              </ExpandableCell>
                             </>
+                          ) : (
+                            <>
+                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length}>
+                                {getTopicNameById(
+                                  team.preferred_topics[0]
+                                ) || ""}
+                              </ExpandableCell>
+
+                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length}>
+                                {getTopicNameById(
+                                  team.preferred_topics[1]
+                                ) || ""}
+                              </ExpandableCell>
+
+                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length}>
+                                {getTopicNameById(
+                                  team.preferred_topics[2]
+                                ) || ""}
+                              </ExpandableCell>
+                            </>
+                          )                            
                           )}
-                        </>
+                        
+                        {/* Sección de los botones */}
+                        {index === 0 && (
+                          <TableCell rowSpan={team.students.length}>
+                            <Stack direction="row" spacing={1}>                          
+                              <Button
+                                onClick={() => {setOpenEditModal(true); setItemToPassToModal(team)}}
+                                style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
+                                >
+                                Editar
+                              </Button>
+                            
+                              {false && (
+                                <Button
+                                  style={{ backgroundColor: "red", color: "white" }}
+                                  >
+                                  Eliminar
+                                </Button>
+                              )}
+                            </Stack>
+                          </TableCell>
+                        )}
+
                       </TableRow>
                     ))}
                   </React.Fragment>
@@ -299,10 +578,39 @@ const GroupDataTable = () => {
               </TableBody>
             </Table>
           </TableContainer>
+
+          <TeamModals
+            openAddModal={openAddModal}
+            setOpenAddModal={setOpenAddModal}
+            handleAddItem={handleAddItem}
+
+            openEditModal={openEditModal}
+            setOpenEditModal={setOpenEditModal}            
+            handleEditItem={handleEditItem}
+            
+            item={itemToPassToModal}
+            setParentItem={setItemToPassToModal}
+
+            openConfirmModal={openConfirmModal}
+            setOpenConfirmModal={setOpenConfirmModal}
+
+            conflicts={conflicts}
+            setConflictMsg={setConflicts}
+
+            topics={allTopics}
+            tutors={tutors}
+            students={students}
+            periodId={period.id}
+          />  
+          <MySnackbar
+            open={notification.open}
+            handleClose={handleSnackbarClose}
+            message={notification.message}
+            status={notification.status}
+          />
         </>
-      )}
     </Box>
-  );
+  )
 };
 
 export default GroupDataTable;

@@ -337,7 +337,8 @@ const StudentForm = () => {
                   </FormControl>
                 </>
               )}
-  
+
+              {/* Ya tengo tema y tutor */}
               {formData.selectedOption === "existing" && (
                 <>
                   <TextField

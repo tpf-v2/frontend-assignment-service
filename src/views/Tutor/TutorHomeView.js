@@ -100,10 +100,10 @@ const TutorHomeView = () => {
       <Title variant="h4">¡{user.name}, te damos la bienvenida!</Title>
       <Typography variant="h5" style={{ color: '#555' }}>Cuatrimestres</Typography>
       <CardContainer>
-        {periods.map((cuatrimestre, index) => (
-          <CardStyled key={index} onClick={() => handleCardClick(cuatrimestre)}>
+        {periods.map((period, index) => (
+          <CardStyled key={index} onClick={() => handleCardClick(period)}>
             <CardContent>
-              <Typography variant="h6" style={{ color: '#333' }}>{cuatrimestre.period_id}</Typography>
+              <Typography variant="h6" style={{ color: '#333' }}>{period.period_id}</Typography>
             </CardContent>
           </CardStyled>
         ))}
