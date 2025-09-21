@@ -242,8 +242,8 @@ const ContentPdfProjects = ({
 
 
               {selectedNoEntregaron && (
-                <>
-                {groupsData.filter((g) => !some(g.pre_report_date)).map((g, key) => (
+                <>                
+                {groupsData.filter((g) => !g.pre_report_date).map((g, key) => (
                   /////////
 
                   <TableRow key={g.id}>
