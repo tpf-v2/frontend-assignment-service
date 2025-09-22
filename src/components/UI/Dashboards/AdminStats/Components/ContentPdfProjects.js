@@ -61,22 +61,22 @@ const ContentPdfProjects = ({
       [deliveryId]: reviewerId,
     });
     // Obtener el equipo y crear una copia modificable
-    const updatedGroup = { ...getTeamById(parseInt(deliveryId, 10), teams) };
+    const updatedTeam = { ...getTeamById(parseInt(deliveryId, 10), teams) };
 
-    if (updatedGroup) {
+    if (updatedTeam) {
       // Asignar el reviewerId a la copia del equipo
-      updatedGroup.reviewer_id = reviewerId;
+      updatedTeam.reviewer_id = reviewerId;
 
       // Llamar al backend para actualizar el equipo
-      await updateGroup(user, period.id, updatedGroup);
+      await updateGroup(user, period.id, updatedTeam);
 
       // Crear una nueva lista de equipos actualizados
-      const updatedGroups = teams.map((group) =>
-        group.id === updatedGroup.id ? updatedGroup : group
+      const updatedTeams = teams.map((group) =>
+        group.id === updatedTeam.id ? updatedTeam : group
       );
 
       // Despachar la actualización solo del equipo modificado en Redux
-      dispatch(setGroups(updatedGroups));
+      dispatch(setGroups(updatedTeams));
     }
   };
 
