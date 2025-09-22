@@ -38,6 +38,7 @@ const ContentIntermediateProject = () => {
     <>
       {teams && (
         <>
+          {/* Tarjetas con cantidades */}
           <Box mt={4}>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={4}>
@@ -82,7 +83,9 @@ const ContentIntermediateProject = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {teamsWhoDelivered.map((team, index) => (
+
+                {selectedEntregaron && (
+                  teamsWhoDelivered.map((team, index) => (
                   <TableRow key={index}>
                     <TableCell>{team.group_number}</TableCell>
                     <TableCell>
@@ -102,7 +105,21 @@ const ContentIntermediateProject = () => {
                       </a>
                     </TableCell>
                   </TableRow>
-                ))}
+                )))}
+
+                {selectedNoEntregaron && (
+                  teams.filter((t) => !t.intermediate_assigment).map((team, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{team.group_number}</TableCell>
+                    <TableCell>
+                      {getTutorNameById(team.tutor_period_id, period.id, tutors)}
+                    </TableCell>
+                    <TableCell> - </TableCell>
+                    <TableCell> - </TableCell>
+                  </TableRow>
+
+                )))}
+
               </TableBody>
             </Table>
           </TableContainer>
