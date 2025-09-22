@@ -8,6 +8,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { useState } from "react";
 import { Box } from "@mui/system";
 import StatCard from "./StatCard";
 import { useSelector } from "react-redux";
@@ -24,10 +25,13 @@ const ContentIntermediateProject = () => {
   const tutors = Object.values(useSelector((state) => state.tutors))
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
-  // Cuenta los equipos que han entregado su proyecto intermedio
+  // Equipos que han hecho su entrega intermedia
   const teamsWhoDelivered = teams.filter(
     (team) => team.intermediate_assigment !== null
   );
+
+  const [selectedEntregaron, setSelectedEntregaron] = useState(true);
+  const [selectedNoEntregaron, setSelectedNoEntregaron] = useState(false);
 
 
   return (
@@ -40,16 +44,25 @@ const ContentIntermediateProject = () => {
                 <StatCard
                   title="Equipos que entregaron"
                   value={teamsWhoDelivered.length}
+                  onClick={() => {setSelectedEntregaron(true); setSelectedNoEntregaron(false)}} 
+                  selected={selectedEntregaron}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <StatCard
                   title="Equipos que faltan entregar"
                   value={teams.length - teamsWhoDelivered.length}
+                  onClick={() => {setSelectedEntregaron(false); setSelectedNoEntregaron(true)}}
+                  selected={selectedNoEntregaron}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
-                <StatCard title="Total de equipos" value={teams.length} />
+                <StatCard
+                title="Total de equipos"
+                value={teams.length}
+                onClick={() => {setSelectedEntregaron(true); setSelectedNoEntregaron(true)}}
+                selected={selectedEntregaron && selectedNoEntregaron}
+                />
               </Grid>
             </Grid>
           </Box>
