@@ -83,6 +83,7 @@ const ContentIntermediateProject = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
+                {/* Contenido según la tarjeta clickeada (se muestran ambos bloques si ambos bools son true) */}
 
                 {selectedEntregaron && (
                   teamsWhoDelivered.map((team, index) => (

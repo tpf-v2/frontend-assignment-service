@@ -95,6 +95,7 @@ const ContentPdfProjects = ({
     <div>
       {teams && (
         <Box mt={4}>
+          {/* Tarjetas con cantidades */}          
           <Grid container spacing={3}>
             <Grid item xs={12} sm={4}>
               <StatCard
@@ -151,6 +152,8 @@ const ContentPdfProjects = ({
               </TableRow>
             ) : (
               <>
+              {/* Contenido según la tarjeta clickeada (se muestran ambos bloques si ambos bools son true) */}
+              
               {selectedEntregaron && (//Si es equipos que sí entregaron, muestro lo que había, que al
                 deliveries.map((entrega, index) => ( // basarse en deliveries son justamente quienes sí entregaron
                   <TableRow key={index}>
@@ -237,7 +240,7 @@ const ContentPdfProjects = ({
                           `Proyecto Final Equipo ${team.group_number}`}
                     </TableCell>
   
-                    <TableCell>{null}</TableCell>
+                    <TableCell> - </TableCell>
                     {projectType === "initial" && (
                       <TableCell>
                         <Select
