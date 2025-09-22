@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   TableContainer,
@@ -14,10 +14,9 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import StatCard from "./StatCard";
 import DownloadIcon from "@mui/icons-material/Download";
-import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { getPublicProjectsMetadata } from "../../../../../api/handleProjects";
 
 const ContentPublicPdfProjects = ({
   loadingProjects,
@@ -26,16 +25,19 @@ const ContentPublicPdfProjects = ({
   projectType,
 }) => {
   const [period, setPeriod] = useState(useParams().period);
+  const [groupsData, setGroupsData] = useState(useParams().period);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const groupsData = await getPublicProjectsMetadata(null, period)
+        setGroupsData(groupsData)
+      } catch (error) {
+        console.error("Error al obtener datos del proyecto:", error);
+      } 
+    };
+    getData();
+  }, [])
 
-  let groupsData = Object.values(useSelector((state) => state.groups))
-    .sort((a, b) => a.id - b.id)
-    .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
-    .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
-  const tutors = Object.values(useSelector((state) => state.tutors))
-    .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
-    .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
-  const user = useSelector((state) => state.user);
-  const dispatch = useDispatch();
   if (loadingProjects) {
     return (
       <Box
@@ -48,32 +50,11 @@ const ContentPublicPdfProjects = ({
       </Box>
     );
   }
-
-  const getGroupById = (id) => {
-    const group = groupsData?.find((g) => g.id === id);
-    return group ? group : null;
-  };
-
   // Función para obtener el nombre del tutor por su id
-  const TrygetTutorNameById = (gData, entrega, period) => {
-    let _find = gData.find((g) => parseInt(getGroup(entrega.name)) === g.id)?.tutor_period_id
-    console.log("find: ", _find)
-    console.log("period: ", period)
-    let ret = getTutorNameById(_find, period)
-    console.log(ret)
-    return ret
-  };
-  const getTutorNameById = (id, periodId) => {
-    console.log(tutors)
-    console.log(periodId)
-    console.log(id)
-    const tutor = tutors.find(
-      (t) =>
-        t.tutor_periods &&
-        t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
-    );
-
-    return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
+  const TrygetTutorNameById = (gData, entrega, _) => {
+    let groupData = gData.find((g) => parseInt(getGroup(entrega.name)) === g.id)
+    let ret = groupData.tutor_name
+    return ret.name + " " + ret.last_name
   };
 
   function getGroup(path) {
@@ -100,7 +81,7 @@ const ContentPublicPdfProjects = ({
             <TableRow>
               <TableCell sx={{ fontWeight: "bold" }}>Equipo</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Tutor</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Titulo</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Título</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>
                 Descipción
               </TableCell>
@@ -122,13 +103,15 @@ const ContentPublicPdfProjects = ({
                 <TableRow key={index}>
                   <TableCell>{getGroupNumber(entrega.name)}</TableCell>
                   <TableCell>
-                    {TrygetTutorNameById(groupsData, entrega, period)}
+                    {TrygetTutorNameById(groupsData, entrega, period) }
                   </TableCell>
                   <TableCell>
-                    {groupsData.find(
-                          (g) => parseInt(getGroup(entrega.name)) === g.id
+                    {
+                    groupsData ? groupsData.find(
+                       (g) => parseInt(getGroup(entrega.name)) === g.id
                         )?.final_report_title ||
-                        `Proyecto Final Equipo ${getGroupNumber(entrega.name)}`}
+                        `Proyecto Final Equipo ${getGroupNumber(entrega.name)}` : ""
+                    }
                   </TableCell>
 
                   <TableCell>{entrega.description ? entrega.description : "<i>Sin descripción</i>"}</TableCell>

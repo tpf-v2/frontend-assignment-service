@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "@mui/system";
+import {getTutorsData} from "../../api/dashboardStats"
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setTopics } from "../../redux/slices/topicsSlice";
-import { setTutors } from "../../redux/slices/tutorsSlice";
 import { getTableData } from "../../api/handleTableData";
-import { getDashboardData } from "../../api/dashboardStats";
 import { Container, Box, Grid, Paper } from "@mui/material";
-import { setGroups } from "../../redux/slices/groupsSlice";
 import { downloadProject, getPublicProjects } from "../../api/handleProjects";
-import { setStudents } from "../../redux/slices/studentsSlice";
 import ContentPublicPdfProjects from "../../components/UI/Dashboards/AdminStats/Components/ContentPublicProjectPDFs";
+
+// Redux
+import { setGroups } from "../../redux/slices/groupsSlice";
+import { setTutors } from "../../redux/slices/tutorsSlice";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -22,49 +22,31 @@ const Root = styled(Paper)(({ theme }) => ({
 }));
 
 const PublicPDFView = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const tutors = useSelector((state) => state.tutors);
-  const students = useSelector((state) => state.students);
-  const topics = useSelector((state) => state.topics);
-
-  const [dashboardData, setDashboardData] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState(useParams().period);
   const [loadingFinalProjects, setLoadingFinalProjects] = useState(true);
-
-  const [selectedMenu, setSelectedMenu] = useState("Inicio");
   const [deliveries, setDeliveries] = useState(null);
-  const [showUploadCSV, setShowUploadCSV] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const data = await getDashboardData(period, user);
-        console.log(data.tutors)
-        dispatch(setTopics(data.topics));
+        const data = await getTutorsData(period, user);
         dispatch(setTutors(data.tutors));
-        dispatch(setStudents(data.students));
-        setDashboardData(data);
-        console.log(tutors)
 
         const endpoint = `/groups/?period=${period}`;
         const groupsData = await getTableData(endpoint, user);
         dispatch(setGroups(groupsData));
       } catch (error) {
         console.error("Error al obtener datos del dashboard:", error);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
     getData();
   }, [])
 
 useEffect(() => {
-  const start = async (menu) => {
-    setSelectedMenu(menu);
-    setShowUploadCSV(false);
+  const start = async () => {
     setLoadingFinalProjects(true);
     const finalProjectsData = await getPublicProjects(
       user,
