@@ -11,12 +11,13 @@ import {
 import { Box } from "@mui/system";
 import StatCard from "./StatCard";
 import { useSelector } from "react-redux";
+import { getTutorNameById, formatDate } from "../../../../../utils/getEntitiesUtils";
 
 const ContentIntermediateProject = () => {
   const period = useSelector((state) => state.period);
 
   // Obtiene los datos de los equipos del estado
-  let groupsData = Object.values(useSelector((state) => state.groups))
+  let teams = Object.values(useSelector((state) => state.groups))
     .sort((a, b) => a.id - b.id)
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
@@ -24,50 +25,31 @@ const ContentIntermediateProject = () => {
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
   // Cuenta los equipos que han entregado su proyecto intermedio
-  const deliveredGroups = groupsData.filter(
-    (group) => group.intermediate_assigment !== null
+  const teamsWhoDelivered = teams.filter(
+    (team) => team.intermediate_assigment !== null
   );
 
-  // Función para obtener el nombre del tutor por su id
-  const getTutorNameById = (id, periodId) => {
-    const tutor = tutors.find(
-      (t) =>
-        t.tutor_periods &&
-        t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
-    );
-
-    return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
-  };
-
-  function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("es-ES", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  }
 
   return (
     <>
-      {groupsData && (
+      {teams && (
         <>
           <Box mt={4}>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={4}>
                 <StatCard
                   title="Equipos que entregaron"
-                  value={deliveredGroups.length}
+                  value={teamsWhoDelivered.length}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <StatCard
                   title="Equipos que faltan entregar"
-                  value={groupsData.length - deliveredGroups.length}
+                  value={teams.length - teamsWhoDelivered.length}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
-                <StatCard title="Total de equipos" value={groupsData.length} />
+                <StatCard title="Total de equipos" value={teams.length} />
               </Grid>
             </Grid>
           </Box>
@@ -87,23 +69,23 @@ const ContentIntermediateProject = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {deliveredGroups.map((group, index) => (
+                {teamsWhoDelivered.map((team, index) => (
                   <TableRow key={index}>
-                    <TableCell>{group.group_number}</TableCell>
+                    <TableCell>{team.group_number}</TableCell>
                     <TableCell>
-                      {getTutorNameById(group.tutor_period_id, period.id)}
+                      {getTutorNameById(team.tutor_period_id, period.id, tutors)}
                     </TableCell>
 
                     <TableCell>
-                      {formatDate(group.intermediate_assigment_date)}
+                      {formatDate(team.intermediate_assigment_date)}
                     </TableCell>
                     <TableCell>
                       <a
-                        href={group.intermediate_assigment}
+                        href={team.intermediate_assigment}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        {group.intermediate_assigment}
+                        {team.intermediate_assigment}
                       </a>
                     </TableCell>
                   </TableRow>
