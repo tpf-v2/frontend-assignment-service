@@ -410,8 +410,7 @@ const ParentTable = ({
           item={itemToPassToModal}
           setParentItem={setItemToPassToModal}
        />
-
-      }; 
+      }
       {title === TableType.TUTORS &&
         <TutorModals 
           openAddModal={openAddModal}
@@ -425,8 +424,7 @@ const ParentTable = ({
           item={itemToPassToModal}
           setParentItem={setItemToPassToModal}
         />
-        
-      };
+      }
       {title === TableType.TOPICS &&
         <TopicModals 
           openAddModal={openAddModal}
@@ -442,7 +440,7 @@ const ParentTable = ({
           tutors={tutors}
           categories={categories}
         />
-      };      
+      }
       <DeleteConfirmationModal
         openModal={openConfirmDeleteModal}
         setOpenModal={setOpenConfirmDeleteModal}
