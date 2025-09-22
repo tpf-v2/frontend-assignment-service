@@ -19,7 +19,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import { useDispatch, useSelector } from "react-redux";
 import { updateGroup } from "../../../../../api/updateGroups";
 import { setGroups } from "../../../../../redux/slices/groupsSlice";
-import { getTeamById } from "../../../../../utils/getEntitiesUtils";
+import { getTeamById, getTutorNameById, formatDate } from "../../../../../utils/getEntitiesUtils";
 
 const ContentPdfProjects = ({
   loadingProjects,
@@ -80,17 +80,6 @@ const ContentPdfProjects = ({
     }
   };
 
-      // Función para obtener el nombre del tutor por su id
-      const getTutorNameById = (id, periodId) => {
-        const tutor = tutors.find(
-          (t) =>
-            t.tutor_periods &&
-            t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
-        );
-    
-        return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
-      };
-
   function getTeam(path) {
     const parts = path.split("/");
     return parts[1]; // Devuelve el equipo
@@ -100,15 +89,6 @@ const ContentPdfProjects = ({
     const parts = path.split("/");
     const group = teams?.find((g) => g.id === parseInt(parts[1]));
     return group ? group.group_number : null;
-  }
-
-  function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("es-ES", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
   }
 
   return (
@@ -179,7 +159,8 @@ const ContentPdfProjects = ({
                       {getTutorNameById(
                         teams.find(
                           (t) => parseInt(getTeam(entrega.name)) === t.id
-                        )?.tutor_period_id, period.id
+                        )?.tutor_period_id, period.id,
+                        tutors
                       )}
                     </TableCell>
                     <TableCell>
@@ -246,7 +227,7 @@ const ContentPdfProjects = ({
                   <TableRow key={team.id}>
                     <TableCell>{team.group_number}</TableCell>
                     <TableCell>
-                      {getTutorNameById(team.tutor_period_id, period.id)}
+                      {getTutorNameById(team.tutor_period_id, period.id, tutors)}
                     </TableCell>
                     <TableCell>
                       {projectType === "initial"
