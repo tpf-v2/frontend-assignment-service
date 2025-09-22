@@ -19,6 +19,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import { useDispatch, useSelector } from "react-redux";
 import { updateGroup } from "../../../../../api/updateGroups";
 import { setGroups } from "../../../../../redux/slices/groupsSlice";
+import { getTeamById } from "../../../../../utils/getEntitiesUtils";
 
 const ContentPdfProjects = ({
   loadingProjects,
@@ -54,17 +55,13 @@ const ContentPdfProjects = ({
     );
   }
 
-  const getGroupById = (id) => { // To-Do: función importable (usada tmb en TopicTutor)
-    const group = teams?.find((g) => g.id === id);
-    return group ? group : null;
-  };
   const handleReviewerChange = async (deliveryId, reviewerId) => {
     setSelectedReviewers({
       ...selectedReviewers,
       [deliveryId]: reviewerId,
     });
     // Obtener el equipo y crear una copia modificable
-    const updatedGroup = { ...getGroupById(parseInt(deliveryId, 10)) };
+    const updatedGroup = { ...getTeamById(parseInt(deliveryId, 10), teams) };
 
     if (updatedGroup) {
       // Asignar el reviewerId a la copia del equipo
@@ -204,10 +201,10 @@ const ContentPdfProjects = ({
                           value={
                             selectedReviewers[getTeam(entrega.name)]
                               ? selectedReviewers[getTeam(entrega.name)]
-                              : getGroupById(parseInt(getTeam(entrega.name), 10))
+                              : getTeamById(parseInt(getTeam(entrega.name), 10), teams)
                                   ?.reviewer_id === 0
                               ? ""
-                              : getGroupById(parseInt(getTeam(entrega.name), 10))
+                              : getTeamById(parseInt(getTeam(entrega.name), 10), teams)
                                   ?.reviewer_id
                           }
                           onChange={(e) =>

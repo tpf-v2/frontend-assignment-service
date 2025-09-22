@@ -47,6 +47,7 @@ export const updateGroup = async (user, periodId, group) => {
     },
   };
 
+  // Obs a futuro: tantos campos parecen innecesarios para updatear solo el reviewer_id.
   const body = [
     {
       id: group.id,
