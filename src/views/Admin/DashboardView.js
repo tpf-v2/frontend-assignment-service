@@ -10,7 +10,7 @@ import { Container, Box, Grid, Paper } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
 import ContentInicio from "../../components/UI/Dashboards/AdminStats/Components/ContentInicio";
 import ContentInscripciones from "../../components/UI/Dashboards/AdminStats/Components/ContentInscripciones";
-import ContentPdfProjects from "../../components/UI/Dashboards/AdminStats/Components/ContentAnteproyecto";
+import ContentPdfProjects from "../../components/UI/Dashboards/AdminStats/Components/ContentPdfProjects";
 import { setGroups } from "../../redux/slices/groupsSlice";
 import IncompleteGroups from "../../components/Algorithms/IncompleteGroups";
 import TopicTutor from "../../components/Algorithms/TopicTutor";
