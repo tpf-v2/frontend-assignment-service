@@ -26,7 +26,7 @@ const ContentPdfProjects = ({
   downloadFile,
   projectType,
 }) => {
-  let groupsData = Object.values(useSelector((state) => state.groups))
+  let teams = Object.values(useSelector((state) => state.groups))
     .sort((a, b) => a.id - b.id)
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
@@ -54,8 +54,8 @@ const ContentPdfProjects = ({
     );
   }
 
-  const getGroupById = (id) => {
-    const group = groupsData?.find((g) => g.id === id);
+  const getGroupById = (id) => { // To-Do: función importable (usada tmb en TopicTutor)
+    const group = teams?.find((g) => g.id === id);
     return group ? group : null;
   };
   const handleReviewerChange = async (deliveryId, reviewerId) => {
@@ -74,7 +74,7 @@ const ContentPdfProjects = ({
       await updateGroup(user, period.id, updatedGroup);
 
       // Crear una nueva lista de equipos actualizados
-      const updatedGroups = groupsData.map((group) =>
+      const updatedGroups = teams.map((group) =>
         group.id === updatedGroup.id ? updatedGroup : group
       );
 
@@ -101,7 +101,7 @@ const ContentPdfProjects = ({
 
   function getGroupNumber(path) { // To-Do: función importable (usada tmb en TopicTutor)
     const parts = path.split("/");
-    const group = groupsData?.find((g) => g.id === parseInt(parts[1]));
+    const group = teams?.find((g) => g.id === parseInt(parts[1]));
     return group ? group.group_number : null;
   }
 
@@ -116,7 +116,7 @@ const ContentPdfProjects = ({
 
   return (
     <div>
-      {groupsData && (
+      {teams && (
         <Box mt={4}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={4}>
@@ -131,7 +131,7 @@ const ContentPdfProjects = ({
               <StatCard
                 title="Equipos que faltan entregar"
                 value={
-                  loadingProjects ? -1 : groupsData.length - deliveries.length
+                  loadingProjects ? -1 : teams.length - deliveries.length
                 }
                 onClick={() => {setSelectedEntregaron(false); setSelectedNoEntregaron(true)}}
                 selected={selectedNoEntregaron}
@@ -140,7 +140,7 @@ const ContentPdfProjects = ({
             <Grid item xs={12} sm={4}>
               <StatCard
                 title="Total de equipos"
-                value={loadingProjects ? -1 : groupsData.length}
+                value={loadingProjects ? -1 : teams.length}
                 onClick={() => {setSelectedEntregaron(true); setSelectedNoEntregaron(true)}}
                 selected={selectedEntregaron && selectedNoEntregaron}
               />
@@ -180,19 +180,19 @@ const ContentPdfProjects = ({
                     <TableCell>{getGroupNumber(entrega.name)}</TableCell>
                     <TableCell>
                       {getTutorNameById(
-                        groupsData.find(
-                          (g) => parseInt(getTeam(entrega.name)) === g.id
+                        teams.find(
+                          (t) => parseInt(getTeam(entrega.name)) === t.id
                         )?.tutor_period_id, period.id
                       )}
                     </TableCell>
                     <TableCell>
                       {projectType === "initial"
-                        ? groupsData.find(
-                            (g) => parseInt(getTeam(entrega.name)) === g.id
+                        ? teams.find(
+                            (t) => parseInt(getTeam(entrega.name)) === t.id
                           )?.pre_report_title ||
                           `Anteproyecto Equipo ${getGroupNumber(entrega.name)}`
-                        : groupsData.find(
-                            (g) => parseInt(getTeam(entrega.name)) === g.id
+                        : teams.find(
+                            (t) => parseInt(getTeam(entrega.name)) === t.id
                           )?.final_report_title ||
                           `Proyecto Final Equipo ${getGroupNumber(entrega.name)}`}
                     </TableCell>
@@ -244,19 +244,19 @@ const ContentPdfProjects = ({
 
               {selectedNoEntregaron && (
                 <>                
-                {groupsData.filter((g) => !g.pre_report_date).map((g, key) => (
+                {teams.filter((t) => !t.pre_report_date).map((team) => (
 
-                  <TableRow key={g.id}>
-                    <TableCell>{g.group_number}</TableCell>
+                  <TableRow key={team.id}>
+                    <TableCell>{team.group_number}</TableCell>
                     <TableCell>
-                      {getTutorNameById(g.tutor_period_id, period.id)}
+                      {getTutorNameById(team.tutor_period_id, period.id)}
                     </TableCell>
                     <TableCell>
                       {projectType === "initial"
-                        ? g.pre_report_title ||
-                          `Anteproyecto Equipo ${g.group_number}`
-                        : g.final_report_title ||
-                          `Proyecto Final Equipo ${g.group_number}`}
+                        ? team.pre_report_title ||
+                          `Anteproyecto Equipo ${team.group_number}`
+                        : team.final_report_title ||
+                          `Proyecto Final Equipo ${team.group_number}`}
                     </TableCell>
   
                     <TableCell>{null}</TableCell>
@@ -264,15 +264,15 @@ const ContentPdfProjects = ({
                       <TableCell>
                         <Select
                           value={
-                            selectedReviewers[g]
-                              ? selectedReviewers[g]
-                              : g.reviewer_id === 0
+                            selectedReviewers[team]
+                              ? selectedReviewers[team]
+                              : team.reviewer_id === 0
                               ? ""
-                              : g.reviewer_id
+                              : team.reviewer_id
                           }
                           onChange={(e) =>
                             handleReviewerChange(
-                              g,
+                              team,
                               e.target.value
                             )
                           }
