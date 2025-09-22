@@ -12,6 +12,7 @@ import {
   TableRow,
   TextField,
   Button,
+  Fab,
   Box,
   Stack
 } from "@mui/material";
@@ -19,11 +20,12 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ExpandableCell from "../ExpandableCell";
 
-import { TeamModal } from "../UI/Tables/Modals/teamModal";
+import { TeamModals } from "../UI/Tables/Modals/teamModals";
 import { setGroups } from "../../redux/slices/groupsSlice";
-import { editTeam } from "../../api/sendGroupForm";
+import { editTeam, addTeam } from "../../api/sendGroupForm";
 import MySnackbar from "../UI/MySnackBar";
 import { getTableData } from "../../api/handleTableData";
+import AddIcon from "@mui/icons-material/Add";
 
 // Componente para la tabla de equipos
 const GroupDataTable = () => {
@@ -59,11 +61,12 @@ const GroupDataTable = () => {
   const [showNoTopic, setShowNoTopic] = useState(false);
   const [showNoTutor, setShowNoTutor] = useState(false);
 
-  const [openConfirmEditModal, setOpenConfirmEditModal] = useState(false);
-  const [conflictsMessage, setConflictsMessage] = useState([]);
+  const [openConfirmModal, setOpenConfirmModal] = useState(false);
+  const [conflicts, setConflicts] = useState({msg:[]});
 
   const [openEditModal, setOpenEditModal] = useState(false);
   const [itemToPassToModal, setItemToPassToModal] = useState(null);
+  const [openAddModal, setOpenAddModal] = useState(false);
 
   // useEffect
   const endpoint = `/groups/?period=${period.id}`;
@@ -71,13 +74,21 @@ const GroupDataTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseData = await getTableData(endpoint, user);
+        const responseData = await getTableData(endpoint, user); // TEAMS
 
-        // Workaround a que el back no los devuelva: temas de "Ya tengo tema y tutor":
-        const customTopics = groups.filter(team => !topics.some(t => t.id === team.topic.id))
-        .map(team => team.topic);
-        setAllTopics({csvTopics: topics, customTopics: customTopics});
+        console.log("groups recibidos:", groups.map(g => ({id: g.id, "topic.id": g.topic?.id})));
         
+        // Minor 'fix' xq admin envía tema copypasteado en csv (con != tutor) queda id repetido y eso rompe búsqueda de Autocomplete
+        const uniqueTopics = Array.from(
+          new Map((topics ?? []).map(t => [t.id, t])).values()
+        );
+        // Workaround a que el back no los devuelva: temas de "Ya tengo tema y tutor":
+        const customTopics = groups?.filter(team => !topics.some(t => t.id === team.topic?.id))
+        .map(team => team.topic);
+        setAllTopics({csvTopics: uniqueTopics, customTopics: customTopics});
+
+        console.log("--- uniqueTopics:", uniqueTopics);
+              
         setData(responseData);
         setLoading(false);
 
@@ -91,16 +102,68 @@ const GroupDataTable = () => {
   }, [endpoint, user]);
   //}, [endpoint, user, groups, topics]);
 
-  // Editar equipo
-  const handleEditItem = async (editedItem, setEditedItem, handleCloseEditModal, confirm_option=false) => {
+  // Agregar equipo. El first modal es en este caso el modal de add.
+  // Es llamada desde TeamModals: primera vez queda bool en false; luego, si hay conflictos, con bool en true.
+  const handleAddItem = async (newItem, setNewItem, handleCloseFirstModal=undefined, confirm_option=false, confirm_topic_move=false) => {
+    try {
+      await addItemToGenericTable(addTeam, newItem, setNewItem, {}, confirm_option, confirm_topic_move);
+      if (handleCloseFirstModal) {
+        handleCloseFirstModal(); // Esto cierra el primer modal solo si no hubo conflicto
+      }      
+      setNewItem({students:[]}); // necesario para el segundo modal, el de confirm.// <-- copypasteo esto acá, revisar en el modal
+    } catch (err) {
+      console.error(`Error when adding new team:`, err);
+      setNotification({
+        open: true,
+        //message: `Error al agregar ${TableTypeSingularLabel[title]||''}.`,        
+        message: `Error al agregar equipo.`,
+        status: "error",
+      });
+
+      // Si hay conflicto, no cerrar el modal de add; abrir cartel de confirmación
+      // y si se confirma, se reenvía la request (conservar los datos a enviar) pero con un bool en true
+      if (err.response?.status===409) {
+        setNotification({
+          open: true,
+          message: `Advertencia: Conflicto al agregar equipo.`,
+          status: "warning",
+        });
+
+        // Indicamos que los conflictos fueron durante el add de un equipo, y abrimos el modal de confirmación
+        setConflicts({operation: "add", msg: err.response?.data?.detail} || {operation: "add", msg:[]});
+        setOpenConfirmModal(true);
+      }
+    }
+  };
+  const addItemToGenericTable = async (apiAddFunction, newItem, setNewItem, setReducer, confirm_option=false, confirm_topic_move=false) => {    
+    newItem.tutor_email = getTutorEmailByTutorPeriodId(newItem.tutor_period_id, period.id);
+    const changes = await apiAddFunction(newItem, user, period.id, confirm_option); // add
+    setNewItem({});
+    setNotification({
+      open: true,
+      //message: `Se agregó ${TableTypeSingularLabel[title]||''} exitosamente`, // 'estudiante', etc
+      message: `Se agregó equipo exitosamente`, // 'estudiante', etc
+      status: "success",
+    });
+
+    setData((prevData) => adaptListWithApiResponse(prevData, changes));
+    //dispatch(setReducer((prevData) => [...prevData, item])); // set
+  };
+
+  // Editar equipo. El first modal es en este caso el modal de editar.
+  // Es llamada desde TeamModals: primera vez queda bool en false; luego, si hay conflictos, con bool en true.
+  const handleEditItem = async (editedItem, setEditedItem, handleCloseFirstModal=undefined, confirm_option=false, confirm_topic_move=false) => {
     try {
       editedItem.tutor_email = getTutorEmailByTutorPeriodId(editedItem.tutor_period_id, period.id);
-      await editItemInGenericTable(editTeam, editedItem, setEditedItem, setGroups, confirm_option);
+      await editItemInGenericTable(editTeam, editedItem, setEditedItem, setGroups, confirm_option, confirm_topic_move);
       
-      // Close modal de edición en caso de éxito
-      handleCloseEditModal();      
-      setEditedItem({}); // necesario para el segundo modal, el de confirm.      
-    } catch (err) {
+      // Close modal de edición en caso de éxito sin conflictos
+      if (handleCloseFirstModal) {
+        handleCloseFirstModal(); // esto cierra el primer modal (edit en este caso) si no hay conflictos
+      }
+      setEditedItem({}); // necesario para el segundo modal, el de confirm.
+      
+    } catch (err) {      
       const title="team";
       console.error(`Error when editing ${title}:`, err);
       setNotification({
@@ -117,41 +180,21 @@ const GroupDataTable = () => {
           message: `Advertencia: Conflicto al editar equipo.`,
           status: "warning",
         });
-
-        setConflictsMessage(err.response?.data?.detail || []);
-        setOpenConfirmEditModal(true);
+        
+        setConflicts({operation: "edit", msg: err.response?.data?.detail} || {operation: "edit", msg:[]});
+        setOpenConfirmModal(true);
       }
     }
   };
-  const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, setReducer, confirm_option=false) => {    
-    const changes = await apiEditFunction(editedItem.id, period.id, editedItem, user, confirm_option);
+  const editItemInGenericTable = async (apiEditFunction, editedItem, setEditedItem, setReducer, confirm_option=false, confirm_topic_move=false) => {    
+    const changes = await apiEditFunction(editedItem.id, period.id, editedItem, user, confirm_option, confirm_topic_move);
     setNotification({
       open: true,
       message: `Se editó equipo exitosamente`,
       status: "success",
     });
     // Si es éxito, hay que adaptar los datos de la lista a mostrar en la tabla    
-    setData((prevData) => {
-      let updated = [...prevData];
-
-      // Reemplazar o agregar los equipos editados
-      changes.edited.forEach((team) => {
-        const idx = updated.findIndex((prevDataTeam) => prevDataTeam.id === team.id);
-        if (idx >= 0) {
-          // reenplazar si ya existía
-          updated[idx] = team;
-        } else {
-          // o agregar si no estaba en la lista (no debería darse este caso en un edit en realidad)
-          updated.push(team);
-        }
-      });
-
-      // Eliminar equipos borrados (me quedo con los equipos que No incluye la lista de deleted)
-      updated = updated.filter((prevDataTeam) => !changes.deleted.includes(prevDataTeam.id));
-
-      return updated;
-    });
-              
+    setData((prevData) => adaptListWithApiResponse(prevData, changes));
   };
   const [notification, setNotification] = useState({
     open: false,
@@ -161,11 +204,34 @@ const GroupDataTable = () => {
   const handleSnackbarClose = () => {
     setNotification({ ...notification, open: false });
   };
-  
-  // Confirmar edición con bool true
-  const handleConfirmEditOnConflict = async (editedItem, setEditedItem, handleCloseEditModal, confirm_option=true) => {
-    await handleEditItem(editedItem, setEditedItem, handleCloseEditModal, true);
-  };
+
+  // Adaptar la lista de equipos que se muestra en la tabla, con el resultado del add/edición
+  const adaptListWithApiResponse = (prevData, changes) => {
+    let updated = [...prevData];
+
+    // Agregar si hay equipo nuevo
+    if (changes.added){
+      updated.push(...changes.added); // "extend" versión javascript
+    }
+
+    // Reemplazar o agregar los equipos editados
+    changes.edited?.forEach((team) => {
+      const idx = updated.findIndex((prevDataTeam) => prevDataTeam.id === team.id);
+      if (idx >= 0) {
+        // reenplazar si ya existía
+        updated[idx] = team;
+      } else {
+        // o agregar si no estaba en la lista (no debería darse este caso en un edit en realidad)
+        updated.push(team);
+      }
+    });
+
+    // Eliminar equipos borrados (me quedo con los equipos que No incluye la lista de deleted)
+    // (obs: el campo deleted existe siempre, es vacío si no se eliminó nada)
+    updated = updated.filter((prevDataTeam) => !changes.deleted.includes(prevDataTeam.id));
+
+    return updated;
+  }
   
   // Formato para el endpoint
   const getTutorEmailByTutorPeriodId = (id, periodId) => {
@@ -307,6 +373,8 @@ const GroupDataTable = () => {
     URL.revokeObjectURL(url);
   };
 
+  console.log("--- filteredTeams:", filteredTeams);
+
   return (
     <Box>      
         <>
@@ -358,6 +426,15 @@ const GroupDataTable = () => {
               sx={{ marginBottom: 2 }}>
               {showExtraColumns ? "Ocultar preferencias" : "Mostrar preferencias"}
             </Button>
+
+            <Fab
+              size="small"
+              color="primary"
+              aria-label="add"                  
+              onClick={() => setOpenAddModal(true)}
+            >
+              <AddIcon />
+            </Fab>
           </Box>
 
           <TableContainer component={Paper}>
@@ -502,7 +579,11 @@ const GroupDataTable = () => {
             </Table>
           </TableContainer>
 
-          <TeamModal 
+          <TeamModals
+            openAddModal={openAddModal}
+            setOpenAddModal={setOpenAddModal}
+            handleAddItem={handleAddItem}
+
             openEditModal={openEditModal}
             setOpenEditModal={setOpenEditModal}            
             handleEditItem={handleEditItem}
@@ -510,12 +591,11 @@ const GroupDataTable = () => {
             item={itemToPassToModal}
             setParentItem={setItemToPassToModal}
 
-            openConfirmModal={openConfirmEditModal}
-            setOpenConfirmModal={setOpenConfirmEditModal}
-            handleConfirm={handleConfirmEditOnConflict}
+            openConfirmModal={openConfirmModal}
+            setOpenConfirmModal={setOpenConfirmModal}
 
-            conflictMsg={conflictsMessage}
-            setConflictMsg={setConflictsMessage}
+            conflicts={conflicts}
+            setConflictMsg={setConflicts}
 
             topics={allTopics}
             tutors={tutors}
