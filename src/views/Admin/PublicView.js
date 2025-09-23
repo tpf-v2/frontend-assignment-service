@@ -1,16 +1,10 @@
 import { useEffect, useState } from "react";
 import { styled } from "@mui/system";
-import {getTutorsData} from "../../api/dashboardStats"
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getTableData } from "../../api/handleTableData";
 import { Container, Box, Grid, Paper } from "@mui/material";
 import { downloadProject, getPublicProjects } from "../../api/handleProjects";
 import ContentPublicPdfProjects from "../../components/UI/Dashboards/AdminStats/Components/ContentPublicProjectPDFs";
-
-// Redux
-import { setGroups } from "../../redux/slices/groupsSlice";
-import { setTutors } from "../../redux/slices/tutorsSlice";
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -24,26 +18,10 @@ const Root = styled(Paper)(({ theme }) => ({
 const PublicPDFView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const tutors = useSelector((state) => state.tutors);
   const [period, setPeriod] = useState(useParams().period);
   const [loadingFinalProjects, setLoadingFinalProjects] = useState(true);
   const [deliveries, setDeliveries] = useState(null);
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const data = await getTutorsData(period, user);
-        dispatch(setTutors(data.tutors));
-
-        const endpoint = `/groups/?period=${period}`;
-        const groupsData = await getTableData(endpoint, user);
-        dispatch(setGroups(groupsData));
-      } catch (error) {
-        console.error("Error al obtener datos del dashboard:", error);
-      } 
-    };
-    getData();
-  }, [])
 
 useEffect(() => {
   const start = async () => {

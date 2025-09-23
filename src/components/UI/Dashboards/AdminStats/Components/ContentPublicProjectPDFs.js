@@ -24,20 +24,6 @@ const ContentPublicPdfProjects = ({
   downloadFile,
   projectType,
 }) => {
-  const [period, setPeriod] = useState(useParams().period);
-  const [groupsData, setGroupsData] = useState(useParams().period);
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const groupsData = await getPublicProjectsMetadata(null, period)
-        setGroupsData(groupsData)
-      } catch (error) {
-        console.error("Error al obtener datos del proyecto:", error);
-      } 
-    };
-    getData();
-  }, [])
-
   if (loadingProjects) {
     return (
       <Box
@@ -50,31 +36,9 @@ const ContentPublicPdfProjects = ({
       </Box>
     );
   }
-  // Función para obtener el nombre del tutor por su id
-  const TrygetTutorNameById = (gData, entrega, _) => {
-    let groupData = gData.find((g) => parseInt(getGroup(entrega.name)) === g.id)
-    let ret = groupData.tutor_name
-    return ret.name + " " + ret.last_name
-  };
-
-  function getGroup(path) {
-    const parts = path.split("/");
-    return parts[1]; // Devuelve el equipo
-  }
-
-  function getGroupNumber(path) {
-    const parts = path.split("/");
-    const group = groupsData?.find((g) => g.id === parseInt(parts[1]));
-    return group ? group.group_number : null;
-  }
 
   return (
     <div>
-      {groupsData && (
-        <Box mt={4}>
-        </Box>
-      )}
-
       <TableContainer component={Paper} style={{ marginTop: "20px" }}>
         <Table stickyHeader>
           <TableHead>
@@ -101,23 +65,26 @@ const ContentPublicPdfProjects = ({
             ) : (
               deliveries.map((entrega, index) => (
                 <TableRow key={index}>
-                  <TableCell>{getGroupNumber(entrega.name)}</TableCell>
+                  <TableCell>{entrega.group_number}</TableCell>
                   <TableCell>
-                    {TrygetTutorNameById(groupsData, entrega, period) }
+                    { entrega.project.tutor_name.name + " " + entrega.project.tutor_name.last_name }
                   </TableCell>
                   <TableCell>
                     {
-                    groupsData ? groupsData.find(
-                       (g) => parseInt(getGroup(entrega.name)) === g.id
-                        )?.final_report_title ||
-                        `Proyecto Final Equipo ${getGroupNumber(entrega.name)}` : ""
+                      entrega.project?.final_report_title || `Proyecto Final Equipo ${entrega.group_number}`
                     }
                   </TableCell>
 
-                  <TableCell>{entrega.description ? entrega.description : "<i>Sin descripción</i>"}</TableCell>
+                  <TableCell>
+                    {
+                      entrega.project.final_report_summary
+                      ? entrega.project.final_report_summary 
+                      : <p style={{ fontStyle: 'italic' }}> {"Sin descripción"} </p>
+                    }
+                  </TableCell>
                   <TableCell>
                     <IconButton
-                      onClick={() => downloadFile(getGroup(entrega.name), getGroupNumber(entrega.name))}
+                      onClick={() => downloadFile(entrega.project.id, entrega.group_number)}
                     >
                       <DownloadIcon />
                     </IconButton>
