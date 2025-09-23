@@ -35,6 +35,8 @@ import { togglePeriodSetting } from "../../redux/slices/periodSlice";
 import updatePeriod from "../../api/updatePeriod";
 import ResultsDialog from "./Dates/ResultsDialog";
 
+import { getInputAnalysis } from "../Forms/AlgorithmInputAnalysis"
+
 const evaluatorColors = [
   "#87CEFA", // Light Blue
   "#90EE90", // Light Green
@@ -108,7 +110,26 @@ const Dates = () => {
 
   const [loadingDates, setLoadingDates] = useState(false);
 
+  const [inputInfo, setInputInfo] = useState();
+
   const dispatch = useDispatch();
+  
+  // Análsis del input, previo a ejecutar
+  const endpoint = "/dates_algorithm_input_info"
+  useEffect(() => {
+    const getInputInfo = async () => {
+      try {
+        const data = await getInputAnalysis(endpoint, period.id, user);        
+        setInputInfo(data);
+
+      } catch (error) {
+        console.error("Error al obtener datos del input:", error);
+      }
+    };
+    getInputInfo();
+  }, [user, period]);
+
+  // Fechas
 
   useEffect(() => {
     const fetchData = async () => {
@@ -540,6 +561,23 @@ const Dates = () => {
       <Grid container spacing={2}>
         {/* Descripción */}
         <Description />
+        {/* Probandooooo, dsp lo muevo a un componente aparte*/}
+        <>
+          <Grid item xs={12} md={12} sx={{ display: "flex" }}>
+            <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+              Verificación previa
+            </Typography>
+          </Grid>
+          {inputInfo && (
+            <Grid item xs={12} md={12} sx={{ display: "flex" }}>
+              <Typography variant="body1" sx={{ textAlign: "justify" }}>
+              Existen {inputInfo.length} equipos que no completaron su disponibilidad.
+              </Typography>
+            </Grid>
+          )}
+        </>
+        
+
         {/* Botones Correr */}
         <ButtonSection
           handleSelectEvaluators={handleSelectEvaluators}

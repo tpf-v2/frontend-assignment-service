@@ -19,7 +19,7 @@ import {
   DialogActions,
 } from "@mui/material";
 import { incompleteGroups } from "../../api/assignments";
-import { getIncompleteTeamsInputAnalysis } from "../Forms/AlgorithmInputAnalysis"
+import { getInputAnalysis } from "../Forms/AlgorithmInputAnalysis"
 
 import { useDispatch, useSelector } from "react-redux";
 import { getGroups } from "../../api/getGroups";
@@ -55,12 +55,11 @@ const IncompleteGroups = () => {
 
   //"/input-analyzers"
 
-  //getIncompleteTeamsInputAnalysis
   const endpoint = "/incomplete_teams_algorithm_input_info"
   useEffect(() => {
     const getInputInfo = async () => {
       try {
-        const data = await getIncompleteTeamsInputAnalysis(endpoint, period.id, user);        
+        const data = await getInputAnalysis(endpoint, period.id, user);        
         setInputInfo(data);
 
       } catch (error) {
