@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Box,
@@ -19,12 +19,15 @@ import {
   DialogActions,
 } from "@mui/material";
 import { incompleteGroups } from "../../api/assignments";
+import { getIncompleteTeamsInputAnalysis } from "../Forms/AlgorithmInputAnalysis"
+
 import { useDispatch, useSelector } from "react-redux";
 import { getGroups } from "../../api/getGroups";
 import { setGroups } from "../../redux/slices/groupsSlice";
 import { togglePeriodSetting } from "../../redux/slices/periodSlice";
 import updatePeriod from "../../api/updatePeriod";
 import { useNavigate } from "react-router-dom";
+//import FormAnswersTable from "../UI/Tables/ChildTables/FormAnswersTable";
 
 const IncompleteGroups = () => {
   const period = useSelector((state) => state.period);
@@ -44,9 +47,30 @@ const IncompleteGroups = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false); // Nuevo estado para el diálogo de confirmación
 
+  const [inputInfo, setInputInfo] = useState(); 
+
   const handleRun = async () => {
     setOpenConfirmDialog(true); // Muestra el diálogo de confirmación al presionar el botón "Correr"
   };
+
+  //"/input-analyzers"
+
+  //getIncompleteTeamsInputAnalysis
+  const endpoint = "/incomplete_teams_algorithm_input_info"
+  useEffect(() => {
+    const getInputInfo = async () => {
+      try {
+        const data = await getIncompleteTeamsInputAnalysis(endpoint, period.id, user);        
+        setInputInfo(data);
+
+      } catch (error) {
+        console.error("Error al obtener datos del input:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getInputInfo();
+  }, []);
   
   const handleAcceptResults = async () => {
     try {
@@ -97,6 +121,8 @@ const IncompleteGroups = () => {
     return topic ? topic.name : ""; // Si no encuentra el topic, mostrar 'Desconocido'
   };
 
+  console.log("--- Input info:", inputInfo);
+
   return (
     <Box sx={{ padding: 3 }}>
       <Grid container spacing={2}>
@@ -122,6 +148,33 @@ const IncompleteGroups = () => {
             Este algoritmo se puede correr <strong>una única vez</strong>.
           </Typography>
         </Grid>
+
+
+        {/* Inicio Veamos el input del algoritmo antes de ejecutarlo (hay que mejorar la ui, ya sé) */}
+        <Grid item xs={12} md={10} sx={{ display: "flex" }}>
+          <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+            Input a este algoritmo            
+          </Typography>
+        </Grid>
+        <Grid item xs={12} md={10} sx={{ display: "flex" }}>
+          <Typography variant="body1">
+            Este algorimo utiliza las respuestas al formulario de equipos
+            (Preferencias / Ya tengo tema y tutor) como input,
+            para completar los equipos en base a sus preferencias.
+            De los {} estudiantes de este cuatrimestre        
+
+            Veamos
+
+
+          </Typography>
+          {/* <FormAnswersTable />*/}
+          
+
+        </Grid>
+
+        {/* Fin Veamos el input del algoritmo antes de ejecutarlo */}
+
+        
         {/* Botones Correr, Editar */}
         <Grid
           item
