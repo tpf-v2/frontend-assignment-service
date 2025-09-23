@@ -36,6 +36,7 @@ import updatePeriod from "../../api/updatePeriod";
 import ResultsDialog from "./Dates/ResultsDialog";
 
 import { getInputAnalysis } from "../Forms/AlgorithmInputAnalysis"
+import AlgorithmPreCheck from "./AlgorithmPreCheck";
 
 const evaluatorColors = [
   "#87CEFA", // Light Blue
@@ -561,22 +562,8 @@ const Dates = () => {
       <Grid container spacing={2}>
         {/* Descripción */}
         <Description />
-        {/* Probandooooo, dsp lo muevo a un componente aparte*/}
-        <>
-          <Grid item xs={12} md={12} sx={{ display: "flex" }}>
-            <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-              Verificación previa
-            </Typography>
-          </Grid>
-          {inputInfo && (
-            <Grid item xs={12} md={12} sx={{ display: "flex" }}>
-              <Typography variant="body1" sx={{ textAlign: "justify" }}>
-              Existen {inputInfo.length} equipos que no completaron su disponibilidad.
-              </Typography>
-            </Grid>
-          )}
-        </>
-        
+        {/* Probandooooo, Verificación Previa */}
+        <AlgorithmPreCheck inputInfo={inputInfo} msg={"equipos que no completaron su disponibilidad"}/>        
 
         {/* Botones Correr */}
         <ButtonSection

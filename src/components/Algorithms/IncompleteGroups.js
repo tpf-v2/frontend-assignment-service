@@ -27,6 +27,7 @@ import { setGroups } from "../../redux/slices/groupsSlice";
 import { togglePeriodSetting } from "../../redux/slices/periodSlice";
 import updatePeriod from "../../api/updatePeriod";
 import { useNavigate } from "react-router-dom";
+import AlgorithmPreCheck from "./AlgorithmPreCheck";
 //import FormAnswersTable from "../UI/Tables/ChildTables/FormAnswersTable";
 
 const IncompleteGroups = () => {
@@ -54,8 +55,11 @@ const IncompleteGroups = () => {
   };
 
   //"/input-analyzers"
-
+  
   const endpoint = "/incomplete_teams_algorithm_input_info"
+  const preCheckMsg = "Este algoritmo utiliza las respuestas al formulario de equipos\
+                      (Preferencias / Ya tengo tema y tutor) como input,\
+                      para completar los equipos en base a sus preferencias."
   useEffect(() => {
     const getInputInfo = async () => {
       try {
@@ -70,6 +74,8 @@ const IncompleteGroups = () => {
     };
     getInputInfo();
   }, []);
+
+  // Algoritmo de equipos incompletos
   
   const handleAcceptResults = async () => {
     try {
@@ -150,27 +156,8 @@ const IncompleteGroups = () => {
 
 
         {/* Inicio Veamos el input del algoritmo antes de ejecutarlo (hay que mejorar la ui, ya sé) */}
-        <Grid item xs={12} md={10} sx={{ display: "flex" }}>
-          <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-            Input a este algoritmo            
-          </Typography>
-        </Grid>
-        <Grid item xs={12} md={10} sx={{ display: "flex" }}>
-          <Typography variant="body1">
-            Este algorimo utiliza las respuestas al formulario de equipos
-            (Preferencias / Ya tengo tema y tutor) como input,
-            para completar los equipos en base a sus preferencias.
-            De los {} estudiantes de este cuatrimestre        
-
-            Veamos
-
-
-          </Typography>
-          {/* <FormAnswersTable />*/}
-          
-
-        </Grid>
-
+          {/* <FormAnswersTable />*/}          
+        <AlgorithmPreCheck initialDescription={preCheckMsg} inputInfo={inputInfo} msg={"estudiantes que no están en respuestas al formulario de equipos en ninguna de sus variantes"}/>        
         {/* Fin Veamos el input del algoritmo antes de ejecutarlo */}
 
         
