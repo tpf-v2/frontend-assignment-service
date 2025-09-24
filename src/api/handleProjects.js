@@ -75,36 +75,36 @@ export const fetchProjectPdf = async (groupId, user, period_id, projectType) => 
 };
 
 export const getProjects = async (user, period_id, projectType) => {
-    const projectName = projectType === 'final' ? 'final-project' : 'initial-project';
+  const projectName = projectType === 'final' ? 'final-project' : 'initial-project';
 
-    const config = {
-      params: {
-          period: period_id
-      },
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
-  
-    // Realiza la solicitud GET con los parámetros de consulta dinámicos
-    const response = await axios.get(`${BASE_URL}/groups/${projectName}`, config);
-  
-    return response.data;
+  const config = {
+    params: {
+        period: period_id
+    },
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
   };
+
+  // Realiza la solicitud GET con los parámetros de consulta dinámicos
+  const response = await axios.get(`${BASE_URL}/groups/${projectName}`, config);
+
+  return response.data;
+};
 
 export const getPublicProjects = async (user, period_id, projectType) => {
-    const projectName = projectType === 'final-project';
+  const projectName = projectType === 'final-project';
 
-    const config = {
-      params: {
-          period: period_id
-      },
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
-  
-    const response = await axios.get(`${BASE_URL}/groups/public-final-project`, config);
-    return response.data;
+  const config = {
+    params: {
+        period: period_id
+    },
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
   };
+
+  const response = await axios.get(`${BASE_URL}/groups/public-final-project`, config);
+  return response.data;
+};
 
