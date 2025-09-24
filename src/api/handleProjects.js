@@ -108,25 +108,3 @@ export const getPublicProjects = async (user, period_id, projectType) => {
     return response.data;
   };
 
-  export const getPublicProjectsMetadata = async (user, period_id) => {
-    console.log("PERIOD ID")
-    console.log(period_id)
-    let response = null
-    if (user) {
-      const config = {
-        params: {
-            period: period_id
-        },
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-      response = await axios.get(`${BASE_URL}/groups/public-projects-metadata?period=${period_id}`, config);
-    } else {
-      response = await axios.get(`${BASE_URL}/groups/public-projects-metadata?period=${period_id}`);
-    }
-    if (response.status < 200 || response.status >= 300) {
-      return undefined
-    }
-    return response.data.list;
-  };

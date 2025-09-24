@@ -15,8 +15,6 @@ import {
   MenuItem,
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
-import { useParams } from "react-router-dom";
-import { getPublicProjectsMetadata } from "../../../../../api/handleProjects";
 
 const ContentPublicPdfProjects = ({
   loadingProjects,
