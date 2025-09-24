@@ -44,7 +44,7 @@ export const getProjects = async (user, period_id, projectType) => {
   return response.data;
 };
 
-export const getPublicProjects = async (user, period_id, projectType) => {
+export const getPublicProjects = async (user, period_id) => {
   const config = config(period_id, user);
   const response = await axios.get(`${BASE_URL}/groups/public-final-project`, config);
   return response.data;

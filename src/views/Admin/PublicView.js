@@ -27,8 +27,7 @@ const PublicPDFView = () => {
       setLoadingFinalProjects(true);
       const finalProjectsData = await getPublicProjects(
         user,
-        period,
-        'final'
+        period
       );
       if (finalProjectsData) {
         setDeliveries(finalProjectsData);
