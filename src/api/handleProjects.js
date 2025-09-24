@@ -2,9 +2,21 @@ import axios from "axios";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
+
+function _config(period_id, user) {
+  return {
+    params: {
+      period: period_id
+    },
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
+}
+
 export const downloadProject = async (groupId, user, period_id, projectType, groupNumber) => {
-  const projectName = projectType === 'final' ? 'final-project' : 'initial-project';
-  const fileName = projectType === 'final' ? `EntregaFinal_equipo${groupNumber}.pdf` : `EntregaInicial_equipo${groupNumber}.pdf`;
+  const projectName = projectType;
+  const fileName = projectType === 'final-project' ? `EntregaFinal_equipo${groupNumber}.pdf` : `EntregaInicial_equipo${groupNumber}.pdf`;
 
   try {
     const url = await fetchUrlForProject(groupId, projectName, user, period_id);
@@ -38,29 +50,17 @@ export const fetchProjectPdf = async (groupId, user, period_id, projectType) => 
 };
 
 export const getProjects = async (user, period_id, projectType) => {
-  const projectName = projectType === 'final' ? 'final-project' : 'initial-project';
-  const config = config(period_id, user);
+  const projectName = projectType;
+  const config = _config(period_id, user);
   const response = await axios.get(`${BASE_URL}/groups/${projectName}`, config);
   return response.data;
 };
 
 export const getPublicProjects = async (user, period_id) => {
-  const config = config(period_id, user);
+  const config = _config(period_id, user);
   const response = await axios.get(`${BASE_URL}/groups/public-final-project`, config);
   return response.data;
 };
-
-function config(period_id, user) {
-  return {
-    params: {
-      period: period_id
-    },
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-  };
-}
-
 async function fetchUrlForProject(groupId, projectName, user, period_id) {
   const CONFIG_BLOB = {
     params: {
@@ -71,13 +71,8 @@ async function fetchUrlForProject(groupId, projectName, user, period_id) {
     },
     responseType: 'blob', // Esto asegura que la respuesta se maneje como un archivo binario
   };
-  // Realiza la solicitud GET para obtener el archivo
   const response = await axios.get(`${BASE_URL}/groups/${groupId}/${projectName}`, CONFIG_BLOB);
-
-  // Crea un blob a partir de la respuesta
   const blob = new Blob([response.data], { type: response.headers['content-type'] });
-
-  // Crea una URL para el blob
   const url = window.URL.createObjectURL(blob);
   return url;
 }

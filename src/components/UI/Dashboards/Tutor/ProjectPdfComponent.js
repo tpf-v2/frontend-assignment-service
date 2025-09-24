@@ -1,6 +1,6 @@
 import { Button, Typography } from "@mui/material";
 import { Box, styled } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { downloadProject, fetchProjectPdf } from "../../../../api/handleProjects";
 
@@ -35,7 +35,7 @@ const ProjectPdfComponent = ({ groupId, groupNumber, projectType }) => {
   const downloadFile = async () => {
     try {
       // Llama a la función genérica para descargar el proyecto (inicial o final)
-      const projectKey = projectType === "Anteproyecto" ? 'initial' : 'final';
+      const projectKey = projectType === "Anteproyecto" ? 'initial-project' : 'final-project';
       await downloadProject(groupId, user, period.id, projectKey, groupNumber);
     } catch (error) {
       console.error("Error al descargar el archivo:", error);

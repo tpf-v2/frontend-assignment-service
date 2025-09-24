@@ -41,7 +41,7 @@ const PublicPDFView = () => {
 
     const downloadFinalFile = async (groupId, groupNumber) => {
       try {
-        await downloadProject(groupId, user, period, "final", groupNumber);
+        await downloadProject(groupId, user, period, "final-project", groupNumber);
       } catch (error) {
         console.error("Error al descargar el archivo:", error);
       }
