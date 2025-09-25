@@ -4,7 +4,9 @@ import ParentTable from '../ParentTable';
 import { useSelector } from "react-redux";
 import { TableType } from '../TableType';
 
-const StudentsTable = () => {
+const StudentsTable = ({dataListToRender = []}) => {
+  // Este dataListToRender es opcional, para la pantalla de Estudiantes no se usa, pero
+  // se agrega para poder pasarle una lista y no tener que llamar al endpoint
   const period = useSelector((state) => state.period);
   const endpoint = `/students/?period=${period.id}`; // Replace with your endpoint
   const title = TableType.STUDENTS;
@@ -28,10 +30,25 @@ const StudentsTable = () => {
       <TableCell>{item.email}</TableCell>
     </>
   );
+
+  // Si tiene elementos, la estoy llamando para la Verificación previa a algoritmos,
+  // y no quiero que haga ningún fetch
+  if (dataListToRender.length > 0) {
+    return (
+      <ParentTable title={title} columns={columns} rowKeys={rowKeys} renderRow={renderRow} items={students}/>
+    );
+  } else {
+    // Si está vacía, es el uso por defecto que ya existía, es para mostrar tabla de Estudiantes
+    return (
+      // Aux pruebo a ver cómo se rompe:
+      <ParentTable title={title} columns={columns} rowKeys={rowKeys} renderRow={renderRow} items={students}/>
+
+
+      // Esta de acá abajo es la línea de verdaddddd, conservar la línea de acá abajo
+      //<ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} items={students}/>
+    );
+  }
   
-  return (
-    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} items={students}/>
-  );
 };
 
 export default StudentsTable;

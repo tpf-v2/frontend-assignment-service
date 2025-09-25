@@ -84,7 +84,7 @@ const ParentTable = ({
   const tutorsWithoutCapacityField = Object.values(useSelector((state) => state.tutors))
   .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
   .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
-  const tutors = addCapacityToTutors(tutorsWithoutCapacityField, period);
+  const tutors = addCapacityToTutors(tutorsWithoutCapacityField, period);  
 
   csvRowKeys = csvRowKeys || rowKeys;
   csvColumns = csvColumns || columns;
@@ -92,15 +92,23 @@ const ParentTable = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseData = await getTableData(endpoint, user);
-        if (title === TableType.TUTORS){
-          const tutorsWithCapacityField = addCapacityToTutors(responseData, period);
-          setData(tutorsWithCapacityField);
-        } else {
-          setData(responseData);
+        // Seteamos items para usar eso como valor inicial antes de hacer fetch
+        setData(items);
+
+        // Si sí hay endpoint, actualizamos la data
+        if (endpoint){
+          const responseData = await getTableData(endpoint, user);
+
+          if (title === TableType.TUTORS){
+            const tutorsWithCapacityField = addCapacityToTutors(responseData, period);
+            setData(tutorsWithCapacityField);
+          } else {
+            setData(responseData);
+          }          
         }
         
         setLoading(false);
+
       } catch (error) {
         console.error("Error fetching data:", error);
         setLoading(false); // Handle error
