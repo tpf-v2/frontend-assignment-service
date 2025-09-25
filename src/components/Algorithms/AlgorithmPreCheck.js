@@ -1,5 +1,6 @@
 import React from "react";
 import { Grid, Typography } from "@mui/material";
+import StudentsTable from "../UI/Tables/ChildTables/StudentsTable";
 
 const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm}) => {  
   if (!inputInfo) return;
@@ -25,7 +26,7 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm}) => {
       msg = "Ocurrió un error inesperado al mostrar información";
     }
   }
-    
+
   return (
     <>
     <Grid item xs={12} md={12} sx={{ display: "flex" }}>
@@ -43,6 +44,17 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm}) => {
       <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
         <Typography variant="body1" sx={{ textAlign: "justify" }}>
           {msg}
+        </Typography>
+      </Grid>
+
+      {/* VER dónde poner esto, lo pongo acá para probar
+        - Poner esto acá va a obviamente romper el caso de fechas (que igual no mostraba nada)
+          solo estoy probando */}
+      <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
+        <Typography variant="body1" sx={{ textAlign: "justify" }}>
+          Quiénes son
+          <StudentsTable dataListToRender={inputInfo} />
+      
         </Typography>
       </Grid>
       </>
