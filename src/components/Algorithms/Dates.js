@@ -35,7 +35,7 @@ import { togglePeriodSetting } from "../../redux/slices/periodSlice";
 import updatePeriod from "../../api/updatePeriod";
 import ResultsDialog from "./Dates/ResultsDialog";
 
-import { getInputAnalysis } from "../Forms/AlgorithmInputAnalysis"
+import { getInputAnalysis } from "../../api/handleAlgorithmAnalysis";
 import AlgorithmPreCheck from "./AlgorithmPreCheck";
 
 const evaluatorColors = [
@@ -562,7 +562,7 @@ const Dates = () => {
       <Grid container spacing={2}>
         {/* Descripción */}
         <Description />
-        {/* Probandooooo, Verificación Previa */}
+        {/* Verificación Previa */}
         <AlgorithmPreCheck inputInfo={inputInfo} algorithm={"Dates"}/>        
 
         {/* Botones Correr */}

@@ -19,7 +19,7 @@ import {
   DialogActions,
 } from "@mui/material";
 import { incompleteGroups } from "../../api/assignments";
-import { getInputAnalysis } from "../Forms/AlgorithmInputAnalysis"
+import { getInputAnalysis } from "../../api/handleAlgorithmAnalysis";
 
 import { useDispatch, useSelector } from "react-redux";
 import { getGroups } from "../../api/getGroups";
@@ -154,12 +154,9 @@ const IncompleteGroups = () => {
           </Typography>
         </Grid>
 
-
-        {/* Inicio Veamos el input del algoritmo antes de ejecutarlo (hay que mejorar la ui, ya sé) */}
-          {/* <FormAnswersTable />*/}          
+        {/* Verificación Previa */}
+          {/* <FormAnswersTable />*/}
         <AlgorithmPreCheck initialDescription={preCheckMsg} inputInfo={inputInfo} algorithm={"IncompleteTeams"}/>        
-        {/* Fin Veamos el input del algoritmo antes de ejecutarlo */}
-
         
         {/* Botones Correr, Editar */}
         <Grid
