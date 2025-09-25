@@ -1,10 +1,18 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Paper, Typography } from "@mui/material";
 import { Container, styled } from "@mui/system";
 import GroupDataTable from "../../../Algorithms/GroupDataTable";
 
-const GroupsTable = () => {
+const GroupsTable = ({dataListToRender=[]}) => {
   const title = "Equipos";
+  const period = useSelector((state) => state.period);
+  const endpoint = `/groups/?period=${period.id}`;
+
+  const teams = Object.values(useSelector((state) => state.groups))
+  .sort((a, b) => a.group_number - b.group_number)
+  .map(({ version, rehydrated, ...rest }) => rest)
+  .filter((item) => Object.keys(item).length > 0);
 
   const Title = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(3),
@@ -21,16 +29,32 @@ const GroupsTable = () => {
     backgroundColor: "#ffffff",
     boxShadow: theme.shadows[3],
   }));
-  return (
-    // <ParentTable title={title} columns={columns} endpoint={endpoint} renderRow={renderRow} />
-    <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>
-      <Root>
-        <Title variant="h4">{title}</Title>
 
-        <GroupDataTable />
-      </Root>
-    </Container>
-  );
+
+  // Si tiene elementos, la estoy llamando para la Verificación previa a algoritmos,
+  // y no quiero que haga ningún fetch
+  if (dataListToRender.length > 0) {
+    return (
+      <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>
+        <Root>
+          <Title variant="h4">{title}</Title>
+
+          <GroupDataTable items={dataListToRender}/>
+        </Root>
+      </Container>
+    );
+  } else {
+    // Si está vacía, es el uso por defecto que ya existía, es para mostrar tabla de Estudiantes
+    return (
+      <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>
+        <Root>
+          <Title variant="h4">{title}</Title>
+
+          <GroupDataTable endpoint={endpoint} items={teams}/>
+        </Root>
+      </Container>
+    );
+  }
 };
 
 export default GroupsTable;

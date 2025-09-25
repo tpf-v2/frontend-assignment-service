@@ -28,7 +28,7 @@ import { getTableData } from "../../api/handleTableData";
 import AddIcon from "@mui/icons-material/Add";
 
 // Componente para la tabla de equipos
-const GroupDataTable = () => {
+const GroupDataTable = ({endpoint, items}) => {
   const period = useSelector((state) => state.period);
 
   // Obtener la lista de topics desde Redux
@@ -40,11 +40,6 @@ const GroupDataTable = () => {
     .map(({ version, rehydrated, ...rest }) => rest)
     .filter((item) => Object.keys(item).length > 0);
 
-  const groups = Object.values(useSelector((state) => state.groups))
-    .sort((a, b) => a.group_number - b.group_number)
-    .map(({ version, rehydrated, ...rest }) => rest)
-    .filter((item) => Object.keys(item).length > 0);
-
   const students = Object.values(useSelector((state) => state.students))
   .map(({ version, rehydrated, ...rest }) => rest)
   .filter(item => Object.keys(item).length > 0);
@@ -53,7 +48,9 @@ const GroupDataTable = () => {
   const [loading, setLoading] = useState(true);
 
   const [allTopics, setAllTopics] = useState({csvTopics: topics, customTopics: []});
-  const [data, setData] = useState(groups); // teams
+  
+  // Valor inicial lo recibido por props
+  const [data, setData] = useState(items); // data es la lista de teams a mostrar en la tabla
 
   const [showExtraColumns, setShowExtraColumns] = useState(false);
 
@@ -69,27 +66,26 @@ const GroupDataTable = () => {
   const [openAddModal, setOpenAddModal] = useState(false);
 
   // useEffect
-  const endpoint = `/groups/?period=${period.id}`;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseData = await getTableData(endpoint, user); // TEAMS
+        // Si hay endpoint, hacemos request y actualizamos
+        if (endpoint) {
+          const responseData = await getTableData(endpoint, user); // TEAMS
+          setData(responseData);
+        }
 
-        console.log("groups recibidos:", groups.map(g => ({id: g.id, "topic.id": g.topic?.id})));
-        
         // Minor 'fix' xq admin envía tema copypasteado en csv (con != tutor) queda id repetido y eso rompe búsqueda de Autocomplete
         const uniqueTopics = Array.from(
           new Map((topics ?? []).map(t => [t.id, t])).values()
         );
         // Workaround a que el back no los devuelva: temas de "Ya tengo tema y tutor":
-        const customTopics = groups?.filter(team => !topics.some(t => t.id === team.topic?.id))
+        const customTopics = data?.filter(team => !topics.some(t => t.id === team.topic?.id))
         .map(team => team.topic);
-        setAllTopics({csvTopics: uniqueTopics, customTopics: customTopics});
+        setAllTopics({csvTopics: uniqueTopics, customTopics: customTopics});        
+        //console.log("--- uniqueTopics:", uniqueTopics);
 
-        console.log("--- uniqueTopics:", uniqueTopics);
-              
-        setData(responseData);
         setLoading(false);
 
       } catch (error) {

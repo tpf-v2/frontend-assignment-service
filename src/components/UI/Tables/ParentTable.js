@@ -63,7 +63,10 @@ const ParentTable = ({
   enableEdit = true,
   enableDelete = true,
 }) => {
-  const [data, setData] = useState([]);
+  // Data es la lista de elementos (estudiantes / tutores / temas / respuestas) a mostrar en la tabla
+  // Seteamos items para usar eso como valor inicial antes de hacer fetch
+  const [data, setData] = useState(items);
+
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -92,9 +95,6 @@ const ParentTable = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Seteamos items para usar eso como valor inicial antes de hacer fetch
-        setData(items);
-
         // Si sí hay endpoint, actualizamos la data
         if (endpoint){
           const responseData = await getTableData(endpoint, user);
