@@ -2,9 +2,9 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Paper, Typography } from "@mui/material";
 import { Container, styled } from "@mui/system";
-import GroupDataTable from "../../../Algorithms/GroupDataTable";
+import TeamDataTable from "../../../Algorithms/GroupDataTable";
 
-const GroupsTable = ({dataListToRender=[]}) => {
+const TeamsTable = ({dataListToRender=[]}) => {
   const title = "Equipos";
   const period = useSelector((state) => state.period);
   const endpoint = `/groups/?period=${period.id}`;
@@ -39,7 +39,7 @@ const GroupsTable = ({dataListToRender=[]}) => {
         <Root>
           <Title variant="h4">{title}</Title>
 
-          <GroupDataTable items={dataListToRender}/>
+          <TeamDataTable items={dataListToRender}/>
         </Root>
       </Container>
     );
@@ -50,11 +50,11 @@ const GroupsTable = ({dataListToRender=[]}) => {
         <Root>
           <Title variant="h4">{title}</Title>
 
-          <GroupDataTable endpoint={endpoint} items={teams}/>
+          <TeamDataTable endpoint={endpoint} items={teams}/>
         </Root>
       </Container>
     );
   }
 };
 
-export default GroupsTable;
+export default TeamsTable;

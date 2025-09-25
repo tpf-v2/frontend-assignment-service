@@ -28,7 +28,7 @@ import { getTableData } from "../../api/handleTableData";
 import AddIcon from "@mui/icons-material/Add";
 
 // Componente para la tabla de equipos
-const GroupDataTable = ({endpoint, items}) => {
+const TeamDataTable = ({endpoint, items}) => {
   const period = useSelector((state) => state.period);
 
   // Obtener la lista de topics desde Redux
@@ -609,4 +609,4 @@ const GroupDataTable = ({endpoint, items}) => {
   )
 };
 
-export default GroupDataTable;
+export default TeamDataTable;
