@@ -563,7 +563,7 @@ const Dates = () => {
         {/* Descripción */}
         <Description />
         {/* Probandooooo, Verificación Previa */}
-        <AlgorithmPreCheck inputInfo={inputInfo} msg={"equipos que no completaron su disponibilidad"}/>        
+        <AlgorithmPreCheck inputInfo={inputInfo} algorithm={"Dates"}/>        
 
         {/* Botones Correr */}
         <ButtonSection

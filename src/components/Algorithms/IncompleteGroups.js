@@ -57,9 +57,9 @@ const IncompleteGroups = () => {
   //"/input-analyzers"
   
   const endpoint = "/incomplete_teams_algorithm_input_info"
-  const preCheckMsg = "Este algoritmo utiliza las respuestas al formulario de equipos\
-                      (Preferencias / Ya tengo tema y tutor) como input,\
-                      para completar los equipos en base a sus preferencias."
+  // (Esta sintaxis del '+' es solo para hacer un salto de línea en el ide, no afecta al renderizado)
+  const preCheckMsg = `Este algoritmo utiliza las respuestas al formulario de equipos`+
+        ` (Preferencias / Ya tengo tema y tutor) como input, para completar los equipos en base a sus preferencias.`
   useEffect(() => {
     const getInputInfo = async () => {
       try {
@@ -157,7 +157,7 @@ const IncompleteGroups = () => {
 
         {/* Inicio Veamos el input del algoritmo antes de ejecutarlo (hay que mejorar la ui, ya sé) */}
           {/* <FormAnswersTable />*/}          
-        <AlgorithmPreCheck initialDescription={preCheckMsg} inputInfo={inputInfo} msg={"estudiantes que no están en respuestas al formulario de equipos en ninguna de sus variantes"}/>        
+        <AlgorithmPreCheck initialDescription={preCheckMsg} inputInfo={inputInfo} algorithm={"IncompleteTeams"}/>        
         {/* Fin Veamos el input del algoritmo antes de ejecutarlo */}
 
         
