@@ -66,6 +66,7 @@ const TeamDataTable = ({endpoint, items}) => {
   const [openAddModal, setOpenAddModal] = useState(false);
 
   // useEffect
+  console.log("--- Probando data:", data);
 
   useEffect(() => {
     const fetchData = async () => {

@@ -96,7 +96,7 @@ const ParentTable = ({
     const fetchData = async () => {
       try {
         // Si sí hay endpoint, actualizamos la data
-        if (endpoint){
+        if (endpoint) {
           const responseData = await getTableData(endpoint, user);
 
           if (title === TableType.TUTORS){
@@ -123,7 +123,7 @@ const ParentTable = ({
     const addTutorCapacityField = () => {      
       if (title === TableType.TUTORS) {
         if (!data) {
-          // Seteo inicial xq hasta ahora data no vale nada
+          // Seteo inicial, con campo capacity
           // Así que agrego capacity a 'items'
           const tutorsWithCapacityField = addCapacityToTutors(items, period);
           setData(tutorsWithCapacityField);
