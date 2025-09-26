@@ -114,25 +114,27 @@ const Dates = () => {
   const [inputInfo, setInputInfo] = useState();
 
   const dispatch = useDispatch();
-  
-  // Análsis del input, previo a ejecutar
-  const endpoint = "/dates_algorithm_input_info"
-  useEffect(() => {
-    const getInputInfo = async () => {
-      try {
-        const data = await getInputAnalysis(endpoint, period.id, user);        
-        setInputInfo(data);
-
-      } catch (error) {
-        console.error("Error al obtener datos del input:", error);
-      }
-    };
-    getInputInfo();
-  }, [user, period]);
 
   // Fechas
 
   useEffect(() => {
+    
+    // Análsis del input del algoritmo, previo a ejecutarlo
+    const getInputInfo = async () => {
+      const endpoint = "/dates_algorithm_input_info"
+      try {
+        setLoadingDates(true);
+        const data = await getInputAnalysis(endpoint, period.id, user);        
+        setInputInfo(data);
+        console.log("--- seteo input info:", data);
+
+      } catch (error) {
+        setLoadingDates(false);
+        console.error("Error al obtener datos del input:", error);
+      }
+    };   
+
+    // Fechas
     const fetchData = async () => {
       setLoadingDates(true);
       try {
@@ -168,12 +170,16 @@ const Dates = () => {
         }
       } catch (error) {
         console.error("Error fetching assigned dates:", error);
+        setLoadingDates(false);
       }
-      setLoadingDates(false);
     };
 
+    // Dos acciones, cada una setea loading a false en caso de error, y en caso de éxito se
+    // lo setea en false recién acá abajo al final de las dos para esperar a ambas
     fetchData();
-  }, []);
+    getInputInfo();    
+    setLoadingDates(false);
+  }, [period, user]);
 
   // Transforma datesResult en eventos para el calendario
   useEffect(() => {
@@ -556,6 +562,8 @@ const Dates = () => {
       setModalOpen(false);
     }
   };
+
+  console.log("--- la input info quedó, pre return jsx:", inputInfo);
 
   return (
     <Box sx={{ padding: 3 }}>

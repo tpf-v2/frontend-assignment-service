@@ -32,6 +32,8 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm}) => {
     }
   }
 
+  console.log("--- inputInfo:", inputInfo);
+
   return (
     <>
     <Grid item xs={12} md={12} sx={{ display: "flex" }}>
@@ -54,9 +56,7 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm}) => {
       </Grid>      
 
       <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
-        <Typography variant="body1" sx={{ textAlign: "justify" }}>
-          {showWhoComponent}      
-        </Typography>
+        {showWhoComponent}
       </Grid>
       </>
     )}
