@@ -399,6 +399,36 @@ const TeamDataTable = ({
     URL.revokeObjectURL(url);
   };
 
+  const copyEmailsToClipboard = async () => {
+
+    try {
+      const displayedEmails = filteredTeams
+      .flatMap(team => team.students.map(student => student.email)) // dentro del paréntesis hay un array de emails por equipo => flatmap
+      .filter(Boolean); // el filter elimina undefined/null
+      console.log("--- displayedEmails:", displayedEmails);
+
+      await navigator.clipboard.writeText(displayedEmails.join(", "));
+      setNotification({
+        open: true,
+        message: `Copiado al portapapeles`,
+        status: "success",
+      });
+      // Con esto logramos que el alert no aparezca antes que la notif (pasa, sin timeout, por funcionamiento de react)
+      setTimeout(() => {
+        alert("Emails copiados!");
+      }, 0);
+
+
+    } catch (err) {
+      console.error("Error al copiar al portapapeles:", err);
+      setNotification({
+        open: true,
+        message: `Error al copiar al portapapeles`,
+        status: "error",
+      });
+    }
+  };
+
   console.log("--- filteredTeams:", filteredTeams);
 
   return (
@@ -430,6 +460,15 @@ const TeamDataTable = ({
               >
                 Descargar CSV
               </Button>
+
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={copyEmailsToClipboard}
+                sx={{ ml: "auto" }} // ml empuja hacia la derecha (al gap lo maneja el último de la derecha)
+              >
+                Copiar emails al portapapeles
+              </Button>              
 
               {enableFilterButtons && (
                 <>
