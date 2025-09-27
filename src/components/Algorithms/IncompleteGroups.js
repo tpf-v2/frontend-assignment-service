@@ -28,7 +28,6 @@ import { togglePeriodSetting } from "../../redux/slices/periodSlice";
 import updatePeriod from "../../api/updatePeriod";
 import { useNavigate } from "react-router-dom";
 import AlgorithmPreCheck from "./AlgorithmPreCheck";
-//import FormAnswersTable from "../UI/Tables/ChildTables/FormAnswersTable";
 
 const IncompleteGroups = () => {
   const period = useSelector((state) => state.period);

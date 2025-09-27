@@ -62,6 +62,7 @@ const ParentTable = ({
   csvRowKeys,
   enableEdit = true,
   enableDelete = true,
+  enableAdd = true,
 }) => {
   // Data es la lista de elementos (estudiantes / tutores / temas / respuestas) a mostrar en la tabla
   // Seteamos items para usar eso como valor inicial antes de hacer fetch
@@ -348,7 +349,7 @@ const ParentTable = ({
             </Button>
             {/* {(AddButtonComponent && topicsCond) && <AddButtonComponent />} */}
 
-            {title !== TableType.RESPONSES && (
+            {title !== TableType.RESPONSES && enableAdd && (
               <Box>
                 <Fab
                   size="small"

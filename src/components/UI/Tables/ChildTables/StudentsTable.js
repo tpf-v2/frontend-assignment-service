@@ -35,7 +35,11 @@ const StudentsTable = ({dataListToRender = []}) => {
   // y no quiero que haga ningún fetch
   if (dataListToRender.length > 0) {
     return (
-      <ParentTable title={title} columns={columns} rowKeys={rowKeys} renderRow={renderRow} items={dataListToRender}/>
+      <ParentTable columns={columns} rowKeys={rowKeys} renderRow={renderRow}
+                    items={dataListToRender}
+                    enableEdit={false}
+                    //enableDelete={false}
+                    enableAdd={false}/>
     );
   } else {
     // Si está vacía, es el uso por defecto que ya existía, es para mostrar tabla de Estudiantes
