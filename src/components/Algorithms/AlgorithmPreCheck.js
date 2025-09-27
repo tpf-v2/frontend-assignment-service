@@ -12,8 +12,8 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
   switch (algorithm) {
     case "IncompleteTeams": {
       msg = inputInfo.length === 0 ? "Todos/as los/as estudiantes forman parte de alguna respuesta al formulario."
-      : inputInfo.length === 1 ? "Existe 1 estudiante que no está en respuestas al formulario de equipos en ninguna de sus variantes."
-      : `Existen ${inputInfo.length} estudiantes que no están en respuestas al formulario de equipos en ninguna de sus variantes.`
+      : inputInfo.length === 1 ? "Existe 1 estudiante que no está en respuestas al formulario de equipos en ninguna de sus variantes:"
+      : `Existen ${inputInfo.length} estudiantes que no están en respuestas al formulario de equipos en ninguna de sus variantes:`
 
       showWhoList = inputInfo;
       showWhoComponent = <StudentsTable dataListToRender={showWhoList} />;
@@ -25,8 +25,8 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
       
       msg = inputInfo.admin_slots ? (
         inputInfo.teams?.length === 0 ? "Todos los equipos completaron su disponibilidad."
-        : inputInfo.teams?.length === 1 ? "Existe 1 equipo que no completó su disponibilidad."
-        : `Existen ${inputInfo.teams?.length} equipos que no completaron su disponibilidad.`
+        : inputInfo.teams?.length === 1 ? "Existe 1 equipo que no completó su disponibilidad:"
+        : `Existen ${inputInfo.teams?.length} equipos que no completaron su disponibilidad:`
       ) : (
         <>
           Primero se debe cargar las fechas disponibles desde la sección {""}
