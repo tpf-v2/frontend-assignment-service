@@ -322,7 +322,38 @@ const ParentTable = ({
   });
 
   if (loading) return <Typography variant="h6">Cargando...</Typography>;
-  const categories = title === TableType.TOPICS ? getCategories(data) : []; // debe ser sobre "data" y no otra variable.
+  const categories = title === TableType.TOPICS ? getCategories(data) : []; // debe ser sobre "data" y no otra variable.    
+
+  const copyEmailsToClipboard = async () => {
+    // Solo seguir para estas dos, que son las que tienen campo email
+    if (title !== TableType.STUDENTS && title!== TableType.TUTORS) return;
+
+    try {
+      const displayedEmails = filteredData.map(item => item.email).filter(Boolean); // el filter elimina undefined/null
+      //console.log("--- displayedEmails:", displayedEmails);
+
+      await navigator.clipboard.writeText(displayedEmails.join(", "));
+      setNotification({
+        open: true,
+        message: `Copiado al portapapeles`,
+        status: "success",
+      });
+      //alert("Emails copiados!");
+      setTimeout(() => {
+        alert("Emails copiados!");
+      }, 0);
+
+
+    } catch (err) {
+      console.error("Error al copiar al portapapeles:", err);
+      setNotification({
+        open: true,
+        message: `Error al copiar al portapapeles`,
+        status: "error",
+      });
+    }
+  };
+    
 
   return (
     <>
@@ -348,7 +379,16 @@ const ParentTable = ({
               Descargar como CSV
             </Button>
             {/* {(AddButtonComponent && topicsCond) && <AddButtonComponent />} */}
-
+            
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={copyEmailsToClipboard}
+              sx={{ marginBottom: 2 }}
+            >
+              Copiar emails al portapapeles
+            </Button>
+            
             {title !== TableType.RESPONSES && enableAdd && (
               <Box>
                 <Fab
