@@ -363,7 +363,7 @@ const ParentTable = ({
           <Title variant="h4">{title}</Title>
           <TextField
             label="Buscar"
-            variant="outlined"
+            variant="outlined"            
             value={searchTerm}
             onChange={handleSearchChange}
             fullWidth
@@ -384,7 +384,7 @@ const ParentTable = ({
               variant="outlined"
               color="primary"
               onClick={copyEmailsToClipboard}
-              sx={{ marginBottom: 2 }}
+              sx={{ ml: "auto", mr: 5 }} // ml empuja hacia la derecha, mr ajusta el espacio al siguiente              
             >
               Copiar emails al portapapeles
             </Button>
