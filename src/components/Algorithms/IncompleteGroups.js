@@ -53,9 +53,8 @@ const IncompleteGroups = () => {
   const handleRun = async () => {
     setOpenConfirmDialog(true); // Muestra el diálogo de confirmación al presionar el botón "Correr"
   };
-
-  //"/input-analyzers"
   
+  // Análsis del input del algoritmo, previo a ejecutarlo
   const endpoint = "/incomplete_teams_algorithm_input_info"
   // (Esta sintaxis del '+' es solo para hacer un salto de línea en el ide, no afecta al renderizado)
   const preCheckMsg = `Este algoritmo utiliza las respuestas al formulario de equipos`+
@@ -155,7 +154,6 @@ const IncompleteGroups = () => {
         </Grid>
 
         {/* Verificación Previa */}
-          {/* <FormAnswersTable />*/}
         <AlgorithmPreCheck initialDescription={preCheckMsg} inputInfo={inputInfo} algorithm={"IncompleteTeams"}/>        
         
         {/* Botones Correr, Editar */}
@@ -179,7 +177,6 @@ const IncompleteGroups = () => {
             Correr
           </Button>
         </Grid>
-        {/* </Paper> */}
       </Grid>
 
       <Grid item xs={12}>
@@ -324,17 +321,6 @@ const IncompleteGroups = () => {
             )}
           </Table>
         </TableContainer>
-
-        {/* <Box
-            sx={{ display: "flex", alignItems: "center", marginLeft: "16px" }}
-          >
-            <Button
-              variant="outlined"
-              onClick={() => navigate(`/dashboard/${period.id}/teams`)}
-            >
-              Ver más información de los equipos
-            </Button>
-          </Box> */}
       </Grid>
 
       {/* Confirm Dialog */}
@@ -394,7 +380,6 @@ const IncompleteGroups = () => {
           )}
         </DialogContent>
       </Dialog>
-      {/* </Grid> */}
     </Box>
   );
 };

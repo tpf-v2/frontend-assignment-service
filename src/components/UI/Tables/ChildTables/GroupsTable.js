@@ -33,7 +33,10 @@ const TeamsTable = ({dataListToRender=[]}) => {
 
   // Si tiene elementos, la estoy llamando para la Verificación previa a algoritmos,
   // y no quiero que haga ningún fetch
+  if (!dataListToRender) return;
+  console.log("---- datalistToRender:", dataListToRender);
   if (dataListToRender.length > 0) {
+    console.log("---- dataListToRender.length > 0");
     return (
       <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>
         <Root>
@@ -43,7 +46,8 @@ const TeamsTable = ({dataListToRender=[]}) => {
         </Root>
       </Container>
     );
-  } else {
+  } if (dataListToRender.length === 0) {
+    console.log("---- dataListToRender.length === 0");
     // Si está vacía, es el uso por defecto que ya existía, es para mostrar tabla de Estudiantes
     return (
       <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>
