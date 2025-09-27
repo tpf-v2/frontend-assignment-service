@@ -444,13 +444,16 @@ const TeamDataTable = ({
               onChange={(e) => setSearchTerm(e.target.value)}
               sx={{ marginBottom: 2 }}
             />
-            <Box
+            
+            {/* Botones */}
+            <Box            
               sx={{ 
                 display: 'flex', 
                 justifyContent: 'space-between', 
+                gap: 2,
                 marginBottom: 2 
               }}
-            >
+            >              
               
               <Button
                 variant="contained"
@@ -465,11 +468,33 @@ const TeamDataTable = ({
                 variant="outlined"
                 color="primary"
                 onClick={copyEmailsToClipboard}
-                sx={{ ml: "auto" }} // ml empuja hacia la derecha (al gap lo maneja el último de la derecha)
+                sx={{ ml: "auto" }} // ml empuja hacia la derecha (al gap lo maneja el último de la derecha o el box)
               >
                 Copiar emails al portapapeles
               </Button>              
 
+              {enableAdd && (
+                <Fab
+                  size="small"
+                  color="primary"
+                  aria-label="add"                  
+                  onClick={() => setOpenAddModal(true)}
+                >
+                  <AddIcon />
+                </Fab>
+              )}
+            </Box>
+            
+            {/* Segunda fila de botones */}
+            <Box
+              sx={{ 
+                display: 'flex', 
+                justifyContent: 'right', 
+                gap: 2,
+                ml: 5,
+                mb: 2
+              }}
+            >
               {enableFilterButtons && (
                 <>
                   <Button
@@ -496,17 +521,6 @@ const TeamDataTable = ({
                     {showExtraColumns ? "Ocultar preferencias" : "Mostrar preferencias"}
                   </Button>
                 </>
-              )}
-
-              {enableAdd && (
-                <Fab
-                  size="small"
-                  color="primary"
-                  aria-label="add"                  
-                  onClick={() => setOpenAddModal(true)}
-                >
-                  <AddIcon />
-                </Fab>
               )}
             </Box>
 
