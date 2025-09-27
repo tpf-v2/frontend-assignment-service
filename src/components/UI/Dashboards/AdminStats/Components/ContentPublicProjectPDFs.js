@@ -51,7 +51,7 @@ const ContentPublicPdfProjects = ({
                     <DownloadIcon />
                     </IconButton>
                   </TableCell>
-                  <TableCell>
+                  <TableCell style={{overflowWrap: "anywhere"}}>
                     <h2>
                     {
                       entrega.project?.final_report_title || `Proyecto Final Equipo ${entrega.group_number}`
