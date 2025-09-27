@@ -4,7 +4,7 @@ import StudentsTable from "../UI/Tables/ChildTables/StudentsTable";
 import TeamsTable from "../UI/Tables/ChildTables/GroupsTable";
 
 const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm}) => {  
-  if (!inputInfo) return;
+  if (!inputInfo) return;  
 
   let msg;
   let showWhoComponent;
@@ -17,12 +17,12 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm}) => {
       showWhoComponent = <StudentsTable dataListToRender={inputInfo} />;
       break;
     }
-    case "Dates": {
-      msg = inputInfo.length === 0 ? "Todos los equipos completaron su disponibilidad."
-      : inputInfo.length === 1 ? "Existe 1 equipo que no completó su disponibilidad."
-      : `Existen ${inputInfo.length} equipos que no completaron su disponibilidad.`
+    case "Dates": {      
+      msg = inputInfo.teams?.length === 0 ? "Todos los equipos completaron su disponibilidad."
+      : inputInfo.teams?.length === 1 ? "Existe 1 equipo que no completó su disponibilidad."
+      : `Existen ${inputInfo.teams?.length} equipos que no completaron su disponibilidad.`
 
-      showWhoComponent = <TeamsTable dataListToRender={inputInfo} />;
+      showWhoComponent = <TeamsTable dataListToRender={inputInfo.teams} />;
 
       break;
     }
@@ -55,7 +55,7 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm}) => {
         </Typography>
       </Grid>      
 
-      {inputInfo?.length > 0 && (<Grid item xs={12} md={12} sx={{ display: "flex" }}>  
+      {inputInfo?.teams?.length > 0 && (<Grid item xs={12} md={12} sx={{ display: "flex" }}>  
         {showWhoComponent}
       </Grid>)}
       </>
