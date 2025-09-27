@@ -384,7 +384,7 @@ const ParentTable = ({
               variant="outlined"
               color="primary"
               onClick={copyEmailsToClipboard}
-              sx={{ ml: "auto", mr: 5 }} // ml empuja hacia la derecha, mr ajusta el espacio al siguiente              
+              sx={{ ml: "auto" }} // ml empuja hacia la derecha (al gap lo maneja el último de la derecha)
             >
               Copiar emails al portapapeles
             </Button>
@@ -396,6 +396,7 @@ const ParentTable = ({
                   color="primary"
                   aria-label="add"                  
                   onClick={() => setOpenAddModal(true)}
+                  sx={{ ml: 5 }} // ml ajusta el espacio al siguiente de su izquierda
                 >
                   <AddIcon />
                 </Fab>
