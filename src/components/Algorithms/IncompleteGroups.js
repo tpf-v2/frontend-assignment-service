@@ -22,7 +22,7 @@ import { incompleteTeams } from "../../api/assignments";
 import { getInputAnalysis } from "../../api/handleAlgorithmAnalysis";
 
 import { useDispatch, useSelector } from "react-redux";
-import { getTeams } from "../../api/getGroups";
+import { getTeams } from "../../api/getTeams";
 import { setGroups } from "../../redux/slices/groupsSlice";
 import { togglePeriodSetting } from "../../redux/slices/periodSlice";
 import updatePeriod from "../../api/updatePeriod";
