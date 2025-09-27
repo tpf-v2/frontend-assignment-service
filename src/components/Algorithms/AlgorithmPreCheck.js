@@ -55,9 +55,9 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm}) => {
         </Typography>
       </Grid>      
 
-      <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
+      {inputInfo?.length > 0 && (<Grid item xs={12} md={12} sx={{ display: "flex" }}>  
         {showWhoComponent}
-      </Grid>
+      </Grid>)}
       </>
     )}
   </>
