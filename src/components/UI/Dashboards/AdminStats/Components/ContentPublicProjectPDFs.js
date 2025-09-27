@@ -1,18 +1,13 @@
-import { useState, useEffect } from "react";
 import {
   Box,
   TableContainer,
   Table,
-  TableHead,
   TableRow,
   TableCell,
   TableBody,
   CircularProgress,
-  Grid,
   Paper,
   IconButton,
-  Select,
-  MenuItem,
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 
@@ -39,20 +34,6 @@ const ContentPublicPdfProjects = ({
     <div>
       <TableContainer component={Paper} style={{ marginTop: "20px" }}>
         <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ fontWeight: "bold" }}>Equipo</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Tutor</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Título</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>
-                Descipción
-              </TableCell>
-              {projectType === "initial" && (
-                <TableCell sx={{ fontWeight: "bold" }}>Revisor</TableCell>
-              )}
-              <TableCell sx={{ fontWeight: "bold" }}>Descargar</TableCell>
-            </TableRow>
-          </TableHead>
           <TableBody>
             {loadingProjects ? (
               <TableRow>
@@ -63,29 +44,27 @@ const ContentPublicPdfProjects = ({
             ) : (
               deliveries.map((entrega, index) => (
                 <TableRow key={index}>
-                  <TableCell>{entrega.group_number}</TableCell>
-                  <TableCell>
-                    { entrega.project.tutor_name.name + " " + entrega.project.tutor_name.last_name }
-                  </TableCell>
-                  <TableCell>
-                    {
-                      entrega.project?.final_report_title || `Proyecto Final Equipo ${entrega.group_number}`
-                    }
-                  </TableCell>
-
-                  <TableCell>
-                    {
-                      entrega.project.final_report_summary
-                      ? entrega.project.final_report_summary 
-                      : <p style={{ fontStyle: 'italic' }}> {"Sin descripción"} </p>
-                    }
-                  </TableCell>
                   <TableCell>
                     <IconButton
                       onClick={() => downloadFile(entrega.project.id, entrega.group_number)}
                     >
-                      <DownloadIcon />
+                    <DownloadIcon />
                     </IconButton>
+                  </TableCell>
+                  <TableCell>
+                    <h2>
+                    {
+                      entrega.project?.final_report_title || `Proyecto Final Equipo ${entrega.group_number}`
+                    }
+                    </h2>
+                    <p>{ "Tutor: " + entrega.project.tutor_name.name + " " + entrega.project.tutor_name.last_name }</p>
+                    <p style={entrega.project.final_report_summary ? {} : { fontStyle: 'italic' }}>
+                    { 
+                        entrega.project.final_report_summary
+                        ? entrega.project.final_report_summary 
+                        : "Sin descripción"
+                    }
+                    </p>
                   </TableCell>
                 </TableRow>
               ))
