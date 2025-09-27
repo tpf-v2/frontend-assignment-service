@@ -17,10 +17,13 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm}) => {
       showWhoComponent = <StudentsTable dataListToRender={inputInfo} />;
       break;
     }
-    case "Dates": {      
-      msg = inputInfo.teams?.length === 0 ? "Todos los equipos completaron su disponibilidad."
+    case "Dates": {
+
+      msg = inputInfo.admin_slots ? (
+        inputInfo.teams?.length === 0 ? "Todos los equipos completaron su disponibilidad."
       : inputInfo.teams?.length === 1 ? "Existe 1 equipo que no completó su disponibilidad."
       : `Existen ${inputInfo.teams?.length} equipos que no completaron su disponibilidad.`
+      ) : "Primero se debe cargar las fechas disponibles desde la sección Disponibilidad Fechas de Presentación."
 
       showWhoComponent = <TeamsTable dataListToRender={inputInfo.teams} />;
 
