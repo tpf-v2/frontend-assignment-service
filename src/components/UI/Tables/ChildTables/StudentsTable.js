@@ -37,7 +37,8 @@ const StudentsTable = ({dataListToRender = []}) => {
     return (
       <ParentTable
         columns={columns} rowKeys={rowKeys} renderRow={renderRow}
-        items={dataListToRender}
+        title={TableType.EMBEDDEDNOTITLE}
+        items={dataListToRender}        
         enableEdit={false}
         enableDelete={false} // Consistencia con Verificación previa de equipos (no existe delete teams)
         enableAdd={false}

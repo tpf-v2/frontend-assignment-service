@@ -325,8 +325,8 @@ const ParentTable = ({
   const categories = title === TableType.TOPICS ? getCategories(data) : []; // debe ser sobre "data" y no otra variable.    
 
   const copyEmailsToClipboard = async () => {
-    // Solo seguir para estas dos, que son las que tienen campo email
-    if (title !== TableType.STUDENTS && title!== TableType.TUTORS) return;
+    // Solo seguir para estas dos (y embedded), que son las que tienen campo email    
+    if (title !== TableType.STUDENTS && title!== TableType.TUTORS && !TableType.EMBEDDEDNOTITLE) return;
 
     try {
       const displayedEmails = filteredData.map(item => item.email).filter(Boolean); // el filter elimina undefined/null
@@ -338,7 +338,7 @@ const ParentTable = ({
         message: `Copiado al portapapeles`,
         status: "success",
       });
-      //alert("Emails copiados!");
+      // Con esto logramos que el alert no aparezca antes que la notif (pasa, sin timeout, por funcionamiento de react)
       setTimeout(() => {
         alert("Emails copiados!");
       }, 0);
@@ -360,7 +360,7 @@ const ParentTable = ({
       <Container maxWidth="lg">
         <Root>
           {/* --- Header --- */}
-          <Title variant="h4">{title}</Title>
+          { title !== TableType.EMBEDDEDNOTITLE && (<Title variant="h4">{title}</Title>)}
           <TextField
             label="Buscar"
             variant="outlined"            
@@ -378,7 +378,6 @@ const ParentTable = ({
             <Button variant="contained" color="primary" onClick={downloadCSV}>
               Descargar como CSV
             </Button>
-            {/* {(AddButtonComponent && topicsCond) && <AddButtonComponent />} */}
             
             <Button
               variant="outlined"
