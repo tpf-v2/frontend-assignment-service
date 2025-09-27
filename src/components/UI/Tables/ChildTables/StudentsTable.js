@@ -35,11 +35,13 @@ const StudentsTable = ({dataListToRender = []}) => {
   // y no quiero que haga ningún fetch
   if (dataListToRender.length > 0) {
     return (
-      <ParentTable columns={columns} rowKeys={rowKeys} renderRow={renderRow}
-                    items={dataListToRender}
-                    enableEdit={false}
-                    //enableDelete={false}
-                    enableAdd={false}/>
+      <ParentTable
+        columns={columns} rowKeys={rowKeys} renderRow={renderRow}
+        items={dataListToRender}
+        enableEdit={false}
+        enableDelete={false} // Consistencia con Verificación previa de equipos (no existe delete teams)
+        enableAdd={false}
+      />
     );
   } else {
     // Si está vacía, es el uso por defecto que ya existía, es para mostrar tabla de Estudiantes

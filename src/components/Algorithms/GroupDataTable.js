@@ -28,7 +28,14 @@ import { getTableData } from "../../api/handleTableData";
 import AddIcon from "@mui/icons-material/Add";
 
 // Componente para la tabla de equipos
-const TeamDataTable = ({endpoint, items}) => {
+const TeamDataTable = ({
+  endpoint,
+  items,
+  enableEdit = true,
+  //enableDelete = true, // No existe endpoint delete para teams actualmente
+  enableAdd = true,
+  enableFilterButtons = true,
+}) => {
   const period = useSelector((state) => state.period);
 
   // Obtener la lista de topics desde Redux
@@ -401,38 +408,44 @@ const TeamDataTable = ({endpoint, items}) => {
               Descargar CSV
             </Button>
 
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleShowTeamsWithNoTopic}
-              sx={{ marginBottom: 2 }}
-            >
-              {showNoTopic ? "Mostrar todos los equipos" : "Mostrar equipos sin tema"}
-            </Button>
+            {enableFilterButtons && (
+              <>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleShowTeamsWithNoTopic}
+                  sx={{ marginBottom: 2 }}
+                >
+                  {showNoTopic ? "Mostrar todos los equipos" : "Mostrar equipos sin tema"}
+                </Button>
 
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleShowTeamsWithNoTutor}
-              sx={{ marginBottom: 2 }}
-            >
-              {showNoTutor ? "Mostrar todos los equipos" : "Mostrar equipos sin tutor"}
-            </Button>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleShowTeamsWithNoTutor}
+                  sx={{ marginBottom: 2 }}
+                >
+                  {showNoTutor ? "Mostrar todos los equipos" : "Mostrar equipos sin tutor"}
+                </Button>
 
-            <Button variant="outlined" color="primary" 
-              onClick={() => setShowExtraColumns(prev => !prev)}
-              sx={{ marginBottom: 2 }}>
-              {showExtraColumns ? "Ocultar preferencias" : "Mostrar preferencias"}
-            </Button>
+                <Button variant="outlined" color="primary" 
+                  onClick={() => setShowExtraColumns(prev => !prev)}
+                  sx={{ marginBottom: 2 }}>
+                  {showExtraColumns ? "Ocultar preferencias" : "Mostrar preferencias"}
+                </Button>
+              </>
+            )}
 
-            <Fab
-              size="small"
-              color="primary"
-              aria-label="add"                  
-              onClick={() => setOpenAddModal(true)}
-            >
-              <AddIcon />
-            </Fab>
+            {enableAdd && (
+              <Fab
+                size="small"
+                color="primary"
+                aria-label="add"                  
+                onClick={() => setOpenAddModal(true)}
+              >
+                <AddIcon />
+              </Fab>
+            )}
           </Box>
 
           <TableContainer component={Paper}>
@@ -463,7 +476,9 @@ const TeamDataTable = ({endpoint, items}) => {
                       Preferencia 3
                   </ExpandableCell>                  
                   
-                  <TableCell sx={{ fontWeight: "bold" }}>Acciones</TableCell>
+                  {enableEdit && (
+                    <TableCell sx={{ fontWeight: "bold" }}>Acciones</TableCell>
+                  )}
                   
                 </TableRow>
               </TableHead>
@@ -551,12 +566,14 @@ const TeamDataTable = ({endpoint, items}) => {
                         {index === 0 && (
                           <TableCell rowSpan={team.students.length}>
                             <Stack direction="row" spacing={1}>                          
-                              <Button
+                              {enableEdit && (
+                                <Button
                                 onClick={() => {setOpenEditModal(true); setItemToPassToModal(team)}}
                                 style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
                                 >
                                 Editar
                               </Button>
+                              )}
                             
                               {false && (
                                 <Button

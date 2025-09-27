@@ -42,7 +42,12 @@ const TeamsTable = ({dataListToRender=[]}) => {
         <Root>
           <Title variant="h4">{title}</Title>
 
-          <TeamDataTable items={dataListToRender}/>
+          <TeamDataTable
+            items={dataListToRender}
+            enableAdd={false}
+            enableEdit={false}
+            enableFilterButtons={false}
+          />
         </Root>
       </Container>
     );
