@@ -58,7 +58,7 @@ const getEvaluatorColor = (evaluatorId, evaluatorColorMap) => {
   return evaluatorColorMap[evaluatorId];
 };
 
-const Dates = () => {
+const Dates = ({setSelectedMenu}) => {
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
 
@@ -571,7 +571,7 @@ const Dates = () => {
         {/* Descripción */}
         <Description />
         {/* Verificación Previa */}
-        <AlgorithmPreCheck inputInfo={inputInfo} algorithm={"Dates"}/>        
+        <AlgorithmPreCheck inputInfo={inputInfo} algorithm={"Dates"} setSelectedMenu={setSelectedMenu}/>        
 
         {/* Botones Correr */}
         <ButtonSection

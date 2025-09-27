@@ -1,9 +1,9 @@
 import React from "react";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography, Link } from "@mui/material";
 import StudentsTable from "../UI/Tables/ChildTables/StudentsTable";
 import TeamsTable from "../UI/Tables/ChildTables/GroupsTable";
 
-const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm}) => {  
+const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelectedMenu}) => {  
   if (!inputInfo) return;  
 
   let msg;
@@ -21,12 +21,25 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm}) => {
       break;
     }
     case "Dates": {
+      if (!setSelectedMenu) return;
       
       msg = inputInfo.admin_slots ? (
         inputInfo.teams?.length === 0 ? "Todos los equipos completaron su disponibilidad."
         : inputInfo.teams?.length === 1 ? "Existe 1 equipo que no completó su disponibilidad."
         : `Existen ${inputInfo.teams?.length} equipos que no completaron su disponibilidad.`
-      ) : "Primero se debe cargar las fechas disponibles desde la sección Disponibilidad Fechas de Presentación."
+      ) : (
+        <>
+          Primero se debe cargar las fechas disponibles desde la sección {""}
+          <Link
+            component="span"
+            onClick={() => setSelectedMenu("Disponibilidad fechas de Presentación")}
+            underline="always"
+            sx={{ color: "blue", cursor: "pointer"}}
+            >
+            Disponibilidad fechas de Presentación
+          </Link>.
+        </>
+        )
       
       showWhoList = inputInfo.teams;
       showWhoComponent = <TeamsTable dataListToRender={showWhoList} />;      
