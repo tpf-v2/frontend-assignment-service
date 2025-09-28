@@ -8,7 +8,6 @@ import {
   Alert,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import { getTopics } from "../../api/handleTopics"; // Aux: sobra
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import ClosedAlert from "../ClosedAlert"; // Ahora se conserva, en el futuro no existirá
@@ -21,6 +20,8 @@ const Root = styled(Paper)(({ theme }) => ({
 
 const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
+  display: "block", // con esta prop + marginLeft se ajusta el botón a la derecha
+  marginLeft: "auto",
 }));
 
 const Title = styled(Typography)(({ theme }) => ({
@@ -40,7 +41,6 @@ const ProposeIdea = () => {
   });
 
   const [submitSuccess, setSubmitSuccess] = useState(false);  
-  const [loading, setLoading] = useState(false)
   const [notification, setNotification] = useState({
     open: false,
     message: "",
@@ -51,28 +51,6 @@ const ProposeIdea = () => {
     setNotification({ ...notification, open: false });
   };
 
-  useEffect(() => {
-    const fetchTopics = async () => {
-      try {
-        const response = await getTopics(period.id, user);
-        const topics = response.data.filter(
-          (c) => c.category.name !== "default"
-        ).sort((a, b) => a.name.localeCompare(b.name)); // Sorting alphabetically;
-        //setTopics(topics);
-      } catch (error) {
-        console.error("Error al obtener los topics", error);
-        setNotification({
-          open: true,
-          message:
-            "Error al obtener los temas. Por favor contactar al administrador",
-          status: "error",
-        });
-      }
-    };
-
-    fetchTopics();
-  }, []);
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -82,7 +60,7 @@ const ProposeIdea = () => {
   };
 
   const handleConfirm = async () => {
-    setLoading(true);    
+    //setLoading(true);
     try {
       //const response = await sendGroupForm(period.id, payload, existingGroup, user);
       const response = 201;
@@ -104,7 +82,7 @@ const ProposeIdea = () => {
       });
       console.error("Error al enviar el formulario", error);
     } finally {
-      setLoading(false)
+      //setLoading(false)
     }
   };
 
@@ -112,7 +90,7 @@ const ProposeIdea = () => {
     <Container maxWidth="sm">
       {period.form_active ? (
         <Root>
-          <Title variant="h5">Proponer Idea</Title>
+          <Title variant="h5" align="center">Proponer Idea</Title>
           {submitSuccess && (
             <Alert severity="success">
               Gracias por proponer la idea.
@@ -148,7 +126,7 @@ const ProposeIdea = () => {
                 </>
               )}
   
-              <ButtonStyled variant="contained" color="primary" type="submit">
+              <ButtonStyled variant="contained" color="primary" type="submit" align="right">
                 Enviar Formulario
               </ButtonStyled>
             </form>
