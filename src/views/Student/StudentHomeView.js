@@ -2,7 +2,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { Container, Box, Typography, CircularProgress } from "@mui/material"; // Importar CircularProgress
+import { Container, Box, CircularProgress } from "@mui/material";
 import MySnackbar from "../../components/UI/MySnackBar";
 import SubmitButton from "../../components/Buttons/SubmitButton";
 import StudentInfo from "../../components/UI/Dashboards/Student/StudentInfo";
@@ -20,7 +20,7 @@ const StudentHomeView = () => {
   const period = useSelector((state) => state.user.period_id);
  
   const [milestones, setMilestones] = useState([]);
-  const [group, setGroup] = useState({});
+  const [team, setTeam] = useState({});
   const [loading, setLoading] = useState(true); // Estado para manejar la carga
   const [notification, setNotification] = useState({
     open: false,
@@ -48,19 +48,19 @@ const StudentHomeView = () => {
   }, [user, dispatch]);
   
   useEffect(() => {
-    const fetchGroupAnswer = async () => {
+    const fetchTeamAnswer = async () => {
       try {
         const userData = await dispatch(getStudentInfo(user));
 
         console.log("--- user.id:", user.id);
         console.log("--- userData:", userData);
         
-        let group = {};
+        let team = {};
         if (userData.group_id !== 0) {
-          group = await dispatch(getGroupById(user, userData.group_id));
+          team = await dispatch(getGroupById(user, userData.group_id));
         }
         
-        setGroup(group);
+        setTeam(team);
         const form_completed = userData.form_answered || (userData.topic && userData.tutor)
         const topic_completed = userData.topic && userData.tutor
         setMilestones([
@@ -82,12 +82,12 @@ const StudentHomeView = () => {
             phase: "Anteproyecto",
             tasks: [
               {
-                title: !!group.pre_report_date ? "Enviado" : "No enviado",
-                completed: !!group.pre_report_date,
+                title: !!team.pre_report_date ? "Enviado" : "No enviado",
+                completed: !!team.pre_report_date,
               },
               {
-                title: group.pre_report_approved ?  "Revisión terminada" : "Revisión de tutor",
-                completed: group.pre_report_approved,
+                title: team.pre_report_approved ?  "Revisión terminada" : "Revisión de tutor",
+                completed: team.pre_report_approved,
               },
             ],
           },
@@ -95,9 +95,9 @@ const StudentHomeView = () => {
             phase: "Entrega Intermedia",
             tasks: [
               {
-                title: !!group.intermediate_assigment_date ? "Enviada" : "No enviada",
+                title: !!team.intermediate_assigment_date ? "Enviada" : "No enviada",
                 completed:
-                  !!group.intermediate_assigment_date,
+                  !!team.intermediate_assigment_date,
               },
             ],
           },
@@ -105,8 +105,8 @@ const StudentHomeView = () => {
             phase: "Entrega Final",
             tasks: [
               {
-                title: !!group.final_report_date ? "Enviada" : "No enviada",
-                completed: !!group.final_report_date,
+                title: !!team.final_report_date ? "Enviada" : "No enviada",
+                completed: !!team.final_report_date,
               }
             ],
           },
@@ -118,7 +118,7 @@ const StudentHomeView = () => {
       }
     };
 
-    fetchGroupAnswer();
+    fetchTeamAnswer();
   }, [dispatch, user]);
 
   const navigate = useNavigate();
@@ -131,13 +131,13 @@ const StudentHomeView = () => {
       <Box sx={{ flex: 1, mr: 8, mt: 8 }}>
         <StudentInfo />
         <Box sx={{ mb: 1 }} />
-        {!loading && group.exhibition_date && <PresentationDateCard presentationDate={group.exhibition_date}/>}
+        {!loading && team.exhibition_date && <PresentationDateCard presentationDate={team.exhibition_date}/>}
         {!loading && (
           <>
             {/* AUX PROBANDO: este primer botón no va a ir acá, solo estoy probando */}
             <SubmitButton
               url="/propose-idea"
-              title="Proponer idea"
+              title="Proponer Idea"
               width="100%"
               handleSubmit={() => handleNavigation("/propose-idea")}
               disabled={!milestones[0]?.tasks[0].completed}
