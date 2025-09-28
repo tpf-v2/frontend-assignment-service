@@ -5,27 +5,13 @@ import {
   Button,
   Container,
   Paper,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Alert,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import { sendGroupForm } from "../../api/sendGroupForm";
-import { getStudents } from "../../api/handleStudents";
-import { getTopics } from "../../api/handleTopics";
+import { getTopics } from "../../api/handleTopics"; // Aux: sobra
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
-import { NumericFormat } from "react-number-format";
-import ClosedAlert from "../ClosedAlert";
+import ClosedAlert from "../ClosedAlert"; // Ahora se conserva, en el futuro no existirá
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -53,9 +39,7 @@ const ProposeIdea = () => {
     student_id: user.id,
   });
 
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [topics, setTopics] = useState([]);
+  const [submitSuccess, setSubmitSuccess] = useState(false);  
   const [loading, setLoading] = useState(false)
   const [notification, setNotification] = useState({
     open: false,
@@ -74,7 +58,7 @@ const ProposeIdea = () => {
         const topics = response.data.filter(
           (c) => c.category.name !== "default"
         ).sort((a, b) => a.name.localeCompare(b.name)); // Sorting alphabetically;
-        setTopics(topics);
+        //setTopics(topics);
       } catch (error) {
         console.error("Error al obtener los topics", error);
         setNotification({
@@ -104,7 +88,7 @@ const ProposeIdea = () => {
       const response = 201;
       if (response.status === 201) {
         setSubmitSuccess(true);
-        setOpenDialog(false);
+        //setOpenDialog(false);
       } else {
         setNotification({
           open: true,
@@ -124,14 +108,6 @@ const ProposeIdea = () => {
     }
   };
 
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
-
-  const handleOptionChange = (e) => {
-    setFormData({ ...formData, selectedOption: e.target.value });
-  };
-
   return (
     <Container maxWidth="sm">
       {period.form_active ? (
@@ -148,24 +124,25 @@ const ProposeIdea = () => {
               {(
                 <>
                   <TextField
-                    label="Tema"
-                    name="specificTopic"
+                    label="Título"
+                    name="title" // para manejar de manera genérica el e.target.value con handleChange
                     fullWidth
                     margin="normal"
                     variant="outlined"
-                    //value={formData.specificTopic}
+                    value={formData.title}
                     onChange={handleChange}
                     required
                   />
                   <TextField
-                    label="Email del Tutor"
-                    name="tutorEmail"
-                    type="email"
+                    label="Descripción"
+                    name="description"
                     fullWidth
                     margin="normal"
                     variant="outlined"
-                    //value={formData.tutorEmail}
+                    value={formData.description}
                     onChange={handleChange}
+                    multiline
+                    rows={4}   // altura inicial
                     required
                   />
                 </>
@@ -176,27 +153,10 @@ const ProposeIdea = () => {
               </ButtonStyled>
             </form>
           )}
-  
-          {/* Diálogo de Confirmación */}
-          <Dialog open={openDialog} onClose={handleCloseDialog}>
-            <DialogTitle>Confirmar Envío</DialogTitle>
-            <DialogContent>
-              <Typography variant="body1">
-                ¿Enviar idea?                
-              </Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button disabled={loading} onClick={handleCloseDialog} color="primary">
-                Seguir Editando
-              </Button>
-              <Button disabled={loading} onClick={handleConfirm} color="primary">
-                Confirmar
-              </Button>
-            </DialogActions>
-          </Dialog>
+          
         </Root>
       ) : (
-        <ClosedAlert message="No se aceptan respuestas al formulario de equipos." />
+        <ClosedAlert message="No se aceptan más propuestas de ideas." />
       )}
       <MySnackbar
         open={notification.open}
