@@ -44,24 +44,24 @@ const FormSelection = () => {
 
   const navigate = useNavigate(); // Hook para navegación
   const user = useSelector((state) => state.user); // Obtener el usuario desde Redux
-  const [groupCount, setGroupAnswer] = useState([]);
+  const [teamCount, setTeamAnswer] = useState([]);
 
   const handleNavigation = (path) => {
     navigate(path);
   };
 
   useEffect(() => {
-    const fetchGroupAnswer = async () => {
+    const fetchTeamAnswer = async () => {
       try {
         const response = await getFormAnswersById(period.id, user);
-        const groupCount = response.data.length;
-        setGroupAnswer(groupCount);
+        const teamCount = response.data.length; // []
+        setTeamAnswer(teamCount);
       } catch (error) {
         console.error("Error al obtener los topics", error);
       }
     };
   
-    fetchGroupAnswer();
+    fetchTeamAnswer();
   }, []); 
 
   return (
@@ -75,7 +75,7 @@ const FormSelection = () => {
         ) : null}
         {user.temporal_role === 'student' && (
             <Typography variant="h6">
-              Tu padrón se registró en {groupCount} respuesta{groupCount !== 1 ? 's' : ''}
+              Tu padrón se registró en {teamCount} respuesta{teamCount !== 1 ? 's' : ''}
             </Typography>
         )}
         <Box textAlign="center">
