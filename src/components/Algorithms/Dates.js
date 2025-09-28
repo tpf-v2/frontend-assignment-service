@@ -734,9 +734,9 @@ const Dates = ({setSelectedMenu}) => {
                     : "Selecciona un Grupo";
                 }}
               >
-                {teams.map((group) => (
-                  <MenuItem key={group.id} value={group.group_number}>
-                    {`Grupo ${group.group_number}`}
+                {teams.map((team) => (
+                  <MenuItem key={team.id} value={team.group_number}>
+                    {`Grupo ${team.group_number}`}
                   </MenuItem>
                 ))}
               </Select>
