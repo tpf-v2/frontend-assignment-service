@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Typography,
   TextField,
@@ -11,6 +11,7 @@ import { styled } from "@mui/system";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import ClosedAlert from "../ClosedAlert"; // Ahora se conserva, en el futuro no existirá
+import { proposeIdea } from "../../api/ideas";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -33,7 +34,6 @@ const ProposeIdea = () => {
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
 
-  //full_team: false,
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -55,15 +55,12 @@ const ProposeIdea = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();    
-  };
 
-  const handleConfirm = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     //setLoading(true);
     try {
-      //const response = await sendGroupForm(period.id, payload, existingGroup, user);
-      const response = 201;
+      const response = await proposeIdea(formData, period.id, user);
       if (response.status === 201) {
         setSubmitSuccess(true);
         //setOpenDialog(false);

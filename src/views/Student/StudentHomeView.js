@@ -136,7 +136,7 @@ const StudentHomeView = () => {
           <>
             {/* AUX PROBANDO: este primer botón no va a ir acá, solo estoy probando */}
             <SubmitButton
-              url="/student-form"
+              url="/propose-idea"
               title="Proponer idea"
               width="100%"
               handleSubmit={() => handleNavigation("/propose-idea")}
