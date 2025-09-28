@@ -42,32 +42,37 @@ const ContentPublicPdfProjects = ({
                 </TableCell>
               </TableRow>
             ) : (
-              deliveries.map((entrega, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <IconButton
-                      onClick={() => downloadFile(entrega.project.id, entrega.group_number)}
-                    >
-                    <DownloadIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell style={{overflowWrap: "anywhere"}}>
-                    <h2>
-                    {
-                      entrega.project?.final_report_title || `Proyecto Final Equipo ${entrega.group_number}`
-                    }
-                    </h2>
-                    <p>{ "Tutor: " + entrega.project.tutor_name.name + " " + entrega.project.tutor_name.last_name }</p>
-                    <p style={entrega.project.final_report_summary ? {} : { fontStyle: 'italic' }}>
-                    { 
-                        entrega.project.final_report_summary
-                        ? entrega.project.final_report_summary 
-                        : "Sin descripción"
-                    }
-                    </p>
-                  </TableCell>
-                </TableRow>
-              ))
+              deliveries ? (
+                deliveries.map((entrega, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <IconButton
+                        onClick={() => downloadFile(entrega.project.id, entrega.group_number)}
+                      >
+                      <DownloadIcon />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell style={{overflowWrap: "anywhere"}}>
+                      <h2>
+                      {
+                        entrega.project?.final_report_title || `Proyecto Final Equipo ${entrega.group_number}`
+                      }
+                      </h2>
+                      <p>{ "Integrantes: " + entrega.project.students.map((student) => {
+                        return student.name + " " + student.last_name
+                      }) }</p>
+                      <p>{ "Tutor: " + entrega.project.tutor_name.name + " " + entrega.project.tutor_name.last_name }</p>
+                      <p style={entrega.project.final_report_summary ? {} : { fontStyle: 'italic' }}>
+                      { 
+                          entrega.project.final_report_summary
+                          ? entrega.project.final_report_summary 
+                          : "Sin descripción"
+                      }
+                      </p>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : <h2>No se encontraron entregas.</h2>
             )}
           </TableBody>
         </Table>
