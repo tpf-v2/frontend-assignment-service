@@ -85,22 +85,22 @@ const SpecificDateDialog = ({
               fullWidth
               value={team?.group_number || ""}
               onChange={(e) => {
-                const selectedGroup = teams.find(
+                const selectedTeam = teams.find(
                   (g) => g.group_number === e.target.value
                 );
-                setTeam(selectedGroup);
+                setTeam(selectedTeam);
 
                 const selectedTutor = getTutorNameById(
-                  selectedGroup.tutor_period_id,
+                  selectedTeam.tutor_period_id,
                   period.id
                 );
                 setTutor(selectedTutor ? selectedTutor : "");
-                setTopic(selectedGroup.topic ? selectedGroup.topic.name : "[No tiene tema asignado.]");
+                setTopic(selectedTeam.topic ? selectedTeam.topic.name : "[No tiene tema asignado.]");
               }}
               displayEmpty
               renderValue={(selected) => {
-                const selectedGroup = teams.find((g) => g.group_number === selected);
-                return selectedGroup ? `Equipo ${selectedGroup.group_number}` : "Selecciona un equipo";
+                const selectedTeam = teams.find((g) => g.group_number === selected);
+                return selectedTeam ? `Equipo ${selectedTeam.group_number}` : "Selecciona un equipo";
               }}
             >
               <MenuItem value="" disabled>
