@@ -281,8 +281,8 @@ const transformEventData = (data) => {
       contentMap[selectedMenu]
     ) : (
       <LearningPath
-        group_id={selectedTeam}
-        group={userTeams.find((team) => team.id === selectedTeam)}
+        team_id={selectedTeam}
+        team={userTeams.find((team) => team.id === selectedTeam)}
       />
     );
   };
