@@ -43,20 +43,23 @@ const StudentHomeView = () => {
         }
       }
     };
-
+    
     fetchPeriod();
   }, [user, dispatch]);
-
+  
   useEffect(() => {
     const fetchGroupAnswer = async () => {
       try {
         const userData = await dispatch(getStudentInfo(user));
 
+        console.log("--- user.id:", user.id);
+        console.log("--- userData:", userData);
+        
         let group = {};
         if (userData.group_id !== 0) {
           group = await dispatch(getGroupById(user, userData.group_id));
         }
-
+        
         setGroup(group);
         const form_completed = userData.form_answered || (userData.topic && userData.tutor)
         const topic_completed = userData.topic && userData.tutor
@@ -72,6 +75,7 @@ const StudentHomeView = () => {
                 title: topic_completed ? "Tema y tutor asignado" : "Tema sin asignar",
                 completed: topic_completed,
               },
+              
             ],
           },
           {
@@ -130,6 +134,14 @@ const StudentHomeView = () => {
         {!loading && group.exhibition_date && <PresentationDateCard presentationDate={group.exhibition_date}/>}
         {!loading && (
           <>
+            {/* AUX PROBANDO: este primer botón no va a ir acá, solo estoy probando */}
+            <SubmitButton
+              url="/student-form"
+              title="Proponer idea"
+              width="100%"
+              handleSubmit={() => handleNavigation("/propose-idea")}
+              disabled={!milestones[0]?.tasks[0].completed}
+            />
             <SubmitButton
               url="/student-form"
               title="Enviar Formulario de Equipo"

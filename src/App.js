@@ -30,6 +30,7 @@ import ResetPasswordView from './views/ResetPasswordView';
 import DashboardView from './views/Admin/DashboardView'
 import ChangePasswordView from './views/ChangePasswordView';
 import StudentForm from './components/Forms/StudentForm';
+import ProposeIdea from './components/Forms/ProposeIdea';
 import StudentAvailabilityView from './views/Student/StudentAvailabilityView';
 import { setStudents } from './redux/slices/studentsSlice';
 import { setTutors } from './redux/slices/tutorsSlice';
@@ -101,6 +102,7 @@ const App = () => {
             <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
             <Route path="/upload/:projectType" element={<ProtectedRoute><UploadView /></ProtectedRoute>} />
             <Route path="/student-form" element={<ProtectedRoute><StudentForm /></ProtectedRoute>} />
+            <Route path="/propose-idea" element={<ProtectedRoute><ProposeIdea /></ProtectedRoute>} />
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
             <Route path="/tutor-cuatrimestre/:period" element={<ProtectedRoute><TutorDashboardView /></ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />
