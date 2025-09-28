@@ -122,15 +122,15 @@ const TutorDashboardView = () => {
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
 
-  const [userGroups, setUserGroups] = useState([]);
-  const [userGroupsToReview, setUserGroupsToReview] = useState([]);
+  const [userTeams, setUserTeams] = useState([]);
+  const [userTeamsToReview, setUserTeamsToReview] = useState([]);
 
-  const [loadingGroups, setLoadingGroups] = useState(true);
+  const [loadingTeams, setLoadingTeams] = useState(true);
   const [loadingReviews, setLoadingReviews] = useState(true);
 
   const [selectedMenu, setSelectedMenu] = useState("Inicio");
-  const [selectedGroup, setSelectedGroup] = useState(null);
-  const [selectedGroupReview, setSelectedGroupReview] = useState(null);
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [selectedTeamReview, setSelectedTeamReview] = useState(null);
   const [events, setEvents] = useState([]);
   
   const [loadingEvents, setLoadingEvents] = useState(false)
@@ -154,24 +154,24 @@ const transformEventData = (data) => {
 };
 
   useEffect(() => {
-    const getGroups = async () => {
-      setLoadingGroups(true);
+    const getTeams = async () => {
+      setLoadingTeams(true);
       try {
-        const groups = await getMyGroups(user, period.id);
-        setUserGroups(groups.sort((a, b) => a.id - b.id));
+        const teams = await getMyGroups(user, period.id);
+        setUserTeams(teams.sort((a, b) => a.id - b.id));
       } catch (error) {
-        console.error("Error when getting my groups: ", error);
+        console.error("Error when getting my teams: ", error);
       } finally {
-        setLoadingGroups(false);
+        setLoadingTeams(false);
       }
     };
 
-    const getGroupsToReview = async () => {
+    const getTeamsToReview = async () => {
       setLoadingReviews(true);
 
       try {
-        const groups = await getMyGroupsToReview(user, period.id);
-        setUserGroupsToReview(groups.sort((a, b) => a.id - b.id));
+        const teams = await getMyGroupsToReview(user, period.id);
+        setUserTeamsToReview(teams.sort((a, b) => a.id - b.id));
       } catch (error) {
         console.error("Error al obtener los equipos: ", error);
       } finally {
@@ -187,13 +187,13 @@ const transformEventData = (data) => {
       setLoadingEvents(false)
     }
 
-    getGroups();
-    getGroupsToReview();
+    getTeams();
+    getTeamsToReview();
     getEvents();
   }, [user]);
 
-  const renderGroups = () => {
-    if (loadingGroups) {
+  const renderTeams = () => {
+    if (loadingTeams) {
       return (
         <DotsLoader>
           <div></div>
@@ -204,26 +204,26 @@ const transformEventData = (data) => {
       );
     }
 
-    if (userGroups.length === 0) {
+    if (userTeams.length === 0) {
       return <Typography>No hay equipos.</Typography>;
     }
 
-    return userGroups.map((group) => (
+    return userTeams.map((team) => (
       <ListItemStyled
-        key={group.id}
+        key={team.id}
         button
-        selected={selectedMenu === `Grupo ${group.group_number}`}
+        selected={selectedMenu === `Grupo ${team.group_number}`}
         onClick={() => {
-          setSelectedGroup(group.id);
-          setSelectedMenu(`Grupo ${group.group_number}`);
+          setSelectedTeam(team.id);
+          setSelectedMenu(`Grupo ${team.group_number}`);
         }}
       >
-        Equipo {group.group_number}
+        Equipo {team.group_number}
       </ListItemStyled>
     ));
   };
 
-  const renderGroupsToReview = () => {
+  const renderTeamsToReview = () => {
     if (loadingReviews) {
       return (
         <DotsLoader>
@@ -235,23 +235,23 @@ const transformEventData = (data) => {
       );
     }
 
-    if (userGroupsToReview.length === 0) {
+    if (userTeamsToReview.length === 0) {
       return <Typography>No hay equipos.</Typography>;
     }
 
-    return userGroupsToReview.map((group) => (
+    return userTeamsToReview.map((team) => (
       <ListItemStyled
-        key={group.id}
+        key={team.id}
         button
         selected={
-          selectedGroupReview?.id === group.id && selectedMenu === "Revisiones"
+          selectedTeamReview?.id === team.id && selectedMenu === "Revisiones"
         }
         onClick={() => {
-          setSelectedGroupReview(group);
+          setSelectedTeamReview(team);
           setSelectedMenu("Revisiones");
         }}
       >
-        Equipo {group.group_number}
+        Equipo {team.group_number}
       </ListItemStyled>
     ));
   };
@@ -269,8 +269,8 @@ const transformEventData = (data) => {
     "Mis Equipos": <div>Contenido del Formulario de Fechas</div>,
     "Seleccionar Disponibilidad": <AvailabilityCalendar />,
     "Fechas de presentación": <TutorEvents events={events} loading={loadingEvents}></TutorEvents>,
-    Revisiones: selectedGroupReview ? (
-      <GroupReview group={selectedGroupReview} />
+    Revisiones: selectedTeamReview ? (
+      <GroupReview group={selectedTeamReview} />
     ) : (
       <div>Selecciona un equipo para ver las revisiones</div>
     ),
@@ -281,8 +281,8 @@ const transformEventData = (data) => {
       contentMap[selectedMenu]
     ) : (
       <LearningPath
-        group_id={selectedGroup}
-        group={userGroups.find((group) => group.id === selectedGroup)}
+        group_id={selectedTeam}
+        group={userTeams.find((team) => team.id === selectedTeam)}
       />
     );
   };
@@ -316,14 +316,14 @@ const transformEventData = (data) => {
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     Mis Equipos
                   </AccordionSummary>
-                  <AccordionDetails>{renderGroups()}</AccordionDetails>
+                  <AccordionDetails>{renderTeams()}</AccordionDetails>
                 </Accordion>
 
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     Revisiones
                   </AccordionSummary>
-                  <AccordionDetails>{renderGroupsToReview()}</AccordionDetails>
+                  <AccordionDetails>{renderTeamsToReview()}</AccordionDetails>
                 </Accordion>
 
                 <Accordion defaultExpanded>
