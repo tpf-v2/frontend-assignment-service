@@ -42,7 +42,7 @@ const ContentPublicPdfProjects = ({
                 </TableCell>
               </TableRow>
             ) : (
-              deliveries ? (
+              deliveries.length ? (
                 deliveries.map((entrega, index) => (
                   <TableRow key={index}>
                     <TableCell>
@@ -72,7 +72,7 @@ const ContentPublicPdfProjects = ({
                     </TableCell>
                   </TableRow>
                 ))
-              ) : <h2>No se encontraron entregas.</h2>
+              ) : <h2 style={{padding: "20px", fontStyle: 'italic'}}>No se encontraron entregas.</h2>
             )}
           </TableBody>
         </Table>
