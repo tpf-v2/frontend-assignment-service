@@ -69,9 +69,9 @@ const App = () => {
           minHeight: '100vh',
         }}
       >
-        {user.token && (
+        {user.token ? (
           <Header user={user} color={color} handleHomeClick={resetUser} />
-        )}
+        ) : <Header user={undefined} color={color} handleHomeClick={resetUser} /> }
         <BackgroundContainer />
         <Box
           className="content-container"
