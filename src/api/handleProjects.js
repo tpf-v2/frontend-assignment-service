@@ -58,7 +58,7 @@ export const getProjects = async (user, period_id, projectType) => {
 
 export const getPublicProjects = async (user, period_id) => {
   const config = _config(period_id, user);
-  const response = await axios.get(`${BASE_URL}/groups/public-final-project`, config);
+  const response = await axios.get(`${BASE_URL}/projects/public-project`, config);
   return response.data;
 };
 async function fetchUrlForProject(groupId, projectName, user, period_id) {
