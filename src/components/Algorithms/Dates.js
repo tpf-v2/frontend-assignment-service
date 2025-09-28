@@ -652,7 +652,7 @@ const Dates = ({setSelectedMenu}) => {
       <SpecificDateDialog
         open={assignDateOpenDialog}
         onClose={() => setAssignDateOpenDialog(false)}
-        groups={teams}
+        teams={teams}
         period={period}
         tutor={tutor}
         topic={topic}
@@ -666,8 +666,8 @@ const Dates = ({setSelectedMenu}) => {
         getTutorNameById={getTutorNameById}
         hours={hours}
         tutors={tutors}
-        group={team}
-        setGroup={setTeam}
+        team={team}
+        setTeam={setTeam}
         setTutor={setTutor}
         setTopic={setTopic}
       />

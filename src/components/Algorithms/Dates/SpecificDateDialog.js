@@ -18,7 +18,7 @@ import dayjs from "dayjs";
 const SpecificDateDialog = ({
   open,
   onClose,
-  groups,
+  teams,
   period,
   tutor,
   topic,
@@ -32,8 +32,8 @@ const SpecificDateDialog = ({
   getTutorNameById,
   hours,
   tutors,
-  group,
-  setGroup,
+  team,
+  setTeam,
   setTutor,
   setTopic,
 }) => {
@@ -49,13 +49,13 @@ const SpecificDateDialog = ({
   useEffect(() => {
     setIsAssignDisabled(
       !(
-        group &&
+        team &&
         selectedDateTime &&
         selectedHour &&
         evaluador
       )
     );
-  }, [group, selectedDateTime, selectedHour, evaluador]);
+  }, [team, selectedDateTime, selectedHour, evaluador]);
 
   const handleHourChange = (event) => {
     setSelectedHour(event.target.value);
@@ -63,7 +63,7 @@ const SpecificDateDialog = ({
 
   const handleCancel = () => {
     // Restablece los valores de todos los campos
-    setGroup("");
+    setTeam("");
     setTutor("");
     setTopic("");
     setEvaluador("");
@@ -83,12 +83,12 @@ const SpecificDateDialog = ({
             </Typography>
             <Select
               fullWidth
-              value={group?.group_number || ""}
+              value={team?.group_number || ""}
               onChange={(e) => {
-                const selectedGroup = groups.find(
+                const selectedGroup = teams.find(
                   (g) => g.group_number === e.target.value
                 );
-                setGroup(selectedGroup);
+                setTeam(selectedGroup);
 
                 const selectedTutor = getTutorNameById(
                   selectedGroup.tutor_period_id,
@@ -99,16 +99,16 @@ const SpecificDateDialog = ({
               }}
               displayEmpty
               renderValue={(selected) => {
-                const selectedGroup = groups.find((g) => g.group_number === selected);
+                const selectedGroup = teams.find((g) => g.group_number === selected);
                 return selectedGroup ? `Equipo ${selectedGroup.group_number}` : "Selecciona un equipo";
               }}
             >
               <MenuItem value="" disabled>
                 Selecciona un equipo
               </MenuItem>
-              {groups.map((group) => (
-                <MenuItem key={group.id} value={group.group_number}>
-                  {`Equipo ${group.group_number}`}
+              {teams.map((team) => (
+                <MenuItem key={team.id} value={team.group_number}>
+                  {`Equipo ${team.group_number}`}
                 </MenuItem>
               ))}
             </Select>
