@@ -76,7 +76,7 @@ const ProposeIdea = () => {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="md">
       {period.form_active ? (
         <Root>
           <Title variant="h5" align="center">Proponer Idea</Title>
@@ -114,7 +114,8 @@ const ProposeIdea = () => {
                     value={formData.description}
                     onChange={handleChange}
                     multiline
-                    rows={4}   // altura inicial
+                    minrows={5}   // altura inicial
+                    maxRows={15}  // se expande hasta esta altura (luego scroll)
                     required
                   />
                 </>
