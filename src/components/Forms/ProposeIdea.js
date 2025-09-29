@@ -61,23 +61,15 @@ const ProposeIdea = () => {
     //setLoading(true);
     try {
       const response = await proposeIdea(formData, period.id, user);
-      if (response.status === 201) {
-        setSubmitSuccess(true);
-        //setOpenDialog(false);
-      } else {
-        setNotification({
-          open: true,
-          message: response.data.detail,
-          status: "error",
-        });
-      }
+      setSubmitSuccess(true);
+      //setOpenDialog(false);
     } catch (error) {
       setNotification({
         open: true,
-        message: "Error al enviar el formulario",
+        message: "Error al enviar la idea",
         status: "error",
       });
-      console.error("Error al enviar el formulario", error);
+      console.error("Error al enviar la idea", error);
     } finally {
       //setLoading(false)
     }
@@ -88,6 +80,7 @@ const ProposeIdea = () => {
       {period.form_active ? (
         <Root>
           <Title variant="h5" align="center">Proponer Idea</Title>
+          {/* Con el esquema de bool y !bool casos exluyentes, cambiamos lo mostrado en pantalla */}
           {submitSuccess && (
             <Alert severity="success">
               Gracias por proponer la idea.
@@ -95,7 +88,6 @@ const ProposeIdea = () => {
           )}
           {!submitSuccess && (
             <form onSubmit={handleSubmit}>
-              {/* Ya tengo tema y tutor */}
               {(
                 <>
                   <TextField
