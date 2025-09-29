@@ -53,7 +53,7 @@ const ProposeIdea = () => {
 
   return (
     <Container maxWidth="md">
-      {period.form_active ? (
+      {period.form_active ? ( // <-- [VER] qué condición poner acá. No habría que dep de toggles, quizás algoritmo temas (o equipos) no ejecutado
         <Root>
           <Title variant="h5" align="center">Proponer Idea</Title>
           <Typography>
