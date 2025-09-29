@@ -134,12 +134,19 @@ const StudentHomeView = () => {
         {!loading && team.exhibition_date && <PresentationDateCard presentationDate={team.exhibition_date}/>}
         {!loading && (
           <>
-            {/* AUX PROBANDO: este primer botón no va a ir acá, solo estoy probando */}
+            {/* AUX PROBANDO: estos dos primeros botones no van a ir acá, solo estoy probando */}
             <SubmitButton
               url="/propose-idea"
               title="Proponer Idea"
               width="100%"
               handleSubmit={() => handleNavigation("/propose-idea")}
+              disabled={!milestones[0]?.tasks[0].completed}
+            />
+            <SubmitButton
+              url="/explore/ideas"
+              title="Explorar Ideas"
+              width="100%"
+              handleSubmit={() => handleNavigation("/explore/ideas")}
               disabled={!milestones[0]?.tasks[0].completed}
             />
             <SubmitButton

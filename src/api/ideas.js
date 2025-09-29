@@ -25,3 +25,21 @@ export const proposeIdea = async (ideaData, periodId, user) => {
         throw err;
     }
   };
+  
+
+  export const getPeriodIdeas = async (periodId, user) => {
+    const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+  
+    try {
+        const url = `${BASE_URL}/periods/${periodId}/ideas`;
+        const response = await axios.get(url, config);
+        return response.data;
+    } catch (err) {
+        console.error(`Error when getting period idea: ${err}`)
+        throw err;
+    }
+  };
