@@ -58,9 +58,11 @@ const ContentPublicPdfProjects = ({
                         entrega.project?.final_report_title || `Proyecto Final Equipo ${entrega.group_number}`
                       }
                       </h2>
-                      <p>{ "Integrantes: " + entrega.project.students.map((student) => {
-                        return student.name + " " + student.last_name
-                      }) }</p>
+                      <p>{
+                        "Integrantes: " + entrega.project.students.map((student) => {
+                          return student.name + " " + student.last_name
+                        }).join(", ")
+                      }</p>
                       <p>{ "Tutor: " + entrega.project.tutor_name.name + " " + entrega.project.tutor_name.last_name }</p>
                       <p style={entrega.project.final_report_summary ? {} : { fontStyle: 'italic' }}>
                       { 
