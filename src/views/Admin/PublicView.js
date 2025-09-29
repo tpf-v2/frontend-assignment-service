@@ -71,7 +71,7 @@ const PublicPDFView = () => {
         <Grid container spacing={3}>
           {/* Sidebar */}
           {/* Contenido */}
-          <Grid item xs={9}>
+          <Grid item xs={12}>
             <Box mt={2}>{renderContent()}</Box>
           </Grid>
         </Grid>
