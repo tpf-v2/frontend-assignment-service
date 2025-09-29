@@ -69,21 +69,20 @@ const ExploreIdeas = () => {
         </Typography>
         {/* Un renderizado de ideas mejorable */}        
         {ideas?.map((idea) => (
-          <Box key={idea.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2 }}>
+          <Box key={idea?.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2 }}>
+
             <Typography variant="subtitle1" fontWeight="bold">
               Título: {idea?.title}
             </Typography>
             <Typography variant="body1">Descripción: {idea?.description}</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Propuesta por: {idea?.student?.email}
+            
+            <Typography variant="body2">
+              Propuesta por: {idea?.student?.name} {idea?.student?.last_name} ({idea?.student?.email})
             </Typography>
-          </Box>
-
-        //   <>
-        //     <Typography>Título: {idea?.title}</Typography>
-        //     <Typography>Descripción: {idea?.description}</Typography>
-        //     <Typography>Propuesta por: {idea?.student?.email}</Typography>
-        //   </>
+            <Typography variant="body2">
+              Equipo: {idea?.full_team ? "Completo" : "Aún buscando integrantes"}
+            </Typography>
+          </Box>        
         ))}
                       
       </Root>
