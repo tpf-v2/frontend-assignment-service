@@ -116,7 +116,7 @@ const ProposeIdea = () => {
               )}
   
               <ButtonStyled variant="contained" color="primary" type="submit" align="right">
-                Enviar Formulario
+                Enviar
               </ButtonStyled>
             </form>
           )}
