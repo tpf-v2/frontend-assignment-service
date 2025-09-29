@@ -329,8 +329,7 @@ const ParentTable = ({
     if (title !== TableType.STUDENTS && title!== TableType.TUTORS && !TableType.EMBEDDEDNOTITLE) return;
 
     try {
-      const displayedEmails = filteredData.map(item => item.email).filter(Boolean); // el filter elimina undefined/null
-      //console.log("--- displayedEmails:", displayedEmails);
+      const displayedEmails = filteredData.map(item => item.email).filter(Boolean); // el filter elimina undefined/null      
 
       await navigator.clipboard.writeText(displayedEmails.join(", "));
       setNotification({

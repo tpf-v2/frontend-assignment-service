@@ -52,8 +52,6 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
     }
   }
 
-  console.log("--- inputInfo:", inputInfo);
-
   return (
     <>
     <Grid item xs={12} md={12} sx={{ display: "flex" }}>

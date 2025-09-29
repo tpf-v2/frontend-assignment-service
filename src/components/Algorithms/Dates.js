@@ -563,8 +563,6 @@ const Dates = ({setSelectedMenu}) => {
     }
   };
 
-  console.log("--- la input info quedó, pre return jsx:", inputInfo);
-
   return (
     <Box sx={{ padding: 3 }}>
       <Grid container spacing={2}>

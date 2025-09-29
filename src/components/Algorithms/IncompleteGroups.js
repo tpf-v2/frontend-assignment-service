@@ -124,8 +124,6 @@ const IncompleteGroups = () => {
     return topic ? topic.name : ""; // Si no encuentra el topic, mostrar 'Desconocido'
   };
 
-  console.log("--- Input info:", inputInfo);
-
   return (
     <Box sx={{ padding: 3 }}>
       <Grid container spacing={2}>

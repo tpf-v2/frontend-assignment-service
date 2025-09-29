@@ -12,20 +12,10 @@ const TeamsTable = ({dataListToRender=[]}) => {
   .map(({ version, rehydrated, ...rest }) => rest)
   .filter((item) => Object.keys(item).length > 0);
 
-  // const Title = styled(Typography)(({ theme }) => ({
-  //   marginBottom: theme.spacing(3),
-  //   color: "#0072C6",
-  //   textAlign: "center",
-  //   fontSize: "2rem",
-  //   fontWeight: "bold",
-  // }));
-
   // Si tiene elementos, la estoy llamando para la Verificación previa a algoritmos,
   // y no quiero que haga ningún fetch
-  if (!dataListToRender) return;
-  console.log("---- datalistToRender:", dataListToRender);
+  if (!dataListToRender) return;  
   if (dataListToRender.length > 0) {
-    console.log("---- dataListToRender.length > 0");
     return (
           <TeamDataTable
             items={dataListToRender}
@@ -35,7 +25,6 @@ const TeamsTable = ({dataListToRender=[]}) => {
           />
     );
   } if (dataListToRender.length === 0) {
-    console.log("---- dataListToRender.length === 0");
     // Si está vacía, es el uso por defecto que ya existía, es para mostrar tabla de Estudiantes
     return (
       <TeamDataTable endpoint={endpoint} items={teams} title={title}/>
