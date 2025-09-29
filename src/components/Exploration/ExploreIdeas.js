@@ -65,7 +65,8 @@ const ExploreIdeas = () => {
         <Typography>
         En este espacio se pueden ver las ideas propuestas por estudiantes de este cuatrimestre.
         Se muestra email de autores de las ideas, para facilitar el contacto para el armado de equipos.
-        Si obtienen la aprobación de un/a tutor/a, luego pueden completar el formulario de equipos indicando la opción "Ya tengo tema y tutor".
+        Si se obtiene la aprobación de un/a tutor/a, luego, de querer elegirla se debe completar el formulario de equipos
+        indicando la opción "Ya tengo tema y tutor".
         </Typography>
         {/* Un renderizado de ideas mejorable */}        
         {ideas?.map((idea) => (
