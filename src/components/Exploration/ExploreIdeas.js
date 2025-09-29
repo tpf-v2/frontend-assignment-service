@@ -73,11 +73,11 @@ const ExploreIdeas = () => {
           <Box key={idea?.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2 }}>
 
             <Typography variant="subtitle1" fontWeight="bold">
-              Título: {idea?.title}
+              {idea?.title}
             </Typography>
-            <Typography variant="body1">Descripción: {idea?.description}</Typography>
+            <Typography variant="body1">{idea?.description}</Typography>
             
-            <Typography variant="body2">
+            <Typography variant="body2" mt={1}>
               Propuesta por: {idea?.student?.name} {idea?.student?.last_name} ({idea?.student?.email})
             </Typography>
             <Typography variant="body2">
