@@ -1,34 +1,10 @@
 import React, { useState } from "react";
-import {
-  Typography,
-  TextField,
-  Button,
-  Container,
-  Paper,
-  Alert,
-} from "@mui/material";
-import { styled } from "@mui/system";
+import { Typography, TextField, Container, Alert } from "@mui/material";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import ClosedAlert from "../ClosedAlert"; // Ahora se conserva, en el futuro no existirá
 import { proposeIdea } from "../../api/ideas";
-
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-  display: "block", // con esta prop + marginLeft se ajusta el botón a la derecha
-  marginLeft: "auto",
-}));
-
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-}));
+import { Root, Title, ButtonStyled } from "../../components/Root";
 
 const ProposeIdea = () => {
   const user = useSelector((state) => state.user);
