@@ -80,6 +80,11 @@ const ProposeIdea = () => {
       {period.form_active ? (
         <Root>
           <Title variant="h5" align="center">Proponer Idea</Title>
+          <Typography>
+            En este espacio podés proponer una idea. Será visible por estudiantes y tutores de este cuatrimestre.
+            Esto puede utilizarse para que te contacten estudiantes a quienes les interese tu idea y así poder formar equipo.
+            Si obtienen la aprobación de un/a tutor/a, luego pueden completar el formulario de equipos indicando la opción "Ya tengo tema y tutor".
+          </Typography>
           {/* Con el esquema de bool y !bool casos exluyentes, cambiamos lo mostrado en pantalla */}
           {submitSuccess && (
             <Alert severity="success">
