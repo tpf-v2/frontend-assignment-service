@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Typography, TextField, Container, Alert } from "@mui/material";
+import { Typography, TextField, Container, Alert, Box, CircularProgress } from "@mui/material";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { Root, Title, ButtonStyled } from "../../components/Root";
@@ -10,8 +10,8 @@ const ExploreIdeas = () => {
   const period = useSelector((state) => state.period);
 
   const [ideas, setIdeas] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const [submitSuccess, setSubmitSuccess] = useState(false);  
   const [notification, setNotification] = useState({
     open: false,
     message: "",
@@ -22,13 +22,10 @@ const ExploreIdeas = () => {
     setNotification({ ...notification, open: false });
   };
 
-//   const handleChange = (e) => {
-//     setFormData({ ...formData, [e.target.name]: e.target.value });
-//   };
-
   useEffect(() => {
     const fetchIdeas = async () => {
       try {
+        setLoading(true);
         const response = await getPeriodIdeas(period.id, user);        
         setIdeas(response);
       } catch (error) {
@@ -39,6 +36,8 @@ const ExploreIdeas = () => {
             "Error al obtener las ideas del cuatrimestre",
           status: "error",
         });
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -47,25 +46,17 @@ const ExploreIdeas = () => {
 
   console.log("--- ideas:", ideas);
 
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     //setLoading(true);
-//     try {
-//       const response = await proposeIdea(formData, period.id, user);
-//       setSubmitSuccess(true);
-//       //setOpenDialog(false);
-//     } catch (error) {
-//       setNotification({
-//         open: true,
-//         message: "Error al enviar la idea",
-//         status: "error",
-//       });
-//       console.error("Error al enviar la idea", error);
-//     } finally {
-//       //setLoading(false)
-//     }
-//   };
+  if (loading)
+    return (
+        <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="300px"
+        >
+        <CircularProgress />
+        </Box>
+  );
 
   return (
     <Container maxWidth="md">
@@ -76,14 +67,24 @@ const ExploreIdeas = () => {
         Se muestra email de autores de las ideas, para facilitar el contacto para el armado de equipos.
         Si obtienen la aprobación de un/a tutor/a, luego pueden completar el formulario de equipos indicando la opción "Ya tengo tema y tutor".
         </Typography>
-        {/* Un renderizado re básico (y que no anda) */}
-        {ideas?.map((idea) => {
-          <>
-            <Typography>Título: {idea?.title}</Typography>
-            <Typography>Descripción: {idea?.description}</Typography>
-            <Typography>Propuesta por: {idea?.student?.email}</Typography>
-          </>
-        })}
+        {/* Un renderizado de ideas mejorable */}        
+        {ideas?.map((idea) => (
+          <Box key={idea.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2 }}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              Título: {idea?.title}
+            </Typography>
+            <Typography variant="body1">Descripción: {idea?.description}</Typography>
+            <Typography variant="body2" color="text.secondary">
+              Propuesta por: {idea?.student?.email}
+            </Typography>
+          </Box>
+
+        //   <>
+        //     <Typography>Título: {idea?.title}</Typography>
+        //     <Typography>Descripción: {idea?.description}</Typography>
+        //     <Typography>Propuesta por: {idea?.student?.email}</Typography>
+        //   </>
+        ))}
                       
       </Root>
       
