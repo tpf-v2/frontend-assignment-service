@@ -43,7 +43,7 @@ export const EditIdeaModal = ({
               e.preventDefault(); // previene el reload del form
               // Técnicamente este handleConfirm, al crearse afuera,
               // ya tiene el data y el setData. (Técnicamente también tiene el bool).
-              handleConfirm(handleCloseModal);
+              handleConfirm(handleCloseModal, editType);
             }}
           >
             <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>

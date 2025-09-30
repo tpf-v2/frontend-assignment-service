@@ -66,12 +66,16 @@ const ExploreIdeas = () => {
     return idea.student_id == user.id;
   }
 
-  const handleEditIdea = async (handleCloseModal) => {
+  const handleEditIdea = async (handleCloseModal, editType) => {
     try {      
-      // Hago request y adapto lista con su resultado
-      //const ideaResult = await editIdeaContent(editingIdea, period.id, user);
-      // Aux la de arriba es para contenido, hago la de status acá abajo
-      const ideaResult = await editIdeaStatus(editingIdea, period.id, user);
+      // Hago request
+      let ideaResult;
+      if (editType === "ideaContent") {
+        ideaResult = await editIdeaContent(editingIdea, period.id, user);
+      } else if (editType === "ideaStatus") {
+        ideaResult = await editIdeaStatus(editingIdea, period.id, user);        
+      }
+      // Adapto lista inmediatamente, con su resultado
       setIdeas((prevData) =>
         prevData.map((prevIdea) => (prevIdea.id === editingIdea.id ? ideaResult : prevIdea))
       )
