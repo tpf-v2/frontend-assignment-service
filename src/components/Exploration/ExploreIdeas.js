@@ -107,7 +107,7 @@ const ExploreIdeas = () => {
             
             {isMyIdea(idea) && (
               <Button
-              onClick={() => setOpenEditModal(true)}
+              onClick={() => {setEditingIdea(idea); setOpenEditModal(true)}}
               style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
               >
               probando
@@ -129,9 +129,13 @@ const ExploreIdeas = () => {
                       
       </Root>
 
-      <EditIdeaModal open={openEditModal} setOpen={setOpenEditModal}
-                     setData={setEditingIdea} handleConfirm={handleEditIdea}/>
-
+      <EditIdeaModal
+        open={openEditModal}
+        setOpen={setOpenEditModal}
+        data={editingIdea}
+        setData={setEditingIdea}
+        handleConfirm={handleEditIdea}
+      />
       
       <MySnackbar
         open={notification.open}

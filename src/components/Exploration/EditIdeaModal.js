@@ -5,8 +5,14 @@ import {
     DialogContent,
     DialogActions,
   } from "@mui/material";
+import { WriteIdeaFields } from "../Forms/WriteIdea";
 
-export const EditIdeaModal = ({open, setOpen, setData, handleConfirm}) => {
+export const EditIdeaModal = ({
+    open,
+    setOpen,
+    data, // la necesito para mostrarla en el WriteIdea
+    setData,
+    handleConfirm}) => {
 
     const ConfirmButtonText = "Guardar";
     const handleCloseModal = () => {
@@ -36,6 +42,7 @@ export const EditIdeaModal = ({open, setOpen, setData, handleConfirm}) => {
             }}
           >
             <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
+                <WriteIdeaFields formData={data} setFormData={setData}/>
               
             </DialogContent>
             <DialogActions>

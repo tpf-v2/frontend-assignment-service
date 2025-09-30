@@ -2,7 +2,7 @@ import { TextField } from "@mui/material";
 import { ButtonStyled } from "../../components/Root";
 
 
-export const WriteIdea = ({formData, setFormData, handleSubmit}) => {
+export const WriteIdeaFields = ({formData, setFormData}) => {
 
     // Esto es para manejar de forma genérica el guardado de e.target.value
     const handleChange = (e) => {
@@ -10,8 +10,7 @@ export const WriteIdea = ({formData, setFormData, handleSubmit}) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            
+        <>
             <TextField
             label="Título"
             name="title" // para manejar de manera genérica el e.target.value con handleChange
@@ -34,12 +33,7 @@ export const WriteIdea = ({formData, setFormData, handleSubmit}) => {
             minrows={5}   // altura inicial
             maxRows={15}  // se expande hasta esta altura (luego scroll)
             required
-            />            
-
-            <ButtonStyled variant="contained" color="primary" type="submit" align="right">
-            Enviar
-            </ButtonStyled>
-        </form>
+            />  
+        </>        
     )
-
 }
