@@ -3,7 +3,7 @@ import { Typography, Container, Box, CircularProgress, Button, Link } from "@mui
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { Root, Title } from "../../components/Root";
-import { getPeriodIdeas, editIdeaContent } from "../../api/ideas";
+import { getPeriodIdeas, editIdeaContent, editIdeaStatus } from "../../api/ideas";
 import { EditIdeaModal } from "./EditIdeaModal";
 
 const ExploreIdeas = () => {
@@ -69,7 +69,9 @@ const ExploreIdeas = () => {
   const handleEditIdea = async (handleCloseModal) => {
     try {      
       // Hago request y adapto lista con su resultado
-      const ideaResult = await editIdeaContent(editingIdea, period.id, user);
+      //const ideaResult = await editIdeaContent(editingIdea, period.id, user);
+      // Aux la de arriba es para contenido, hago la de status acá abajo
+      const ideaResult = await editIdeaStatus(editingIdea, period.id, user);
       setIdeas((prevData) =>
         prevData.map((prevIdea) => (prevIdea.id === editingIdea.id ? ideaResult : prevIdea))
       )
@@ -126,7 +128,6 @@ const ExploreIdeas = () => {
                 </Button>
               )}
             </Box>
-
 
             <Typography variant="body1">{idea?.description}</Typography>
             
