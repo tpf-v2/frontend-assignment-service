@@ -5,6 +5,7 @@ import MySnackbar from "../UI/MySnackBar";
 import ClosedAlert from "../ClosedAlert"; // Ahora se conserva, en el futuro no existirá
 import { proposeIdea } from "../../api/ideas";
 import { Root, Title, ButtonStyled } from "../../components/Root";
+import { WriteIdea } from "./WriteIdea";
 
 const ProposeIdea = () => {
   const user = useSelector((state) => state.user);
@@ -26,11 +27,6 @@ const ProposeIdea = () => {
   const handleSnackbarClose = () => {
     setNotification({ ...notification, open: false });
   };
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,39 +65,7 @@ const ProposeIdea = () => {
             </Alert>
           )}
           {!submitSuccess && (
-            <form onSubmit={handleSubmit}>
-              {(
-                <>
-                  <TextField
-                    label="Título"
-                    name="title" // para manejar de manera genérica el e.target.value con handleChange
-                    fullWidth
-                    margin="normal"
-                    variant="outlined"
-                    value={formData.title}
-                    onChange={handleChange}
-                    required
-                  />
-                  <TextField
-                    label="Descripción"
-                    name="description"
-                    fullWidth
-                    margin="normal"
-                    variant="outlined"
-                    value={formData.description}
-                    onChange={handleChange}
-                    multiline
-                    minrows={5}   // altura inicial
-                    maxRows={15}  // se expande hasta esta altura (luego scroll)
-                    required
-                  />
-                </>
-              )}
-  
-              <ButtonStyled variant="contained" color="primary" type="submit" align="right">
-                Enviar
-              </ButtonStyled>
-            </form>
+            <WriteIdea handleSubmit={handleSubmit} formData={formData} setFormData={setFormData} />
           )}
           
         </Root>
