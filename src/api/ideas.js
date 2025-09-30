@@ -11,7 +11,7 @@ export const proposeIdea = async (ideaData, periodId, user) => {
   
     // Pasamos los campos
     const sendableIdeaData = {
-      "author_id": user.id,
+      "student_id": user.id,
       "title": ideaData.title,
       "description": ideaData.description,
     };
