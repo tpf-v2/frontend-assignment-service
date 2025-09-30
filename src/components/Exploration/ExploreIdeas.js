@@ -66,12 +66,18 @@ const ExploreIdeas = () => {
   }
 
   const handleEditIdea = async (handleCloseModal) => {
-    try {
-      setLoading(true);
-      // AUX: ACÁ VA A IR LLAMADA AL ENDPOINT NUEVO
-      const response = await editIdeaContent(editingIdea, period.id, user);
-      // AUX ADAPTAR ESTO  
-      //setIdeas([]);
+    try {      
+      // Hago request y adapto lista con su resultado
+      const ideaResult = await editIdeaContent(editingIdea, period.id, user);
+      setIdeas((prevData) =>
+        prevData.map((prevIdea) => (prevIdea.id === editingIdea.id ? ideaResult : prevIdea))
+      )
+      setNotification({
+        open: true,
+        message: `Se editó idea exitosamente`,
+        status: "success",
+      });
+      handleCloseModal();
     } catch (error) {
       console.error("Error al editar idea", error);
       setNotification({
@@ -80,11 +86,7 @@ const ExploreIdeas = () => {
           "Error al editar idea",
         status: "error",
       });
-    } finally {
-      setLoading(false);
     }
-
-    handleCloseModal();
   }
 
   return (
