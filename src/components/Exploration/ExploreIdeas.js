@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Typography, TextField, Container, Alert, Box, CircularProgress } from "@mui/material";
+import { Typography, TextField, Container, Alert, Box, CircularProgress, Button} from "@mui/material";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { Root, Title, ButtonStyled } from "../../components/Root";
@@ -58,6 +58,12 @@ const ExploreIdeas = () => {
         </Box>
   );
 
+  const isMyIdea = (idea) => {
+    console.log(idea);
+    console.log(user.id);
+    return idea.student_id == user.id;
+  }
+
   return (
     <Container maxWidth="md">
       <Root>
@@ -75,6 +81,18 @@ const ExploreIdeas = () => {
             <Typography variant="subtitle1" fontWeight="bold">
               {idea?.title}
             </Typography>
+            
+            {isMyIdea(idea) && (
+              <Button
+              onClick={() => {}}
+              style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
+              >
+              probando
+              </Button>
+            )}
+            
+
+
             <Typography variant="body1">{idea?.description}</Typography>
             
             <Typography variant="body2" mt={1}>
