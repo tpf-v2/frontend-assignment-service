@@ -3,7 +3,7 @@ import { Typography, TextField, Container, Alert, Box, CircularProgress, Button}
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { Root, Title, ButtonStyled } from "../../components/Root";
-import { getPeriodIdeas } from "../../api/ideas";
+import { getPeriodIdeas, editIdeaContent } from "../../api/ideas";
 import { EditIdeaModal } from "./EditIdeaModal";
 
 const ExploreIdeas = () => {
@@ -69,15 +69,15 @@ const ExploreIdeas = () => {
     try {
       setLoading(true);
       // AUX: ACÁ VA A IR LLAMADA AL ENDPOINT NUEVO
-      const response = await getPeriodIdeas(period.id, user);      
+      const response = await editIdeaContent(editingIdea, period.id, user);
       // AUX ADAPTAR ESTO  
-      setIdeas(response);
+      //setIdeas([]);
     } catch (error) {
-      console.error("Error al obtener las ideas del cuatrimestre", error);
+      console.error("Error al editar idea", error);
       setNotification({
         open: true,
         message:
-          "Error al obtener las ideas del cuatrimestre",
+          "Error al editar idea",
         status: "error",
       });
     } finally {
