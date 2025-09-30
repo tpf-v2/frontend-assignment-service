@@ -7,6 +7,12 @@ import {
   } from "@mui/material";
 import { WriteIdeaFields } from "../Forms/WriteIdeaFields";
 
+// Enum en reactjs
+export const EditType = Object.freeze({
+    CONTENT: "ideaContent",
+    STATUS: "ideaStatus",
+});
+
 export const EditIdeaModal = ({
     open,
     setOpen,
@@ -14,12 +20,10 @@ export const EditIdeaModal = ({
     setData,
     handleConfirm,
     editType, // Reutilizo el modal, sirve para contenido y para estado
-    titleText, // estas dos son strings, la editType en cambio es una constante
+    titleText, // estas dos son strings a mostrar, la editType en cambio es una constante
     okButtonText,
 }) => {
     
-    //const editType = "ideaContent"; // ideaStatus    
-
     const handleCloseModal = () => {
         setOpen(false);
         setData();
@@ -47,10 +51,10 @@ export const EditIdeaModal = ({
             }}
           >
             <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
-                {editType === "ideaContent" && (
+                {editType === EditType.CONTENT && (
                     <WriteIdeaFields data={data} setData={setData}/>
                 )}
-                {editType === "ideaStatus" && (
+                {editType === EditType.STATUS && (
                   <>
                     {data?.full_team
                         ? <>¿Informar que el equipo busca integrantes nuevamente?</>

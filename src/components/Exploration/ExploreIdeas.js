@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { Root, Title } from "../../components/Root";
 import { getPeriodIdeas, editIdeaContent, editIdeaStatus } from "../../api/ideas";
-import { EditIdeaModal } from "./EditIdeaModal";
+import { EditIdeaModal, EditType } from "./EditIdeaModal";
 
 const ExploreIdeas = () => {
   const user = useSelector((state) => state.user);
@@ -70,9 +70,9 @@ const ExploreIdeas = () => {
     try {      
       // Hago request
       let ideaResult;
-      if (editType === "ideaContent") {
+      if (editType === EditType.CONTENT) {
         ideaResult = await editIdeaContent(editingIdea, period.id, user);
-      } else if (editType === "ideaStatus") {
+      } else if (editType === EditType.STATUS) {
         ideaResult = await editIdeaStatus(editingIdea, period.id, user);        
       }
       // Adapto lista inmediatamente, con su resultado
@@ -153,14 +153,17 @@ const ExploreIdeas = () => {
         ))}
                       
       </Root>
+      {/* Modals para editar el contenido y el full_team */}
 
       <EditIdeaModal
         open={openEditModal}
         setOpen={setOpenEditModal}
         data={editingIdea}
         setData={setEditingIdea}
+        
         handleConfirm={handleEditIdea}
-        editType={"ideaContent"}
+        
+        editType={EditType.CONTENT}
         titleText={"Editar"}
         okButtonText={"Guardar"}
       />
@@ -170,8 +173,10 @@ const ExploreIdeas = () => {
         setOpen={setOpenChangeStatusModal}
         data={editingIdea}
         setData={setEditingIdea}
-        handleConfirm={handleEditIdea} // <---
-        editType={"ideaStatus"}
+        
+        handleConfirm={handleEditIdea}
+        
+        editType={EditType.STATUS}
         titleText={"Cambiar Estado de"}
         okButtonText={"Confirmar"}
       />
