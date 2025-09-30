@@ -1,5 +1,4 @@
 import { TextField } from "@mui/material";
-import { ButtonStyled } from "../../components/Root";
 
 // Contiene solamente el renderizado de los campos a editar, sin botones
 export const WriteIdeaFields = ({data, setData}) => {
@@ -8,7 +7,7 @@ export const WriteIdeaFields = ({data, setData}) => {
     const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
     };
-    
+
     if (!data) return;
 
     return (

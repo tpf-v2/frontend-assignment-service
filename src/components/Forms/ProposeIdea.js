@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Typography, TextField, Container, Alert } from "@mui/material";
+import { Typography, Container, Alert } from "@mui/material";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import ClosedAlert from "../ClosedAlert"; // Ahora se conserva, en el futuro no existirá
@@ -32,7 +32,7 @@ const ProposeIdea = () => {
     e.preventDefault();
     //setLoading(true);
     try {
-      const response = await proposeIdea(formData, period.id, user);
+      await proposeIdea(formData, period.id, user);
       setSubmitSuccess(true);
       //setOpenDialog(false);
     } catch (error) {

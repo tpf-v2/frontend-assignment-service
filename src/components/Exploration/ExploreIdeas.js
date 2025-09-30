@@ -63,7 +63,7 @@ const ExploreIdeas = () => {
   );
 
   const isMyIdea = (idea) => {
-    return idea.student_id == user.id;
+    return idea.student_id === user.id;
   }
 
   const handleEditIdea = async (handleCloseModal, editType) => {
