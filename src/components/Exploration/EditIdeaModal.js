@@ -13,8 +13,11 @@ export const EditIdeaModal = ({
     data, // la necesito para mostrarla en el WriteIdea
     setData,
     handleConfirm}) => {
+    
+    const editType = "ideaContent"; // ideaStatus 
+    const titleText = "Editar";
+    const okButtonText = "Guardar";
 
-    const ConfirmButtonText = "Guardar";
     const handleCloseModal = () => {
         setOpen(false);
         setData();
@@ -31,7 +34,7 @@ export const EditIdeaModal = ({
               padding: "16px 24px",
             }}
           >
-            Editar Idea
+            {titleText} Idea
           </DialogTitle>
           <form
             onSubmit={(e) => {
@@ -42,7 +45,12 @@ export const EditIdeaModal = ({
             }}
           >
             <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
-                <WriteIdeaFields data={data} setData={setData}/>
+                {editType === "ideaContent" && (
+                    <WriteIdeaFields data={data} setData={setData}/>
+                )}
+                {editType === "ideaStatus" && (
+                    <></>
+                )}
               
             </DialogContent>
             <DialogActions>
@@ -50,7 +58,7 @@ export const EditIdeaModal = ({
                 Cancelar
               </Button>
               <Button type="submit" variant="contained" color="primary">
-                {ConfirmButtonText}
+                {okButtonText}
               </Button>
             </DialogActions>
           </form>

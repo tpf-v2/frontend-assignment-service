@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Typography, TextField, Container, Alert, Box, CircularProgress, Button} from "@mui/material";
+import { Typography, Container, Box, CircularProgress, Button, Link } from "@mui/material";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
-import { Root, Title, ButtonStyled } from "../../components/Root";
+import { Root, Title } from "../../components/Root";
 import { getPeriodIdeas, editIdeaContent } from "../../api/ideas";
 import { EditIdeaModal } from "./EditIdeaModal";
 
@@ -12,8 +12,9 @@ const ExploreIdeas = () => {
 
   const [ideas, setIdeas] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [openEditModal, setOpenEditModal] = useState(false);
   const [editingIdea, setEditingIdea] = useState();
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [openStatusModal, setOpenChangeStatusModal] = useState(false);
 
   const [notification, setNotification] = useState({
     open: false,
@@ -111,8 +112,7 @@ const ExploreIdeas = () => {
                 alignItems: 'center',
               }}
             >
-              <Typography variant="subtitle1" fontWeight="bold">
-               
+              <Typography variant="subtitle1" fontWeight="bold">               
                 {idea?.title}
               </Typography>
               
@@ -134,7 +134,16 @@ const ExploreIdeas = () => {
               Propuesta por: {idea?.student?.name} {idea?.student?.last_name} ({idea?.student?.email})
             </Typography>
             <Typography variant="body2">
-              Equipo: {idea?.full_team ? "Completo" : "Aún buscando integrantes"}
+              Equipo: {idea?.full_team ? "Completo" : "Aún buscando integrantes"} {""}
+              sección {""}
+              <Link
+                component="span"
+                onClick={() => {setEditingIdea(idea); setOpenChangeStatusModal(true)}}
+                underline="always"
+                sx={{ color: "grey", fontWeight: "bold", cursor: "pointer"}}
+              >
+                Cambiar
+              </Link>.
             </Typography>
           </Box>        
         ))}
