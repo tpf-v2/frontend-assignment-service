@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { Root, Title, ButtonStyled } from "../../components/Root";
 import { getPeriodIdeas } from "../../api/ideas";
+import { EditIdeaModal } from "./EditIdeaModal";
 
 const ExploreIdeas = () => {
   const user = useSelector((state) => state.user);
@@ -11,6 +12,8 @@ const ExploreIdeas = () => {
 
   const [ideas, setIdeas] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [editingIdea, setEditingIdea] = useState();
 
   const [notification, setNotification] = useState({
     open: false,
@@ -59,9 +62,29 @@ const ExploreIdeas = () => {
   );
 
   const isMyIdea = (idea) => {
-    console.log(idea);
-    console.log(user.id);
     return idea.student_id == user.id;
+  }
+
+  const handleEditIdea = async (handleCloseModal) => {
+    try {
+      setLoading(true);
+      // AUX: ACÁ VA A IR LLAMADA AL ENDPOINT NUEVO
+      const response = await getPeriodIdeas(period.id, user);      
+      // AUX ADAPTAR ESTO  
+      setIdeas(response);
+    } catch (error) {
+      console.error("Error al obtener las ideas del cuatrimestre", error);
+      setNotification({
+        open: true,
+        message:
+          "Error al obtener las ideas del cuatrimestre",
+        status: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+
+    handleCloseModal();
   }
 
   return (
@@ -84,7 +107,7 @@ const ExploreIdeas = () => {
             
             {isMyIdea(idea) && (
               <Button
-              onClick={() => {}}
+              onClick={() => setOpenEditModal(true)}
               style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
               >
               probando
@@ -105,6 +128,10 @@ const ExploreIdeas = () => {
         ))}
                       
       </Root>
+
+      <EditIdeaModal open={openEditModal} setOpen={setOpenEditModal}
+                     setData={setEditingIdea} handleConfirm={handleEditIdea}/>
+
       
       <MySnackbar
         open={notification.open}
