@@ -135,7 +135,6 @@ const ExploreIdeas = () => {
             </Typography>
             <Typography variant="body2">
               Equipo: {idea?.full_team ? "Completo" : "Aún buscando integrantes"} {""}
-              sección {""}
               <Link
                 component="span"
                 onClick={() => {setEditingIdea(idea); setOpenChangeStatusModal(true)}}
@@ -156,7 +155,22 @@ const ExploreIdeas = () => {
         data={editingIdea}
         setData={setEditingIdea}
         handleConfirm={handleEditIdea}
+        editType={"ideaContent"}
+        titleText={"Editar"}
+        okButtonText={"Guardar"}
       />
+
+      <EditIdeaModal
+        open={openStatusModal}
+        setOpen={setOpenChangeStatusModal}
+        data={editingIdea}
+        setData={setEditingIdea}
+        handleConfirm={handleEditIdea} // <---
+        editType={"ideaStatus"}
+        titleText={"Cambiar Estado de"}
+        okButtonText={"Confirmar"}
+      />
+      
       
       <MySnackbar
         open={notification.open}

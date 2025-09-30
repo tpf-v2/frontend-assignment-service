@@ -12,11 +12,13 @@ export const EditIdeaModal = ({
     setOpen,
     data, // la necesito para mostrarla en el WriteIdea
     setData,
-    handleConfirm}) => {
+    handleConfirm,
+    editType, // Reutilizo el modal, sirve para contenido y para estado
+    titleText, // estas dos son strings, la editType en cambio es una constante
+    okButtonText,
+}) => {
     
-    const editType = "ideaContent"; // ideaStatus 
-    const titleText = "Editar";
-    const okButtonText = "Guardar";
+    //const editType = "ideaContent"; // ideaStatus    
 
     const handleCloseModal = () => {
         setOpen(false);
@@ -49,7 +51,12 @@ export const EditIdeaModal = ({
                     <WriteIdeaFields data={data} setData={setData}/>
                 )}
                 {editType === "ideaStatus" && (
-                    <></>
+                  <>
+                    {data?.full_team
+                        ? <>¿Informar que el equipo busca integrantes nuevamente?</>
+                        : <>¿Informar que se completó el equipo?</>
+                    }
+                  </>
                 )}
               
             </DialogContent>
