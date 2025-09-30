@@ -102,20 +102,30 @@ const ExploreIdeas = () => {
         {/* Un renderizado de ideas mejorable */}        
         {ideas?.map((idea) => (
           <Box key={idea?.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2 }}>
-
-            <Typography variant="subtitle1" fontWeight="bold">
-              {idea?.title}
-            </Typography>
-            
-            {isMyIdea(idea) && (
-              <Button
-              onClick={() => {setEditingIdea(idea); setOpenEditModal(true)}}
-              style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
-              >
-              probando
-              </Button>
-            )}
-            
+            {/* Botón en mismo renglón que título */}
+            <Box
+              sx={{ 
+                display: 'flex', 
+                gap: 2,
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <Typography variant="subtitle1" fontWeight="bold">
+               
+                {idea?.title}
+              </Typography>
+              
+              {isMyIdea(idea) && (
+                <Button
+                  onClick={() => {setEditingIdea(idea); setOpenEditModal(true)}}
+                  style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
+                  sx={{ ml: "auto" }}
+                >
+                  Editar
+                </Button>
+              )}
+            </Box>
 
 
             <Typography variant="body1">{idea?.description}</Typography>
