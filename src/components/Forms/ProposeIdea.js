@@ -5,7 +5,7 @@ import MySnackbar from "../UI/MySnackBar";
 import ClosedAlert from "../ClosedAlert"; // Ahora se conserva, en el futuro no existirá
 import { proposeIdea } from "../../api/ideas";
 import { Root, Title, ButtonStyled } from "../../components/Root";
-import { WriteIdeaFields } from "./WriteIdea";
+import { WriteIdeaFields } from "./WriteIdeaFields";
 
 const ProposeIdea = () => {
   const user = useSelector((state) => state.user);
@@ -67,7 +67,7 @@ const ProposeIdea = () => {
           {!submitSuccess && (
             <form onSubmit={handleSubmit}>
               
-              <WriteIdeaFields formData={formData} setFormData={setFormData} />
+              <WriteIdeaFields data={formData} setData={setFormData} />
               
               <ButtonStyled variant="contained" color="primary" type="submit" align="right">
               Enviar

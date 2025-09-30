@@ -5,7 +5,7 @@ import {
     DialogContent,
     DialogActions,
   } from "@mui/material";
-import { WriteIdeaFields } from "../Forms/WriteIdea";
+import { WriteIdeaFields } from "../Forms/WriteIdeaFields";
 
 export const EditIdeaModal = ({
     open,
@@ -42,7 +42,7 @@ export const EditIdeaModal = ({
             }}
           >
             <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
-                <WriteIdeaFields formData={data} setFormData={setData}/>
+                <WriteIdeaFields data={data} setData={setData}/>
               
             </DialogContent>
             <DialogActions>

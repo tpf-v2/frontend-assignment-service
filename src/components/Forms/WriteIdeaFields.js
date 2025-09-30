@@ -2,11 +2,11 @@ import { TextField } from "@mui/material";
 import { ButtonStyled } from "../../components/Root";
 
 
-export const WriteIdeaFields = ({formData, setFormData}) => {
+export const WriteIdeaFields = ({data, setData}) => {
 
     // Esto es para manejar de forma genérica el guardado de e.target.value
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setData({ ...data, [e.target.name]: e.target.value });
     };
 
     return (
@@ -17,7 +17,7 @@ export const WriteIdeaFields = ({formData, setFormData}) => {
             fullWidth
             margin="normal"
             variant="outlined"
-            value={formData.title}
+            value={data.title}
             onChange={handleChange}
             required
             />
@@ -27,7 +27,7 @@ export const WriteIdeaFields = ({formData, setFormData}) => {
             fullWidth
             margin="normal"
             variant="outlined"
-            value={formData.description}
+            value={data.description}
             onChange={handleChange}
             multiline
             minrows={5}   // altura inicial
