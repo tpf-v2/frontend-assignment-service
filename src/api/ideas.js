@@ -17,7 +17,7 @@ export const proposeIdea = async (ideaData, periodId, user) => {
     };
   
     try {
-        const url = `${BASE_URL}/periods/${periodId}/ideas`;
+        const url = `${BASE_URL}/periods/${periodId}/ideas/`;
         const response = await axios.post(url, sendableIdeaData, config);
         return response.data;
     } catch (err) {
@@ -35,7 +35,7 @@ export const proposeIdea = async (ideaData, periodId, user) => {
       };
   
     try {
-        const url = `${BASE_URL}/periods/${periodId}/ideas`;
+        const url = `${BASE_URL}/periods/${periodId}/ideas/`;
         const response = await axios.get(url, config);
         return response.data;
     } catch (err) {
