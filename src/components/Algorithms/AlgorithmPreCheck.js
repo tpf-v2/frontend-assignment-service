@@ -15,8 +15,12 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
   let showWhoComponentTutors;
   let showWhoListTutors;
   let msgTutors;
+
+  let condition = true;
+
   switch (algorithm) {
     case "IncompleteTeams": {
+
       msg = inputInfo.length === 0 ? "Todos/as los/as estudiantes forman parte de alguna respuesta al formulario."
       : inputInfo.length === 1 ? "Existe 1 estudiante que no está en respuestas al formulario de equipos en ninguna de sus variantes:"
       : `Existen ${inputInfo.length} estudiantes que no están en respuestas al formulario de equipos en ninguna de sus variantes:`
@@ -24,52 +28,30 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
       showWhoList = inputInfo;
       showWhoComponent = <StudentsTable dataListToRender={showWhoList} />;
 
+      // "condition" queda en true (ponerle un mejor nombre)
+
       break;
     }
     case "Dates": {
       if (!setSelectedMenu) return;
+
+      condition = inputInfo.admin_slots;
       
-      msg = inputInfo.admin_slots ? (
+      msg =
         inputInfo.teams?.length === 0 ? "Todos los equipos completaron su disponibilidad."
         : inputInfo.teams?.length === 1 ? "Existe 1 equipo que no completó su disponibilidad:"
         : `Existen ${inputInfo.teams?.length} equipos que no completaron su disponibilidad:`
-      ) : (
-        <>
-          Primero se debe cargar las fechas disponibles desde la sección {""}
-          <Link
-            component="span"
-            onClick={() => setSelectedMenu("Disponibilidad fechas de Presentación")}
-            underline="always"
-            sx={{ color: "blue", cursor: "pointer"}}
-            >
-            Disponibilidad fechas de Presentación
-          </Link>.
-        </>
-        )
       
       showWhoList = inputInfo.teams;
       showWhoComponent = <TeamsTable dataListToRender={showWhoList} />;
-      
+
       // Tutores
       showWhoListTutors = inputInfo.teachers;
       showWhoComponentTutors = <TutorsTable dataListToRender={showWhoListTutors} />;      
-      msgTutors = inputInfo.admin_slots ? (
-        inputInfo.teachers?.length === 0 ? "Todos los tutores/as completaron su disponibilidad."
+      msgTutors = 
+        inputInfo.teachers?.length === 0 ? "Todos/as los/as tutores/as completaron su disponibilidad."
         : inputInfo.teachers?.length === 1 ? "Existe 1 tutor/a que no completó su disponibilidad:"
-        : `Existen ${inputInfo.teachers?.length} tutoras/es que no completaron su disponibilidad:`
-      ) : ( // cambiar esta estructura de ifs xq no quiero dar dos veces este msj de abajo, va ese chack primero
-        <>
-          Primero se debe cargar las fechas disponibles desde la sección {""}
-          <Link
-            component="span"
-            onClick={() => setSelectedMenu("Disponibilidad fechas de Presentación")}
-            underline="always"
-            sx={{ color: "blue", cursor: "pointer"}}
-            >
-            Disponibilidad fechas de Presentación
-          </Link>.
-        </>
-        )
+        : `Existen ${inputInfo.teachers?.length} tutores/as que no completaron su disponibilidad:`      
       
       break;
     }
@@ -94,33 +76,51 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
         </Typography>
       </Grid>
 
-      <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
-        <Typography variant="body1" sx={{ textAlign: "justify" }}>
-          {msg}
-        </Typography>
-      </Grid>      
+      {condition ? (
+        <>          
+            <>
+              <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
+                <Typography variant="body1" sx={{ textAlign: "justify" }}>
+                  {msg}
+                </Typography>
+              </Grid>      
 
-      {showWhoList.length > 0 && (
-        <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
-          {showWhoComponent}
-        </Grid>)
-      }
-
-      {/* Tutores - fechas */}
-      {showWhoListTutors.length > 0 && (
-        <>
-        <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
-          <Typography variant="body1" sx={{ textAlign: "justify" }}>
-            {msgTutors}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
-          {showWhoComponentTutors}
-        </Grid>
+              {showWhoList?.length > 0 && (
+                <Grid item xs={12} md={12} sx={{ display: "flex" }}>
+                  {showWhoComponent}
+                </Grid>
+              )}
+            </>
+          
+            <>
+              {/* Tutores - fechas */}
+              <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
+                <Typography variant="body1" sx={{ textAlign: "justify" }}>
+                  {msgTutors}
+                </Typography>
+              </Grid>
+              {showWhoListTutors?.length > 0 && (
+                <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
+                  {showWhoComponentTutors}
+                </Grid>
+              )}
+            </>
         </>
-        )
-      }
-
+      ) : (
+          
+          <Grid item xs={12} md={12} sx={{ display: "flex" }}>
+            Primero se debe cargar las fechas disponibles desde la sección {""}
+            <Link
+              component="span"
+              onClick={() => setSelectedMenu("Disponibilidad fechas de Presentación")}
+              underline="always"
+              sx={{ color: "blue", cursor: "pointer"}}
+              >
+              Disponibilidad fechas de Presentación
+            </Link>.
+          </Grid>
+          )
+      }      
       </>
     )}
   </>
