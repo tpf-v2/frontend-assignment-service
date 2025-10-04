@@ -2,6 +2,7 @@ import React from "react";
 import { Grid, Typography, Link } from "@mui/material";
 import StudentsTable from "../UI/Tables/ChildTables/StudentsTable";
 import TeamsTable from "../UI/Tables/ChildTables/GroupsTable";
+import TutorsTable from "../UI/Tables/ChildTables/TutorsTable";
 
 const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelectedMenu}) => {  
   if (!inputInfo) return;  
@@ -9,6 +10,11 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
   let msg;
   let showWhoComponent;
   let showWhoList;
+
+  // Aux tutores mientras pruebo
+  let showWhoComponentTutors;
+  let showWhoListTutors;
+  let msgTutors;
   switch (algorithm) {
     case "IncompleteTeams": {
       msg = inputInfo.length === 0 ? "Todos/as los/as estudiantes forman parte de alguna respuesta al formulario."
@@ -42,7 +48,28 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
         )
       
       showWhoList = inputInfo.teams;
-      showWhoComponent = <TeamsTable dataListToRender={showWhoList} />;      
+      showWhoComponent = <TeamsTable dataListToRender={showWhoList} />;
+      
+      // Tutores
+      showWhoListTutors = inputInfo.teachers;
+      showWhoComponentTutors = <TutorsTable dataListToRender={showWhoListTutors} />;      
+      msgTutors = inputInfo.admin_slots ? (
+        inputInfo.teachers?.length === 0 ? "Todos los tutores/as completaron su disponibilidad."
+        : inputInfo.teachers?.length === 1 ? "Existe 1 tutor/a que no completó su disponibilidad:"
+        : `Existen ${inputInfo.teachers?.length} tutoras/es que no completaron su disponibilidad:`
+      ) : ( // cambiar esta estructura de ifs xq no quiero dar dos veces este msj de abajo, va ese chack primero
+        <>
+          Primero se debe cargar las fechas disponibles desde la sección {""}
+          <Link
+            component="span"
+            onClick={() => setSelectedMenu("Disponibilidad fechas de Presentación")}
+            underline="always"
+            sx={{ color: "blue", cursor: "pointer"}}
+            >
+            Disponibilidad fechas de Presentación
+          </Link>.
+        </>
+        )
       
       break;
     }
@@ -73,9 +100,27 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
         </Typography>
       </Grid>      
 
-      {showWhoList.length > 0 && (<Grid item xs={12} md={12} sx={{ display: "flex" }}>  
-        {showWhoComponent}
-      </Grid>)}
+      {showWhoList.length > 0 && (
+        <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
+          {showWhoComponent}
+        </Grid>)
+      }
+
+      {/* Tutores - fechas */}
+      {showWhoListTutors.length > 0 && (
+        <>
+        <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
+          <Typography variant="body1" sx={{ textAlign: "justify" }}>
+            {msgTutors}
+          </Typography>
+        </Grid>
+        <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
+          {showWhoComponentTutors}
+        </Grid>
+        </>
+        )
+      }
+
       </>
     )}
   </>
