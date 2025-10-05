@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Typography, Link } from "@mui/material";
+import { Grid, Typography, Link, Box, CircularProgress } from "@mui/material";
 import StudentsTable from "../UI/Tables/ChildTables/StudentsTable";
 import TeamsTable from "../UI/Tables/ChildTables/GroupsTable";
 import TutorsTable from "../UI/Tables/ChildTables/TutorsTable";
@@ -75,6 +75,16 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
         Verificación previa
       </Typography>
     </Grid>
+    {!inputInfo && (
+      <Grid item xs={12} md={12} sx={{ display: "flex" }}>
+        <Box
+          display="flex"
+          minHeight="300px"
+        >
+          <CircularProgress />
+        </Box>
+      </Grid>
+    )}
     {inputInfo && (
       <>
       <Grid item xs={12} md={12} sx={{ display: "flex" }}>
