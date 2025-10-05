@@ -98,7 +98,7 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
             <>
               <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
                 <Typography variant="body1" sx={{ textAlign: "justify" }}>
-                  {msg}
+                  <strong>{msg}</strong>
                 </Typography>
               </Grid>      
 
@@ -113,7 +113,7 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
               {/* Tutores - fechas */}
               <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
                 <Typography variant="body1" sx={{ textAlign: "justify" }}>
-                  {msgTutors}
+                  <strong>{msgTutors}</strong>
                 </Typography>
               </Grid>
               {showWhoListTutors?.length > 0 && (
@@ -126,12 +126,14 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
       ) : (
           
           <Grid item xs={12} md={12} sx={{ display: "flex" }}>
-            Primero se debe cargar las fechas disponibles desde la sección {""}
+            <Typography component={"span"}>
+              <strong>Primero se debe cargar las fechas disponibles desde la sección {' '}</strong>
+            </Typography>
             <Link
               component="span"
               onClick={() => setSelectedMenu("Disponibilidad fechas de Presentación")}
               underline="always"
-              sx={{ color: "blue", cursor: "pointer"}}
+              sx={{ color: "blue", cursor: "pointer", ml: 0.5}}
               >
               Disponibilidad fechas de Presentación
             </Link>.
