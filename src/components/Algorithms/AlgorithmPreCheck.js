@@ -1,5 +1,6 @@
-import React from "react";
-import { Grid, Typography, Link, Box, CircularProgress } from "@mui/material";
+import React, {useState} from "react";
+import { Grid, Typography, Link, Box, CircularProgress,
+         Dialog, Button } from "@mui/material";
 import StudentsTable from "../UI/Tables/ChildTables/StudentsTable";
 import TeamsTable from "../UI/Tables/ChildTables/GroupsTable";
 import TutorsTable from "../UI/Tables/ChildTables/TutorsTable";
@@ -10,6 +11,9 @@ import ErrorIcon from "@mui/icons-material/Error";
 
 const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelectedMenu}) => {  
   //if (!inputInfo) return;
+
+  const [open, setOpen] = useState(false);
+  const [data, setData] = useState();
 
   let msg;
   let showWhoComponent;
@@ -58,8 +62,8 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
         
         msg =
           inputInfo.teams?.length === 0 ? "Todos los equipos completaron su disponibilidad."
-          : inputInfo.teams?.length === 1 ? "Existe 1 equipo que no completó su disponibilidad:"
-          : `Existen ${inputInfo.teams?.length} equipos que no completaron su disponibilidad:`
+          : inputInfo.teams?.length === 1 ? "Existe 1 equipo que no completó su disponibilidad"
+          : `Existen ${inputInfo.teams?.length} equipos que no completaron su disponibilidad`
         
         showWhoList = inputInfo.teams;
         showWhoComponent = <TeamsTable dataListToRender={showWhoList} />;
@@ -128,12 +132,24 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
                 <Typography variant="body1" sx={{ textAlign: "justify" }}>
                   <strong>{msg}</strong>
                 </Typography>
-              </Grid>      
+              </Grid>              
 
-              {showWhoList?.length > 0 && (
+              {false && showWhoList?.length > 0 && (
                 <Grid item xs={12} md={12} sx={{ display: "flex" }}>
                   {showWhoComponent}
                 </Grid>
+              )}
+
+              {inputInfo.length > 0 && condition && (
+                <Typography variant="body1" sx={{ textAlign: "justify" }}>
+                  <Button
+                    variant="outlined"
+                    onClick={() => {setData(showWhoList); setOpen(true)}}
+                  >
+                    Ver quiénes
+                  </Button>
+
+                </Typography>
               )}
             </>
           
@@ -171,6 +187,14 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
       }      
       </>
     )}
+
+
+  <Dialog open={open} onClose={() => {setOpen(false)}} maxWidth={false} fullWidth>
+    <Grid item xs={12} md={12} sx={{ display: "flex" }}>
+      {showWhoComponent}
+    </Grid>
+  </Dialog>
+
   </>
 );
 }
