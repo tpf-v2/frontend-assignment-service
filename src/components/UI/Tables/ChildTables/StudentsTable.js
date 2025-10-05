@@ -31,6 +31,8 @@ const StudentsTable = ({dataListToRender = null}) => {
     </>
   );
 
+  if (dataListToRender === undefined) return;
+
   // Si le estoy pasando una dataListToRender, es que la estoy llamando para la Verificación previa
   // a algoritmos, y no quiero que haga ningún fetch
   if (dataListToRender !== null) {

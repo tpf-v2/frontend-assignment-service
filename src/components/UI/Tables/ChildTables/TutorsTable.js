@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { TableType } from '../TableType';
 import { addCapacityToTutors } from '../../../../utils/addCapacityToTutors';
 
-const TutorsTable = ({dataListToRender = []}) => {
+const TutorsTable = ({dataListToRender = null}) => {
   const { period } = useParams();
   const endpoint = `/tutors/periods/${period}`;
   const title = TableType.TUTORS;
@@ -41,10 +41,12 @@ const TutorsTable = ({dataListToRender = []}) => {
       <TableCell>{item.capacity}</TableCell>
     </>
   );
+
+  if (dataListToRender === undefined) return;
   
-  // Si tiene elementos, la estoy llamando para la Verificación previa a algoritmos,
-  // y no quiero que haga ningún fetch
-  if (dataListToRender.length > 0) {
+  // Si le estoy pasando una dataListToRender, es que la estoy llamando para la Verificación previa
+  // a algoritmos, y no quiero que haga ningún fetch
+  if (dataListToRender !== null) {
     return (
       <ParentTable
         columns={columns} rowKeys={rowKeys} renderRow={renderRow}
@@ -56,7 +58,7 @@ const TutorsTable = ({dataListToRender = []}) => {
       />
     );
   } else {
-    // Si está vacía, es el uso por defecto que ya existía, es para mostrar tabla de Estudiantes
+    // Si no le pasé nada, es el uso por defecto que ya existía, es para mostrar tabla de Estudiantes
     return (
       <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} items={tutors}
                     csvColumns={csvColumns} csvRowKeys={csvRowKeys}/> // []

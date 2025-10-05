@@ -5,7 +5,7 @@ import TeamsTable from "../UI/Tables/ChildTables/GroupsTable";
 import TutorsTable from "../UI/Tables/ChildTables/TutorsTable";
 
 const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelectedMenu}) => {  
-  if (!inputInfo) return;  
+  if (!inputInfo) return;
 
   let msg;
   let showWhoComponent;

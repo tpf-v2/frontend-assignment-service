@@ -37,7 +37,7 @@ const TeamDataTable = ({
   items,
   title,
   enableEdit = true,
-  //enableDelete = true, // No existe endpoint delete para teams actualmente
+  enableDelete = true, // No existe endpoint delete para teams actualmente
   enableAdd = true,
   enableFilterButtons = true,
 }) => {
