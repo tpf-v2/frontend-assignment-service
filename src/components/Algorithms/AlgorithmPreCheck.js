@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { Grid, Typography, Link, Box, CircularProgress,
-         Dialog, Button } from "@mui/material";
+         Dialog, Button, DialogTitle, DialogContent,
+         Accordion, AccordionSummary, AccordionDetails, } from "@mui/material";
 import StudentsTable from "../UI/Tables/ChildTables/StudentsTable";
 import TeamsTable from "../UI/Tables/ChildTables/GroupsTable";
 import TutorsTable from "../UI/Tables/ChildTables/TutorsTable";
@@ -8,6 +9,8 @@ import TutorsTable from "../UI/Tables/ChildTables/TutorsTable";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import ErrorIcon from "@mui/icons-material/Error";
+
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelectedMenu}) => {  
   //if (!inputInfo) return;
@@ -28,17 +31,21 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
 
   let checkResultIcon;
 
+  let expandableData;
+
   switch (algorithm) {
     case "IncompleteTeams": {
 
       if (inputInfo) {
 
         msg = inputInfo.length === 0 ? "Todos/as los/as estudiantes forman parte de alguna respuesta al formulario."
-        : inputInfo.length === 1 ? "Existe 1 estudiante que no está en respuestas al formulario de equipos en ninguna de sus variantes:"
-        : `Existen ${inputInfo.length} estudiantes que no están en respuestas al formulario de equipos en ninguna de sus variantes:`
+        : inputInfo.length === 1 ? "Existe 1 estudiante que no está en respuestas al formulario de equipos en ninguna de sus variantes"
+        : `Existen ${inputInfo.length} estudiantes que no están en respuestas al formulario de equipos en ninguna de sus variantes`
   
         showWhoList = inputInfo;
         showWhoComponent = <StudentsTable dataListToRender={showWhoList} />;
+
+        //expandableData = {title: "Estudiantes " } //no, es directamente msg
   
         // "condition" queda en true (ponerle un mejor nombre)
 
@@ -68,8 +75,6 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
         showWhoList = inputInfo.teams;
         showWhoComponent = <TeamsTable dataListToRender={showWhoList} />;
 
-        checkResultIcon = inputInfo.teams?.length === 0
-        ? <CheckCircleIcon /> : <WarningAmberIcon />
 
         // Ícono
         checkResultIcon = inputInfo.length === 0
@@ -132,19 +137,20 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
                 <Typography variant="body1" sx={{ textAlign: "justify" }}>
                   <strong>{msg}</strong>
                 </Typography>
-              </Grid>              
+              </Grid>
 
+              {/* Éste no va */}
               {false && showWhoList?.length > 0 && (
                 <Grid item xs={12} md={12} sx={{ display: "flex" }}>
                   {showWhoComponent}
                 </Grid>
               )}
-
+              {/* Va éste. y hay que reutilizar cosas acá, el "inputInfo" es lo variable */}
               {inputInfo.length > 0 && condition && (
                 <Typography variant="body1" sx={{ textAlign: "justify" }}>
                   <Button
                     variant="outlined"
-                    onClick={() => {setData(showWhoList); setOpen(true)}}
+                    onClick={() => {setData([{title: msg, detail: showWhoComponent}]); setOpen(true)}}
                   >
                     Ver quiénes
                   </Button>
@@ -190,9 +196,22 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
 
 
   <Dialog open={open} onClose={() => {setOpen(false)}} maxWidth={false} fullWidth>
-    <Grid item xs={12} md={12} sx={{ display: "flex" }}>
-      {showWhoComponent}
-    </Grid>
+    <DialogTitle>Entidades con problemas</DialogTitle>
+    <DialogContent>
+      {data?.map((e, index) => (
+        <Accordion key={index} defaultExpanded={false}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography>
+              {e.title}
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography variant="body2">{e.detail}</Typography>
+          </AccordionDetails>
+        </Accordion>
+      ))}
+    </DialogContent>
+          
   </Dialog>
 
   </>
@@ -200,3 +219,7 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
 }
 
 export default AlgorithmPreCheck;
+
+    // <Grid item xs={12} md={12} sx={{ display: "flex" }}>
+    //   {showWhoComponent}
+    // </Grid>
