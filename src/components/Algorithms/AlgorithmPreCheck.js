@@ -13,7 +13,6 @@ import ErrorIcon from "@mui/icons-material/Error";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelectedMenu}) => {  
-  //if (!inputInfo) return;
 
   const [open, setOpen] = useState(false);
   const [data, setData] = useState();
@@ -45,7 +44,7 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
         showWhoList = inputInfo;
         showWhoComponent = <StudentsTable dataListToRender={showWhoList} />;
 
-        //expandableData = {title: "Estudiantes " } //no, es directamente msg
+        expandableData = [{title: msg, detail: showWhoComponent}]
   
         // "condition" queda en true (ponerle un mejor nombre)
 
@@ -90,10 +89,15 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
         showWhoComponentTutors = <TutorsTable dataListToRender={showWhoListTutors} />;      
         msgTutors = 
           inputInfo.teachers?.length === 0 ? "Todos/as los/as tutores/as completaron su disponibilidad."
-          : inputInfo.teachers?.length === 1 ? "Existe 1 tutor/a que no completó su disponibilidad:"
-          : `Existen ${inputInfo.teachers?.length} tutores/as que no completaron su disponibilidad:`      
+          : inputInfo.teachers?.length === 1 ? "Existe 1 tutor/a que no completó su disponibilidad"
+          : `Existen ${inputInfo.teachers?.length} tutores/as que no completaron su disponibilidad`      
       }
       
+
+
+      expandableData = [{title: msg, detail: showWhoComponent},
+                        {title: msgTutors, detail: showWhoComponentTutors}
+      ]
       if (!setSelectedMenu) return;
       
       break;
@@ -150,9 +154,9 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
                 <Typography variant="body1" sx={{ textAlign: "justify" }}>
                   <Button
                     variant="outlined"
-                    onClick={() => {setData([{title: msg, detail: showWhoComponent}]); setOpen(true)}}
+                    onClick={() => {setData(expandableData); setOpen(true)}}
                   >
-                    Ver quiénes
+                    Analizar
                   </Button>
 
                 </Typography>
@@ -166,11 +170,25 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
                   <strong>{msgTutors}</strong>
                 </Typography>
               </Grid>
-              {showWhoListTutors?.length > 0 && (
+              {false && showWhoListTutors?.length > 0 && (
                 <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
                   {showWhoComponentTutors}
                 </Grid>
               )}
+
+               {/* Va éste. veamosssssssss _ en realidad no del todo pero probando __ y hay que reutilizar cosas acá, el "inputInfo" es lo variable */}
+               {inputInfo.teachers?.length > 0 && condition && (
+                <Typography variant="body1" sx={{ textAlign: "justify" }}>
+                  <Button
+                    variant="outlined"
+                    onClick={() => {setData(expandableData); setOpen(true)}}
+                  >
+                    Analizar
+                  </Button>
+
+                </Typography>
+              )}
+            
             </>
         </>
       ) : (
@@ -195,14 +213,14 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
     )}
 
 
-  <Dialog open={open} onClose={() => {setOpen(false)}} maxWidth={false} fullWidth>
+  <Dialog open={open} onClose={() => {setOpen(false)}} maxWidth={false}>
     <DialogTitle>Entidades con problemas</DialogTitle>
     <DialogContent>
       {data?.map((e, index) => (
         <Accordion key={index} defaultExpanded={false}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography>
-              {e.title}
+              <strong>{e.title}</strong>
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
