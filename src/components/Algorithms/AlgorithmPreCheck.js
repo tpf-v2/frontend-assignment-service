@@ -5,7 +5,7 @@ import TeamsTable from "../UI/Tables/ChildTables/GroupsTable";
 import TutorsTable from "../UI/Tables/ChildTables/TutorsTable";
 
 const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelectedMenu}) => {  
-  if (!inputInfo) return;
+  //if (!inputInfo) return;
 
   let msg;
   let showWhoComponent;
@@ -21,37 +21,44 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
   switch (algorithm) {
     case "IncompleteTeams": {
 
-      msg = inputInfo.length === 0 ? "Todos/as los/as estudiantes forman parte de alguna respuesta al formulario."
-      : inputInfo.length === 1 ? "Existe 1 estudiante que no está en respuestas al formulario de equipos en ninguna de sus variantes:"
-      : `Existen ${inputInfo.length} estudiantes que no están en respuestas al formulario de equipos en ninguna de sus variantes:`
+      if (inputInfo) {
 
-      showWhoList = inputInfo;
-      showWhoComponent = <StudentsTable dataListToRender={showWhoList} />;
-
-      // "condition" queda en true (ponerle un mejor nombre)
+        msg = inputInfo.length === 0 ? "Todos/as los/as estudiantes forman parte de alguna respuesta al formulario."
+        : inputInfo.length === 1 ? "Existe 1 estudiante que no está en respuestas al formulario de equipos en ninguna de sus variantes:"
+        : `Existen ${inputInfo.length} estudiantes que no están en respuestas al formulario de equipos en ninguna de sus variantes:`
+  
+        showWhoList = inputInfo;
+        showWhoComponent = <StudentsTable dataListToRender={showWhoList} />;
+  
+        // "condition" queda en true (ponerle un mejor nombre)
+      }
 
       break;
     }
-    case "Dates": {
+    case "Dates": {      
+
+      if (inputInfo) {
+        
+        condition = inputInfo.admin_slots;
+        
+        msg =
+          inputInfo.teams?.length === 0 ? "Todos los equipos completaron su disponibilidad."
+          : inputInfo.teams?.length === 1 ? "Existe 1 equipo que no completó su disponibilidad:"
+          : `Existen ${inputInfo.teams?.length} equipos que no completaron su disponibilidad:`
+        
+        showWhoList = inputInfo.teams;
+        showWhoComponent = <TeamsTable dataListToRender={showWhoList} />;
+  
+        // Tutores
+        showWhoListTutors = inputInfo.teachers;
+        showWhoComponentTutors = <TutorsTable dataListToRender={showWhoListTutors} />;      
+        msgTutors = 
+          inputInfo.teachers?.length === 0 ? "Todos/as los/as tutores/as completaron su disponibilidad."
+          : inputInfo.teachers?.length === 1 ? "Existe 1 tutor/a que no completó su disponibilidad:"
+          : `Existen ${inputInfo.teachers?.length} tutores/as que no completaron su disponibilidad:`      
+      }
+      
       if (!setSelectedMenu) return;
-
-      condition = inputInfo.admin_slots;
-      
-      msg =
-        inputInfo.teams?.length === 0 ? "Todos los equipos completaron su disponibilidad."
-        : inputInfo.teams?.length === 1 ? "Existe 1 equipo que no completó su disponibilidad:"
-        : `Existen ${inputInfo.teams?.length} equipos que no completaron su disponibilidad:`
-      
-      showWhoList = inputInfo.teams;
-      showWhoComponent = <TeamsTable dataListToRender={showWhoList} />;
-
-      // Tutores
-      showWhoListTutors = inputInfo.teachers;
-      showWhoComponentTutors = <TutorsTable dataListToRender={showWhoListTutors} />;      
-      msgTutors = 
-        inputInfo.teachers?.length === 0 ? "Todos/as los/as tutores/as completaron su disponibilidad."
-        : inputInfo.teachers?.length === 1 ? "Existe 1 tutor/a que no completó su disponibilidad:"
-        : `Existen ${inputInfo.teachers?.length} tutores/as que no completaron su disponibilidad:`      
       
       break;
     }
