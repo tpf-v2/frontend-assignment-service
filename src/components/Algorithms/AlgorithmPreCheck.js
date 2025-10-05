@@ -4,6 +4,10 @@ import StudentsTable from "../UI/Tables/ChildTables/StudentsTable";
 import TeamsTable from "../UI/Tables/ChildTables/GroupsTable";
 import TutorsTable from "../UI/Tables/ChildTables/TutorsTable";
 
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import ErrorIcon from "@mui/icons-material/Error";
+
 const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelectedMenu}) => {  
   //if (!inputInfo) return;
 
@@ -18,6 +22,8 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
 
   let condition = true;
 
+  let checkResultIcon;
+
   switch (algorithm) {
     case "IncompleteTeams": {
 
@@ -31,6 +37,15 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
         showWhoComponent = <StudentsTable dataListToRender={showWhoList} />;
   
         // "condition" queda en true (ponerle un mejor nombre)
+
+        // Ícono
+        checkResultIcon = inputInfo.length === 0
+        ? <CheckCircleIcon color="success"/> : <WarningAmberIcon color="warning"/>
+        
+        if (!condition) {
+          checkResultIcon = <ErrorIcon color="error"/>
+        }
+
       }
 
       break;
@@ -48,7 +63,19 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
         
         showWhoList = inputInfo.teams;
         showWhoComponent = <TeamsTable dataListToRender={showWhoList} />;
-  
+
+        checkResultIcon = inputInfo.teams?.length === 0
+        ? <CheckCircleIcon /> : <WarningAmberIcon />
+
+        // Ícono
+        checkResultIcon = inputInfo.length === 0
+        ? <CheckCircleIcon color="success"/> : <WarningAmberIcon color="warning"/>
+        
+        if (!condition) {
+          checkResultIcon = checkResultIcon = <ErrorIcon color="error"/>
+        }
+
+        //////////
         // Tutores
         showWhoListTutors = inputInfo.teachers;
         showWhoComponentTutors = <TutorsTable dataListToRender={showWhoListTutors} />;      
@@ -96,7 +123,8 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
       {condition ? (
         <>          
             <>
-              <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
+              <Grid item xs={12} md={12} sx={{ display: "flex", gap: 0.5}}>  
+                {checkResultIcon}
                 <Typography variant="body1" sx={{ textAlign: "justify" }}>
                   <strong>{msg}</strong>
                 </Typography>
@@ -125,7 +153,8 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
         </>
       ) : (
           
-          <Grid item xs={12} md={12} sx={{ display: "flex" }}>
+          <Grid item xs={12} md={12} sx={{ display: "flex", gap: 0.5 }}>
+            {checkResultIcon}
             <Typography component={"span"}>
               <strong>Primero se debe cargar las fechas disponibles desde la sección {' '}</strong>
             </Typography>
