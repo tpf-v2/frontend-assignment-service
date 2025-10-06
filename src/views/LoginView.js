@@ -7,10 +7,8 @@ import {
   Box,
   Paper,
   Divider,
-  IconButton,
-  InputAdornment,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { togglePasswordVisibility } from "./PasswordVisibility.js";
 import { Link, useNavigate } from "react-router-dom";
 import { styled } from "@mui/system";
 import BackgroundContainer from "../components/UI/BackgroundContainer.js";
@@ -110,18 +108,7 @@ const LoginView = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
             // El adornment es para poner el ícono del 'ojito' Adentro del textfield
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
+            InputProps={togglePasswordVisibility(showPassword, setShowPassword)}
           />
           <ButtonStyled
             disabled={loading}
