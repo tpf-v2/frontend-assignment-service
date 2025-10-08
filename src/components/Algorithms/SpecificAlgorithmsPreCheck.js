@@ -56,17 +56,69 @@ export const IncompleteTeamsPreCheck = ({initialDescription, inputInfo, algorith
 }
 
 export const DatesPreCheck = ({initialDescription, inputInfo, algorithm, setSelectedMenu}) => {
-  // Hay que pasarle esto.
-  // const falseConditionMsg = (<Typography component={"span"}>
-  //             <strong>Primero se debe cargar las fechas disponibles desde la sección {' '}</strong>
-  //           </Typography>
-  //           <Link
-  //             component="span"
-  //             onClick={() => setSelectedMenu("Disponibilidad fechas de Presentación")}
-  //             underline="always"
-  //             sx={{ color: "blue", cursor: "pointer", ml: 0.5}}
-  //             >
-  //             Disponibilidad fechas de Presentación
-  //           </Link>.)
+
+    if (inputInfo) {
+        
+        const condition = inputInfo.admin_slots;
+        
+        const msg =
+          inputInfo.teams?.length === 0 ? "Todos los equipos completaron su disponibilidad."
+          : inputInfo.teams?.length === 1 ? "Existe 1 equipo que no completó su disponibilidad"
+          : `Existen ${inputInfo.teams?.length} equipos que no completaron su disponibilidad`
+        
+        const showWhoList = inputInfo.teams;
+        const showWhoComponent = <TeamsTable dataListToRender={showWhoList} />;
+
+        // Ícono
+        let checkResultIcon = inputInfo.length === 0
+        ? <CheckCircleIcon color="success"/> : <WarningAmberIcon color="warning"/>        
+        if (!condition) {
+          checkResultIcon = checkResultIcon = <ErrorIcon color="error"/>
+        }
+
+        //////////
+        // Tutores
+        const showWhoListTutors = inputInfo.teachers;
+        const showWhoComponentTutors = <TutorsTable dataListToRender={showWhoListTutors} />;      
+        const msgTutors = 
+          inputInfo.teachers?.length === 0 ? "Todos/as los/as tutores/as completaron su disponibilidad."
+          : inputInfo.teachers?.length === 1 ? "Existe 1 tutor/a que no completó su disponibilidad"
+          : `Existen ${inputInfo.teachers?.length} tutores/as que no completaron su disponibilidad`      
+        
+        
+        const expandableData = [{title: msg, detail: showWhoComponent},
+                            {title: msgTutors, detail: showWhoComponentTutors}
+        ]
+        if (!setSelectedMenu) return;
+
+
+
+
+        /////
+        const falseConditionMsg = (
+            <>
+                <Typography component={"span"}>
+                    <strong>Primero se debe cargar las fechas disponibles desde la sección {' '}</strong>
+                </Typography>
+                <Link
+                    component="span"
+                    onClick={() => setSelectedMenu("Disponibilidad fechas de Presentación")}
+                    underline="always"
+                    sx={{ color: "blue", cursor: "pointer", ml: 0.5}}
+                    >
+                    Disponibilidad fechas de Presentación
+                </Link>.
+            </>
+        );
+
+        // AUX hay que ponerle un map para pasarle más de un msg... o algo así, ver.
+        return <AlgorithmPreCheck inputInfo={inputInfo} algorithm={"IncompleteTeams"}
+          msg={msg} showWhoList={inputInfo?.teams} showWhoComponent={showWhoComponent}
+          expandableData={expandableData} condition={condition} checkResultIcon={checkResultIcon}
+          falseConditionMsg={falseConditionMsg} />
+    }
+    
+
+   
 
 }

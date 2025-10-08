@@ -37,6 +37,7 @@ import ResultsDialog from "./Dates/ResultsDialog";
 
 import { getInputAnalysis } from "../../api/handleAlgorithmAnalysis";
 import AlgorithmPreCheck from "./AlgorithmPreCheck";
+import { DatesPreCheck } from "./SpecificAlgorithmsPreCheck";
 
 const evaluatorColors = [
   "#87CEFA", // Light Blue
@@ -570,6 +571,7 @@ const Dates = ({setSelectedMenu}) => {
         <Description />
         {/* Verificación Previa */}
         {/*<AlgorithmPreCheck inputInfo={inputInfo} algorithm={"Dates"} setSelectedMenu={setSelectedMenu}/>*/}
+        <DatesPreCheck inputInfo={inputInfo} algorithm={"Dates"} setSelectedMenu={setSelectedMenu}/>
 
         {/* Botones Correr */}
         <ButtonSection
