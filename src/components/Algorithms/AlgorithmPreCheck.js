@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import { Grid, Typography, CircularProgress, Box,
          Dialog, Button, DialogTitle, DialogContent,
-         Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+         Accordion, AccordionSummary, AccordionDetails, 
+         DialogActions} from "@mui/material";
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
@@ -136,6 +137,11 @@ export const AlgorithmPreCheck = ({
         </Accordion>
       ))}
     </DialogContent>
+    <DialogActions>
+      <Button onClick={() => {setOpen(false)}} variant="contained" color="primary">
+          Cerrar
+      </Button>
+    </DialogActions>
           
   </Dialog>
 
