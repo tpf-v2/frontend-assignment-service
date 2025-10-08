@@ -94,9 +94,6 @@ const TeamDataTable = ({
   }));
 
   // useEffect
-  console.log("--- Probando endpoint:", endpoint || "");
-  console.log("--- Probando data:", data);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -428,8 +425,6 @@ const TeamDataTable = ({
       });
     }
   };
-
-  console.log("--- filteredTeams:", filteredTeams);
 
   return (
       <>
