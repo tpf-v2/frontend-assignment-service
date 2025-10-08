@@ -14,11 +14,6 @@ const AlgorithmPreCheck = ({
   const [open, setOpen] = useState(false);
   const [data, setData] = useState();
 
-  // // Aux tutores mientras pruebo
-  let showWhoComponentTutors;
-  let showWhoListTutors;
-  let msgTutors;
-
   return (
     <>
     <Grid item xs={12} md={12} sx={{ display: "flex" }}>
@@ -45,60 +40,37 @@ const AlgorithmPreCheck = ({
       </Grid>
 
       {condition ? (
-        <>          
+        <>
+        {/* Muestro lista de cada msj (ej "Existen _n_ ... que no ...", o msj de Todo ok) con su ícono*/}
+          {expandableData?.map((okMsgOrProblematicEntity) => (
             <>
-              <Grid item xs={12} md={12} sx={{ display: "flex", gap: 0.5}}>  
-                {checkResultIcon}
-                <Typography variant="body1" sx={{ textAlign: "justify" }}>
-                  <strong>{expandableData[0].title}</strong>
-                </Typography>
-              </Grid>
-
-              {/* Va éste. y hay que reutilizar cosas acá, el "inputInfo" es lo variable */}
-              {/*inputInfo.length > 0 && condition && (*/}
-              {expandableData[0].infoList.length > 0 && condition && (
-                <Typography variant="body1" sx={{ textAlign: "justify" }}>
-                  <Button
-                    variant="outlined"
-                    onClick={() => {setData(expandableData); setOpen(true)}}
-                  >
-                    Analizar
-                  </Button>
-
-                </Typography>
-              )}
-            </>
-          
-            <>
-              {/* Tutores - fechas */}
-              <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
-                <Typography variant="body1" sx={{ textAlign: "justify" }}>
-                  <strong>{msgTutors}</strong>
-                </Typography>
-              </Grid>              
-
-               {/* Va éste. veamosssssssss _ en realidad no del todo pero probando __ y hay que reutilizar cosas acá, el "inputInfo" es lo variable */}
-               {inputInfo.teachers?.length > 0 && condition && (
-                <Typography variant="body1" sx={{ textAlign: "justify" }}>
-                  <Button
-                    variant="outlined"
-                    onClick={() => {setData(expandableData); setOpen(true)}}
-                  >
-                    Analizar
-                  </Button>
-
-                </Typography>
-              )}
-            
-            </>
-        </>
+            <Grid item xs={12} md={12} sx={{ display: "flex", gap: 0.5}}>  
+              {checkResultIcon}
+              <Typography variant="body1" sx={{ textAlign: "justify" }}>
+                <strong>{okMsgOrProblematicEntity.title}</strong>
+              </Typography>
+            </Grid>
+          {/* Si hay gente que falte al input, y aplique mostrar, muestro botón para ver quiénes son en modal */}
+          {okMsgOrProblematicEntity.infoList.length > 0 && condition && (
+            <Typography variant="body1" sx={{ textAlign: "justify" }}>
+              <Button
+                variant="outlined"
+                onClick={() => {setData(expandableData); setOpen(true)}}
+              >
+                Analizar
+              </Button>
+            </Typography>
+          )}
+           </>
+          ))}
+          </>
       ) : (
-          
-          <Grid item xs={12} md={12} sx={{ display: "flex", gap: 0.5 }}>
-            {checkResultIcon}
-            {falseConditionMsg}
-          </Grid>
-          )
+        <Grid item xs={12} md={12} sx={{ display: "flex", gap: 0.5 }}>
+          {/* Si esto es false, no aplica mostrarlos xq existe otro problema ("primero admin cargar fechas")*/}
+          {checkResultIcon}
+          {falseConditionMsg}
+        </Grid>
+      )
       }      
       </>
     )}
