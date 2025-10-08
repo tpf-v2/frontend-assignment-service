@@ -12,93 +12,96 @@ import ErrorIcon from "@mui/icons-material/Error";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelectedMenu}) => {  
+const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelectedMenu,
+  msg, showWhoComponent, showWhoList, condition, checkResultIcon, expandableData,
+  falseConditionMsg
+}) => {  
 
   const [open, setOpen] = useState(false);
   const [data, setData] = useState();
 
-  let msg;
-  let showWhoComponent;
-  let showWhoList;
+  // let msg;
+  // let showWhoComponent;
+  // let showWhoList;
 
-  // Aux tutores mientras pruebo
+  // // Aux tutores mientras pruebo
   let showWhoComponentTutors;
   let showWhoListTutors;
   let msgTutors;
 
-  let condition = true;
+  // let condition = true;
 
-  let checkResultIcon;
+  // let checkResultIcon;
 
-  let expandableData;
+  // let expandableData;
 
   switch (algorithm) {
     case "IncompleteTeams": {
 
-      if (inputInfo) {
+    //   if (inputInfo && condition!==undefined) {
 
-        msg = inputInfo.length === 0 ? "Todos/as los/as estudiantes forman parte de alguna respuesta al formulario."
-        : inputInfo.length === 1 ? "Existe 1 estudiante que no está en respuestas al formulario de equipos en ninguna de sus variantes"
-        : `Existen ${inputInfo.length} estudiantes que no están en respuestas al formulario de equipos en ninguna de sus variantes`
+    //     msg = inputInfo.length === 0 ? "Todos/as los/as estudiantes forman parte de alguna respuesta al formulario."
+    //     : inputInfo.length === 1 ? "Existe 1 estudiante que no está en respuestas al formulario de equipos en ninguna de sus variantes"
+    //     : `Existen ${inputInfo.length} estudiantes que no están en respuestas al formulario de equipos en ninguna de sus variantes`
   
-        showWhoList = inputInfo;
-        showWhoComponent = <StudentsTable dataListToRender={showWhoList} />;
+    //     showWhoList = inputInfo;
+    //     showWhoComponent = <StudentsTable dataListToRender={showWhoList} />;
 
-        expandableData = [{title: msg, detail: showWhoComponent}]
+    //     expandableData = [{title: msg, detail: showWhoComponent}]
   
-        // "condition" queda en true (ponerle un mejor nombre)
+    //     // "condition" queda en true (ponerle un mejor nombre)
 
-        // Ícono
-        checkResultIcon = inputInfo.length === 0
-        ? <CheckCircleIcon color="success"/> : <WarningAmberIcon color="warning"/>
+    //     // Ícono
+    //     checkResultIcon = inputInfo.length === 0
+    //     ? <CheckCircleIcon color="success"/> : <WarningAmberIcon color="warning"/>
         
-        if (!condition) {
-          checkResultIcon = <ErrorIcon color="error"/>
-        }
+    //     if (!condition) {
+    //       checkResultIcon = <ErrorIcon color="error"/>
+    //     }
 
-      }
+    //   }
 
       break;
     }
-    case "Dates": {      
+    case "Dates": {  
 
-      if (inputInfo) {
+      // if (inputInfo) {
         
-        condition = inputInfo.admin_slots;
+      //   condition = inputInfo.admin_slots;
         
-        msg =
-          inputInfo.teams?.length === 0 ? "Todos los equipos completaron su disponibilidad."
-          : inputInfo.teams?.length === 1 ? "Existe 1 equipo que no completó su disponibilidad"
-          : `Existen ${inputInfo.teams?.length} equipos que no completaron su disponibilidad`
+      //   msg =
+      //     inputInfo.teams?.length === 0 ? "Todos los equipos completaron su disponibilidad."
+      //     : inputInfo.teams?.length === 1 ? "Existe 1 equipo que no completó su disponibilidad"
+      //     : `Existen ${inputInfo.teams?.length} equipos que no completaron su disponibilidad`
         
-        showWhoList = inputInfo.teams;
-        showWhoComponent = <TeamsTable dataListToRender={showWhoList} />;
+      //   showWhoList = inputInfo.teams;
+      //   showWhoComponent = <TeamsTable dataListToRender={showWhoList} />;
 
 
-        // Ícono
-        checkResultIcon = inputInfo.length === 0
-        ? <CheckCircleIcon color="success"/> : <WarningAmberIcon color="warning"/>
+      //   // Ícono
+      //   checkResultIcon = inputInfo.length === 0
+      //   ? <CheckCircleIcon color="success"/> : <WarningAmberIcon color="warning"/>
         
-        if (!condition) {
-          checkResultIcon = checkResultIcon = <ErrorIcon color="error"/>
-        }
+      //   if (!condition) {
+      //     checkResultIcon = checkResultIcon = <ErrorIcon color="error"/>
+      //   }
 
-        //////////
-        // Tutores
-        showWhoListTutors = inputInfo.teachers;
-        showWhoComponentTutors = <TutorsTable dataListToRender={showWhoListTutors} />;      
-        msgTutors = 
-          inputInfo.teachers?.length === 0 ? "Todos/as los/as tutores/as completaron su disponibilidad."
-          : inputInfo.teachers?.length === 1 ? "Existe 1 tutor/a que no completó su disponibilidad"
-          : `Existen ${inputInfo.teachers?.length} tutores/as que no completaron su disponibilidad`      
-      }
+      //   //////////
+      //   // Tutores
+      //   const showWhoListTutors = inputInfo.teachers;
+      //   const showWhoComponentTutors = <TutorsTable dataListToRender={showWhoListTutors} />;      
+      //   const msgTutors = 
+      //     inputInfo.teachers?.length === 0 ? "Todos/as los/as tutores/as completaron su disponibilidad."
+      //     : inputInfo.teachers?.length === 1 ? "Existe 1 tutor/a que no completó su disponibilidad"
+      //     : `Existen ${inputInfo.teachers?.length} tutores/as que no completaron su disponibilidad`      
+      // }
       
 
 
-      expandableData = [{title: msg, detail: showWhoComponent},
-                        {title: msgTutors, detail: showWhoComponentTutors}
-      ]
-      if (!setSelectedMenu) return;
+      // expandableData = [{title: msg, detail: showWhoComponent},
+      //                   {title: msgTutors, detail: showWhoComponentTutors}
+      // ]
+      // if (!setSelectedMenu) return;
       
       break;
     }
@@ -107,6 +110,12 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
       msg = "Ocurrió un error inesperado al mostrar información";
     }
   }
+
+  // Nop, esto siempre da true -_-
+  // if (condition === undefined) {
+  //   return
+  // }
+  console.log("--- condition:", condition);
 
   return (
     <>
@@ -195,17 +204,7 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
           
           <Grid item xs={12} md={12} sx={{ display: "flex", gap: 0.5 }}>
             {checkResultIcon}
-            <Typography component={"span"}>
-              <strong>Primero se debe cargar las fechas disponibles desde la sección {' '}</strong>
-            </Typography>
-            <Link
-              component="span"
-              onClick={() => setSelectedMenu("Disponibilidad fechas de Presentación")}
-              underline="always"
-              sx={{ color: "blue", cursor: "pointer", ml: 0.5}}
-              >
-              Disponibilidad fechas de Presentación
-            </Link>.
+            {falseConditionMsg}
           </Grid>
           )
       }      
