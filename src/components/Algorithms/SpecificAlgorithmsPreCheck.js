@@ -10,6 +10,11 @@ import ErrorIcon from "@mui/icons-material/Error";
 
 import AlgorithmPreCheck from "./AlgorithmPreCheck";
 
+// export const ExpandableData = ({}) => {
+
+
+// }
+
 export const IncompleteTeamsPreCheck = ({initialDescription, inputInfo, algorithm, setSelectedMenu}) => {
   if (inputInfo) {
     // A ESTE LO TRAIGO DE AFUERA:
@@ -24,28 +29,24 @@ export const IncompleteTeamsPreCheck = ({initialDescription, inputInfo, algorith
     const showWhoList = inputInfo;
     const showWhoComponent = <StudentsTable dataListToRender={showWhoList} />;
 
-    // los dos primeros campos se usan para el modal, pero el tercero se usa para ver su len y si debería renderizarse
-    const expandableData = [{title: studentsMsg, detail: showWhoComponent, infoList: showWhoList}]
-    //const data = [{msg: studentsMsg, infoList: showWhoList}]
-
     const condition = true //(ponerle un mejor nombre)
-
+    
     // Ícono
     let checkResultIcon = inputInfo.length === 0
     ? <CheckCircleIcon color="success"/> : <WarningAmberIcon color="warning"/>    
     if (!condition) {
-      checkResultIcon = <ErrorIcon color="error"/>
+        checkResultIcon = <ErrorIcon color="error"/>
     }
-
-    console.log("--- condition a pasar:", condition);
-
+    
+    // los dos primeros campos se usan para el modal, pero el tercero se usa para ver su len y si debería renderizarse
+    const expandableData = [{title: studentsMsg, detail: showWhoComponent, infoList: showWhoList, icon: checkResultIcon}]
     
     // AUX: esto debe ir acá xq afuera del if no existen las variables que le estoy pasando
     // Aux: Equipos incompletos no lleva set :)
-    return <AlgorithmPreCheck initialDescription={initialDescription} inputInfo={inputInfo} algorithm={"IncompleteTeams"}
-          msg={studentsMsg} showWhoList={inputInfo} showWhoComponent={showWhoComponent}
+    return <AlgorithmPreCheck initialDescription={initialDescription}
           expandableData={expandableData} condition={true} checkResultIcon={checkResultIcon}
-          falseConditionMsg={"Dev error"} />
+          //falseConditionMsg={"Dev error"}
+          />
   } else {
     // AUX )cont): pero poner ese return en el if acá arriba, hace que acá solo haga return en vez de mostrar el
     // spinner. Debería mostrar el spinner acá.
@@ -71,25 +72,29 @@ export const DatesPreCheck = ({initialDescription, inputInfo, algorithm, setSele
         let checkResultIcon = inputInfo.length === 0
         ? <CheckCircleIcon color="success"/> : <WarningAmberIcon color="warning"/>        
         if (!condition) {
-          checkResultIcon = checkResultIcon = <ErrorIcon color="error"/>
+          checkResultIcon = <ErrorIcon color="error"/>
         }
 
         //////////
         // Tutores
-        const showWhoListTutors = inputInfo.teachers;
-        const showWhoComponentTutors = <TutorsTable dataListToRender={showWhoListTutors} />;      
+        const showWhoTutorsList = inputInfo.teachers;
+        const showWhoTutorsComponent = <TutorsTable dataListToRender={showWhoTutorsList} />;      
         const tutorsMsg = 
           inputInfo.teachers?.length === 0 ? "Todos/as los/as tutores/as completaron su disponibilidad."
           : inputInfo.teachers?.length === 1 ? "Existe 1 tutor/a que no completó su disponibilidad"
           : `Existen ${inputInfo.teachers?.length} tutores/as que no completaron su disponibilidad`      
+        // Ícono
+        let tutorsIcon = inputInfo.length === 0
+        ? <CheckCircleIcon color="success"/> : <WarningAmberIcon color="warning"/>        
+        if (!condition) {
+            tutorsIcon = <ErrorIcon color="error"/>
+        }
+
+
         
         // los dos primeros campos se usan para el modal, pero el tercero se usa para ver su len y si debería renderizarse
-        const expandableData = [{title: teamsMsg, detail: showWhoComponent, infoList: showWhoList},
-                            {title: tutorsMsg, detail: showWhoComponentTutors, infoList: showWhoListTutors}]
-        // const data = [
-        //     {msg: teamsMsg, infoList: showWhoList},
-        //     {msg: tutorsMsg, infoList: showWhoListTutors}
-        // ]
+        const expandableData = [{title: teamsMsg, detail: showWhoComponent, infoList: showWhoList, icon: checkResultIcon},
+                            {title: tutorsMsg, detail: showWhoTutorsComponent, infoList: showWhoTutorsList, icon: tutorsIcon}]
         if (!setSelectedMenu) return;
 
 
@@ -113,8 +118,7 @@ export const DatesPreCheck = ({initialDescription, inputInfo, algorithm, setSele
         );
 
         // AUX hay que ponerle un map para pasarle más de un msg... o algo así, ver.
-        return <AlgorithmPreCheck inputInfo={inputInfo} algorithm={"IncompleteTeams"}
-          msg={teamsMsg} showWhoList={inputInfo?.teams} showWhoComponent={showWhoComponent}
+        return <AlgorithmPreCheck
           expandableData={expandableData} condition={condition} checkResultIcon={checkResultIcon}
           falseConditionMsg={falseConditionMsg} />
     }

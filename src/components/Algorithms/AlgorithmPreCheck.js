@@ -1,13 +1,13 @@
 import React, {useState} from "react";
-import { Grid, Typography, Link, Box, CircularProgress,
+import { Grid, Typography, Box, CircularProgress,
          Dialog, Button, DialogTitle, DialogContent,
          Accordion, AccordionSummary, AccordionDetails, } from "@mui/material";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const AlgorithmPreCheck = ({
-  initialDescription, inputInfo, setSelectedMenu,
-  msg, showWhoComponent, showWhoList, condition, checkResultIcon, expandableData,
+  initialDescription,
+  condition, checkResultIcon, expandableData,
   falseConditionMsg
 }) => {  
 
@@ -21,7 +21,7 @@ const AlgorithmPreCheck = ({
         Verificación previa
       </Typography>
     </Grid>
-    {!inputInfo && (
+    {!expandableData && (
       <Grid item xs={12} md={12} sx={{ display: "flex" }}>
         <Box
           display="flex"
@@ -31,7 +31,7 @@ const AlgorithmPreCheck = ({
         </Box>
       </Grid>
     )}
-    {inputInfo && (
+    {expandableData && (
       <>
       <Grid item xs={12} md={12} sx={{ display: "flex" }}>
         <Typography variant="body1" sx={{ textAlign: "justify" }}>
@@ -45,7 +45,7 @@ const AlgorithmPreCheck = ({
           {expandableData?.map((okMsgOrProblematicEntity) => (
             <>
             <Grid item xs={12} md={12} sx={{ display: "flex", gap: 0.5}}>  
-              {checkResultIcon}
+              {okMsgOrProblematicEntity.icon}
               <Typography variant="body1" sx={{ textAlign: "justify" }}>
                 <strong>{okMsgOrProblematicEntity.title}</strong>
               </Typography>
