@@ -3,18 +3,35 @@ import { Grid, Typography, Box, CircularProgress,
          Dialog, Button, DialogTitle, DialogContent,
          Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import ErrorIcon from "@mui/icons-material/Error";
+
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const AlgorithmPreCheck = ({
   initialDescription,
-  condition, checkResultIcon, expandableData,
+  condition=true,
+  expandableData,
   falseConditionMsg
 }) => {  
 
   const [open, setOpen] = useState(false);
   const [data, setData] = useState();
 
-  // True si alguna de las listas muestra problemas, para saber si debo mostrar el botón de "Analizar"
+  const getIcon = (list) => {
+    if (list.length === 0) {
+        return <CheckCircleIcon color="success"/>
+    }
+    if (list.length > 0) {        
+        return <WarningAmberIcon color="warning"/>
+    }
+  }
+  
+  // Agregamos ícono a cada mensaje a mostrar
+  const dataWithIcons = expandableData?.map(elem => ({ ...elem, icon: getIcon(elem.infoList) }));
+  
+  // True si alguna de las listas muestra 'entidades problemáticas', para saber si debo mostrar el botón de "Analizar"
   const areThereProblems = expandableData?.some(element => element.infoList.length > 0);
 
   return (
@@ -34,7 +51,7 @@ const AlgorithmPreCheck = ({
         </Box>
       </Grid>
     )}
-    {expandableData && (
+    {dataWithIcons && (
       <>
       <Grid item xs={12} md={12} sx={{ display: "flex" }}>
         <Typography variant="body1" sx={{ textAlign: "justify" }}>
@@ -45,7 +62,7 @@ const AlgorithmPreCheck = ({
       {condition ? (
         <>
         {/* Muestro lista de cada msj (ej "Existen _n_ ... que no ...", o msj de Todo ok) con su ícono*/}
-          {expandableData?.map((okMsgOrProblematicEntity) => (
+          {dataWithIcons?.map((okMsgOrProblematicEntity) => (
             <Grid item xs={12} md={12} sx={{ display: "flex", gap: 0.5}}>  
               {okMsgOrProblematicEntity.icon}
               <Typography variant="body1" sx={{ textAlign: "justify" }}>
@@ -57,8 +74,8 @@ const AlgorithmPreCheck = ({
           {areThereProblems && condition && (          
             <Typography variant="body1" sx={{ textAlign: "justify" }}>
               <Button
-                variant="outlined"
-                onClick={() => {setData(expandableData); setOpen(true)}}
+                variant="outlined"                
+                onClick={() => {setData(dataWithIcons); setOpen(true)}}
               >
                 Analizar
               </Button>
@@ -68,7 +85,7 @@ const AlgorithmPreCheck = ({
       ) : (
         <Grid item xs={12} md={12} sx={{ display: "flex", gap: 0.5 }}>
           {/* Si esto es false, no aplica mostrarlos xq existe otro problema ("primero admin cargar fechas")*/}
-          {checkResultIcon}
+          <ErrorIcon color="error"/>
           {falseConditionMsg}
         </Grid>
       )
