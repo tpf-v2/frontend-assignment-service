@@ -36,6 +36,10 @@ export const Title = ({withSpinner=false}) => {
   )
 }
 
+// Componente genérico, recibe los datos ya procesados de SpecificAlgorithmsPreCheck.js
+// les agrega íconos y se encarga del renderizado. Muestra a admin que hay entidades con problemas
+// (ej estudiantes / equipos / tutores que faltan al input de los algoritmos) y en un modal
+// muestra quiénes son.
 export const AlgorithmPreCheck = ({
   initialDescription,
   condition=true,

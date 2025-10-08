@@ -116,7 +116,6 @@ const Dates = ({setSelectedMenu}) => {
   const dispatch = useDispatch();
 
   // Fechas
-
   useEffect(() => {
     
     // Análsis del input del algoritmo, previo a ejecutarlo

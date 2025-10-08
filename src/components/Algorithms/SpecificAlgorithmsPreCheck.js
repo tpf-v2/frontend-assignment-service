@@ -79,5 +79,4 @@ export const DatesPreCheck = ({inputInfo, setSelectedMenu}) => {
     } else {
         return <Title withSpinner={true} />
     }
-    
 }
