@@ -27,7 +27,7 @@ import { setGroups } from "../../redux/slices/groupsSlice";
 import { togglePeriodSetting } from "../../redux/slices/periodSlice";
 import updatePeriod from "../../api/updatePeriod";
 import { useNavigate } from "react-router-dom";
-import AlgorithmPreCheck from "./AlgorithmPreCheck";
+import { IncompleteTeamsPreCheck } from "./SpecificAlgorithmsPreCheck";
 
 const IncompleteGroups = () => {
   const period = useSelector((state) => state.period);
@@ -53,13 +53,14 @@ const IncompleteGroups = () => {
     setOpenConfirmDialog(true); // Muestra el diálogo de confirmación al presionar el botón "Correr"
   };
   
-  // Análsis del input del algoritmo, previo a ejecutarlo
-  const endpoint = "/incomplete_teams_algorithm_input_info"
   // (Esta sintaxis del '+' es solo para hacer un salto de línea en el ide, no afecta al renderizado)
   const preCheckMsg = `Este algoritmo utiliza las respuestas al formulario de equipos`+
-        ` (Preferencias / Ya tengo tema y tutor) como input, para completar los equipos en base a sus preferencias.`
+  ` (Preferencias / Ya tengo tema y tutor) como input, para completar los equipos en base a sus preferencias.`
   useEffect(() => {
+    
+    // Análsis del input del algoritmo, previo a ejecutarlo
     const getInputInfo = async () => {
+      const endpoint = "/incomplete_teams_algorithm_input_info"
       try {
         const data = await getInputAnalysis(endpoint, period.id, user);        
         setInputInfo(data);
@@ -151,13 +152,13 @@ const IncompleteGroups = () => {
         </Grid>
 
         {/* Verificación Previa */}
-        <AlgorithmPreCheck initialDescription={preCheckMsg} inputInfo={inputInfo} algorithm={"IncompleteTeams"}/>        
+        <IncompleteTeamsPreCheck initialDescription={preCheckMsg} inputInfo={inputInfo} algorithm={"IncompleteTeams"}/>
         
         {/* Botones Correr, Editar */}
         <Grid
           item
           xs={12}
-          md={2}
+          md={1}
           sx={{ display: "flex", justifyContent: "right" }}
         >
           <Button
