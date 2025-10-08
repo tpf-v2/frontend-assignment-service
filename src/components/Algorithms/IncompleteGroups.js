@@ -158,7 +158,7 @@ const IncompleteGroups = () => {
         <Grid
           item
           xs={12}
-          md={2}
+          md={1}
           sx={{ display: "flex", justifyContent: "right" }}
         >
           <Button

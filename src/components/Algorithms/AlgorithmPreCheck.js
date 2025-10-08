@@ -87,16 +87,25 @@ export const AlgorithmPreCheck = ({
               </Typography>
             </Grid>
           ))}
-          {/* Si hay gente que falte al input, y aplique mostrar, muestro botón para ver quiénes son en modal */}
-          {areThereProblems && condition && (          
-            <Typography variant="body1" sx={{ textAlign: "justify" }}>
-              <Button
-                variant="outlined"                
-                onClick={() => {setData(dataWithIcons); setOpen(true)}}
-              >
-                Analizar
-              </Button>
-            </Typography>
+          {/* Si hay gente que falte al input, y aplica mostrar, muestro botón para ver quiénes son en modal */}
+          {areThereProblems && condition && (    
+            <Grid
+              item
+              xs={12}
+              md={falseConditionMsg ? 12 : 11}
+              sx={{ display: "flex", justifyContent: "right" }}
+            >
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {setData(dataWithIcons); setOpen(true)}}
+              sx={{ ml: "auto", mt: "auto",
+                padding: falseConditionMsg ? "6px 19px" : "6px 9px", // Tamaño del botón para coincidir visualmente con el de "Correr"
+               }} // ml empuja hacia la derecha (al gap lo maneja el último de la derecha)
+            >
+              Analizar
+            </Button> 
+            </Grid>           
           )}
           </>
       ) : (
