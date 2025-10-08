@@ -6,7 +6,7 @@ import { Grid, Typography, Link, Box, CircularProgress,
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const AlgorithmPreCheck = ({
-  initialDescription, inputInfo, algorithm, setSelectedMenu,
+  initialDescription, inputInfo, setSelectedMenu,
   msg, showWhoComponent, showWhoList, condition, checkResultIcon, expandableData,
   falseConditionMsg
 }) => {  
@@ -50,18 +50,13 @@ const AlgorithmPreCheck = ({
               <Grid item xs={12} md={12} sx={{ display: "flex", gap: 0.5}}>  
                 {checkResultIcon}
                 <Typography variant="body1" sx={{ textAlign: "justify" }}>
-                  <strong>{msg}</strong>
+                  <strong>{expandableData[0].title}</strong>
                 </Typography>
               </Grid>
 
-              {/* Éste no va */}
-              {false && showWhoList?.length > 0 && (
-                <Grid item xs={12} md={12} sx={{ display: "flex" }}>
-                  {showWhoComponent}
-                </Grid>
-              )}
               {/* Va éste. y hay que reutilizar cosas acá, el "inputInfo" es lo variable */}
-              {inputInfo.length > 0 && condition && (
+              {/*inputInfo.length > 0 && condition && (*/}
+              {expandableData[0].infoList.length > 0 && condition && (
                 <Typography variant="body1" sx={{ textAlign: "justify" }}>
                   <Button
                     variant="outlined"
@@ -80,12 +75,7 @@ const AlgorithmPreCheck = ({
                 <Typography variant="body1" sx={{ textAlign: "justify" }}>
                   <strong>{msgTutors}</strong>
                 </Typography>
-              </Grid>
-              {false && showWhoListTutors?.length > 0 && (
-                <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
-                  {showWhoComponentTutors}
-                </Grid>
-              )}
+              </Grid>              
 
                {/* Va éste. veamosssssssss _ en realidad no del todo pero probando __ y hay que reutilizar cosas acá, el "inputInfo" es lo variable */}
                {inputInfo.teachers?.length > 0 && condition && (
