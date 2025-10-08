@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { Grid, Typography, Box, CircularProgress,
          Dialog, Button, DialogTitle, DialogContent,
-         Accordion, AccordionSummary, AccordionDetails, } from "@mui/material";
+         Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
@@ -13,6 +13,9 @@ const AlgorithmPreCheck = ({
 
   const [open, setOpen] = useState(false);
   const [data, setData] = useState();
+
+  // True si alguna de las listas muestra problemas, para saber si debo mostrar el botón de "Analizar"
+  const areThereProblems = expandableData?.some(element => element.infoList.length > 0);
 
   return (
     <>
@@ -43,15 +46,15 @@ const AlgorithmPreCheck = ({
         <>
         {/* Muestro lista de cada msj (ej "Existen _n_ ... que no ...", o msj de Todo ok) con su ícono*/}
           {expandableData?.map((okMsgOrProblematicEntity) => (
-            <>
             <Grid item xs={12} md={12} sx={{ display: "flex", gap: 0.5}}>  
               {okMsgOrProblematicEntity.icon}
               <Typography variant="body1" sx={{ textAlign: "justify" }}>
                 <strong>{okMsgOrProblematicEntity.title}</strong>
               </Typography>
             </Grid>
+          ))}
           {/* Si hay gente que falte al input, y aplique mostrar, muestro botón para ver quiénes son en modal */}
-          {okMsgOrProblematicEntity.infoList.length > 0 && condition && (
+          {areThereProblems && condition && (          
             <Typography variant="body1" sx={{ textAlign: "justify" }}>
               <Button
                 variant="outlined"
@@ -61,8 +64,6 @@ const AlgorithmPreCheck = ({
               </Button>
             </Typography>
           )}
-           </>
-          ))}
           </>
       ) : (
         <Grid item xs={12} md={12} sx={{ display: "flex", gap: 0.5 }}>

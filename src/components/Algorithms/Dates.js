@@ -569,7 +569,7 @@ const Dates = ({setSelectedMenu}) => {
         {/* Descripción */}
         <Description />
         {/* Verificación Previa */}
-        <DatesPreCheck inputInfo={inputInfo} algorithm={"Dates"} setSelectedMenu={setSelectedMenu}/>
+        <DatesPreCheck inputInfo={inputInfo} setSelectedMenu={setSelectedMenu}/>
 
         {/* Botones Correr */}
         <ButtonSection

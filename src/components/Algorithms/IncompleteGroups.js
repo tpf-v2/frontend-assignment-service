@@ -53,13 +53,14 @@ const IncompleteGroups = () => {
     setOpenConfirmDialog(true); // Muestra el diálogo de confirmación al presionar el botón "Correr"
   };
   
-  // Análsis del input del algoritmo, previo a ejecutarlo
-  const endpoint = "/incomplete_teams_algorithm_input_info"
   // (Esta sintaxis del '+' es solo para hacer un salto de línea en el ide, no afecta al renderizado)
   const preCheckMsg = `Este algoritmo utiliza las respuestas al formulario de equipos`+
-        ` (Preferencias / Ya tengo tema y tutor) como input, para completar los equipos en base a sus preferencias.`
+  ` (Preferencias / Ya tengo tema y tutor) como input, para completar los equipos en base a sus preferencias.`
   useEffect(() => {
+    
+    // Análsis del input del algoritmo, previo a ejecutarlo
     const getInputInfo = async () => {
+      const endpoint = "/incomplete_teams_algorithm_input_info"
       try {
         const data = await getInputAnalysis(endpoint, period.id, user);        
         setInputInfo(data);
