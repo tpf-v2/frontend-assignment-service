@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Grid, Typography, Box, CircularProgress,
+import { Grid, Typography, CircularProgress, Box,
          Dialog, Button, DialogTitle, DialogContent,
          Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 
@@ -9,7 +9,34 @@ import ErrorIcon from "@mui/icons-material/Error";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-const AlgorithmPreCheck = ({
+// Componente auxiliar para mostrar el título con el spinner mientras carga
+export const Title = ({withSpinner=false}) => {
+  const spinner = () => (
+    <Grid item xs={12} md={12} sx={{ display: "flex" }}>
+      <Box
+        display="flex"
+        minHeight="300px"
+      >
+        <CircularProgress />
+      </Box>
+    </Grid>
+  )
+
+  return (
+    <>
+      <Grid item xs={12} md={12} sx={{ display: "flex" }}>
+        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+          Verificación previa
+        </Typography>      
+      </Grid>
+      {withSpinner && (
+        spinner()
+      )}
+    </>
+  )
+}
+
+export const AlgorithmPreCheck = ({
   initialDescription,
   condition=true,
   expandableData,
@@ -36,21 +63,7 @@ const AlgorithmPreCheck = ({
 
   return (
     <>
-    <Grid item xs={12} md={12} sx={{ display: "flex" }}>
-      <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-        Verificación previa
-      </Typography>
-    </Grid>
-    {!expandableData && (
-      <Grid item xs={12} md={12} sx={{ display: "flex" }}>
-        <Box
-          display="flex"
-          minHeight="300px"
-        >
-          <CircularProgress />
-        </Box>
-      </Grid>
-    )}
+    <Title />    
     {dataWithIcons && (
       <>
       <Grid item xs={12} md={12} sx={{ display: "flex" }}>
@@ -116,5 +129,3 @@ const AlgorithmPreCheck = ({
   </>
 );
 }
-
-export default AlgorithmPreCheck;

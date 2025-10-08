@@ -1,10 +1,10 @@
 import React from "react";
-import { Typography, Link, } from "@mui/material";
+import { Typography, Link } from "@mui/material";
 import StudentsTable from "../UI/Tables/ChildTables/StudentsTable";
 import TeamsTable from "../UI/Tables/ChildTables/GroupsTable";
 import TutorsTable from "../UI/Tables/ChildTables/TutorsTable";
 
-import AlgorithmPreCheck from "./AlgorithmPreCheck";
+import { AlgorithmPreCheck, Title } from "./AlgorithmPreCheck";
 
 export const IncompleteTeamsPreCheck = ({initialDescription, inputInfo}) => {
   if (inputInfo) {    
@@ -24,15 +24,13 @@ export const IncompleteTeamsPreCheck = ({initialDescription, inputInfo}) => {
       condition={true}
     />
   } else {
-    // AUX )cont): pero poner ese return en el if acá arriba, hace que acá solo haga return en vez de mostrar el
-    // spinner. Debería mostrar el spinner acá.
-    return;
+    return <Title withSpinner={true} />
   }
 }
 
 export const DatesPreCheck = ({inputInfo, setSelectedMenu}) => {
 
-    if (inputInfo) {
+    if (inputInfo && setSelectedMenu) {
 
         const externalCondition = inputInfo.admin_slots;
         
@@ -56,7 +54,6 @@ export const DatesPreCheck = ({inputInfo, setSelectedMenu}) => {
         // Los dos primeros campos se usan para el modal, el tercero se usa para ver su len y si debería renderizarse el botón
         const expandableData = [{title: teamsMsg, detail: showWhoTeamsComponent, infoList: showWhoTeamList},
                             {title: tutorsMsg, detail: showWhoTutorsComponent, infoList: showWhoTutorList}]
-        if (!setSelectedMenu) return;
 
         ///// Mensaje a mostrar si admin no cargó las fechas
         const falseConditionMsg = (
@@ -79,6 +76,8 @@ export const DatesPreCheck = ({inputInfo, setSelectedMenu}) => {
           condition={externalCondition}
           falseConditionMsg={falseConditionMsg}
         />
+    } else {
+        return <Title withSpinner={true} />
     }
     
 }
