@@ -27,7 +27,6 @@ import { setGroups } from "../../redux/slices/groupsSlice";
 import { togglePeriodSetting } from "../../redux/slices/periodSlice";
 import updatePeriod from "../../api/updatePeriod";
 import { useNavigate } from "react-router-dom";
-//import AlgorithmPreCheck from "./AlgorithmPreCheck";
 import { IncompleteTeamsPreCheck } from "./SpecificAlgorithmsPreCheck";
 
 const IncompleteGroups = () => {
@@ -152,7 +151,6 @@ const IncompleteGroups = () => {
         </Grid>
 
         {/* Verificación Previa */}
-        {/*<AlgorithmPreCheck initialDescription={preCheckMsg} inputInfo={inputInfo} algorithm={"IncompleteTeams"}/>*/}
         <IncompleteTeamsPreCheck initialDescription={preCheckMsg} inputInfo={inputInfo} algorithm={"IncompleteTeams"}/>
         
         {/* Botones Correr, Editar */}

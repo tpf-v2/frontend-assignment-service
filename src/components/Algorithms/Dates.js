@@ -36,7 +36,6 @@ import updatePeriod from "../../api/updatePeriod";
 import ResultsDialog from "./Dates/ResultsDialog";
 
 import { getInputAnalysis } from "../../api/handleAlgorithmAnalysis";
-import AlgorithmPreCheck from "./AlgorithmPreCheck";
 import { DatesPreCheck } from "./SpecificAlgorithmsPreCheck";
 
 const evaluatorColors = [
@@ -570,7 +569,6 @@ const Dates = ({setSelectedMenu}) => {
         {/* Descripción */}
         <Description />
         {/* Verificación Previa */}
-        {/*<AlgorithmPreCheck inputInfo={inputInfo} algorithm={"Dates"} setSelectedMenu={setSelectedMenu}/>*/}
         <DatesPreCheck inputInfo={inputInfo} algorithm={"Dates"} setSelectedMenu={setSelectedMenu}/>
 
         {/* Botones Correr */}
