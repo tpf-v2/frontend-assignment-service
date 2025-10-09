@@ -4,7 +4,7 @@ export const TableType = Object.freeze({
     TUTORS: "Tutores",
     TOPICS: "Temas",
     RESPONSES: "Respuestas",
-    EMBEDDEDNOTITLE: "Embedded no title", // (obs: no sirve ponerle string vacía "")
+    EMBEDDEDNOTITLE: "Embedded no title", // (obs: no sirve acá ponerle string vacía "")
 });
 
 export const TableTypeSingularLabel = {

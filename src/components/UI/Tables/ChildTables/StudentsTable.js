@@ -4,7 +4,7 @@ import ParentTable from '../ParentTable';
 import { useSelector } from "react-redux";
 import { TableType } from '../TableType';
 
-const StudentsTable = ({dataListToRender = []}) => {
+const StudentsTable = ({dataListToRender = null}) => {
   // Este dataListToRender es opcional, para la pantalla de Estudiantes no se usa, pero
   // se agrega para poder pasarle una lista y no tener que llamar al endpoint
   const period = useSelector((state) => state.period);
@@ -31,9 +31,11 @@ const StudentsTable = ({dataListToRender = []}) => {
     </>
   );
 
-  // Si tiene elementos, la estoy llamando para la Verificación previa a algoritmos,
-  // y no quiero que haga ningún fetch
-  if (dataListToRender.length > 0) {
+  if (dataListToRender === undefined) return;
+
+  // Si le estoy pasando una dataListToRender, es que la estoy llamando para la Verificación previa
+  // a algoritmos, y no quiero que haga ningún fetch
+  if (dataListToRender !== null) {
     return (
       <ParentTable
         columns={columns} rowKeys={rowKeys} renderRow={renderRow}
@@ -45,7 +47,7 @@ const StudentsTable = ({dataListToRender = []}) => {
       />
     );
   } else {
-    // Si está vacía, es el uso por defecto que ya existía, es para mostrar tabla de Estudiantes
+    // Si no le pasé nada, es el uso por defecto que ya existía, es para mostrar tabla de Estudiantes
     return (
       <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} items={students}/>
     );
