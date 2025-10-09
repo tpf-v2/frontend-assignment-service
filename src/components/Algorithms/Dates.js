@@ -186,8 +186,9 @@ const Dates = ({setSelectedMenu}) => {
       const formattedEvents = datesResult.map((result) => {
         const color = getEvaluatorColor(result.evaluator_id, evaluatorColorMap);
 
+        // Rectangulitos de colores (resultados) en el modal de confirmación, y su onhover
         return {
-          title: `Grupo ${result.group_number} - Tutor ${getTutorNameByTutorId(
+          title: `Equipo ${result.group_number} - Tutor ${getTutorNameByTutorId(
             result.tutor_id
           )} - Evaluador ${getTutorNameByTutorId(result.evaluator_id)}`,
           start: new Date(result.date),
@@ -213,9 +214,9 @@ const Dates = ({setSelectedMenu}) => {
     setEvaluatorColorMap((prevMap) => ({ ...prevMap }));
   }, [events]);
 
-  const generateCSVData = () => {
+  const generateCSVData = () => { // botón csv de afuera, hay otro en el modal de confirmar resultados
     return initialEvents.map((event) => ({
-      "Numero de grupo": event.result.group_number,
+      "Numero de equipo": event.result.group_number,
       "Nombre y apellido del tutor": getTutorNameByTutorId(
         event.result.tutor_id
       ),
@@ -265,6 +266,7 @@ const Dates = ({setSelectedMenu}) => {
       console.log("Running the algorithm!");
 
       const response = await dates(user, period, maxDifference, maxTeams);
+      console.log("---response:", response);
 
       setDatesResult(response.assigments);
     } catch (error) {

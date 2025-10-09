@@ -6,6 +6,7 @@ import {
   DialogActions,
   Button,
   IconButton,
+  Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close"; // Importa el ícono Close
 import { CalendarStyled } from "../../../styles/AvailabilityCalendarStyle";
@@ -37,7 +38,7 @@ const ResultsDialog = ({
 
   const generateCSVData = () => {
     return events.map((event) => ({
-      "Numero de grupo": event.result.group_number,
+      "Numero de equipo": event.result.group_number,
       "Nombre y apellido del tutor": getTutorNameByTutorId(
         event.result.tutor_id
       ),
@@ -93,6 +94,9 @@ const ResultsDialog = ({
         dividers
         sx={{ maxHeight: "90vh", backgroundColor: "#f4f6f8" }}
       >
+        <Typography>
+        Se obtuvieron asignaciones para {events.length} equipos.
+        </Typography>
         <CalendarStyled
           messages = {{next: "Siguiente",previous: "Atrás",today: "Hoy"}}
           localizer={localizer}
