@@ -306,7 +306,7 @@ const Dates = ({setSelectedMenu}) => {
   // y crea y agrega el resultado de color al estado que renderiza el componente de resultados
   // Importante: esta función hace request al back para (entre otras cosas( editar la exhibition_date del equipo
   // y puede hacerlo porque los resultados ya fueron confirmados.
-  const handleAssignDate = async (handleClose) => {
+  const handleAssignDate = async (team, evaluator, selectedDateTime, selectedHour, handleClose) => {
     if (!team || !evaluator || !selectedDateTime || !selectedHour) {
       handleSnackbarOpen(
         "Por favor completa todos los campos antes de asignar.",
@@ -314,8 +314,8 @@ const Dates = ({setSelectedMenu}) => {
       );
       return;
     }
-
-    // aux: (para qué lo busca si ya lo tiene?) (ah es solo el nombre lo que tiene en "tutor" ídem topic)
+    
+    // Lo busca, porque el item.tutor es solamente el nombre, lo mismo topic.
     const tutor = tutors.find(
       (t) =>
         t.tutor_periods &&
@@ -503,7 +503,7 @@ const Dates = ({setSelectedMenu}) => {
         return;
       }
 
-      // Guardar el intervalo seleccionado
+      // Guardar el intervalo seleccionado (clickeado)
       setSelectedSlot({ start, end });
       setModalOpen(true); // Abrir el modal para confirmar
     }
@@ -531,22 +531,23 @@ const Dates = ({setSelectedMenu}) => {
   // Importante: los resultados todavía no fueron confirmados, por lo que esto no hace requests
   // al back sino que maneja las ediciones en el front. Actualmente esto hace que un eq pueda
   // aparecer en más de una fecha (y luego el front impide cerrar modal hasta que se resuelva manualmente)
-  const handleConfirmEvent = async (handleClose) => {
-    // Crea un evento (una asignación), solo la setea y cierra el dialog
-    if (selectedSlot && team) {
+  const handleConfirmEvent = async (team, evaluator, _selectedDateTime, _selectedHour, handleClose) => {
+    // Crea un evento (una asignación), solo la setea y cierra el dialog    
+    // El selectSlot no es de item, es el slot en que clickeaste (en él querés ubicar al equipo)
+    if (selectedSlot && item?.team) {
       const teamTutor = tutors.find(
         (t) =>
           t.tutor_periods &&
           t.tutor_periods.some(
             (tp) =>
-              tp.period_id === period.id && tp.id === team.tutor_period_id
+              tp.period_id === period.id && tp.id === item?.team.tutor_period_id
           )
       );
       handleClose()
       const color = getEvaluatorColor(evaluator, evaluatorColorMap);
 
       const newEvent = {
-        title: `Equipo ${team.group_number} - Tutor ${getTutorNameByTutorId(
+        title: `Equipo ${item?.team.group_number} - Tutor ${getTutorNameByTutorId(
           teamTutor.id
         )} - Evaluador ${getTutorNameByTutorId(evaluator)}`,
         start: selectedSlot.start,
@@ -650,30 +651,17 @@ const Dates = ({setSelectedMenu}) => {
 
       <SpecificDateDialog // Asignar fecha a equipo (manualmente)
         open={assignDateOpenDialog}
-        onClose={() => setAssignDateOpenDialog(false)}
+        onClose={() => setAssignDateOpenDialog(false)}        
+        item={item}
+        setItem={setItem}
+
         teams={teams}
-        period={period}
-        
-        team={team}
-        tutor={tutor}
-        topic={topic}
-        setTeam={setTeam}
-        setTutor={setTutor}
-        setTopic={setTopic}
-
-        evaluator={evaluator}
-        setEvaluator={setEvaluator}
-        
-        selectedDateTime={selectedDateTime}
-        setSelectedDateTime={setSelectedDateTime}
-        selectedHour={selectedHour}
-        setSelectedHour={setSelectedHour}
-        showLastPart={true}
-
-        handleAssignDate={handleAssignDate}
-        hours={hours}
         tutors={tutors}
+        period={period}
 
+        hours={hours}
+        showLastPart={true}
+        handleAssignDate={handleAssignDate}
       />
 
       <ResultsDialog // Luego de correr el algoritmo
@@ -702,28 +690,14 @@ const Dates = ({setSelectedMenu}) => {
       <SpecificDateDialog // Asignar manualmente: ResultsDialog -> Editar -> clickear un slot vacío
         open={modalOpen}
         onClose={() => setModalOpen(false)}
+        item={item}
+        setItem={setItem}
 
         teams={teams}
+        tutors={tutors}
         period={period}
         
-        team={team}
-        tutor={tutor}
-        topic={topic}
-        setTeam={setTeam}
-        setTutor={setTutor}
-        setTopic={setTopic}
-
-        evaluator={evaluator}
-        setEvaluator={setEvaluator}
-        tutors={tutors}
-        
-        //no selectedDateTime={selectedDateTime}
-        //no setSelectedDateTime={setSelectedDateTime}
-        //no selectedHour={selectedHour}
-        //no setSelectedHour={setSelectedHour}      
-
         handleAssignDate={handleConfirmEvent} // <--
-        //no hours={hours}
       />
 
       {/* Correr el algoritmo */}

@@ -22,19 +22,6 @@ const SpecificDateDialog = ({
   period,  
   teams,
 
-  team,
-  setTeam,
-  tutor,
-  setTutor,
-  topic,
-  setTopic,
-  evaluator,
-  setEvaluator,
-  selectedDateTime,
-  setSelectedDateTime,
-  selectedHour,
-  setSelectedHour,
-
   handleAssignDate,  
   hours,
   
@@ -53,7 +40,7 @@ const SpecificDateDialog = ({
     )
   );
 
-  // Esto + label: para llamar a una sola y no necesitar un set para cada campo
+  // Esto + name: para llamar a una sola y no necesitar un set para cada campo
   const handleChange = (e) => {
     setItem({ ...item, [e.target.name]: e.target.value });
   };
@@ -63,35 +50,22 @@ const SpecificDateDialog = ({
     setIsAssignDisabled(
       showLastPart ?
       !(
-        team &&
-        selectedDateTime &&
-        selectedHour &&
-        evaluator
+        item?.team &&
+        item?.selectedDateTime &&
+        item?.selectedHour &&
+        item?.evaluator
       )
       :
       !(
-        team &&
-        evaluator
+        item?.team &&
+        item?.evaluator
       ) 
     );
-  }, [team, selectedDateTime, selectedHour, evaluator]);
-
-  const handleHourChange = (event) => {
-    setSelectedHour(event.target.value);
-  };
+  }, [item?.team, item?.selectedDateTime, item?.selectedHour, item?.evaluator]);
 
   const handleClose = () => {
     // Restablece los valores de todos los campos
-    setTeam("");
-    setTutor("");
-    setTopic("");
-    setEvaluator("");
-    if (setSelectedDateTime) {
-      setSelectedDateTime(null);
-    }
-    if (setSelectedHour) {
-      setSelectedHour("");
-    }
+    setItem({})   
     onClose(); // Cierra el diálogo
   };
 
@@ -107,20 +81,22 @@ const SpecificDateDialog = ({
             </Typography>
             <Select
               fullWidth
-              value={team?.group_number || ""}
+              value={item?.team?.group_number || ""}
               onChange={(e) => {
                 const selectedTeam = teams.find(
                   (t) => t.group_number === e.target.value
                 );
-                setTeam(selectedTeam);
 
                 const selectedTutor = getTutorNameById(
                   selectedTeam.tutor_period_id,
                   period.id,
                   tutors
                 );
-                setTutor(selectedTutor ? selectedTutor : "");
-                setTopic(selectedTeam.topic ? selectedTeam.topic.name : "[No tiene tema asignado.]");
+                setItem({ ...item,
+                  team: selectedTeam,
+                  tutor: selectedTutor ? selectedTutor : "",
+                  topic: selectedTeam.topic ? selectedTeam.topic.name : "[No tiene tema asignado.]"
+                });
               }}
               displayEmpty
               renderValue={(selected) => {
@@ -143,7 +119,7 @@ const SpecificDateDialog = ({
           <Grid item xs={12} md={12}>
             <TextField
               label="Tutor"
-              value={tutor || ""}
+              value={item?.tutor || ""}
               fullWidth
               InputProps={{ readOnly: true }}
               variant="outlined"
@@ -153,7 +129,7 @@ const SpecificDateDialog = ({
           <Grid item xs={12}>
             <TextField
               label="Tema"
-              value={topic || ""}
+              value={item?.topic || ""}
               fullWidth
               InputProps={{ readOnly: true }}
               variant="outlined"
@@ -167,9 +143,10 @@ const SpecificDateDialog = ({
               Selecciona un Evaluador:
             </Typography>
             <Select
-              fullWidth
-              value={evaluator || ""}
-              onChange={(e) => setEvaluator(e.target.value)}
+              fullWidth              
+              name="evaluator"
+              value={item?.evaluator || ""}
+              onChange={handleChange}
               displayEmpty
             >
               <MenuItem value="" disabled>
@@ -187,9 +164,9 @@ const SpecificDateDialog = ({
               <Grid item xs={6}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
-                    label="Fecha"
-                    value={selectedDateTime}
-                    onChange={(newValue) => setSelectedDateTime(newValue.startOf("day"))}
+                    label="Fecha"                    
+                    value={item?.selectedDateTime ? dayjs(item.selectedDateTime) : null}
+                    onChange={(newValue) => setItem({...item, selectedDateTime: newValue.startOf("day")})}
                     format="DD/MM/YYYY"
                     minDate={dayjs()}
                   />
@@ -197,8 +174,9 @@ const SpecificDateDialog = ({
               </Grid>
               <Grid item xs={6}>
                 <Select
-                  value={selectedHour || ""}
-                  onChange={handleHourChange}
+                  name="selectedHour"
+                  value={item?.selectedHour || ""}
+                  onChange={handleChange}
                   displayEmpty
                   fullWidth
                 >
@@ -221,7 +199,11 @@ const SpecificDateDialog = ({
           Cancelar
         </Button>
         <Button
-          onClick={() => handleAssignDate(handleClose)}
+          onClick={() => handleAssignDate(
+            item?.team, item?.evaluator,
+            item?.selectedDateTime, item?.selectedHour,
+            handleClose
+          )}
           color="primary"
           variant="contained"
           disabled={isAssignDisabled}
