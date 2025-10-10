@@ -147,8 +147,9 @@ const Dates = ({setSelectedMenu}) => {
             );
 
             // Es otro componente, como el del modal de confirmar resultados (pero cambian las start y end)
+            // Fetch, debajo del botón Correr se muestran estos resultados
             return {
-              title: `Grupo ${
+              title: `Equipo ${
                 result.group_number
               } - Tutor ${getTutorNameByTutorId(
                 result.tutor_id
@@ -537,6 +538,7 @@ const Dates = ({setSelectedMenu}) => {
     }
   };
 
+  // Al confirmar la asignación manual de fecha
   const handleConfirmEvent = async () => {
     // Crea un evento (una asignación), solo la setea y cierra el dialog
     if (selectedSlot && team) {
@@ -551,7 +553,7 @@ const Dates = ({setSelectedMenu}) => {
       const color = getEvaluatorColor(evaluador, evaluatorColorMap);
 
       const newEvent = {
-        title: `Grupo ${team.group_number} - Tutor ${getTutorNameByTutorId(
+        title: `Equipo ${team.group_number} - Tutor ${getTutorNameByTutorId(
           teamTutor.id
         )} - Evaluador ${getTutorNameByTutorId(evaluador)}`,
         start: selectedSlot.start,

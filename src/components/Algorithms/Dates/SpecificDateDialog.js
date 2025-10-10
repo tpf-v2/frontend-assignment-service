@@ -70,13 +70,14 @@ const SpecificDateDialog = ({
     setSelectedDateTime(null);
     setSelectedHour("");
     onClose(); // Cierra el diálogo
-  };
-  
+  };  
+
   return (
     <Dialog open={open} onClose={handleCancel} maxWidth="sm" fullWidth>
       <DialogTitle>Asignar Fecha a Equipo</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
+          {/* Selección de Equipo */}
           <Grid item xs={12}>
             <Typography variant="subtitle1" gutterBottom>
               Selecciona un Equipo:
@@ -86,7 +87,7 @@ const SpecificDateDialog = ({
               value={team?.group_number || ""}
               onChange={(e) => {
                 const selectedTeam = teams.find(
-                  (g) => g.group_number === e.target.value
+                  (t) => t.group_number === e.target.value
                 );
                 setTeam(selectedTeam);
 
@@ -114,7 +115,8 @@ const SpecificDateDialog = ({
             </Select>
           </Grid>
 
-          <Grid item xs={12}>
+          {/* Tutor y Tema */}
+          <Grid item xs={12} md={12}>
             <TextField
               label="Tutor"
               value={tutor || ""}
@@ -123,7 +125,7 @@ const SpecificDateDialog = ({
               variant="outlined"
               margin="dense"
             />
-          </Grid>
+          </Grid>          
           <Grid item xs={12}>
             <TextField
               label="Tema"
@@ -134,7 +136,9 @@ const SpecificDateDialog = ({
               margin="dense"
             />
           </Grid>
-          <Grid item xs={12}>
+
+          {/* Selección de Evaluador */}
+          <Grid item xs={12} md={12}>
             <Typography variant="subtitle1" gutterBottom>
               Selecciona un Evaluador:
             </Typography>
