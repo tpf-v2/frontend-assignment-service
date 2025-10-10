@@ -186,7 +186,7 @@ const SpecificDateDialog = ({
                   <MenuItem value="" disabled>
                     Selecciona la Hora
                   </MenuItem>
-                  {hours.map((hour) => (
+                  {hours?.map((hour) => (
                     <MenuItem key={hour} value={hour}>
                       {hour}
                     </MenuItem>

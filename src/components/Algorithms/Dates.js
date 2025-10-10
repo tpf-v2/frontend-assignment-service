@@ -383,6 +383,8 @@ const Dates = ({setSelectedMenu}) => {
     }
   };
 
+  // Aux: esto en realidad tendría que ser importable en vez de una prop... []
+  // aux: obs se usa solo para pasarla al Specific, se puede mover en cuanto el copypaste de abajo ya no esté
   const getTutorNameById = (id, periodId) => {
     const tutor = tutors.find(
       (t) =>
@@ -408,6 +410,7 @@ const Dates = ({setSelectedMenu}) => {
     setOpenConfirmDialog(true); // Abrir el popup de confirmación
   };
 
+  // Aux: esto se usa solo para el modal de abajo que estoy x sacar x ser copypaste []
   const filteredTutors = tutors.filter((tutor) =>
     tutor.tutor_periods.some(
       (tutor_period) =>
@@ -702,116 +705,43 @@ const Dates = ({setSelectedMenu}) => {
         getTutorNameByTutorId={getTutorNameByTutorId}
       />
 
-      <ConfirmDeleteModal
+      <ConfirmDeleteModal // Viendo resultados del algoritmo -> editar -> click para elim un resultado
         open={confirmDeleteOpen}
         onClose={() => setConfirmDeleteOpen(false)}
         onConfirm={handleDeleteEvent}
       />
 
-      <Dialog // Éste se abre: desde resultsDialog -> Editar -> clickear un slot vacío
+      <SpecificDateDialog // Asignar manualmente: ResultsDialog -> Editar -> clickear un slot vacío
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>Asignar Fecha a Equipo</DialogTitle>
+
+        teams={teams}
+        period={period}
         
-        <DialogContent>
-          <Grid container spacing={3}>
-            {/* Selección de Equipo */}
-            <Grid item xs={12}>
-              <Typography variant="subtitle1">Equipo</Typography>
-              <Select
-                fullWidth
-                displayEmpty
-                value={team.group_number}
-                onChange={(e) => {
-                  const selectedGroup = teams.find(
-                    (g) => g.group_number === e.target.value
-                  );
-                  setTeam(selectedGroup);
+        team={team}
+        tutor={tutor}
+        topic={topic}
+        setTeam={setTeam}
+        setTutor={setTutor}
+        setTopic={setTopic}
 
-                  const selectedTutor = getTutorNameById(
-                    selectedGroup.tutor_period_id,
-                    period.id
-                  );
-                  setTutor(selectedTutor ? selectedTutor : "");
-                  setTopic(selectedGroup.topic ? selectedGroup.topic.name : "[No tiene tema asignado.]");
-                }}
-                renderValue={(selected) => {
-                  const selectedTeam = teams.find(
-                    (t) => t.group_number === selected
-                  );
-                  return selectedTeam
-                    ? `Grupo ${selectedTeam.group_number}`
-                    : "Selecciona un Grupo";
-                }}
-              >
-                {teams.map((team) => (
-                  <MenuItem key={team.id} value={team.group_number}>
-                    {`Grupo ${team.group_number}`}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Grid>
+        evaluator={evaluator}
+        setEvaluator={setEvaluator}
+        tutors={tutors}
+        
+        //no selectedDateTime={selectedDateTime}
+        //no setSelectedDateTime={setSelectedDateTime}
+        //no selectedHour={selectedHour}
+        //no setSelectedHour={setSelectedHour}
+        showLastPart={true}        
 
-            {/* Tutor y Tema */}
-            <Grid item xs={12} md={12}>
-              <TextField
-                label="Tutor"
-                value={tutor}
-                fullWidth
-                InputProps={{ readOnly: true }}
-                variant="filled"
-              />
-            </Grid>
-            <Grid item xs={12} md={12}>
-              <TextField
-                label="Tema"
-                value={topic}
-                fullWidth
-                InputProps={{ readOnly: true }}
-                variant="filled"
-              />
-            </Grid>
+        handleAssignDate={handleConfirmEvent} // <--
 
-            {/* Selección de Evaluador */}
-            <Grid item xs={12}>
-              <Typography variant="subtitle1">Evaluador</Typography>
-              <Select
-                fullWidth
-                displayEmpty
-                value={evaluator}
-                onChange={(e) => setEvaluator(e.target.value)}
-              >
-                {filteredTutors.map((tutor) => (
-                  <MenuItem key={tutor.id} value={tutor.id}>
-                    {`${tutor.name} ${tutor.last_name}`}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Grid>
-          </Grid>
-        </DialogContent>
+        getTutorNameById={getTutorNameById}
+        //no hours={hours}
+      />
 
-        <DialogActions sx={{ padding: "16px 24px" }}>
-          <Button
-            onClick={() => setModalOpen(false)}
-            color="error"
-            variant="outlined"
-          >
-            Cancelar
-          </Button>
-          <Button
-            onClick={handleConfirmEvent}
-            color="primary"
-            variant="contained"
-          >
-            Asignar
-          </Button>
-        </DialogActions>
-      </Dialog>
-
+      {/* Correr el algoritmo */}
       <Dialog open={openRunDialog} onClose={handleCloseRunDialog}>
         <DialogTitle>
           Seleccione la diferencia de equipos entre evaluadores y el límite
@@ -854,7 +784,7 @@ const Dates = ({setSelectedMenu}) => {
         </DialogActions>
       </Dialog>
 
-      {/* Popup de Confirmación */}
+      {/* Popup de Confirmación Para Correr el Algoritmo*/}
       <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>
         <DialogTitle>Confirmar Resultados</DialogTitle>
         <DialogContent>
