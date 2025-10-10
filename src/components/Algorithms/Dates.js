@@ -78,6 +78,8 @@ const Dates = ({setSelectedMenu}) => {
   const [team, setTeam] = useState("");
   const [tutor, setTutor] = useState("");
   const [topic, setTopic] = useState("");
+  const [evaluator, setEvaluator] = useState("");
+  const [selectedDateTime, setSelectedDateTime] = useState(dayjs());
   const [selectedHour, setSelectedHour] = useState("");
 
   const [events, setEvents] = useState([]);
@@ -85,9 +87,8 @@ const Dates = ({setSelectedMenu}) => {
 
   // Genera las opciones de horas (ej: 9:00, 10:00, ..., 17:00)
   const hours = Array.from({ length: 13 }, (_, i) => `${9 + i}:00`);
-  const [evaluador, setEvaluador] = useState("");
+
   const [assignDateOpenDialog, setAssignDateOpenDialog] = useState(false);
-  const [selectedDateTime, setSelectedDateTime] = useState(dayjs());
   const [openRunDialog, setOpenRunDialog] = useState(false);
   const [running, setRunning] = useState(false);
   const [maxDifference, setMaxDifference] = useState("");
@@ -303,7 +304,7 @@ const Dates = ({setSelectedMenu}) => {
   // Busca los datos del equipo, hace request para agregar la asignación manual,
   // y crea y agrega el resultado de color al estado que renderiza el componente de resultados
   const handleAssignDate = async () => {    
-    if (!team || !evaluador || !selectedDateTime || !selectedHour) {
+    if (!team || !evaluator || !selectedDateTime || !selectedHour) {
       handleSnackbarOpen(
         "Por favor completa todos los campos antes de asignar.",
         "error"
@@ -323,18 +324,18 @@ const Dates = ({setSelectedMenu}) => {
         user,
         team.id,
         tutor.id,
-        evaluador,
+        evaluator,
         formatUpdatedDateTime(selectedDateTime, selectedHour),
         period.id
       );
       handleSnackbarOpen("Fecha asignada correctamente", "success");
       // El resultado luego de asignar fecha a un equipo manualmente
-      const color = getEvaluatorColor(evaluador, evaluatorColorMap);
+      const color = getEvaluatorColor(evaluator, evaluatorColorMap);
 
       const newEvent = {
         title: `Equipo ${team.group_number} - Tutor ${getTutorNameByTutorId(
           tutor.id
-        )} - Evaluador ${getTutorNameByTutorId(evaluador)}`,
+        )} - Evaluador ${getTutorNameByTutorId(evaluator)}`,
         start: new Date(
           new Date(formatUpdatedDateTime(selectedDateTime, selectedHour)).getTime() +
             60 * 60 * 1000 * 3
@@ -349,7 +350,7 @@ const Dates = ({setSelectedMenu}) => {
             new Date(formatUpdatedDateTime(selectedDateTime, selectedHour)).getTime() +
               60 * 60 * 1000 * 3
           ),
-          evaluator_id: evaluador,
+          evaluator_id: evaluator,
           group_id: team.id,
           group_number: team.group_number,
           tutor_id: tutor.id,
@@ -550,23 +551,23 @@ const Dates = ({setSelectedMenu}) => {
               tp.period_id === period.id && tp.id === team.tutor_period_id
           )
       );
-      const color = getEvaluatorColor(evaluador, evaluatorColorMap);
+      const color = getEvaluatorColor(evaluator, evaluatorColorMap);
 
       const newEvent = {
         title: `Equipo ${team.group_number} - Tutor ${getTutorNameByTutorId(
           teamTutor.id
-        )} - Evaluador ${getTutorNameByTutorId(evaluador)}`,
+        )} - Evaluador ${getTutorNameByTutorId(evaluator)}`,
         start: selectedSlot.start,
         end: selectedSlot.end,
         color: color,
         result: {
           date: selectedSlot.start,
-          evaluator_id: evaluador,
+          evaluator_id: evaluator,
           group_id: team.id,
           tutor_id: teamTutor.id,
         },
       };
-      setEvents((prevEvents) => [...prevEvents, newEvent]);
+      setEvents((prevEvents) => [...prevEvents, newEvent]); // []
       setModalOpen(false);
     }
   };
@@ -660,22 +661,26 @@ const Dates = ({setSelectedMenu}) => {
         onClose={() => setAssignDateOpenDialog(false)}
         teams={teams}
         period={period}
+        
+        team={team}
         tutor={tutor}
         topic={topic}
-        evaluador={evaluador}
-        setEvaluador={setEvaluador}
+        setTeam={setTeam}
+        setTutor={setTutor}
+        setTopic={setTopic}
+
+        evaluator={evaluator}
+        setEvaluator={setEvaluator}
+
         selectedDateTime={selectedDateTime}
         setSelectedDateTime={setSelectedDateTime}
         selectedHour={selectedHour}
         setSelectedHour={setSelectedHour}
+
         handleAssignDate={handleAssignDate}
         getTutorNameById={getTutorNameById}
         hours={hours}
-        tutors={tutors}
-        team={team}
-        setTeam={setTeam}
-        setTutor={setTutor}
-        setTopic={setTopic}
+        tutors={tutors}        
       />
 
       <ResultsDialog // Luego de correr el algoritmo
@@ -774,8 +779,8 @@ const Dates = ({setSelectedMenu}) => {
               <Select
                 fullWidth
                 displayEmpty
-                value={evaluador}
-                onChange={(e) => setEvaluador(e.target.value)}
+                value={evaluator}
+                onChange={(e) => setEvaluator(e.target.value)}
               >
                 {filteredTutors.map((tutor) => (
                   <MenuItem key={tutor.id} value={tutor.id}>

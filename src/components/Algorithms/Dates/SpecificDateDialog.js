@@ -18,24 +18,28 @@ import dayjs from "dayjs";
 const SpecificDateDialog = ({
   open,
   onClose,
+  period,  
   teams,
-  period,
+
+  team,
+  setTeam,
   tutor,
+  setTutor,
   topic,
-  evaluador,
-  setEvaluador,
+  setTopic,
+  evaluator,
+  setEvaluator,
   selectedDateTime,
   setSelectedDateTime,
   selectedHour,
   setSelectedHour,
-  handleAssignDate,
+
+  handleAssignDate,  
   getTutorNameById,
   hours,
+  
   tutors,
-  team,
-  setTeam,
-  setTutor,
-  setTopic,
+  
 }) => {
   const [isAssignDisabled, setIsAssignDisabled] = useState(true);
   const filteredTutors = tutors.filter((tutor) =>
@@ -52,10 +56,10 @@ const SpecificDateDialog = ({
         team &&
         selectedDateTime &&
         selectedHour &&
-        evaluador
+        evaluator
       )
     );
-  }, [team, selectedDateTime, selectedHour, evaluador]);
+  }, [team, selectedDateTime, selectedHour, evaluator]);
 
   const handleHourChange = (event) => {
     setSelectedHour(event.target.value);
@@ -66,7 +70,7 @@ const SpecificDateDialog = ({
     setTeam("");
     setTutor("");
     setTopic("");
-    setEvaluador("");
+    setEvaluator("");
     setSelectedDateTime(null);
     setSelectedHour("");
     onClose(); // Cierra el diálogo
@@ -144,8 +148,8 @@ const SpecificDateDialog = ({
             </Typography>
             <Select
               fullWidth
-              value={evaluador || ""}
-              onChange={(e) => setEvaluador(e.target.value)}
+              value={evaluator || ""}
+              onChange={(e) => setEvaluator(e.target.value)}
               displayEmpty
             >
               <MenuItem value="" disabled>
