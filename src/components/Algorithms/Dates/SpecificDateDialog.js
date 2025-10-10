@@ -80,19 +80,23 @@ const SpecificDateDialog = ({
     setSelectedHour(event.target.value);
   };
 
-  const handleCancel = () => {
+  const handleClose = () => {
     // Restablece los valores de todos los campos
     setTeam("");
     setTutor("");
     setTopic("");
     setEvaluator("");
-    setSelectedDateTime(null);
-    setSelectedHour("");
+    if (setSelectedDateTime) {
+      setSelectedDateTime(null);
+    }
+    if (setSelectedHour) {
+      setSelectedHour("");
+    }
     onClose(); // Cierra el diálogo
   };
 
   return (
-    <Dialog open={open} onClose={handleCancel} maxWidth="sm" fullWidth>
+    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle>Asignar Fecha a Equipo</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
@@ -213,11 +217,11 @@ const SpecificDateDialog = ({
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCancel} color="error" variant="outlined">
+        <Button onClick={handleClose} color="error" variant="outlined">
           Cancelar
         </Button>
         <Button
-          onClick={handleAssignDate}
+          onClick={() => handleAssignDate(handleClose)}
           color="primary"
           variant="contained"
           disabled={isAssignDisabled}

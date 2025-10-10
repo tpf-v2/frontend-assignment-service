@@ -304,7 +304,9 @@ const Dates = ({setSelectedMenu}) => {
 
   // Busca los datos del equipo, hace request para agregar la asignación manual,
   // y crea y agrega el resultado de color al estado que renderiza el componente de resultados
-  const handleAssignDate = async () => {    
+  // Importante: esta función hace request al back para (entre otras cosas( editar la exhibition_date del equipo
+  // y puede hacerlo porque los resultados ya fueron confirmados.
+  const handleAssignDate = async (handleClose) => {
     if (!team || !evaluator || !selectedDateTime || !selectedHour) {
       handleSnackbarOpen(
         "Por favor completa todos los campos antes de asignar.",
@@ -330,6 +332,7 @@ const Dates = ({setSelectedMenu}) => {
         formatUpdatedDateTime(selectedDateTime, selectedHour),
         period.id
       );
+      handleClose();
       handleSnackbarOpen("Fecha asignada correctamente", "success");
       // El resultado luego de asignar fecha a un equipo manualmente
       const color = getEvaluatorColor(evaluator, evaluatorColorMap);
@@ -524,8 +527,11 @@ const Dates = ({setSelectedMenu}) => {
     }
   };
 
-  // Al confirmar la asignación manual de fecha
-  const handleConfirmEvent = async () => {
+  // Al confirmar la asignación manual de fecha desde ResultsDialog -> "Editar"
+  // Importante: los resultados todavía no fueron confirmados, por lo que esto no hace requests
+  // al back sino que maneja las ediciones en el front. Actualmente esto hace que un eq pueda
+  // aparecer en más de una fecha (y luego el front impide cerrar modal hasta que se resuelva manualmente)
+  const handleConfirmEvent = async (handleClose) => {
     // Crea un evento (una asignación), solo la setea y cierra el dialog
     if (selectedSlot && team) {
       const teamTutor = tutors.find(
@@ -536,6 +542,7 @@ const Dates = ({setSelectedMenu}) => {
               tp.period_id === period.id && tp.id === team.tutor_period_id
           )
       );
+      handleClose()
       const color = getEvaluatorColor(evaluator, evaluatorColorMap);
 
       const newEvent = {
