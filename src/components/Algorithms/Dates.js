@@ -146,6 +146,7 @@ const Dates = ({setSelectedMenu}) => {
               evaluatorColorMap
             );
 
+            // Es otro componente, como el del modal de confirmar resultados (pero cambian las start y end)
             return {
               title: `Grupo ${
                 result.group_number
@@ -298,7 +299,9 @@ const Dates = ({setSelectedMenu}) => {
     return date.toISOString();
   }
 
-  const handleAssignDate = async () => {
+  // Busca los datos del equipo, hace request para agregar la asignación manual,
+  // y crea y agrega el resultado de color al estado que renderiza el componente de resultados
+  const handleAssignDate = async () => {    
     if (!team || !evaluador || !selectedDateTime || !selectedHour) {
       handleSnackbarOpen(
         "Por favor completa todos los campos antes de asignar.",
@@ -324,10 +327,11 @@ const Dates = ({setSelectedMenu}) => {
         period.id
       );
       handleSnackbarOpen("Fecha asignada correctamente", "success");
+      // El resultado luego de asignar fecha a un equipo manualmente
       const color = getEvaluatorColor(evaluador, evaluatorColorMap);
 
       const newEvent = {
-        title: `Grupo ${team.group_number} - Tutor ${getTutorNameByTutorId(
+        title: `Equipo ${team.group_number} - Tutor ${getTutorNameByTutorId(
           tutor.id
         )} - Evaluador ${getTutorNameByTutorId(evaluador)}`,
         start: new Date(
@@ -534,6 +538,7 @@ const Dates = ({setSelectedMenu}) => {
   };
 
   const handleConfirmEvent = async () => {
+    // Crea un evento (una asignación), solo la setea y cierra el dialog
     if (selectedSlot && team) {
       const teamTutor = tutors.find(
         (t) =>
@@ -641,14 +646,14 @@ const Dates = ({setSelectedMenu}) => {
         loading={running}
       />
 
-      <EvaluatorDialog
+      <EvaluatorDialog // El de tildar quiénes son evaluadores
         user={user}
         open={openEvaluatorDialog}
         handleClose={handleEvaluatorDialogClose}
         handleEvaluatorDialogClose={handleEvaluatorDialogClose}
       />
 
-      <SpecificDateDialog
+      <SpecificDateDialog // Asignar fecha a equipo (manualmente)
         open={assignDateOpenDialog}
         onClose={() => setAssignDateOpenDialog(false)}
         teams={teams}
@@ -671,7 +676,7 @@ const Dates = ({setSelectedMenu}) => {
         setTopic={setTopic}
       />
 
-      <ResultsDialog
+      <ResultsDialog // Luego de correr el algoritmo
         open={showResults}
         onClose={handleCloseResults}
         events={events}
@@ -694,14 +699,14 @@ const Dates = ({setSelectedMenu}) => {
         onConfirm={handleDeleteEvent}
       />
 
-      <Dialog
+      <Dialog // Éste se abre: desde resultsDialog -> Editar -> clickear un slot vacío
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         maxWidth="sm"
         fullWidth
       >
         <DialogTitle>Asignar Fecha a Equipo</DialogTitle>
-
+        
         <DialogContent>
           <Grid container spacing={3}>
             {/* Selección de Equipo */}
@@ -725,11 +730,11 @@ const Dates = ({setSelectedMenu}) => {
                   setTopic(selectedGroup.topic ? selectedGroup.topic.name : "[No tiene tema asignado.]");
                 }}
                 renderValue={(selected) => {
-                  const selectedGroup = teams.find(
-                    (g) => g.group_number === selected
+                  const selectedTeam = teams.find(
+                    (t) => t.group_number === selected
                   );
-                  return selectedGroup
-                    ? `Grupo ${selectedGroup.group_number}`
+                  return selectedTeam
+                    ? `Grupo ${selectedTeam.group_number}`
                     : "Selecciona un Grupo";
                 }}
               >

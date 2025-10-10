@@ -99,7 +99,7 @@ const SpecificDateDialog = ({
               }}
               displayEmpty
               renderValue={(selected) => {
-                const selectedTeam = teams.find((g) => g.group_number === selected);
+                const selectedTeam = teams.find((t) => t.group_number === selected);
                 return selectedTeam ? `Equipo ${selectedTeam.group_number}` : "Selecciona un equipo";
               }}
             >
