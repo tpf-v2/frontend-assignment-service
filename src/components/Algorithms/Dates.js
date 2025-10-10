@@ -15,7 +15,6 @@ import {
 import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
-import dayjs from "dayjs";
 import Description from "./Dates/Description";
 import ButtonSection from "./Dates/ButtonSection";
 import CalendarSection from "./Dates/CalendarSection";
@@ -76,12 +75,6 @@ const Dates = ({setSelectedMenu}) => {
   // const [selectedTutors, setSelectedTutors] = useState([]);
 
   const [item, setItem] = useState({}); // Un elemento, evento, a asignar / editar.
-  const [team, setTeam] = useState("");
-  const [tutor, setTutor] = useState("");
-  const [topic, setTopic] = useState("");
-  const [evaluator, setEvaluator] = useState("");
-  const [selectedDateTime, setSelectedDateTime] = useState(dayjs());
-  const [selectedHour, setSelectedHour] = useState("");
 
   const [events, setEvents] = useState([]);
   const [initialEvents, setInitialEvents] = useState([]);
@@ -90,6 +83,7 @@ const Dates = ({setSelectedMenu}) => {
   const hours = Array.from({ length: 13 }, (_, i) => `${9 + i}:00`);
 
   const [assignDateOpenDialog, setAssignDateOpenDialog] = useState(false);
+  const [editDateOpenDialog, setEditDateOpenDialog] = useState(false); 
   const [openRunDialog, setOpenRunDialog] = useState(false);
   const [running, setRunning] = useState(false);
   const [maxDifference, setMaxDifference] = useState("");
@@ -337,6 +331,10 @@ const Dates = ({setSelectedMenu}) => {
       // El resultado luego de asignar fecha a un equipo manualmente
       const color = getEvaluatorColor(evaluator, evaluatorColorMap);
 
+      console.log("----- Viendo formato");
+      console.log("--- selectedDateTime:", selectedDateTime);
+      console.log("--- selectedHour:", selectedHour);
+
       const newEvent = {
         title: `Equipo ${team.group_number} - Tutor ${getTutorNameByTutorId(
           tutor.id
@@ -361,6 +359,7 @@ const Dates = ({setSelectedMenu}) => {
           tutor_id: tutor.id,
         },
       };
+      console.log("--- newEvent:", newEvent);
       // Actualizar el evento si existe, o agregar uno nuevo si no existe
     setInitialEvents((prevEvents) => {
       const eventIndex = prevEvents.findIndex(
@@ -504,7 +503,9 @@ const Dates = ({setSelectedMenu}) => {
       }
 
       // Guardar el intervalo seleccionado (clickeado)
-      setSelectedSlot({ start, end });
+      setSelectedSlot({ start , end });
+      console.log("--- selectedSlot:", selectedSlot);
+      
       setModalOpen(true); // Abrir el modal para confirmar
     }
   };
@@ -535,6 +536,7 @@ const Dates = ({setSelectedMenu}) => {
     // Crea un evento (una asignación), solo la setea y cierra el dialog    
     // El selectSlot no es de item, es el slot en que clickeaste (en él querés ubicar al equipo)
     if (selectedSlot && item?.team) {
+      console.log("--- selectedSlot, veamos:", selectedSlot);
       const teamTutor = tutors.find(
         (t) =>
           t.tutor_periods &&
@@ -546,15 +548,25 @@ const Dates = ({setSelectedMenu}) => {
       handleClose()
       const color = getEvaluatorColor(evaluator, evaluatorColorMap);
 
-      const newEvent = {
+      // Hay que pasar la hora por la función de formattedData, ajuste xq viene de selectedSlot con otro formato
+      const datePart = selectedSlot.start.toISOString().slice(0, 10); // "YYYY-MM-DD"
+      const hourPart = selectedSlot.start.getHours().toString().padStart(2, "0") + ":" +
+                      selectedSlot.start.getMinutes().toString().padStart(2, "0");
+      // Ahora sí llamamos a la función
+      const selectedFormattedDate = formatUpdatedDateTime(datePart, hourPart);
+
+
+      const newEvent = { //
         title: `Equipo ${item?.team.group_number} - Tutor ${getTutorNameByTutorId(
           teamTutor.id
         )} - Evaluador ${getTutorNameByTutorId(evaluator)}`,
-        start: selectedSlot.start,
-        end: selectedSlot.end,
+        start: new Date(new Date(selectedFormattedDate).getTime() +
+          60 * 60 * 1000 * 3), // Para mostrar, hay que volverlo a la hora actual o se mostrará más temprano
+        end: new Date(new Date(selectedFormattedDate).getTime() + 60 * 60 * 1000 * 4), // 1 hora        
         color: color,
         result: {
-          date: selectedSlot.start,
+          date: new Date(new Date(selectedFormattedDate).getTime() +
+            60 * 60 * 1000 * 3),
           evaluator_id: evaluator,
           group_id: team.id,
           tutor_id: teamTutor.id,
@@ -562,9 +574,14 @@ const Dates = ({setSelectedMenu}) => {
       };
       setEvents((prevEvents) => [...prevEvents, newEvent]); // []
       setModalOpen(false);
+
+      console.log("--- newEvent, veamoss:", newEvent);
+      console.log("--- events, veamoss:", events);
     }
   };
-  console.log("--- period:", period);
+  console.log("--- events, cada tanto:", events);
+  console.log("--- initialEvents, cada tanto:", initialEvents);
+  
   return (
     <Box sx={{ padding: 3 }}>
       <Grid container spacing={2}>
@@ -652,6 +669,21 @@ const Dates = ({setSelectedMenu}) => {
       <SpecificDateDialog // Asignar fecha a equipo (manualmente)
         open={assignDateOpenDialog}
         onClose={() => setAssignDateOpenDialog(false)}        
+        item={item}
+        setItem={setItem}
+
+        teams={teams}
+        tutors={tutors}
+        period={period}
+
+        hours={hours}
+        showLastPart={true}
+        handleAssignDate={handleAssignDate}
+      />
+
+      <SpecificDateDialog // Asignar fecha a equipo manualmente, al clickear Editar en el slot ampliado
+        open={editDateOpenDialog}
+        onClose={() => setEditDateOpenDialog(false)}        
         item={item}
         setItem={setItem}
 
