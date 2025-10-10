@@ -10,8 +10,6 @@ import {
   TextField,
   DialogActions,
   Button,
-  MenuItem,
-  Select,
   DialogContentText,
 } from "@mui/material";
 import { CSVLink } from "react-csv";
@@ -383,18 +381,6 @@ const Dates = ({setSelectedMenu}) => {
     }
   };
 
-  // Aux: esto en realidad tendría que ser importable en vez de una prop... []
-  // aux: obs se usa solo para pasarla al Specific, se puede mover en cuanto el copypaste de abajo ya no esté
-  const getTutorNameById = (id, periodId) => {
-    const tutor = tutors.find(
-      (t) =>
-        t.tutor_periods &&
-        t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
-    );
-
-    return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
-  };
-
   const getTutorNameByTutorId = (tutor_id) => {
     const tutor = tutors.find((t) => t.id === tutor_id);
 
@@ -409,14 +395,6 @@ const Dates = ({setSelectedMenu}) => {
   const handleConfirmResults = async () => {
     setOpenConfirmDialog(true); // Abrir el popup de confirmación
   };
-
-  // Aux: esto se usa solo para el modal de abajo que estoy x sacar x ser copypaste []
-  const filteredTutors = tutors.filter((tutor) =>
-    tutor.tutor_periods.some(
-      (tutor_period) =>
-        tutor_period.period_id === period.id && tutor_period.is_evaluator
-    )
-  );
 
   const handleAssignEspecificDate = () => {
     setAssignDateOpenDialog(true);
@@ -674,18 +652,17 @@ const Dates = ({setSelectedMenu}) => {
 
         evaluator={evaluator}
         setEvaluator={setEvaluator}
-
+        
         selectedDateTime={selectedDateTime}
         setSelectedDateTime={setSelectedDateTime}
         selectedHour={selectedHour}
         setSelectedHour={setSelectedHour}
+        showLastPart={true}
 
         handleAssignDate={handleAssignDate}
-        getTutorNameById={getTutorNameById}
         hours={hours}
         tutors={tutors}
 
-        showLastPart={true}
       />
 
       <ResultsDialog // Luego de correr el algoritmo
@@ -736,8 +713,6 @@ const Dates = ({setSelectedMenu}) => {
         showLastPart={true}        
 
         handleAssignDate={handleConfirmEvent} // <--
-
-        getTutorNameById={getTutorNameById}
         //no hours={hours}
       />
 

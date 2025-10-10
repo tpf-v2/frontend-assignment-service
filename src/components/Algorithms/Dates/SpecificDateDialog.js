@@ -14,6 +14,7 @@ import {
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { getTutorNameById } from "../../../utils/getEntitiesUtils"
 
 const SpecificDateDialog = ({
   open,
@@ -35,7 +36,6 @@ const SpecificDateDialog = ({
   setSelectedHour,
 
   handleAssignDate,  
-  getTutorNameById,
   hours,
   
   tutors,
@@ -75,7 +75,7 @@ const SpecificDateDialog = ({
     setSelectedDateTime(null);
     setSelectedHour("");
     onClose(); // Cierra el diálogo
-  };  
+  };
 
   return (
     <Dialog open={open} onClose={handleCancel} maxWidth="sm" fullWidth>
@@ -98,7 +98,8 @@ const SpecificDateDialog = ({
 
                 const selectedTutor = getTutorNameById(
                   selectedTeam.tutor_period_id,
-                  period.id
+                  period.id,
+                  tutors
                 );
                 setTutor(selectedTutor ? selectedTutor : "");
                 setTopic(selectedTeam.topic ? selectedTeam.topic.name : "[No tiene tema asignado.]");
