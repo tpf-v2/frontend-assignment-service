@@ -40,6 +40,9 @@ const SpecificDateDialog = ({
   
   tutors,
   showLastPart=false,
+
+  item,
+  setItem,
   
 }) => {
   const [isAssignDisabled, setIsAssignDisabled] = useState(true);
@@ -50,15 +53,26 @@ const SpecificDateDialog = ({
     )
   );
 
+  // Esto + label: para llamar a una sola y no necesitar un set para cada campo
+  const handleChange = (e) => {
+    setItem({ ...item, [e.target.name]: e.target.value });
+  };
+
   // Verifica si todos los campos necesarios están completos para habilitar el botón de Asignar
   useEffect(() => {
     setIsAssignDisabled(
+      showLastPart ?
       !(
         team &&
         selectedDateTime &&
         selectedHour &&
         evaluator
       )
+      :
+      !(
+        team &&
+        evaluator
+      ) 
     );
   }, [team, selectedDateTime, selectedHour, evaluator]);
 

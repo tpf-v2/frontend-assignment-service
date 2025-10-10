@@ -47,6 +47,7 @@ const evaluatorColors = [
 ];
 
 // Función para asignar un color a cada evaluador de manera dinámica
+// Obs: Depende de la length y se va appendeando! O sea que dep del orden en que llegan evaluadores
 const getEvaluatorColor = (evaluatorId, evaluatorColorMap) => {
   if (!evaluatorColorMap[evaluatorId]) {
     const colorIndex =
@@ -73,6 +74,8 @@ const Dates = ({setSelectedMenu}) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [openEvaluatorDialog, setOpenEvaluatorDialog] = useState(false);
   // const [selectedTutors, setSelectedTutors] = useState([]);
+
+  const [item, setItem] = useState({}); // Un elemento, evento, a asignar / editar.
   const [team, setTeam] = useState("");
   const [tutor, setTutor] = useState("");
   const [topic, setTopic] = useState("");
@@ -310,6 +313,7 @@ const Dates = ({setSelectedMenu}) => {
       return;
     }
 
+    // aux: (para qué lo busca si ya lo tiene?) (ah es solo el nombre lo que tiene en "tutor" ídem topic)
     const tutor = tutors.find(
       (t) =>
         t.tutor_periods &&
@@ -552,7 +556,7 @@ const Dates = ({setSelectedMenu}) => {
       setModalOpen(false);
     }
   };
-
+  console.log("--- period:", period);
   return (
     <Box sx={{ padding: 3 }}>
       <Grid container spacing={2}>
@@ -709,8 +713,7 @@ const Dates = ({setSelectedMenu}) => {
         //no selectedDateTime={selectedDateTime}
         //no setSelectedDateTime={setSelectedDateTime}
         //no selectedHour={selectedHour}
-        //no setSelectedHour={setSelectedHour}
-        showLastPart={true}        
+        //no setSelectedHour={setSelectedHour}      
 
         handleAssignDate={handleConfirmEvent} // <--
         //no hours={hours}
