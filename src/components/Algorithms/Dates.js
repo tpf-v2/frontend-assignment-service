@@ -680,7 +680,9 @@ const Dates = ({setSelectedMenu}) => {
         handleAssignDate={handleAssignDate}
         getTutorNameById={getTutorNameById}
         hours={hours}
-        tutors={tutors}        
+        tutors={tutors}
+
+        showLastPart={true}
       />
 
       <ResultsDialog // Luego de correr el algoritmo

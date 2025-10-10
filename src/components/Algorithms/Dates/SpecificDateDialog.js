@@ -39,6 +39,7 @@ const SpecificDateDialog = ({
   hours,
   
   tutors,
+  showLastPart=false,
   
 }) => {
   const [isAssignDisabled, setIsAssignDisabled] = useState(true);
@@ -162,34 +163,38 @@ const SpecificDateDialog = ({
               ))}
             </Select>
           </Grid>
-          <Grid item xs={6}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Fecha"
-                value={selectedDateTime}
-                onChange={(newValue) => setSelectedDateTime(newValue.startOf("day"))}
-                format="DD/MM/YYYY"
-                minDate={dayjs()}
-              />
-            </LocalizationProvider>
-          </Grid>
-          <Grid item xs={6}>
-            <Select
-              value={selectedHour || ""}
-              onChange={handleHourChange}
-              displayEmpty
-              fullWidth
-            >
-              <MenuItem value="" disabled>
-                Selecciona la Hora
-              </MenuItem>
-              {hours.map((hour) => (
-                <MenuItem key={hour} value={hour}>
-                  {hour}
-                </MenuItem>
-              ))}
-            </Select>
-          </Grid>
+          {showLastPart && (
+            <>
+              <Grid item xs={6}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Fecha"
+                    value={selectedDateTime}
+                    onChange={(newValue) => setSelectedDateTime(newValue.startOf("day"))}
+                    format="DD/MM/YYYY"
+                    minDate={dayjs()}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={6}>
+                <Select
+                  value={selectedHour || ""}
+                  onChange={handleHourChange}
+                  displayEmpty
+                  fullWidth
+                >
+                  <MenuItem value="" disabled>
+                    Selecciona la Hora
+                  </MenuItem>
+                  {hours.map((hour) => (
+                    <MenuItem key={hour} value={hour}>
+                      {hour}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+            </>
+          )}
         </Grid>
       </DialogContent>
       <DialogActions>
