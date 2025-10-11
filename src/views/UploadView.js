@@ -40,7 +40,8 @@ const UploadView = () => {
   const projectActiveKeyMap = {
     "initial-project": "initial_project_active",
     "intermediate-project": "intermediate_project_active",
-    "final-project": "final_project_active"
+    "final-project": "final_project_active",
+    "pps-report": "pps_report_active"
   };
 
   const activeKey = projectActiveKeyMap[projectType];  // Obtén la clave correspondiente de period

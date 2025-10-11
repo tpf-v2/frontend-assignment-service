@@ -8,6 +8,7 @@ export const uploadProjects = async ({ projectType, groupId, projectTitle, selec
     "initial-project": "Anteproyecto",
     "intermediate-project": "Entrega Intermedia",
     "final-project": "Entrega Final",
+    "pps-report": "Informe Cumplimiento PPS",
   };
 
   const errorMessage = `No se pudo completar el envío de la ${projectNameKeyMap[projectType]}. Por favor, inténtalo de nuevo.`;
