@@ -207,8 +207,6 @@ const StudentForm = () => {
     );
   };
 
-  console.log("--- formData:", formData);
-
   return (
     <Container maxWidth="sm">
       {period.form_active ? (
@@ -374,54 +372,35 @@ const StudentForm = () => {
                     onChange={handleChange}
                     required
                   />
+                  <FormControl fullWidth>
+                    <InputLabel id="Tutor" shrink>Tutor *</InputLabel> 
+                    <Select
+                      labelId="Tutor" // Shrink para que el label flotante se vea siempre bien arriba
+                      name="tutorEmail"
+                      value={formData.tutorEmail || ""} // se deja vacío y entonces (con el displayEmpty) cae al MenuItem por defecto
+                      displayEmpty
+                      label="Tutor"
+                      onChange={handleChange}
+                      required
+                      fullWidth
+                    >
+                      <MenuItem key="" value="" // a este MenuItem cae cuando el value está vacío
+                        disabled> 
+                        Seleccionar tutor
+                      </MenuItem>
+                      {tutors.map((tutor) => {
+                        const tp = tutor.tutor_periods.find((tp) => tp.period_id === period.id);
+                        if (!tp) return null; // ignorar si no hay uno del period pedido
+                        
+                        return (
+                            <MenuItem key={tutor.email} value={tutor.email}>
+                            {tutor.name} {tutor.last_name}
+                            </MenuItem>
+                        );
+                        })}
 
-                  <Select
-                    //margin="normal" // da error en consola
-                    name="tutorEmail"
-                    value={formData.tutorEmail || ""} // se deja vacío y entonces (con el displayEmpty) cae al MenuItem por defecto
-                    displayEmpty
-                    label="Tutor"
-                    onChange={handleChange}
-                    //required
-                    fullWidth
-                  >
-                    <MenuItem key="" value="" // a este MenuItem cae cuando el value está vacío
-                      disabled> 
-                      Seleccionar tutor
-                    </MenuItem>
-                    {tutors.map((tutor) => {
-                      const tp = tutor.tutor_periods.find((tp) => tp.period_id === period.id);
-                      if (!tp) return null; // ignorar si no hay uno del period pedido
-                      
-                      return (
-                          <MenuItem key={tutor.email} value={tutor.email}>
-                          {tutor.name} {tutor.last_name}
-                          </MenuItem>
-                      );
-                      })}
-
-                  </Select>
-                
-                  
-                  
-                  
-                  
-                  
-                  
-                  {/*<TextField
-                    label="Email de Tutor"
-                    name="tutorEmail"
-                    type="email"
-                    fullWidth
-                    margin="normal"
-                    variant="outlined"
-                    value={formData.tutorEmail}
-                    onChange={handleChange}
-                    //required
-                  />
-                  */}
-
-
+                    </Select>
+                  </FormControl>
                 </>
               )}
   
