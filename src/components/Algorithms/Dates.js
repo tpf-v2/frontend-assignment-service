@@ -131,6 +131,7 @@ const Dates = ({setSelectedMenu}) => {
 
     // Fechas
     const fetchData = async () => {
+      if (!period) return; // AUX PROBANDO SIN PERIOD EN DEPS.
       setLoadingDates(true);
       try {
         const dates = await getAssignedDates(user, period);
@@ -176,7 +177,8 @@ const Dates = ({setSelectedMenu}) => {
     fetchData();
     getInputInfo();    
     setLoadingDates(false);
-  }, [period, user]);
+  //}, [period, user]);
+  }, [user]);
 
   // Transforma datesResult en eventos para el calendario
   useEffect(() => {
@@ -549,30 +551,35 @@ const Dates = ({setSelectedMenu}) => {
       const color = getEvaluatorColor(evaluator, evaluatorColorMap);
 
       // Hay que pasar la hora por la función de formattedData, ajuste xq viene de selectedSlot con otro formato
-      const datePart = selectedSlot.start.toISOString().slice(0, 10); // "YYYY-MM-DD"
+      const localDate = new Date(
+        selectedSlot.start.getTime() - selectedSlot.start.getTimezoneOffset() * 60000
+      );
+      const datePart = localDate.toISOString().slice(0, 10);
       const hourPart = selectedSlot.start.getHours().toString().padStart(2, "0") + ":" +
-                      selectedSlot.start.getMinutes().toString().padStart(2, "0");
+                       selectedSlot.start.getMinutes().toString().padStart(2, "0");
+
       // Ahora sí llamamos a la función
-      const selectedFormattedDate = formatUpdatedDateTime(datePart, hourPart);
-
-
+      const selectedRealUtc = formatUpdatedDateTime(datePart, hourPart);
+      console.log("---- selectedRealUtc:", selectedRealUtc);
+      console.log("---- selectedSlot:", selectedSlot);
+      
       const newEvent = { //
         title: `Equipo ${item?.team.group_number} - Tutor ${getTutorNameByTutorId(
           teamTutor.id
         )} - Evaluador ${getTutorNameByTutorId(evaluator)}`,
-        start: new Date(new Date(selectedFormattedDate).getTime() +
+        start: new Date(new Date(selectedRealUtc).getTime() +
           60 * 60 * 1000 * 3), // Para mostrar, hay que volverlo a la hora actual o se mostrará más temprano
-        end: new Date(new Date(selectedFormattedDate).getTime() + 60 * 60 * 1000 * 4), // 1 hora        
+        end: new Date(new Date(selectedRealUtc).getTime() + 60 * 60 * 1000 * 4), // 1 hora        
         color: color,
         result: {
-          date: new Date(new Date(selectedFormattedDate).getTime() +
+          date: new Date(new Date(selectedRealUtc).getTime() +
             60 * 60 * 1000 * 3),
           evaluator_id: evaluator,
           group_id: team.id,
           tutor_id: teamTutor.id,
         },
       };
-      setEvents((prevEvents) => [...prevEvents, newEvent]); // []
+      setEvents((prevEvents) => [...prevEvents, newEvent]); // [] Aux: Acá es donde duplica los eventos sin importarle nada (arreglar esto)
       setModalOpen(false);
 
       console.log("--- newEvent, veamoss:", newEvent);
