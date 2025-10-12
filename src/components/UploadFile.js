@@ -11,6 +11,7 @@ import {
   DialogActions,
   DialogContent,
   TextField,
+  Alert,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
@@ -46,7 +47,7 @@ const DropzoneBox = styled(Box)(({ theme }) => ({
   justifyContent: "center",
 }));
 
-const UploadFile = ({ projectType }) => {
+const UploadFile = ({ projectType, headerInfo }) => {
   const [selectedFile, setSelectedFile] = useState(null); // Estado para archivos
   const [fileError, setFileError] = useState("");
   const [url, setUrl] = useState(""); // Estado para la URL (solo para entrega intermedia)
@@ -149,6 +150,15 @@ const UploadFile = ({ projectType }) => {
         <Box textAlign="center">
           <Title variant="h5">Subir {projectNameKeyMap[projectType]}</Title>
         </Box>
+
+        {!!headerInfo ? (
+            <Alert severity="info">
+              {headerInfo}
+            </Alert>
+          ) : (
+            null
+          )
+        }
 
         <form onSubmit={handleSubmit}>
           {projectType === "intermediate-project" ? (
