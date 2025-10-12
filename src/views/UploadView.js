@@ -1,10 +1,11 @@
 
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import UploadFile from "../components/UploadFile";
 import ClosedAlert from "../components/ClosedAlert";
-import { getStudentInfo } from "../api/handleStudents";
+import ChangeDescription from "../components/ChangeDescription";
+import { getGroupById } from "../api/getGroupById";
 
 const UploadView = () => {
   const dispatch = useDispatch();
@@ -12,20 +13,21 @@ const UploadView = () => {
   const id = useSelector((state) => state.user.group_id);
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
-  let userData = null
+  const [group, setGroup] = useState(null);
+  
   useEffect(() => {
-    const getData = async () => {
+    const getGroup = async () => {
       try {
-        if (period == undefined){
-          return
-        }
-        console.log(period)
-        userData = await dispatch(getStudentInfo(user));
+        console.log(id)
+        setGroup(await dispatch(getGroupById(user,id)))
+
+        console.log("Group acquired:")
+        console.log(group)
       } catch (error) {
         console.error("Error al obtener datos para el upload:", error);
       } 
     };
-    getData();
+    getGroup();
   }, []);
 
   // Mapeo entre el parámetro de la URL y las variables del estado de period
@@ -40,24 +42,29 @@ const UploadView = () => {
   // Comprueba si el campo activo correspondiente es verdadero
   const isProjectActive = period[activeKey];
   let delivered = false;
-  if (userData && projectType=="final-project" && !!userData.final_report_date) {
+  if (group && projectType=="final-project" && !!group.final_report_date) {
     delivered = true;
   }
-  if (userData && projectType=="initial-project" && !!userData.pre_report_date) {
+  if (group && projectType=="initial-project" && !!group.pre_report_date) {
     delivered = true;
   }
-  if (userData && projectType=="intermediate-project" && !!userData.intermediate_report_date) {
+  if (group && projectType=="intermediate-project" && !!group.intermediate_report_date) {
     delivered = true;
   }
   let msg = delivered ? "Tu equipo ya ha realizado esta entrega." : "Tu equipo no ha realizado esta entrega aún."
-  //  
+  console.log("Delivered?")
+  console.log(delivered)
   return (
     <div>
       {isProjectActive ? (
         <UploadFile projectType={projectType} headerInfo={msg} />
       ) : (
         <ClosedAlert message="No se aceptan más entregas." />
-      )}
+      )
+      }
+      {
+        (delivered && projectType == "final-project") ? <ChangeDescription projectType={"final-project"} headerInfo={null} user={user}/> : null
+      }
     </div>
   );
 };
