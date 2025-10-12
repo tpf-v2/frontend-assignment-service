@@ -261,7 +261,7 @@ export const TeamModals = ({
                         options={getTutorsForPeriod(periodId, tutors) || []}
                         getOptionLabel={(option) => option.name? `${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
                         sx={{ width: '100%' }}
-                        clearText={false}
+                        clearText="Desasignar tutor"
                         renderInput={(tutors) => <TextField {...tutors}
                                                       label="Tutor/a"/>} // label es la etiqueta a mostrar
                         onChange={(event, newValue) => {    
@@ -276,37 +276,6 @@ export const TeamModals = ({
                         }}
                         value={getTutorById(item?.tutor_period_id, periodId, tutors) || null}
                       />
-
-
-                  {/* <FormControl fullWidth variant="outlined" margin="normal">
-                    {<InputLabel margin="normal">Tutor/a</InputLabel>
-                    }
-                    <Select
-                      value={item.tutor_period_id || ""}
-                      label="Tutor"
-                      onChange={(e) =>
-                        setItem({ ...item, tutor_period_id: e.target.value })
-                      }
-                      required
-                      fullWidth
-                    >
-                      <MenuItem key="" value="" disabled>
-                        Seleccionar tutor
-                      </MenuItem>
-                      {tutors.map((tutor) => {
-                        const tp = tutor.tutor_periods.find((tp) => tp.period_id === periodId);
-                        if (!tp) return null; // ignorar si no hay uno del period pedido
-
-                        return (
-                            <MenuItem key={tp.id} value={tp.id}>
-                            {tutor.name} {tutor.last_name}
-                            </MenuItem>
-                        );
-                        })}
-
-                    </Select>
-                  </FormControl> */}
-
 
                   {/* Las tres preferencias, no editables */}
                   <InputLabel>Preferencias</InputLabel>
@@ -607,8 +576,11 @@ export const TeamModals = ({
                   <Grid item xs={6} md={6}>
 
                   {/* Tema y tutor */}
-                  <InputLabel>Tema y Tutor/a</InputLabel>
-                  <Autocomplete // Igual que en el modal de editar []
+                  <InputLabel sx={{ mb: 2 }}>Tema y Tutor/a</InputLabel>
+                  <Grid container spacing={2}>
+
+                    <Grid item xs={12} md={12}>
+                      <Autocomplete // Igual que en el modal de editar []
                         disablePortal
                         options={topics.csvTopics ?? []}
                         // manera básica: getOptionLabel={(option) => option?.name ?? ""} // cómo mostrar el texto
@@ -672,36 +644,34 @@ export const TeamModals = ({
                         }}
 
                       />
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+
+                      <Autocomplete // igual que en Editar []
+                        disablePortal
+                        options={getTutorsForPeriod(periodId, tutors) || []}
+                        getOptionLabel={(option) => option.name? `${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
+                        sx={{ width: '100%' }}
+                        clearText="Desasignar tutor"
+                        renderInput={(tutors) => <TextField {...tutors}
+                                                      label="Tutor/a"/>} // label es la etiqueta a mostrar
+                        onChange={(event, newValue) => {    
+                          // Tenemos newvalue que es un objeto tutor, no queremos setearlo directamente (completo)
+                          // sino que hay que setear un campo suyo
+                          const tp = newValue?.tutor_periods.find((tp) => tp.period_id === periodId);
+                          if (newValue) {
+                            setItem({ ...item, tutor_period_id: tp?.id })                                
+                          } else {
+                            setItem({ ...item, tutor_period_id: null }) // dejarlo vacío al quitar la selección
+                          }
+                        }}
+                        value={getTutorById(item?.tutor_period_id, periodId, tutors) || null}
+                      />
+                    </Grid>
+
+                  </Grid>
                   
-                  <FormControl fullWidth variant="outlined" margin="normal">
-                    {<InputLabel margin="normal">Tutor/a</InputLabel>
-                    }
-                    <Select
-                      margin="normal"
-                      value={item.tutor_period_id || ""}
-                      label="Tutor"
-                      onChange={(e) =>
-                        setItem({ ...item, tutor_period_id: e.target.value })
-                      }
-                      required
-                      fullWidth
-                    >
-                      <MenuItem key="" value="" disabled>
-                        Seleccionar tutor
-                      </MenuItem>
-                      {tutors.map((tutor) => {
-                        const tp = tutor.tutor_periods.find((tp) => tp.period_id === periodId);
-                        if (!tp) return null; // ignorar si no hay uno del period pedido
-
-                        return (
-                            <MenuItem key={tp.id} value={tp.id}>
-                            {tutor.name} {tutor.last_name}
-                            </MenuItem>
-                        );
-                        })}
-
-                    </Select>
-                  </FormControl>
+                  
                   {/* Las tres preferencias, no editables - resulta ser que sí las queremos editables []
                     * No irán a este endpoint de add_team, es otro endpoint el de las answers.
                   */}
