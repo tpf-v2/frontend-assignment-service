@@ -19,7 +19,9 @@ export const getTeamById = (id, teams) => { // To-Do: usarla tmb en TopicTutor
     return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
 };
 
-// Función para obtener la entidad completa 'tutor' por su tutor_period_id
+/// Las dos que siguen son muy parecidas, y actualmente solo se usan en TeamModals para no ensuciar el Autocomplete
+/// (existen otros lugares en que se podrían usar también)
+// Para TeamModals _ Función para obtener la entidad completa 'tutor' por su tutor_period_id
 export const getTutorById = (id, periodId, tutors) => {
     const tutor = tutors.find(
       (t) =>
@@ -29,6 +31,15 @@ export const getTutorById = (id, periodId, tutors) => {
 
     return tutor;
 };
+// Para TeamModals _ obtiene Lista de tutores del período indicado
+export const getTutorsForPeriod = (periodId, tutors) => {
+    return tutors.filter(
+      (t) =>
+        t.tutor_periods &&
+        t.tutor_periods.some((tp) => tp.period_id === periodId)
+    );
+};
+  
 
 export function formatDate(dateString) {
     const date = new Date(dateString);

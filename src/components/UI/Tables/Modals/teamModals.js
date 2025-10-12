@@ -23,7 +23,7 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
-import { getTutorById } from "../../../../utils/getEntitiesUtils";
+import { getTutorById, getTutorsForPeriod } from "../../../../utils/getEntitiesUtils";
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 const filter = createFilterOptions();
 
@@ -259,13 +259,13 @@ export const TeamModals = ({
 
                       <Autocomplete
                         disablePortal
-                        options={tutors || []}
+                        options={getTutorsForPeriod(periodId, tutors) || []}
                         getOptionLabel={(option) => option.name? `${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
                         sx={{ width: '100%' }}
                         clearText={false}
                         renderInput={(tutors) => <TextField {...tutors}
                                                       label="Tutor/a"/>} // label es la etiqueta a mostrar
-                        onChange={(event, newValue) => {
+                        onChange={(event, newValue) => {                         
                           
                           if (newValue) {
                             setItem({ ...item, tutor_period_id: newValue })                                
