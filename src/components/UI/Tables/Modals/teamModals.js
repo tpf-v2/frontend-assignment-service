@@ -256,7 +256,6 @@ export const TeamModals = ({
 
                       />
 
-
                       <Autocomplete
                         disablePortal
                         options={getTutorsForPeriod(periodId, tutors) || []}
@@ -265,10 +264,12 @@ export const TeamModals = ({
                         clearText={false}
                         renderInput={(tutors) => <TextField {...tutors}
                                                       label="Tutor/a"/>} // label es la etiqueta a mostrar
-                        onChange={(event, newValue) => {                         
-                          
+                        onChange={(event, newValue) => {    
+                          // Tenemos newvalue que es un objeto tutor, no queremos setearlo directamente (completo)
+                          // sino que hay que setear un campo suyo
+                          const tp = newValue?.tutor_periods.find((tp) => tp.period_id === periodId);
                           if (newValue) {
-                            setItem({ ...item, tutor_period_id: newValue })                                
+                            setItem({ ...item, tutor_period_id: tp?.id })                                
                           } else {
                             setItem({ ...item, tutor_period_id: null }) // dejarlo vacío al quitar la selección
                           }
@@ -747,6 +748,9 @@ export const TeamModals = ({
         // Usa el newItem para guardar lo que va a enviar
         return innerAddTeamModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar", "Guardar")
       }
+
+  
+  console.log("--- editedItem:", editedItem);
 
   return (
     <>
