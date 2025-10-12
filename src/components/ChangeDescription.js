@@ -82,7 +82,7 @@ const ChangeDescription = ({ projectType, headerInfo, user }) => {
     <Container maxWidth="sm">
       <Root>
         <Box textAlign="center">
-          <Title variant="h5">Subir {projectNameKeyMap[projectType]}</Title>
+          <Title variant="h5">Descripción de {projectNameKeyMap[projectType]}</Title>
         </Box>
 
         {!!headerInfo ? (

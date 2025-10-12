@@ -3,7 +3,6 @@ import axios from 'axios';
 const BASE_URL = process.env.REACT_APP_API_URL;
 
 export const uploadDescription = async (user, description) => {
-    description="test_example_temp_TODO"
     const config = {
         headers: {
           Authorization: `Bearer ${user.token}`,
