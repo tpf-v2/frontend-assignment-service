@@ -37,7 +37,7 @@ const TeamDataTable = ({
   items,
   title,
   enableEdit = true,
-  //enableDelete = true, // No existe endpoint delete para teams actualmente
+  enableDelete = true, // No existe endpoint delete para teams actualmente
   enableAdd = true,
   enableFilterButtons = true,
 }) => {
@@ -94,9 +94,6 @@ const TeamDataTable = ({
   }));
 
   // useEffect
-  console.log("--- Probando endpoint:", endpoint || "");
-  console.log("--- Probando data:", data);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -428,8 +425,6 @@ const TeamDataTable = ({
       });
     }
   };
-
-  console.log("--- filteredTeams:", filteredTeams);
 
   return (
       <>

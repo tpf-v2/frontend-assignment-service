@@ -36,7 +36,7 @@ import updatePeriod from "../../api/updatePeriod";
 import ResultsDialog from "./Dates/ResultsDialog";
 
 import { getInputAnalysis } from "../../api/handleAlgorithmAnalysis";
-import AlgorithmPreCheck from "./AlgorithmPreCheck";
+import { DatesPreCheck } from "./SpecificAlgorithmsPreCheck";
 
 const evaluatorColors = [
   "#87CEFA", // Light Blue
@@ -116,7 +116,6 @@ const Dates = ({setSelectedMenu}) => {
   const dispatch = useDispatch();
 
   // Fechas
-
   useEffect(() => {
     
     // Análsis del input del algoritmo, previo a ejecutarlo
@@ -563,15 +562,13 @@ const Dates = ({setSelectedMenu}) => {
     }
   };
 
-  console.log("--- la input info quedó, pre return jsx:", inputInfo);
-
   return (
     <Box sx={{ padding: 3 }}>
       <Grid container spacing={2}>
         {/* Descripción */}
         <Description />
         {/* Verificación Previa */}
-        <AlgorithmPreCheck inputInfo={inputInfo} algorithm={"Dates"} setSelectedMenu={setSelectedMenu}/>        
+        <DatesPreCheck inputInfo={inputInfo} setSelectedMenu={setSelectedMenu}/>
 
         {/* Botones Correr */}
         <ButtonSection

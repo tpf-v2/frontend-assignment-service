@@ -1,67 +1,75 @@
-import React from "react";
-import { Grid, Typography, Link } from "@mui/material";
-import StudentsTable from "../UI/Tables/ChildTables/StudentsTable";
-import TeamsTable from "../UI/Tables/ChildTables/GroupsTable";
+import React, {useState} from "react";
+import { Grid, Typography, CircularProgress, Box,
+         Dialog, Button, DialogTitle, DialogContent,
+         Accordion, AccordionSummary, AccordionDetails, 
+         DialogActions} from "@mui/material";
 
-const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelectedMenu}) => {  
-  if (!inputInfo) return;  
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import ErrorIcon from "@mui/icons-material/Error";
 
-  let msg;
-  let showWhoComponent;
-  let showWhoList;
-  switch (algorithm) {
-    case "IncompleteTeams": {
-      msg = inputInfo.length === 0 ? "Todos/as los/as estudiantes forman parte de alguna respuesta al formulario."
-      : inputInfo.length === 1 ? "Existe 1 estudiante que no está en respuestas al formulario de equipos en ninguna de sus variantes:"
-      : `Existen ${inputInfo.length} estudiantes que no están en respuestas al formulario de equipos en ninguna de sus variantes:`
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-      showWhoList = inputInfo;
-      showWhoComponent = <StudentsTable dataListToRender={showWhoList} />;
-
-      break;
-    }
-    case "Dates": {
-      if (!setSelectedMenu) return;
-      
-      msg = inputInfo.admin_slots ? (
-        inputInfo.teams?.length === 0 ? "Todos los equipos completaron su disponibilidad."
-        : inputInfo.teams?.length === 1 ? "Existe 1 equipo que no completó su disponibilidad:"
-        : `Existen ${inputInfo.teams?.length} equipos que no completaron su disponibilidad:`
-      ) : (
-        <>
-          Primero se debe cargar las fechas disponibles desde la sección {""}
-          <Link
-            component="span"
-            onClick={() => setSelectedMenu("Disponibilidad fechas de Presentación")}
-            underline="always"
-            sx={{ color: "blue", cursor: "pointer"}}
-            >
-            Disponibilidad fechas de Presentación
-          </Link>.
-        </>
-        )
-      
-      showWhoList = inputInfo.teams;
-      showWhoComponent = <TeamsTable dataListToRender={showWhoList} />;      
-      
-      break;
-    }
-    default: {
-      console.log("Error, valor no esperado de algorithm:", algorithm);
-      msg = "Ocurrió un error inesperado al mostrar información";
-    }
-  }
-
-  console.log("--- inputInfo:", inputInfo);
+// Componente auxiliar para mostrar el título con el spinner mientras carga
+export const Title = ({withSpinner=false}) => {
+  const spinner = () => (
+    <Grid item xs={12} md={12} sx={{ display: "flex" }}>
+      <Box
+        display="flex"
+        minHeight="300px"
+      >
+        <CircularProgress />
+      </Box>
+    </Grid>
+  )
 
   return (
     <>
-    <Grid item xs={12} md={12} sx={{ display: "flex" }}>
-      <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-        Verificación previa
-      </Typography>
-    </Grid>
-    {inputInfo && (
+      <Grid item xs={12} md={12} sx={{ display: "flex" }}>
+        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+          Verificación previa
+        </Typography>      
+      </Grid>
+      {withSpinner && (
+        spinner()
+      )}
+    </>
+  )
+}
+
+// Componente genérico, recibe los datos ya procesados de SpecificAlgorithmsPreCheck.js
+// les agrega íconos y se encarga del renderizado. Muestra a admin que hay entidades con problemas
+// (ej estudiantes / equipos / tutores que faltan al input de los algoritmos) y en un modal
+// muestra quiénes son.
+export const AlgorithmPreCheck = ({
+  initialDescription,
+  condition=true,
+  expandableData,
+  falseConditionMsg
+}) => {  
+
+  const [open, setOpen] = useState(false);
+  const [data, setData] = useState();
+
+  const getIcon = (list) => {
+    if (list.length === 0) {
+        return <CheckCircleIcon color="success"/>
+    }
+    if (list.length > 0) {        
+        return <WarningAmberIcon color="warning"/>
+    }
+  }
+  
+  // Agregamos ícono a cada mensaje a mostrar
+  const dataWithIcons = expandableData?.map(elem => ({ ...elem, icon: getIcon(elem.infoList) }));
+  
+  // True si alguna de las listas muestra 'entidades problemáticas', para saber si debo mostrar el botón de "Analizar"
+  const areThereProblems = expandableData?.some(element => element.infoList.length > 0);
+
+  return (
+    <>
+    <Title />    
+    {dataWithIcons && (
       <>
       <Grid item xs={12} md={12} sx={{ display: "flex" }}>
         <Typography variant="body1" sx={{ textAlign: "justify" }}>
@@ -69,19 +77,74 @@ const AlgorithmPreCheck = ({initialDescription, inputInfo, algorithm, setSelecte
         </Typography>
       </Grid>
 
-      <Grid item xs={12} md={12} sx={{ display: "flex" }}>  
-        <Typography variant="body1" sx={{ textAlign: "justify" }}>
-          {msg}
-        </Typography>
-      </Grid>      
-
-      {showWhoList.length > 0 && (<Grid item xs={12} md={12} sx={{ display: "flex" }}>  
-        {showWhoComponent}
-      </Grid>)}
+      {condition ? (
+        <>
+        {/* Muestro lista de cada msj (ej "Existen _n_ ... que no ...", o msj de Todo ok) con su ícono*/}
+          {dataWithIcons?.map((okMsgOrProblematicEntity) => (
+            <Grid item xs={12} md={12} sx={{ display: "flex", gap: 0.5}}>  
+              {okMsgOrProblematicEntity.icon}
+              <Typography variant="body1" sx={{ textAlign: "justify" }}>
+                <strong>{okMsgOrProblematicEntity.title}</strong>
+              </Typography>
+            </Grid>
+          ))}
+          {/* Si hay gente que falte al input, y aplica mostrar, muestro botón para ver quiénes son en modal */}
+          {areThereProblems && condition && (    
+            <Grid
+              item
+              xs={12}
+              md={falseConditionMsg ? 12 : 11}
+              sx={{ display: "flex", justifyContent: "right" }}
+            >
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {setData(dataWithIcons); setOpen(true)}}
+              sx={{ ml: "auto", mt: "auto",
+                padding: falseConditionMsg ? "6px 19px" : "6px 9px", // Tamaño del botón para coincidir visualmente con el de "Correr"
+               }} // ml empuja hacia la derecha (al gap lo maneja el último de la derecha)
+            >
+              Analizar
+            </Button> 
+            </Grid>           
+          )}
+          </>
+      ) : (
+        <Grid item xs={12} md={12} sx={{ display: "flex", gap: 0.5 }}>
+          {/* Si esto es false, no aplica mostrarlos xq existe otro problema ("primero admin cargar fechas")*/}
+          <ErrorIcon color="error"/>
+          {falseConditionMsg}
+        </Grid>
+      )
+      }      
       </>
     )}
+
+
+  <Dialog open={open} onClose={() => {setOpen(false)}} maxWidth={false}>
+    <DialogTitle>Entidades con problemas</DialogTitle>
+    <DialogContent>
+      {data?.map((e, index) => (
+        <Accordion key={index} defaultExpanded={false}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography>
+              <strong>{e.title}</strong>
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography variant="body2">{e.detail}</Typography>
+          </AccordionDetails>
+        </Accordion>
+      ))}
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={() => {setOpen(false)}} variant="contained" color="primary">
+          Cerrar
+      </Button>
+    </DialogActions>
+          
+  </Dialog>
+
   </>
 );
 }
-
-export default AlgorithmPreCheck;
