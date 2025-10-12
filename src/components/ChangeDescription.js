@@ -32,8 +32,8 @@ const Title = styled(Typography)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-const ChangeDescription = ({ projectType, headerInfo, user }) => {
-  const [description, setDescription] = useState(""); // Estado para la URL (solo para entrega intermedia)
+const ChangeDescription = ({ projectType, headerInfo, user, group }) => {
+  const [description, setDescription] = useState(group && group.final_report_summary ? group.final_report_summary : ""); // Estado para la URL (solo para entrega intermedia)
   const [descriptionError, setDescriptionError] = useState("");
   const [responseMessage, setResponseMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -67,9 +67,6 @@ const ChangeDescription = ({ projectType, headerInfo, user }) => {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    if (isSuccess) {
-      navigate("/learning-path");
-    }
   };
 
   const projectNameKeyMap = {

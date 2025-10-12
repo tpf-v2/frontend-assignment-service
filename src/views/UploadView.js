@@ -52,8 +52,7 @@ const UploadView = () => {
     delivered = true;
   }
   let msg = delivered ? "Tu equipo ya ha realizado esta entrega." : "Tu equipo no ha realizado esta entrega aún."
-  console.log("Delivered?")
-  console.log(delivered)
+
   return (
     <div>
       {isProjectActive ? (
@@ -63,7 +62,7 @@ const UploadView = () => {
       )
       }
       {
-        (delivered && projectType == "final-project") ? <ChangeDescription projectType={"final-project"} headerInfo={null} user={user}/> : null
+        (delivered && projectType == "final-project") ? <ChangeDescription projectType={"final-project"} headerInfo={null} user={user} group={group}/> : null
       }
     </div>
   );
