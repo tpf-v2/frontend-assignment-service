@@ -19,6 +19,17 @@ export const getTeamById = (id, teams) => { // To-Do: usarla tmb en TopicTutor
     return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
 };
 
+// Función para obtener la entidad completa 'tutor' por su tutor_period_id
+export const getTutorById = (id, periodId, tutors) => {
+    const tutor = tutors.find(
+      (t) =>
+        t.tutor_periods &&
+        t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
+    );
+
+    return tutor;
+};
+
 export function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString("es-ES", {
