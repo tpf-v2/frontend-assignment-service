@@ -7,19 +7,10 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
-    //
-    Select,
-    MenuItem,
     InputLabel,
-    //
-    FormControl,
-    //Autocomplete,
-    //
     RadioGroup,
     Radio,
     FormControlLabel,
-    //createFilterOptions
-
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
@@ -79,13 +70,6 @@ export const TeamModals = ({
         if (id === "") return // AUX: agrego esta línea, para usar la función desde el modal de confirm, puedo mandarle "" si no tenía tema asignado.
         const topic = topics.csvTopics?.find((t) => t.id === id);        
         return topic ? topic.name : ""; // Si no encuentra el topic, mostrar 'Desconocido'
-      };
-        
-      // Nueva función, para obtener el objeto topic
-      // Ya no es necesaria desde que migramos a Autocomplete
-      const getTopicById = (id) => {
-        const topic = topics.csvTopics?.find((t) => t.id === id);
-        return topic ? topic : ""; // Si no encuentra el topic, mostrar 'Desconocido'
       };
 
       /////// Modals ///////

@@ -99,9 +99,10 @@ const StudentForm = () => {
     
     const fetchTutors = async () => {
       try {
+        // Obtenemos tutores y ordenamos en orden alfabético para mostrarlos en dropdown
         const fetchedTutors = await getTutorsData(period.id, user);
         const sortedTutors = fetchedTutors.sort((a, b) => a.last_name.localeCompare(b.last_name));
-        setTutors(fetchedTutors);
+        setTutors(sortedTutors);
       } catch (error) {
 
         console.error("Error al obtener tutores", error);
