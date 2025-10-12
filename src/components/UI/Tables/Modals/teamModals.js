@@ -175,8 +175,8 @@ export const TeamModals = ({
                   {/* Tema y tutor */}
                   <InputLabel sx={{ mb: 2 }}>Tema y Tutor/a</InputLabel>
                   <Grid container spacing={2}>
+                    
                     <Grid item xs={12} md={12}>
-
                       <Autocomplete
                         disablePortal
                         options={topics.csvTopics ?? []}
@@ -710,9 +710,6 @@ export const TeamModals = ({
         // Usa el newItem para guardar lo que va a enviar
         return innerAddTeamModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar", "Guardar")
       }
-
-  
-  console.log("--- editedItem:", editedItem);
 
   return (
     <>
