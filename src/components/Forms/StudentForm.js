@@ -22,6 +22,7 @@ import { styled } from "@mui/system";
 import { sendGroupForm } from "../../api/sendGroupForm";
 import { getStudents } from "../../api/handleStudents";
 import { getTopics } from "../../api/handleTopics";
+import { getTutorsData } from "../../api/dashboardStats";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { NumericFormat } from "react-number-format";
@@ -65,6 +66,7 @@ const StudentForm = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [studentNames, setStudentNames] = useState([]);
   const [topics, setTopics] = useState([]);
+  const [tutors, setTutors] = useState([]);
   const [loading, setLoading] = useState(false)
   const [notification, setNotification] = useState({
     open: false,
@@ -89,13 +91,32 @@ const StudentForm = () => {
         setNotification({
           open: true,
           message:
-            "Error al obtener los temas. Por favor contactar al administrador",
+            "Error al obtener los temas",
           status: "error",
         });
       }
     };
+    
+    const fetchTutors = async () => {
+      try {
+        const fetchedTutors = await getTutorsData(period.id, user);
+        const sortedTutors = fetchedTutors.sort((a, b) => a.last_name.localeCompare(b.last_name));
+        setTutors(fetchedTutors);
+      } catch (error) {
+
+        console.error("Error al obtener tutores", error);
+        setNotification({
+          open: true,
+          message:
+            "Error al obtener tutores",
+          status: "error",
+        });
+
+      }
+    }
 
     fetchTopics();
+    fetchTutors();
   }, []);
 
   const handleChange = (e) => {
@@ -185,6 +206,8 @@ const StudentForm = () => {
       formData.specificTopic === topic
     );
   };
+
+  console.log("--- formData:", formData);
 
   return (
     <Container maxWidth="sm">
@@ -351,8 +374,42 @@ const StudentForm = () => {
                     onChange={handleChange}
                     required
                   />
-                  <TextField
-                    label="Email del Tutor"
+
+                  <Select
+                    //margin="normal" // da error en consola
+                    name="tutorEmail"
+                    value={formData.tutorEmail || ""} // se deja vacío y entonces (con el displayEmpty) cae al MenuItem por defecto
+                    displayEmpty
+                    label="Tutor"
+                    onChange={handleChange}
+                    //required
+                    fullWidth
+                  >
+                    <MenuItem key="" value="" // a este MenuItem cae cuando el value está vacío
+                      disabled> 
+                      Seleccionar tutor
+                    </MenuItem>
+                    {tutors.map((tutor) => {
+                      const tp = tutor.tutor_periods.find((tp) => tp.period_id === period.id);
+                      if (!tp) return null; // ignorar si no hay uno del period pedido
+                      
+                      return (
+                          <MenuItem key={tutor.email} value={tutor.email}>
+                          {tutor.name} {tutor.last_name}
+                          </MenuItem>
+                      );
+                      })}
+
+                  </Select>
+                
+                  
+                  
+                  
+                  
+                  
+                  
+                  {/*<TextField
+                    label="Email de Tutor"
                     name="tutorEmail"
                     type="email"
                     fullWidth
@@ -360,8 +417,11 @@ const StudentForm = () => {
                     variant="outlined"
                     value={formData.tutorEmail}
                     onChange={handleChange}
-                    required
+                    //required
                   />
+                  */}
+
+
                 </>
               )}
   
