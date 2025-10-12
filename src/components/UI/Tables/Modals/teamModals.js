@@ -189,8 +189,10 @@ export const TeamModals = ({
                   <Grid item xs={6} md={6}>
 
                   {/* Tema y tutor */}
-                  <InputLabel>Tema y Tutor/a</InputLabel>
-                  
+                  <InputLabel sx={{ mb: 2 }}>Tema y Tutor/a</InputLabel>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={12}>
+
                       <Autocomplete
                         disablePortal
                         options={topics.csvTopics ?? []}
@@ -255,7 +257,9 @@ export const TeamModals = ({
                         }}
 
                       />
-
+                    </Grid>
+                    
+                    <Grid item xs={12} md={12}>
                       <Autocomplete
                         disablePortal
                         options={getTutorsForPeriod(periodId, tutors) || []}
@@ -276,8 +280,10 @@ export const TeamModals = ({
                         }}
                         value={getTutorById(item?.tutor_period_id, periodId, tutors) || null}
                       />
+                      </Grid>
 
                   {/* Las tres preferencias, no editables */}
+                  <Grid item xs={12} md={12}>
                   <InputLabel>Preferencias</InputLabel>
                   <TextField
                     variant="outlined"
@@ -310,8 +316,10 @@ export const TeamModals = ({
                     disabled
                   />
                   </Grid>
+                  </Grid>
 
                 </Grid> 
+              </Grid>
               </DialogContent>
 
               <DialogActions>
