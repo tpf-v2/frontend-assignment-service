@@ -3,6 +3,7 @@ import { Container, TextField, Button, Typography, Box, Paper } from '@mui/mater
 import { styled } from '@mui/system';
 import BackgroundContainer from '../components/UI/BackgroundContainer.js';
 import MySnackbar from '../components/UI/MySnackBar.js';
+import { togglePasswordVisibility } from "./PasswordVisibility.js";
 import { resetPassword } from '../api/postChangePassword.js';
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +27,11 @@ const ChangePasswordView = () => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [repeatNewPassword, setRepeatNewPassword] = useState('');
+
+  const [showCurrentPasswd, setShowCurrentPasswd] = useState(false);
+  const [showNewPasswd, setShowNewPasswd] = useState(false);
+  const [showRepeatNewPasswd, setShowRepeatNewPasswd] = useState(false);
+  
   const [loading, setLoading] = useState(false);
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -85,33 +91,37 @@ const ChangePasswordView = () => {
         <form onSubmit={handleSubmit}>
           <TextField
             label="Contraseña Actual"
-            type="password"
+            type={showCurrentPasswd ? "text" : "password"}
             fullWidth
             margin="normal"
             variant="outlined"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
             required
+            // El adornment es para poner el ícono del 'ojito' adentro del textfield
+            InputProps={togglePasswordVisibility(showCurrentPasswd, setShowCurrentPasswd)}
           />
           <TextField
             label="Nueva Contraseña"
-            type="password"
+            type={showNewPasswd ? "text" : "password"}
             fullWidth
             margin="normal"
             variant="outlined"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             required
+            InputProps={togglePasswordVisibility(showNewPasswd, setShowNewPasswd)}
           />
           <TextField
             label="Repetir Nueva Contraseña"
-            type="password"
+            type={showRepeatNewPasswd ? "text" : "password"}
             fullWidth
             margin="normal"
             variant="outlined"
             value={repeatNewPassword}
             onChange={(e) => setRepeatNewPassword(e.target.value)}
             required
+            InputProps={togglePasswordVisibility(showRepeatNewPasswd, setShowRepeatNewPasswd)}
           />
           <ButtonStyled disabled={loading} variant="contained" color="primary" type="submit" fullWidth>
             {loading ? "Cargando ..." : "Cambiar Contraseña"}

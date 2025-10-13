@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Box,
@@ -18,18 +18,21 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
-import { incompleteGroups } from "../../api/assignments";
+import { incompleteTeams } from "../../api/assignments";
+import { getInputAnalysis } from "../../api/handleAlgorithmAnalysis";
+
 import { useDispatch, useSelector } from "react-redux";
-import { getGroups } from "../../api/getGroups";
+import { getTeams } from "../../api/getTeams";
 import { setGroups } from "../../redux/slices/groupsSlice";
 import { togglePeriodSetting } from "../../redux/slices/periodSlice";
 import updatePeriod from "../../api/updatePeriod";
 import { useNavigate } from "react-router-dom";
+import { IncompleteTeamsPreCheck } from "./SpecificAlgorithmsPreCheck";
 
 const IncompleteGroups = () => {
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
-  const groups = Object.values(useSelector((state) => state.groups))
+  const teams = Object.values(useSelector((state) => state.groups))
     .sort((a, b) => a.group_number - b.group_number)
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
@@ -44,9 +47,34 @@ const IncompleteGroups = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false); // Nuevo estado para el diálogo de confirmación
 
+  const [inputInfo, setInputInfo] = useState(); 
+
   const handleRun = async () => {
     setOpenConfirmDialog(true); // Muestra el diálogo de confirmación al presionar el botón "Correr"
   };
+  
+  // (Esta sintaxis del '+' es solo para hacer un salto de línea en el ide, no afecta al renderizado)
+  const preCheckMsg = `Este algoritmo utiliza las respuestas al formulario de equipos`+
+  ` (Preferencias / Ya tengo tema y tutor) como input, para completar los equipos en base a sus preferencias.`
+  useEffect(() => {
+    
+    // Análsis del input del algoritmo, previo a ejecutarlo
+    const getInputInfo = async () => {
+      const endpoint = "/incomplete_teams_algorithm_input_info"
+      try {
+        const data = await getInputAnalysis(endpoint, period.id, user);        
+        setInputInfo(data);
+
+      } catch (error) {
+        console.error("Error al obtener datos del input:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getInputInfo();
+  }, []);
+
+  // Algoritmo de equipos incompletos
   
   const handleAcceptResults = async () => {
     try {
@@ -55,12 +83,12 @@ const IncompleteGroups = () => {
       setOpenDialog(true);
 
       // Obtiene los equipos incompletos
-      const response = await incompleteGroups(user, period);
-      console.log("Incomplete groups response:", response);
+      const response = await incompleteTeams(user, period);
+      console.log("Incomplete teams response:", response);
 
       // Obtiene y actualiza los equipos en el estado global
-      const groups = await getGroups(user, period);
-      dispatch(setGroups(groups));
+      const teams = await getTeams(user, period);
+      dispatch(setGroups(teams));
 
       // Alterna la configuración de 'groups_assignment_completed' si es necesario
       dispatch(togglePeriodSetting({ field: "groups_assignment_completed" }));
@@ -122,11 +150,15 @@ const IncompleteGroups = () => {
             Este algoritmo se puede correr <strong>una única vez</strong>.
           </Typography>
         </Grid>
+
+        {/* Verificación Previa */}
+        <IncompleteTeamsPreCheck initialDescription={preCheckMsg} inputInfo={inputInfo} algorithm={"IncompleteTeams"}/>
+        
         {/* Botones Correr, Editar */}
         <Grid
           item
           xs={12}
-          md={2}
+          md={1}
           sx={{ display: "flex", justifyContent: "right" }}
         >
           <Button
@@ -143,7 +175,6 @@ const IncompleteGroups = () => {
             Correr
           </Button>
         </Grid>
-        {/* </Paper> */}
       </Grid>
 
       <Grid item xs={12}>
@@ -218,31 +249,31 @@ const IncompleteGroups = () => {
               </TableRow>
             ) : (
               <TableBody>
-                {groups
+                {teams
                   .filter(
-                    (group) =>
-                      group.preferred_topics &&
-                      group.preferred_topics.length > 0
+                    (team) =>
+                      team.preferred_topics &&
+                      team.preferred_topics.length > 0
                   ) // Filtrar equipos que tienen preferred_topics
-                  .map((group) => (
-                    <React.Fragment key={group.id}>
+                  .map((team) => (
+                    <React.Fragment key={team.id}>
                       {/* Fila del equipo */}
                       <TableCell
-                        rowSpan={group.students?.length + 1}
+                        rowSpan={team.students?.length + 1}
                         align="center"
                       >
-                        {group.group_number}
+                        {team.group_number}
                       </TableCell>
                       {/* Iterar sobre los estudiantes del equipo */}
-                      {group.students.map((student, index) => (
+                      {team.students.map((student, index) => (
                         <TableRow key={student.id}>
                           <>
                             {index === 0 && (
                               <TableCell
-                                rowSpan={group.students.length}
+                                rowSpan={team.students.length}
                                 align="center"
                               >
-                                {group.students.length}{" "}
+                                {team.students.length}{" "}
                                 {/* Mostrar el tutor del equipo */}
                               </TableCell>
                             )}
@@ -250,30 +281,30 @@ const IncompleteGroups = () => {
                           {/* Mostrar preferencias o topic_id dependiendo de si preferred_topics está vacío */}
                           {index === 0 && (
                             <>
-                              {group.preferred_topics.length === 0 ? (
+                              {team.preferred_topics.length === 0 ? (
                                 <TableCell
-                                  rowSpan={group.students.length}
+                                  rowSpan={team.students.length}
                                   colSpan={3}
                                   align="center"
                                 >
-                                  {getTopicNameById(group.topic_id)}{" "}
+                                  {getTopicNameById(team.topic_id)}{" "}
                                   {/* Mostrar nombre del topic */}
                                 </TableCell>
                               ) : (
                                 <>
-                                  <TableCell rowSpan={group.students.length}>
+                                  <TableCell rowSpan={team.students.length}>
                                     {getTopicNameById(
-                                      group.preferred_topics[0]
+                                      team.preferred_topics[0]
                                     ) || ""}
                                   </TableCell>
-                                  <TableCell rowSpan={group.students.length}>
+                                  <TableCell rowSpan={team.students.length}>
                                     {getTopicNameById(
-                                      group.preferred_topics[1]
+                                      team.preferred_topics[1]
                                     ) || ""}
                                   </TableCell>
-                                  <TableCell rowSpan={group.students.length}>
+                                  <TableCell rowSpan={team.students.length}>
                                     {getTopicNameById(
-                                      group.preferred_topics[2]
+                                      team.preferred_topics[2]
                                     ) || ""}
                                   </TableCell>
                                 </>
@@ -288,17 +319,6 @@ const IncompleteGroups = () => {
             )}
           </Table>
         </TableContainer>
-
-        {/* <Box
-            sx={{ display: "flex", alignItems: "center", marginLeft: "16px" }}
-          >
-            <Button
-              variant="outlined"
-              onClick={() => navigate(`/dashboard/${period.id}/teams`)}
-            >
-              Ver más información de los equipos
-            </Button>
-          </Box> */}
       </Grid>
 
       {/* Confirm Dialog */}
@@ -358,7 +378,6 @@ const IncompleteGroups = () => {
           )}
         </DialogContent>
       </Dialog>
-      {/* </Grid> */}
     </Box>
   );
 };
