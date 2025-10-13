@@ -76,8 +76,8 @@ const App = () => {
           className="content-container"
           sx={{
             flex: '1',
-            minHeight: '1000px',
-            overflowY: 'auto', // Add scrolling if content exceeds
+            minHeight: 'auto',
+            overflowY: 'visible',
             display: 'flex',
             flexDirection: 'column',
           }}
