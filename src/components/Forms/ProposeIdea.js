@@ -30,11 +30,9 @@ const ProposeIdea = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //setLoading(true);
     try {
       await proposeIdea(formData, period.id, user);
       setSubmitSuccess(true);
-      //setOpenDialog(false);
     } catch (error) {
       setNotification({
         open: true,
@@ -42,8 +40,6 @@ const ProposeIdea = () => {
         status: "error",
       });
       console.error("Error al enviar la idea", error);
-    } finally {
-      //setLoading(false)
     }
   };
 

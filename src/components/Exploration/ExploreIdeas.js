@@ -48,8 +48,6 @@ const ExploreIdeas = () => {
     fetchIdeas();
   }, [user, period]);
 
-  console.log("--- ideas:", ideas);
-
   if (loading)
     return (
         <Box
