@@ -3,7 +3,7 @@ import { waitForAsyncTask } from "./waitForAsyncTask";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
-export const incompleteGroups = async (user, period) => {
+export const incompleteTeams = async (user, period) => {
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
