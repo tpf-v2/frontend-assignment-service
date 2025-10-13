@@ -40,22 +40,23 @@ export const confirmGroups = async (user, period, assignments, groups) => {
   }
 };
 
-export const updateGroup = async (user, periodId, group) => {
+export const updateGroup = async (user, periodId, team) => {
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
     },
   };
 
+  // Obs a futuro: tantos campos parecen innecesarios para updatear solo el reviewer_id.
   const body = [
     {
-      id: group.id,
-      tutor_period_id: group.tutor_period_id,
-      assigned_topic_id: group.topic.id ? group.topic.id : 0,
-      reviewer_id: group.reviewer_id ? group.reviewer_id : 0,
-      pre_report_approved: group.pre_report_approved,
-      intermediate_assigment_approved: group.intermediate_assigment_approved,
-      final_report_approved: group.final_report_approved,
+      id: team.id,
+      tutor_period_id: team.tutor_period_id,
+      assigned_topic_id: team.topic.id ? team.topic.id : 0,
+      reviewer_id: team.reviewer_id ? team.reviewer_id : 0,
+      pre_report_approved: team.pre_report_approved,
+      intermediate_assigment_approved: team.intermediate_assigment_approved,
+      final_report_approved: team.final_report_approved,
     },
   ];
 
