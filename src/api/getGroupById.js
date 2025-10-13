@@ -14,7 +14,5 @@ export const getGroupById = (user, group_id) => async () => {
   };
 
   const response = await axios.get(`${BASE_URL}/groups/states/${group_id}`, config);
-  console.log("response:")
-  console.log(response)
   return response.data;
 };
