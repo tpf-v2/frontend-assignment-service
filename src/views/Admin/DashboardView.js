@@ -163,7 +163,7 @@ const DashboardView = () => {
           />
         );
       case "Fechas de presentación":
-        return <Dates/>;
+        return <Dates setSelectedMenu={setSelectedMenu}/>;
       case "Disponibilidad fechas de Presentación":
         return <AvailabilityCalendarAdmin />;
 

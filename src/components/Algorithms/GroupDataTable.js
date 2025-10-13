@@ -2,8 +2,10 @@
 // el flujo de editar equipo (con dos modales, analizando si hubo o no conflicto) es diferente a ParentTable,
 // por lo que se optó por mantener los archivos separados en pos de la legibilidad.
 import {
+  Container,
   CircularProgress,
   Paper,
+  Typography,
   Table,
   TableBody,
   TableCell,
@@ -16,6 +18,8 @@ import {
   Box,
   Stack
 } from "@mui/material";
+import { styled } from "@mui/system";
+
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ExpandableCell from "../ExpandableCell";
@@ -28,7 +32,15 @@ import { getTableData } from "../../api/handleTableData";
 import AddIcon from "@mui/icons-material/Add";
 
 // Componente para la tabla de equipos
-const GroupDataTable = () => {
+const TeamDataTable = ({
+  endpoint,
+  items,
+  title,
+  enableEdit = true,
+  enableDelete = true, // No existe endpoint delete para teams actualmente
+  enableAdd = true,
+  enableFilterButtons = true,
+}) => {
   const period = useSelector((state) => state.period);
 
   // Obtener la lista de topics desde Redux
@@ -40,11 +52,6 @@ const GroupDataTable = () => {
     .map(({ version, rehydrated, ...rest }) => rest)
     .filter((item) => Object.keys(item).length > 0);
 
-  const groups = Object.values(useSelector((state) => state.groups))
-    .sort((a, b) => a.group_number - b.group_number)
-    .map(({ version, rehydrated, ...rest }) => rest)
-    .filter((item) => Object.keys(item).length > 0);
-
   const students = Object.values(useSelector((state) => state.students))
   .map(({ version, rehydrated, ...rest }) => rest)
   .filter(item => Object.keys(item).length > 0);
@@ -53,7 +60,9 @@ const GroupDataTable = () => {
   const [loading, setLoading] = useState(true);
 
   const [allTopics, setAllTopics] = useState({csvTopics: topics, customTopics: []});
-  const [data, setData] = useState(groups); // teams
+  
+  // Valor inicial lo recibido por props
+  const [data, setData] = useState(items); // data es la lista de teams a mostrar en la tabla
 
   const [showExtraColumns, setShowExtraColumns] = useState(false);
 
@@ -68,28 +77,42 @@ const GroupDataTable = () => {
   const [itemToPassToModal, setItemToPassToModal] = useState(null);
   const [openAddModal, setOpenAddModal] = useState(false);
 
-  // useEffect
-  const endpoint = `/groups/?period=${period.id}`;
+  // Estilos
+  const Root = styled(Paper)(({ theme }) => ({
+    marginTop: theme.spacing(4),
+    padding: theme.spacing(4),
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: "#ffffff",
+    boxShadow: theme.shadows[3],
+  }));
+  const Title = styled(Typography)(({ theme }) => ({
+    marginBottom: theme.spacing(2),
+    color: "#0072C6",
+    textAlign: "center",
+    fontSize: "2rem",
+    fontWeight: "bold",
+  }));
 
+  // useEffect
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseData = await getTableData(endpoint, user); // TEAMS
+        // Si hay endpoint, hacemos request y actualizamos
+        if (endpoint) {
+          const responseData = await getTableData(endpoint, user); // TEAMS
+          setData(responseData);
+        }
 
-        console.log("groups recibidos:", groups.map(g => ({id: g.id, "topic.id": g.topic?.id})));
-        
         // Minor 'fix' xq admin envía tema copypasteado en csv (con != tutor) queda id repetido y eso rompe búsqueda de Autocomplete
         const uniqueTopics = Array.from(
           new Map((topics ?? []).map(t => [t.id, t])).values()
         );
         // Workaround a que el back no los devuelva: temas de "Ya tengo tema y tutor":
-        const customTopics = groups?.filter(team => !topics.some(t => t.id === team.topic?.id))
+        const customTopics = data?.filter(team => !topics.some(t => t.id === team.topic?.id))
         .map(team => team.topic);
-        setAllTopics({csvTopics: uniqueTopics, customTopics: customTopics});
+        setAllTopics({csvTopics: uniqueTopics, customTopics: customTopics});        
+        //console.log("--- uniqueTopics:", uniqueTopics);
 
-        console.log("--- uniqueTopics:", uniqueTopics);
-              
-        setData(responseData);
         setLoading(false);
 
       } catch (error) {
@@ -373,244 +396,308 @@ const GroupDataTable = () => {
     URL.revokeObjectURL(url);
   };
 
-  console.log("--- filteredTeams:", filteredTeams);
+  const copyEmailsToClipboard = async () => {
+
+    try {
+      const displayedEmails = filteredTeams
+      .flatMap(team => team.students.map(student => student.email)) // dentro del paréntesis hay un array de emails por equipo => flatmap
+      .filter(Boolean); // el filter elimina undefined/null
+      console.log("--- displayedEmails:", displayedEmails);
+
+      await navigator.clipboard.writeText(displayedEmails.join(", "));
+      setNotification({
+        open: true,
+        message: `Copiado al portapapeles`,
+        status: "success",
+      });
+      // Con esto logramos que el alert no aparezca antes que la notif (pasa, sin timeout, por funcionamiento de react)
+      setTimeout(() => {
+        alert("Emails copiados!");
+      }, 0);
+
+
+    } catch (err) {
+      console.error("Error al copiar al portapapeles:", err);
+      setNotification({
+        open: true,
+        message: `Error al copiar al portapapeles`,
+        status: "error",
+      });
+    }
+  };
 
   return (
-    <Box>      
-        <>
-          <TextField
-            label="Buscar"
-            variant="outlined"
-            fullWidth
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            sx={{ marginBottom: 2 }}
-          />
-          <Box
-            sx={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              marginBottom: 2 
-            }}
-          >
+      <>
+        <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>
+          <Root>
+            <Title variant="h4">{title}</Title>
+            <TextField
+              label="Buscar"
+              variant="outlined"
+              fullWidth
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              sx={{ marginBottom: 2 }}
+            />
             
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={downloadCSV}
-              sx={{ marginBottom: 2 }}
+            {/* Botones */}
+            <Box            
+              sx={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                gap: 2,
+                marginBottom: 2 
+              }}
+            >              
+              
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={downloadCSV}
+                sx={{ marginBottom: 2 }}
+              >
+                Descargar CSV
+              </Button>
+
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={copyEmailsToClipboard}
+                sx={{ ml: "auto" }} // ml empuja hacia la derecha (al gap lo maneja el último de la derecha o el box)
+              >
+                Copiar emails al portapapeles
+              </Button>              
+
+              {enableAdd && (
+                <Fab
+                  size="small"
+                  color="primary"
+                  aria-label="add"                  
+                  onClick={() => setOpenAddModal(true)}
+                >
+                  <AddIcon />
+                </Fab>
+              )}
+            </Box>
+            
+            {/* Segunda fila de botones */}
+            <Box
+              sx={{ 
+                display: 'flex', 
+                justifyContent: 'right', 
+                gap: 2,
+                ml: 5,
+                mb: 2
+              }}
             >
-              Descargar CSV
-            </Button>
+              {enableFilterButtons && (
+                <>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleShowTeamsWithNoTopic}
+                    sx={{ marginBottom: 2 }}
+                  >
+                    {showNoTopic ? "Mostrar todos los equipos" : "Mostrar equipos sin tema"}
+                  </Button>
 
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleShowTeamsWithNoTopic}
-              sx={{ marginBottom: 2 }}
-            >
-              {showNoTopic ? "Mostrar todos los equipos" : "Mostrar equipos sin tema"}
-            </Button>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleShowTeamsWithNoTutor}
+                    sx={{ marginBottom: 2 }}
+                  >
+                    {showNoTutor ? "Mostrar todos los equipos" : "Mostrar equipos sin tutor"}
+                  </Button>
 
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleShowTeamsWithNoTutor}
-              sx={{ marginBottom: 2 }}
-            >
-              {showNoTutor ? "Mostrar todos los equipos" : "Mostrar equipos sin tutor"}
-            </Button>
+                  <Button variant="outlined" color="primary" 
+                    onClick={() => setShowExtraColumns(prev => !prev)}
+                    sx={{ marginBottom: 2 }}>
+                    {showExtraColumns ? "Ocultar preferencias" : "Mostrar preferencias"}
+                  </Button>
+                </>
+              )}
+            </Box>
 
-            <Button variant="outlined" color="primary" 
-              onClick={() => setShowExtraColumns(prev => !prev)}
-              sx={{ marginBottom: 2 }}>
-              {showExtraColumns ? "Ocultar preferencias" : "Mostrar preferencias"}
-            </Button>
+            <TableContainer component={Paper}>
+              <Table
+                stickyHeader
+                sx={{ minWidth: 650 }}
+                aria-label="simple table"
+              >
+                <TableHead>
+                  <TableRow sx={{ backgroundColor: (theme) => theme.palette.action.hover }}>
+                    <TableCell sx={{ fontWeight: "bold" }}>Equipo número</TableCell>
 
-            <Fab
-              size="small"
-              color="primary"
-              aria-label="add"                  
-              onClick={() => setOpenAddModal(true)}
-            >
-              <AddIcon />
-            </Fab>
-          </Box>
+                    <TableCell sx={{ fontWeight: "bold" }}>Padrón</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Nombre</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Apellido</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
 
-          <TableContainer component={Paper}>
-            <Table
-              stickyHeader
-              sx={{ minWidth: 650 }}
-              aria-label="simple table"
-            >
-              <TableHead>
-                <TableRow sx={{ backgroundColor: (theme) => theme.palette.action.hover }}>
-                  <TableCell sx={{ fontWeight: "bold" }}>Equipo número</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Tutor</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Tema asignado</TableCell>
 
-                  <TableCell sx={{ fontWeight: "bold" }}>Padrón</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Nombre</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Apellido</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
+                    <ExpandableCell show={showExtraColumns} isHeader>
+                        Preferencia 1
+                    </ExpandableCell>
+                    <ExpandableCell show={showExtraColumns} isHeader>
+                        Preferencia 2
+                    </ExpandableCell>
+                    <ExpandableCell show={showExtraColumns} isHeader>
+                        Preferencia 3
+                    </ExpandableCell>                  
+                    
+                    {enableEdit && (
+                      <TableCell sx={{ fontWeight: "bold" }}>Acciones</TableCell>
+                    )}
+                    
+                  </TableRow>
+                </TableHead>
 
-                  <TableCell sx={{ fontWeight: "bold" }}>Tutor</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Tema asignado</TableCell>
-
-                  <ExpandableCell show={showExtraColumns} isHeader>
-                      Preferencia 1
-                  </ExpandableCell>
-                  <ExpandableCell show={showExtraColumns} isHeader>
-                      Preferencia 2
-                  </ExpandableCell>
-                  <ExpandableCell show={showExtraColumns} isHeader>
-                      Preferencia 3
-                  </ExpandableCell>                  
-                  
-                  <TableCell sx={{ fontWeight: "bold" }}>Acciones</TableCell>
-                  
-                </TableRow>
-              </TableHead>
-
-              <TableBody>
-                {filteredTeams.map((team) => (
-                  <React.Fragment key={team.id}>
-                    <TableRow sx={{ backgroundColor: "#f0f0f0" }}>
-                      <TableCell colSpan={12} align="center"></TableCell>
-                    </TableRow>
-                    {/* Table content */}
-                    <TableCell
-                      rowSpan={team.students?.length + 1}
-                      align="center"
-                    >
-                      {team.group_number}
-                    </TableCell>
-                    {team.students?.map((student, index) => (
-                      <TableRow key={student.id}>
-                        <TableCell>{student.id}</TableCell>
-                        <TableCell>{student.name}</TableCell>
-                        <TableCell>{student.last_name}</TableCell>
-                        <TableCell>{student.email}</TableCell>
-                        
-                          {/* index 0 para renderizar esto una vez por fila de equipo (y no una por estudiante) */}
-                          {index === 0 && (
-                            <TableCell
-                              rowSpan={team.students.length}
-                              align="center"
-                            >
-                              {getTutorNameById(
-                                team.tutor_period_id,
-                                period.id
-                              ) || "Sin asignar"}
-                            </TableCell>
-                          )}
-                          {index === 0 && (
-                            <TableCell
-                              rowSpan={team.students.length}
-                              align="center"
-                            >
-                              {team.topic ? team.topic.name : "Sin asignar"}
-                            </TableCell>
-                          )}
-
-                          {/* Las tres preferencias */}
-                          {index === 0 && (
-                            
-                            (!team.preferred_topics || (team.preferred_topics.length === 0)) ? (
-                            <>
-                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length} align="center">
-                                {"N/A"}
-                              </ExpandableCell>
-                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length} align="center">
-                                {"N/A"}
-                              </ExpandableCell>
-                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length} align="center">
-                                {"N/A"}
-                              </ExpandableCell>
-                            </>
-                          ) : (
-                            <>
-                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length}>
-                                {getTopicNameById(
-                                  team.preferred_topics[0]
-                                ) || ""}
-                              </ExpandableCell>
-
-                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length}>
-                                {getTopicNameById(
-                                  team.preferred_topics[1]
-                                ) || ""}
-                              </ExpandableCell>
-
-                              <ExpandableCell show={showExtraColumns} rowSpan={team.students.length}>
-                                {getTopicNameById(
-                                  team.preferred_topics[2]
-                                ) || ""}
-                              </ExpandableCell>
-                            </>
-                          )                            
-                          )}
-                        
-                        {/* Sección de los botones */}
-                        {index === 0 && (
-                          <TableCell rowSpan={team.students.length}>
-                            <Stack direction="row" spacing={1}>                          
-                              <Button
-                                onClick={() => {setOpenEditModal(true); setItemToPassToModal(team)}}
-                                style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
-                                >
-                                Editar
-                              </Button>
-                            
-                              {false && (
-                                <Button
-                                  style={{ backgroundColor: "red", color: "white" }}
-                                  >
-                                  Eliminar
-                                </Button>
-                              )}
-                            </Stack>
-                          </TableCell>
-                        )}
-
+                <TableBody>
+                  {filteredTeams.map((team) => (
+                    <React.Fragment key={team.id}>
+                      <TableRow sx={{ backgroundColor: "#f0f0f0" }}>
+                        <TableCell colSpan={12} align="center"></TableCell>
                       </TableRow>
-                    ))}
-                  </React.Fragment>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                      {/* Table content */}
+                      <TableCell
+                        rowSpan={team.students?.length + 1}
+                        align="center"
+                      >
+                        {team.group_number}
+                      </TableCell>
+                      {team.students?.map((student, index) => (
+                        <TableRow key={student.id}>
+                          <TableCell>{student.id}</TableCell>
+                          <TableCell>{student.name}</TableCell>
+                          <TableCell>{student.last_name}</TableCell>
+                          <TableCell>{student.email}</TableCell>
+                          
+                            {/* index 0 para renderizar esto una vez por fila de equipo (y no una por estudiante) */}
+                            {index === 0 && (
+                              <TableCell
+                                rowSpan={team.students.length}
+                                align="center"
+                              >
+                                {getTutorNameById(
+                                  team.tutor_period_id,
+                                  period.id
+                                ) || "Sin asignar"}
+                              </TableCell>
+                            )}
+                            {index === 0 && (
+                              <TableCell
+                                rowSpan={team.students.length}
+                                align="center"
+                              >
+                                {team.topic ? team.topic.name : "Sin asignar"}
+                              </TableCell>
+                            )}
 
-          <TeamModals
-            openAddModal={openAddModal}
-            setOpenAddModal={setOpenAddModal}
-            handleAddItem={handleAddItem}
+                            {/* Las tres preferencias */}
+                            {index === 0 && (
+                              
+                              (!team.preferred_topics || (team.preferred_topics.length === 0)) ? (
+                              <>
+                                <ExpandableCell show={showExtraColumns} rowSpan={team.students.length} align="center">
+                                  {"N/A"}
+                                </ExpandableCell>
+                                <ExpandableCell show={showExtraColumns} rowSpan={team.students.length} align="center">
+                                  {"N/A"}
+                                </ExpandableCell>
+                                <ExpandableCell show={showExtraColumns} rowSpan={team.students.length} align="center">
+                                  {"N/A"}
+                                </ExpandableCell>
+                              </>
+                            ) : (
+                              <>
+                                <ExpandableCell show={showExtraColumns} rowSpan={team.students.length}>
+                                  {getTopicNameById(
+                                    team.preferred_topics[0]
+                                  ) || ""}
+                                </ExpandableCell>
 
-            openEditModal={openEditModal}
-            setOpenEditModal={setOpenEditModal}            
-            handleEditItem={handleEditItem}
-            
-            item={itemToPassToModal}
-            setParentItem={setItemToPassToModal}
+                                <ExpandableCell show={showExtraColumns} rowSpan={team.students.length}>
+                                  {getTopicNameById(
+                                    team.preferred_topics[1]
+                                  ) || ""}
+                                </ExpandableCell>
 
-            openConfirmModal={openConfirmModal}
-            setOpenConfirmModal={setOpenConfirmModal}
+                                <ExpandableCell show={showExtraColumns} rowSpan={team.students.length}>
+                                  {getTopicNameById(
+                                    team.preferred_topics[2]
+                                  ) || ""}
+                                </ExpandableCell>
+                              </>
+                            )                            
+                            )}
+                          
+                          {/* Sección de los botones */}
+                          {index === 0 && (
+                            <TableCell rowSpan={team.students.length}>
+                              <Stack direction="row" spacing={1}>                          
+                                {enableEdit && (
+                                  <Button
+                                  onClick={() => {setOpenEditModal(true); setItemToPassToModal(team)}}
+                                  style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
+                                  >
+                                  Editar
+                                </Button>
+                                )}
+                              
+                                {false && (
+                                  <Button
+                                    style={{ backgroundColor: "red", color: "white" }}
+                                    >
+                                    Eliminar
+                                  </Button>
+                                )}
+                              </Stack>
+                            </TableCell>
+                          )}
 
-            conflicts={conflicts}
-            setConflictMsg={setConflicts}
+                        </TableRow>
+                      ))}
+                    </React.Fragment>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Root>
+        </Container>
 
-            topics={allTopics}
-            tutors={tutors}
-            students={students}
-            periodId={period.id}
-          />  
-          <MySnackbar
-            open={notification.open}
-            handleClose={handleSnackbarClose}
-            message={notification.message}
-            status={notification.status}
-          />
-        </>
-    </Box>
+        <TeamModals
+          openAddModal={openAddModal}
+          setOpenAddModal={setOpenAddModal}
+          handleAddItem={handleAddItem}
+
+          openEditModal={openEditModal}
+          setOpenEditModal={setOpenEditModal}            
+          handleEditItem={handleEditItem}
+          
+          item={itemToPassToModal}
+          setParentItem={setItemToPassToModal}
+
+          openConfirmModal={openConfirmModal}
+          setOpenConfirmModal={setOpenConfirmModal}
+
+          conflicts={conflicts}
+          setConflictMsg={setConflicts}
+
+          topics={allTopics}
+          tutors={tutors}
+          students={students}
+          periodId={period.id}
+        />  
+        <MySnackbar
+          open={notification.open}
+          handleClose={handleSnackbarClose}
+          message={notification.message}
+          status={notification.status}
+        />
+      </>
   )
 };
 
-export default GroupDataTable;
+export default TeamDataTable;

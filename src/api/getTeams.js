@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
-export const getGroups = async (user, period) => {
+export const getTeams = async (user, period) => {
     const config = {
         headers: {
           Authorization: `Bearer ${user.token}`,

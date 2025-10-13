@@ -16,7 +16,7 @@ import StudentsTable from './components/UI/Tables/ChildTables/StudentsTable';
 import TopicsTable from './components/UI/Tables/ChildTables/TopicsTable';
 import TutorsTable from './components/UI/Tables/ChildTables/TutorsTable';
 import FormAnswersTable from './components/UI/Tables/ChildTables/FormAnswersTable';
-import GroupsTable from './components/UI/Tables/ChildTables/GroupsTable';
+import TeamsTable from './components/UI/Tables/ChildTables/GroupsTable';
 import TokenManager from './components/TokenManager';
 import ProtectedRoute from './components/ProtectedRoute';
 import TutorDashboardView from './views/Tutor/TutorDashboardView';
@@ -96,7 +96,7 @@ const App = () => {
             <Route path="dashboard/:period/topics" element={<ProtectedRoute><TopicsTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/tutors" element={<ProtectedRoute><TutorsTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/form-answers" element={<ProtectedRoute><FormAnswersTable /></ProtectedRoute>} />
-            <Route path="dashboard/:period/teams" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
+            <Route path="dashboard/:period/teams" element={<ProtectedRoute><TeamsTable /></ProtectedRoute>} />
             {/* <Route path="/form-selection/:period" element={<FormSelection />} />             */}
             <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
             <Route path="/upload/:projectType" element={<ProtectedRoute><UploadView /></ProtectedRoute>} />

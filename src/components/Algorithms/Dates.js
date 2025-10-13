@@ -35,6 +35,9 @@ import { togglePeriodSetting } from "../../redux/slices/periodSlice";
 import updatePeriod from "../../api/updatePeriod";
 import ResultsDialog from "./Dates/ResultsDialog";
 
+import { getInputAnalysis } from "../../api/handleAlgorithmAnalysis";
+import { DatesPreCheck } from "./SpecificAlgorithmsPreCheck";
+
 const evaluatorColors = [
   "#87CEFA", // Light Blue
   "#90EE90", // Light Green
@@ -55,7 +58,7 @@ const getEvaluatorColor = (evaluatorId, evaluatorColorMap) => {
   return evaluatorColorMap[evaluatorId];
 };
 
-const Dates = () => {
+const Dates = ({setSelectedMenu}) => {
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
 
@@ -108,9 +111,29 @@ const Dates = () => {
 
   const [loadingDates, setLoadingDates] = useState(false);
 
+  const [inputInfo, setInputInfo] = useState();
+
   const dispatch = useDispatch();
 
+  // Fechas
   useEffect(() => {
+    
+    // Análsis del input del algoritmo, previo a ejecutarlo
+    const getInputInfo = async () => {
+      const endpoint = "/dates_algorithm_input_info"
+      try {
+        setLoadingDates(true);
+        const data = await getInputAnalysis(endpoint, period.id, user);        
+        setInputInfo(data);
+        console.log("--- seteo input info:", data);
+
+      } catch (error) {
+        setLoadingDates(false);
+        console.error("Error al obtener datos del input:", error);
+      }
+    };   
+
+    // Fechas
     const fetchData = async () => {
       setLoadingDates(true);
       try {
@@ -146,12 +169,16 @@ const Dates = () => {
         }
       } catch (error) {
         console.error("Error fetching assigned dates:", error);
+        setLoadingDates(false);
       }
-      setLoadingDates(false);
     };
 
+    // Dos acciones, cada una setea loading a false en caso de error, y en caso de éxito se
+    // lo setea en false recién acá abajo al final de las dos para esperar a ambas
     fetchData();
-  }, []);
+    getInputInfo();    
+    setLoadingDates(false);
+  }, [period, user]);
 
   // Transforma datesResult en eventos para el calendario
   useEffect(() => {
@@ -540,6 +567,9 @@ const Dates = () => {
       <Grid container spacing={2}>
         {/* Descripción */}
         <Description />
+        {/* Verificación Previa */}
+        <DatesPreCheck inputInfo={inputInfo} setSelectedMenu={setSelectedMenu}/>
+
         {/* Botones Correr */}
         <ButtonSection
           handleSelectEvaluators={handleSelectEvaluators}
