@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Container, Box, CircularProgress, Button, Link } from "@mui/material";
+import { Typography, Container, Box, CircularProgress } from "@mui/material";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { Root, Title } from "../../components/Root";
@@ -46,8 +46,6 @@ const TutorEmails = () => {
     fetchTutors();
   }, [user, period]);
 
-  console.log("--- tutors:", tutors);
-
   if (loading)
     return (
         <Box
@@ -61,12 +59,14 @@ const TutorEmails = () => {
   );
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="xs">
       <Root>
-        <Title variant="h5" align="center">Mail de Contacto de Tutores</Title>
+        <Title variant="h5" align="center">
+          Tutores {period.id}<br />
+          Mail de Contacto
+          </Title>
         {tutors?.map((tutor) => (
-          <Box key={tutor?.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2 }}>
-            {/* Botón en mismo renglón que título */}
+          <Box key={tutor?.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2 }}>            
             <Box
               sx={{ 
                 display: 'flex', 
