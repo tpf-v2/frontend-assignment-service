@@ -47,7 +47,7 @@ const DropzoneBox = styled(Box)(({ theme }) => ({
   justifyContent: "center",
 }));
 
-const UploadFile = ({ projectType, headerInfo }) => {
+const UploadFile = ({ projectType, headerInfo, loadingHeaderInfo }) => {
   const [selectedFile, setSelectedFile] = useState(null); // Estado para archivos
   const [fileError, setFileError] = useState("");
   const [url, setUrl] = useState(""); // Estado para la URL (solo para entrega intermedia)
@@ -143,7 +143,6 @@ const UploadFile = ({ projectType, headerInfo }) => {
     "intermediate-project": "Entrega Intermedia",
     "final-project": "Entrega Final",
   };
-
   return (
     <Container maxWidth="sm">
       <Root>
@@ -151,7 +150,7 @@ const UploadFile = ({ projectType, headerInfo }) => {
           <Title variant="h5">Subir {projectNameKeyMap[projectType]}</Title>
         </Box>
 
-        {!!headerInfo ? (
+        {(!!headerInfo && !loadingHeaderInfo) ? (
             <Alert severity="info">
               {headerInfo}
             </Alert>

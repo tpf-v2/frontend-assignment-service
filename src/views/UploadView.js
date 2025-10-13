@@ -14,13 +14,13 @@ const UploadView = () => {
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
   const [group, setGroup] = useState(null);
-  
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const getGroup = async () => {
       try {
         console.log(id)
         setGroup(await dispatch(getGroupById(user,id)))
-
+        setLoading(false)
         console.log("Group acquired:")
         console.log(group)
       } catch (error) {
@@ -52,11 +52,11 @@ const UploadView = () => {
     delivered = true;
   }
   let msg = delivered ? "Tu equipo ya ha realizado esta entrega." : "Tu equipo no ha realizado esta entrega aún."
-
+  // TODO: poner spinning circle al cargar el mensaje "Tu equipo ya entregó"
   return (
     <div>
       {isProjectActive ? (
-        <UploadFile projectType={projectType} headerInfo={msg} />
+        <UploadFile projectType={projectType} headerInfo={msg} loadingHeaderInfo={loading} />
       ) : (
         <ClosedAlert message="No se aceptan más entregas." />
       )
