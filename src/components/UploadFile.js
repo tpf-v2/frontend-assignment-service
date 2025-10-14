@@ -11,6 +11,7 @@ import {
   DialogContent,
   TextField,
   Alert,
+  CircularProgress,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
@@ -153,7 +154,13 @@ const UploadFile = ({ projectType, headerInfo, loadingHeaderInfo }) => {
               {headerInfo}
             </Alert>
           ) : (
-            null
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <CircularProgress />
+            </Box>
           )
         }
 
