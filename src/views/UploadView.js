@@ -37,6 +37,7 @@ const UploadView = () => {
   const activeKey = projectActiveKeyMap[projectType];  // Obtén la clave correspondiente de period
 
   // Comprueba si el campo activo correspondiente es verdadero
+  // TODO:WARNING: un nuevo tipo de proyecto, como PPS, requiere cambiar este código o producirá un mensaje incorrecto
   const isProjectActive = period[activeKey];
   let delivered = false;
   if (group && projectType=="final-project" && !!group.final_report_date) {
