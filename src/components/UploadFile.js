@@ -47,7 +47,7 @@ const DropzoneBox = styled(Box)(({ theme }) => ({
   justifyContent: "center",
 }));
 
-const UploadFile = ({ projectType, headerInfo, loadingHeaderInfo }) => {
+const UploadFile = ({ projectType, headerInfo, loadingHeaderInfo, ownershipType = "groups", hasProjectTitle = true }) => {
   const [selectedFile, setSelectedFile] = useState(null); // Estado para archivos
   const [fileError, setFileError] = useState("");
   const [url, setUrl] = useState(""); // Estado para la URL (solo para entrega intermedia)
@@ -61,7 +61,8 @@ const UploadFile = ({ projectType, headerInfo, loadingHeaderInfo }) => {
   const [externalLink, setExternalLink] = useState("");
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
-  const groupId = useSelector((state) => state.user.group_id);
+  const id = 
+    useSelector((state) => ownershipType === "groups" ? state.user.group_id : state.user.id);
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -89,9 +90,11 @@ const UploadFile = ({ projectType, headerInfo, loadingHeaderInfo }) => {
       return;
     }
     
-    if (!projectTitle.trim() && projectType !== "intermediate-project") {
-      setTitleError("Por favor ingrese el título del proyecto.");
-      return;
+    if (hasProjectTitle) {
+      if (!projectTitle.trim() && projectType !== "intermediate-project") {
+        setTitleError("Por favor ingrese el título del proyecto.");
+        return;
+      }
     }
     setTitleError("");
 
@@ -118,7 +121,8 @@ const UploadFile = ({ projectType, headerInfo, loadingHeaderInfo }) => {
 
     const { success, message } = await uploadProjects({
       projectType,
-      groupId,
+      subpath: ownershipType,
+      id,
       projectTitle,
       selectedFile,
       url,
@@ -142,6 +146,7 @@ const UploadFile = ({ projectType, headerInfo, loadingHeaderInfo }) => {
     "initial-project": "Anteproyecto",
     "intermediate-project": "Entrega Intermedia",
     "final-project": "Entrega Final",
+    "pps-report": "Informe Cumplimiento PPS",
   };
   return (
       <div>
@@ -190,16 +195,18 @@ const UploadFile = ({ projectType, headerInfo, loadingHeaderInfo }) => {
             </>
           ) : (
             <>
-              <TextField
-                label="Ingrese el título del proyecto"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={projectTitle}
+              {hasProjectTitle && (
+                <TextField
+                  label="Ingrese el título del proyecto"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={projectTitle}
                 onChange={(e) => setProjectTitle(e.target.value)}
-                error={Boolean(titleError)}
-                helperText={titleError}
-              />
+                  error={Boolean(titleError)}
+                  helperText={titleError}
+                />
+              )}
 
               <DropzoneBox {...getRootProps()}>
                 <input {...getInputProps()} />

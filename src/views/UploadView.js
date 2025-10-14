@@ -44,6 +44,20 @@ const UploadView = () => {
     "pps-report": "pps_report_active"
   };
 
+  const ownershipTypeMap = {
+    "initial-project": "groups",
+    "intermediate-project": "groups",
+    "final-project": "groups",
+    "pps-report": "students"
+  };
+
+  const hasProjectTitleMap = {
+    "initial-project": true,
+    "intermediate-project": true,
+    "final-project": true,
+    "pps-report": false
+  };
+
   const activeKey = projectActiveKeyMap[projectType];  // Obtén la clave correspondiente de period
 
   // Comprueba si el campo activo correspondiente es verdadero
@@ -66,11 +80,14 @@ const UploadView = () => {
   }
   let msg = delivered ? `Tu equipo ya realizó esta entrega el ${date_delivery}.` : "Tu equipo no ha realizado esta entrega aún."
   // TODO: poner spinning circle al cargar el mensaje "Tu equipo ya entregó"
+  const ownershipType = ownershipTypeMap[projectType];
+  const hasProjectTitle = hasProjectTitleMap[projectType];
+
   return (
     <Container maxWidth="sm">
       <Root>
       {isProjectActive ? (
-        <UploadFile projectType={projectType} headerInfo={msg} loadingHeaderInfo={loading} />
+        <UploadFile projectType={projectType} headerInfo={msg} loadingHeaderInfo={loading} ownershipType={ownershipType} hasProjectTitle={hasProjectTitle} />
       ) : (
         <Alert severity="info">No se aceptan más entregas.</Alert>
       )
