@@ -11,8 +11,6 @@ export const uploadDescription = async (user, description) => {
             description: description,
         }
     };
-    console.log("users group id:")
-    console.log(user.group_id)
     const response = await axios.put(`${BASE_URL}/groups/add-description/${user.group_id}`, undefined, config);
     return response.data;
 };
