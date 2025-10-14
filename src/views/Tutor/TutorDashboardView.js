@@ -9,11 +9,13 @@ import {
   Paper,
   Grid,
   List,
-  ListItem,
   Accordion,
   AccordionSummary,
   AccordionDetails,
   Divider,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText
 } from "@mui/material";
 import { getMyGroups } from "../../api/getMyGroups";
 import LearningPath from "../../components/LearningPath";
@@ -24,6 +26,11 @@ import "react-datepicker/dist/react-datepicker.css"; // Estilos por defecto
 import { getMyGroupsToReview } from "../../api/getMyGroupsToReview";
 import TutorEvents from "../../components/UI/Dashboards/Tutor/TutorEvents";
 import { getTutorEvents } from "../../api/getTutorEvents";
+import HomeIcon from '@mui/icons-material/Home';
+import EditCalendarIcon from '@mui/icons-material/EditCalendar';
+import TodayIcon from '@mui/icons-material/Today';
+import GroupsIcon from '@mui/icons-material/Groups';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -43,7 +50,7 @@ const SidebarList = styled(List)(({ theme }) => ({
   marginTop: theme.spacing(4),
 }));
 
-const ListItemStyled = styled(ListItem)(({ selected }) => ({
+const ListItemStyled = styled(ListItemButton)(({ selected }) => ({
   backgroundColor: selected ? "#005B9A" : "transparent",
   color: "#000000",
   "&:hover": {
@@ -135,6 +142,10 @@ const TutorDashboardView = () => {
   
   const [loadingEvents, setLoadingEvents] = useState(false)
   
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [selectedMenu]);
+  
 const transformEventData = (data) => {
   const tutorEvents = data.tutor_dates.map(event => ({
     id: event.group_number,
@@ -211,14 +222,14 @@ const transformEventData = (data) => {
     return userGroups.map((group) => (
       <ListItemStyled
         key={group.id}
-        button
         selected={selectedMenu === `Grupo ${group.group_number}`}
         onClick={() => {
           setSelectedGroup(group.id);
           setSelectedMenu(`Grupo ${group.group_number}`);
         }}
       >
-        Equipo {group.group_number}
+        <ListItemIcon>{<GroupsIcon />}</ListItemIcon>
+        <ListItemText primary={`Equipo ${group.group_number}`} />
       </ListItemStyled>
     ));
   };
@@ -242,7 +253,6 @@ const transformEventData = (data) => {
     return userGroupsToReview.map((group) => (
       <ListItemStyled
         key={group.id}
-        button
         selected={
           selectedGroupReview?.id === group.id && selectedMenu === "Revisiones"
         }
@@ -251,7 +261,8 @@ const transformEventData = (data) => {
           setSelectedMenu("Revisiones");
         }}
       >
-        Equipo {group.group_number}
+        <ListItemIcon>{<Diversity3Icon />}</ListItemIcon>
+        <ListItemText primary={`Equipo ${group.group_number}`} />
       </ListItemStyled>
     ));
   };
@@ -287,6 +298,13 @@ const transformEventData = (data) => {
     );
   };
 
+  const ListItem = ({ label, icon, menu }) => (
+    <ListItemStyled selected={selectedMenu === menu} onClick={() => setSelectedMenu(menu)}>
+      <ListItemIcon>{icon}</ListItemIcon>
+      <ListItemText primary={label} />
+    </ListItemStyled>
+  );
+
   return (
     <Container
       maxWidth={false}
@@ -303,13 +321,7 @@ const transformEventData = (data) => {
             <SidebarContainer>
               <Title variant="h4">{period.id}</Title>
               <SidebarList>
-                <ListItemStyled
-                  button
-                  selected={selectedMenu === "Inicio"}
-                  onClick={() => setSelectedMenu("Inicio")}
-                >
-                  Inicio
-                </ListItemStyled>
+                <ListItem label="Inicio" icon={<HomeIcon />} menu="Inicio" />
                 <Divider />
                 {/* Asignaciones - Mis Equipos */}
                 <Accordion defaultExpanded>
@@ -331,22 +343,8 @@ const transformEventData = (data) => {
                     Mis Presentaciones
                   </AccordionSummary>
                   <AccordionDetails>
-                    <ListItemStyled
-                      button
-                      selected={selectedMenu === "Seleccionar Disponibilidad"}
-                      onClick={() =>
-                        setSelectedMenu("Seleccionar Disponibilidad")
-                      }
-                    >
-                      Seleccionar Disponibilidad
-                    </ListItemStyled>
-                    <ListItemStyled
-                      button
-                      selected={selectedMenu === "Fechas de presentación"}
-                      onClick={() => setSelectedMenu("Fechas de presentación")}
-                    >
-                      Fechas de Presentaciones
-                    </ListItemStyled>
+                    <ListItem label="Seleccionar Disponibilidad" icon={<EditCalendarIcon />} menu="Seleccionar Disponibilidad" />
+                    <ListItem label="Fechas de Presentaciones" icon={<TodayIcon />} menu="Fechas de presentación" />
                   </AccordionDetails>
                 </Accordion>
               </SidebarList>
