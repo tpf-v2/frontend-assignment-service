@@ -58,7 +58,7 @@ const UploadView = () => {
   if (group && projectType=="intermediate-project" && !!group.intermediate_report_date) {
     delivered = true;
   }
-  let msg = delivered ? "Tu equipo ya ha realizado esta entrega." : "Tu equipo no ha realizado esta entrega aún."
+  let msg = delivered ? `Tu equipo ya realizó esta entrega el ${group.final_report_date.substring(0,10)}.` : "Tu equipo no ha realizado esta entrega aún."
   // TODO: poner spinning circle al cargar el mensaje "Tu equipo ya entregó"
   return (
     <Container maxWidth="sm">
