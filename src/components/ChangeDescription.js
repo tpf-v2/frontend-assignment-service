@@ -55,8 +55,6 @@ const ChangeDescription = ({ projectType, headerInfo, user, group }) => {
     }
     setDescriptionError("");
     setLoading(true);
-    console.log("user:")
-    console.log(user)
     const upload = await uploadDescription(user, description)
 
     setResponseMessage("Descripción publicada."); // TODO: revisar response code

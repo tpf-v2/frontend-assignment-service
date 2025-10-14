@@ -18,11 +18,8 @@ const UploadView = () => {
   useEffect(() => {
     const getGroup = async () => {
       try {
-        console.log(id)
         setGroup(await dispatch(getGroupById(user,id)))
         setLoading(false)
-        console.log("Group acquired:")
-        console.log(group)
       } catch (error) {
         console.error("Error al obtener datos para el upload:", error);
       } 

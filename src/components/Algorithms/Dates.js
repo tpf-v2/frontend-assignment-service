@@ -125,7 +125,6 @@ const Dates = ({setSelectedMenu}) => {
         setLoadingDates(true);
         const data = await getInputAnalysis(endpoint, period.id, user);        
         setInputInfo(data);
-        console.log("--- seteo input info:", data);
 
       } catch (error) {
         setLoadingDates(false);
@@ -261,8 +260,6 @@ const Dates = ({setSelectedMenu}) => {
       setOpenDialog(true);
       setOpenRunDialog(false);
       setShowResults(false);
-
-      console.log("Running the algorithm!");
 
       const response = await dates(user, period, maxDifference, maxGroups);
 
