@@ -107,6 +107,8 @@ const ChangeDescription = ({ projectType, headerInfo, user, group }) => {
               variant="outlined"
               fullWidth
               margin="normal"
+              multiline={true}
+              minRows={10}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               error={Boolean(descriptionError)}
