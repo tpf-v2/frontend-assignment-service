@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useSelector } from "react-redux";
 import {
-  Container,
   Button,
   Typography,
   Box,
@@ -144,8 +143,7 @@ const UploadFile = ({ projectType, headerInfo, loadingHeaderInfo }) => {
     "final-project": "Entrega Final",
   };
   return (
-    <Container maxWidth="sm">
-      <Root>
+      <div>
         <Box textAlign="center">
           <Title variant="h5">Subir {projectNameKeyMap[projectType]}</Title>
         </Box>
@@ -298,8 +296,7 @@ const UploadFile = ({ projectType, headerInfo, loadingHeaderInfo }) => {
             </Button>
           </DialogActions>
         </Dialog>
-      </Root>
-    </Container>
+      </div>
   );
 };
 

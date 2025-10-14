@@ -6,7 +6,16 @@ import UploadFile from "../components/UploadFile";
 import ClosedAlert from "../components/ClosedAlert";
 import ChangeDescription from "../components/ChangeDescription";
 import { getGroupById } from "../api/getGroupById";
-
+import { styled } from "@mui/system";
+import {
+  Paper,
+  Container
+} from "@mui/material";
+const Root = styled(Paper)(({ theme }) => ({
+  marginTop: theme.spacing(10),
+  padding: theme.spacing(4),
+  boxShadow: theme.shadows[10],
+}));
 const UploadView = () => {
   const dispatch = useDispatch();
   const { projectType } = useParams();  // Extrae el projectType desde la URL
@@ -52,7 +61,8 @@ const UploadView = () => {
   let msg = delivered ? "Tu equipo ya ha realizado esta entrega." : "Tu equipo no ha realizado esta entrega aún."
   // TODO: poner spinning circle al cargar el mensaje "Tu equipo ya entregó"
   return (
-    <div>
+    <Container maxWidth="sm">
+      <Root>
       {isProjectActive ? (
         <UploadFile projectType={projectType} headerInfo={msg} loadingHeaderInfo={loading} />
       ) : (
@@ -62,7 +72,8 @@ const UploadView = () => {
       {
         (delivered && projectType == "final-project") ? <ChangeDescription projectType={"final-project"} headerInfo={null} user={user} group={group}/> : null
       }
-    </div>
+      </Root>
+    </Container>
   );
 };
 
