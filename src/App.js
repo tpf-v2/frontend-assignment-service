@@ -37,6 +37,7 @@ import { setStudents } from './redux/slices/studentsSlice';
 import { setTutors } from './redux/slices/tutorsSlice';
 import { setTopics } from './redux/slices/topicsSlice';
 import Credits from './views/CreditsView';
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -61,6 +62,7 @@ const App = () => {
 
   return (
     <HashRouter>
+      <ScrollToTop />
       <TokenManager />
       <Box
         className="main-container"
@@ -78,8 +80,8 @@ const App = () => {
           className="content-container"
           sx={{
             flex: '1',
-            minHeight: '1000px',
-            overflowY: 'auto', // Add scrolling if content exceeds
+            minHeight: 'auto',
+            overflowY: 'visible',
             display: 'flex',
             flexDirection: 'column',
           }}
