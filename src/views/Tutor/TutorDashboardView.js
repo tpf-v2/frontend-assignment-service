@@ -74,6 +74,7 @@ const TitleTop = styled(Typography)(({ theme }) => ({
   fontSize: "2rem",
   fontWeight: "bold",
   flexGrow: 1,
+  overflowWrap: "break-word",
 }));
 
 // Loader de puntos animados
