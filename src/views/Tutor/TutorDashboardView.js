@@ -59,7 +59,7 @@ const ListItemStyled = styled(ListItemButton)(({ selected }) => ({
 }));
 
 const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
+  marginBottom: theme.spacing(2),
   color: "#0072C6",
   textAlign: "center",
   fontSize: "2rem",
@@ -71,7 +71,7 @@ const TitleTop = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(0),
   color: "#0072C6",
   textAlign: "center",
-  fontSize: "2rem",
+  fontSize: "1rem",
   fontWeight: "bold",
   flexGrow: 1,
   overflowWrap: "break-word",
@@ -331,7 +331,7 @@ const transformEventData = (data) => {
           {/* Sidebar */}
           <Grid item xs={3}>
             <SidebarContainer>
-              <TitleTop variant="h4" marginBottom={"0px"}>{prettyPeriod}</TitleTop>
+              <TitleTop variant="h4">{prettyPeriod}</TitleTop>
               <Title variant="h3">{prettyPeriodYear}</Title>
               <SidebarList>
                 <ListItem label="Inicio" icon={<HomeIcon />} menu="Inicio" />

@@ -13,12 +13,21 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 
 const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
+  marginBottom: theme.spacing(2),
   color: "#0072C6",
   textAlign: "center",
   fontSize: "2rem",
   fontWeight: "bold",
   flexGrow: 1,
+}));
+
+const TitleTop = styled(Typography)(({ theme }) => ({
+  color: "#0072C6",
+  textAlign: "center",
+  fontSize: "1rem",
+  fontWeight: "bold",
+  flexGrow: 1,
+  overflowWrap: "break-word",
 }));
 
 const SidebarList = styled(List)(({ theme }) => ({
@@ -46,9 +55,14 @@ const Sidebar = ({ selectedMenu, handleNavigation, period }) => {
     </ListItemStyled>
   );
 
+  const periodParts = period.split("C")
+  const prettyPeriod = "Cuatrimestre " + periodParts[0] + "º"
+  const prettyPeriodYear = periodParts[1]
+
   return (
     <SidebarContainer>
-      <Title variant="h4">{period}</Title>
+      <TitleTop variant="h4">{prettyPeriod}</TitleTop>
+      <Title variant="h3">{prettyPeriodYear}</Title>
       <SidebarList>
         {/* Botón no desplegable */}
         <ListItem label="Inicio" icon={<HomeIcon />} menu="Inicio" />
