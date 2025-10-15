@@ -67,6 +67,15 @@ const Title = styled(Typography)(({ theme }) => ({
   flexGrow: 1,
 }));
 
+const TitleTop = styled(Typography)(({ theme }) => ({
+  marginBottom: theme.spacing(0),
+  color: "#0072C6",
+  textAlign: "center",
+  fontSize: "2rem",
+  fontWeight: "bold",
+  flexGrow: 1,
+}));
+
 // Loader de puntos animados
 const DotsLoader = styled("div")({
   display: "inline-block",
@@ -304,7 +313,9 @@ const transformEventData = (data) => {
       <ListItemText primary={label} />
     </ListItemStyled>
   );
-
+  const periodParts = period.id.split("C")
+  const prettyPeriod = "Cuatrimestre " + periodParts[0] + "º"
+  const prettyPeriodYear = periodParts[1]
   return (
     <Container
       maxWidth={false}
@@ -319,7 +330,8 @@ const transformEventData = (data) => {
           {/* Sidebar */}
           <Grid item xs={3}>
             <SidebarContainer>
-              <Title variant="h4">{period.id}</Title>
+              <TitleTop variant="h4" marginBottom={"0px"}>{prettyPeriod}</TitleTop>
+              <Title variant="h3">{prettyPeriodYear}</Title>
               <SidebarList>
                 <ListItem label="Inicio" icon={<HomeIcon />} menu="Inicio" />
                 <Divider />
