@@ -72,10 +72,10 @@ export const StudentModals = ({
                   autoFocus
                   margin="normal"
                   label="Padrón"
-                  value={item["id"] || ""}
+                  value={item["student_number"] || ""}
                   required
                   onChange={(e) =>
-                    setItem({ ...item, id: parseInt(e.target.value) })
+                    setItem({ ...item, student_number: parseInt(e.target.value) })
                   }
                   disabled={disableEditId}
                 />
@@ -135,8 +135,8 @@ export const StudentModals = ({
 
   return (
     <>
-      {addStudentModal()};
-      {editStudentModal()};
+      {addStudentModal()}
+      {editStudentModal()}
     </>
   )
 }

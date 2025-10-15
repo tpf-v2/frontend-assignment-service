@@ -63,21 +63,6 @@ export const TutorModals = ({
               }}
             >
               <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
-                <NumericFormat
-                  fullWidth
-                  allowNegative={false}
-                  customInput={TextField}
-                  variant="outlined"
-                  autoFocus
-                  margin="normal"
-                  label="DNI o Identificación"
-                  value={item["id"] || ""}
-                  required
-                  onChange={(e) =>
-                    setItem({ ...item, id: parseInt(e.target.value) })
-                  }
-                  disabled={disableEditId}
-                />
                 <TextField
                   variant="outlined"
                   fullWidth
@@ -93,7 +78,7 @@ export const TutorModals = ({
                   margin="normal"
                   label="Apellido"
                   value={item["last_name"] || ""}
-                  required
+                  required 
                   onChange={(e) =>
                     setItem({ ...item, last_name: e.target.value })
                   }
@@ -147,8 +132,8 @@ export const TutorModals = ({
 
       return (
         <>
-            {addTutorModal()};
-            {editTutorModal()};
+            {addTutorModal()}
+            {editTutorModal()}
         </>
       )
 }
