@@ -59,7 +59,7 @@ const ListItemStyled = styled(ListItemButton)(({ selected }) => ({
 }));
 
 const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(2),
+  marginBottom: 0,
   color: "#0072C6",
   textAlign: "center",
   fontSize: "2rem",

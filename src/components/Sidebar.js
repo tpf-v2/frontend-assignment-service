@@ -13,7 +13,7 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 
 const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(2),
+  marginBottom: 0,
   color: "#0072C6",
   textAlign: "center",
   fontSize: "2rem",
