@@ -125,7 +125,6 @@ const Dates = ({setSelectedMenu}) => {
         setLoadingDates(true);
         const data = await getInputAnalysis(endpoint, period.id, user);        
         setInputInfo(data);
-        console.log("--- seteo input info:", data);
 
       } catch (error) {
         setLoadingDates(false);
