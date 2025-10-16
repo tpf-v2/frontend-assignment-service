@@ -68,7 +68,7 @@ export const DeleteConfirmationModal = ({
       
   return (
     <>
-      {confirmationModal(openModal, handleCloseModal, handleDelete, item, itemTypeName)};
+      {confirmationModal(openModal, handleCloseModal, handleDelete, item, itemTypeName)}
     </>
   )
 }

@@ -49,6 +49,10 @@ const DashboardView = () => {
   const [uploadType, setUploadType] = useState("");
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [selectedMenu]);
+
+  useEffect(() => {
     const getData = async () => {
       try {
         const data = await getDashboardData(period.id, user);
