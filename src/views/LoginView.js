@@ -8,6 +8,7 @@ import {
   Paper,
   Divider,
 } from "@mui/material";
+import { togglePasswordVisibility } from "./PasswordVisibility.js";
 import { Link, useNavigate } from "react-router-dom";
 import { styled } from "@mui/system";
 import BackgroundContainer from "../components/UI/BackgroundContainer.js";
@@ -33,6 +34,7 @@ const Title = styled(Typography)(({ theme }) => ({
 const LoginView = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setloading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -98,13 +100,15 @@ const LoginView = () => {
           />
           <TextField
             label="Contraseña"
-            type="password"
+            type={showPassword ? "text" : "password"}
             fullWidth
             margin="normal"
             variant="outlined"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            // El adornment es para poner el ícono del 'ojito' Adentro del textfield
+            InputProps={togglePasswordVisibility(showPassword, setShowPassword)}
           />
           <ButtonStyled
             disabled={loading}

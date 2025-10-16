@@ -8,10 +8,13 @@ import {
   Alert,
 } from "@mui/material";
 import { styled } from "@mui/system";
+import { Typography, Container, Alert } from "@mui/material";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import ClosedAlert from "../ClosedAlert"; // Ahora se conserva, en el futuro no existirá
 import { proposeIdea } from "../../api/ideas";
+import { Root, Title, ButtonStyled } from "../../components/Root";
+import { WriteIdeaFields } from "./WriteIdeaFields";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -84,47 +87,29 @@ const ProposeIdea = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      {period.form_active ? (
+    <Container maxWidth="md">
+      {period.form_active ? ( // <-- [VER] qué condición poner acá. No habría que dep de toggles, quizás algoritmo temas (o equipos) no ejecutado
         <Root>
           <Title variant="h5" align="center">Proponer Idea</Title>
+          <Typography>
+            En este espacio se puede proponer una idea. Será visible por estudiantes y tutores de este cuatrimestre.
+            Esto puede utilizarse para que te contacten estudiantes a quienes les interese tu idea y así poder formar equipo.
+            Si se obtiene la aprobación de un/a tutor/a, luego, de querer elegirla se debe completar el formulario de equipos
+            indicando la opción "Ya tengo tema y tutor".
+          </Typography>
+          {/* Con el esquema de bool y !bool casos exluyentes, cambiamos lo mostrado en pantalla */}
           {submitSuccess && (
-            <Alert severity="success">
+            <Alert severity="success" sx={{ mt: 2 }}>
               Gracias por proponer la idea.
             </Alert>
           )}
           {!submitSuccess && (
             <form onSubmit={handleSubmit}>
-              {/* Ya tengo tema y tutor */}
-              {(
-                <>
-                  <TextField
-                    label="Título"
-                    name="title" // para manejar de manera genérica el e.target.value con handleChange
-                    fullWidth
-                    margin="normal"
-                    variant="outlined"
-                    value={formData.title}
-                    onChange={handleChange}
-                    required
-                  />
-                  <TextField
-                    label="Descripción"
-                    name="description"
-                    fullWidth
-                    margin="normal"
-                    variant="outlined"
-                    value={formData.description}
-                    onChange={handleChange}
-                    multiline
-                    rows={4}   // altura inicial
-                    required
-                  />
-                </>
-              )}
-  
+              
+              <WriteIdeaFields data={formData} setData={setFormData} />
+              
               <ButtonStyled variant="contained" color="primary" type="submit" align="right">
-                Enviar Formulario
+              Enviar
               </ButtonStyled>
             </form>
           )}
