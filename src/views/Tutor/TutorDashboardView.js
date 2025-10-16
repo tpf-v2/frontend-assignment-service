@@ -240,7 +240,7 @@ const transformEventData = (data) => {
         }}
       >
         <ListItemIcon>{<GroupsIcon />}</ListItemIcon>
-        <ListItemText primary={`Equipo ${group.group_number}`} />
+        <ListItemText primary={`Equipo ${team.group_number}`} />
       </ListItemStyled>
     ));
   };
@@ -274,7 +274,7 @@ const transformEventData = (data) => {
         }}
       >
         <ListItemIcon>{<Diversity3Icon />}</ListItemIcon>
-        <ListItemText primary={`Equipo ${group.group_number}`} />
+        <ListItemText primary={`Equipo ${team.group_number}`} />
       </ListItemStyled>
     ));
   };
