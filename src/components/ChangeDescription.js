@@ -75,7 +75,7 @@ const ChangeDescription = ({ projectType, headerInfo, user, group }) => {
 
   return (
     <div>
-      <Box padding={"2em"} ><hr /></Box>
+      <Box padding={"2em"} ><Divider /></Box>
 
       <Box textAlign="center">
         <Title variant="h5">Descripción de {projectNameKeyMap[projectType]}</Title>
