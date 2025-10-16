@@ -11,7 +11,7 @@ import {
   Avatar,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import fiubaLogo from "../../assets/Logo-fiuba_big_face.png";
+import fiubaLogo from "../../assets/title-logo.png";
 import { useDispatch } from "react-redux";
 import { clearUser } from "../../redux/slices/userSlice";
 import { clearTopics } from "../../redux/slices/topicsSlice";
@@ -77,9 +77,8 @@ const Header = ({ user, color, handleHomeClick }) => {
               <img
                 src={fiubaLogo}
                 alt="FIUBA Logo"
-                style={{ height: "40px", marginRight: "15px" }}
+                style={{ height: "70px", marginRight: "15px" }}
               />
-              <Typography variant="h6">FIUBA</Typography>
             </Box>
           </Box>
           {user && (
