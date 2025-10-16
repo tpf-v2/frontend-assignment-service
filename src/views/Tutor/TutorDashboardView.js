@@ -9,11 +9,13 @@ import {
   Paper,
   Grid,
   List,
-  ListItem,
   Accordion,
   AccordionSummary,
   AccordionDetails,
   Divider,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText
 } from "@mui/material";
 import { getMyGroups } from "../../api/getMyGroups";
 import LearningPath from "../../components/LearningPath";
@@ -24,6 +26,11 @@ import "react-datepicker/dist/react-datepicker.css"; // Estilos por defecto
 import { getMyGroupsToReview } from "../../api/getMyGroupsToReview";
 import TutorEvents from "../../components/UI/Dashboards/Tutor/TutorEvents";
 import { getTutorEvents } from "../../api/getTutorEvents";
+import HomeIcon from '@mui/icons-material/Home';
+import EditCalendarIcon from '@mui/icons-material/EditCalendar';
+import TodayIcon from '@mui/icons-material/Today';
+import GroupsIcon from '@mui/icons-material/Groups';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
 
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
@@ -43,7 +50,7 @@ const SidebarList = styled(List)(({ theme }) => ({
   marginTop: theme.spacing(4),
 }));
 
-const ListItemStyled = styled(ListItem)(({ selected }) => ({
+const ListItemStyled = styled(ListItemButton)(({ selected }) => ({
   backgroundColor: selected ? "#005B9A" : "transparent",
   color: "#000000",
   "&:hover": {
@@ -52,12 +59,22 @@ const ListItemStyled = styled(ListItem)(({ selected }) => ({
 }));
 
 const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
+  marginBottom: 0,
   color: "#0072C6",
   textAlign: "center",
   fontSize: "2rem",
   fontWeight: "bold",
   flexGrow: 1,
+}));
+
+const TitleTop = styled(Typography)(({ theme }) => ({
+  marginBottom: theme.spacing(0),
+  color: "#0072C6",
+  textAlign: "center",
+  fontSize: "1rem",
+  fontWeight: "bold",
+  flexGrow: 1,
+  overflowWrap: "break-word",
 }));
 
 // Loader de puntos animados
@@ -122,18 +139,22 @@ const TutorDashboardView = () => {
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
 
-  const [userGroups, setUserGroups] = useState([]);
-  const [userGroupsToReview, setUserGroupsToReview] = useState([]);
+  const [userTeams, setUserTeams] = useState([]);
+  const [userTeamsToReview, setUserTeamsToReview] = useState([]);
 
-  const [loadingGroups, setLoadingGroups] = useState(true);
+  const [loadingTeams, setLoadingTeams] = useState(true);
   const [loadingReviews, setLoadingReviews] = useState(true);
 
   const [selectedMenu, setSelectedMenu] = useState("Inicio");
-  const [selectedGroup, setSelectedGroup] = useState(null);
-  const [selectedGroupReview, setSelectedGroupReview] = useState(null);
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [selectedTeamReview, setSelectedTeamReview] = useState(null);
   const [events, setEvents] = useState([]);
   
   const [loadingEvents, setLoadingEvents] = useState(false)
+  
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [selectedMenu]);
   
 const transformEventData = (data) => {
   const tutorEvents = data.tutor_dates.map(event => ({
@@ -154,24 +175,24 @@ const transformEventData = (data) => {
 };
 
   useEffect(() => {
-    const getGroups = async () => {
-      setLoadingGroups(true);
+    const getTeams = async () => {
+      setLoadingTeams(true);
       try {
-        const groups = await getMyGroups(user, period.id);
-        setUserGroups(groups.sort((a, b) => a.id - b.id));
+        const teams = await getMyGroups(user, period.id);
+        setUserTeams(teams.sort((a, b) => a.id - b.id));
       } catch (error) {
-        console.error("Error when getting my groups: ", error);
+        console.error("Error when getting my teams: ", error);
       } finally {
-        setLoadingGroups(false);
+        setLoadingTeams(false);
       }
     };
 
-    const getGroupsToReview = async () => {
+    const getTeamsToReview = async () => {
       setLoadingReviews(true);
 
       try {
-        const groups = await getMyGroupsToReview(user, period.id);
-        setUserGroupsToReview(groups.sort((a, b) => a.id - b.id));
+        const teams = await getMyGroupsToReview(user, period.id);
+        setUserTeamsToReview(teams.sort((a, b) => a.id - b.id));
       } catch (error) {
         console.error("Error al obtener los equipos: ", error);
       } finally {
@@ -187,13 +208,13 @@ const transformEventData = (data) => {
       setLoadingEvents(false)
     }
 
-    getGroups();
-    getGroupsToReview();
+    getTeams();
+    getTeamsToReview();
     getEvents();
   }, [user]);
 
-  const renderGroups = () => {
-    if (loadingGroups) {
+  const renderTeams = () => {
+    if (loadingTeams) {
       return (
         <DotsLoader>
           <div></div>
@@ -204,26 +225,27 @@ const transformEventData = (data) => {
       );
     }
 
-    if (userGroups.length === 0) {
+    if (userTeams.length === 0) {
       return <Typography>No hay equipos.</Typography>;
     }
 
-    return userGroups.map((group) => (
+    return userTeams.map((team) => (
       <ListItemStyled
-        key={group.id}
+        key={team.id}
         button
-        selected={selectedMenu === `Grupo ${group.group_number}`}
+        selected={selectedMenu === `Grupo ${team.group_number}`}
         onClick={() => {
-          setSelectedGroup(group.id);
-          setSelectedMenu(`Grupo ${group.group_number}`);
+          setSelectedTeam(team.id);
+          setSelectedMenu(`Grupo ${team.group_number}`);
         }}
       >
-        Equipo {group.group_number}
+        <ListItemIcon>{<GroupsIcon />}</ListItemIcon>
+        <ListItemText primary={`Equipo ${group.group_number}`} />
       </ListItemStyled>
     ));
   };
 
-  const renderGroupsToReview = () => {
+  const renderTeamsToReview = () => {
     if (loadingReviews) {
       return (
         <DotsLoader>
@@ -235,23 +257,24 @@ const transformEventData = (data) => {
       );
     }
 
-    if (userGroupsToReview.length === 0) {
+    if (userTeamsToReview.length === 0) {
       return <Typography>No hay equipos.</Typography>;
     }
 
-    return userGroupsToReview.map((group) => (
+    return userTeamsToReview.map((team) => (
       <ListItemStyled
-        key={group.id}
+        key={team.id}
         button
         selected={
-          selectedGroupReview?.id === group.id && selectedMenu === "Revisiones"
+          selectedTeamReview?.id === team.id && selectedMenu === "Revisiones"
         }
         onClick={() => {
-          setSelectedGroupReview(group);
+          setSelectedTeamReview(team);
           setSelectedMenu("Revisiones");
         }}
       >
-        Equipo {group.group_number}
+        <ListItemIcon>{<Diversity3Icon />}</ListItemIcon>
+        <ListItemText primary={`Equipo ${group.group_number}`} />
       </ListItemStyled>
     ));
   };
@@ -269,8 +292,8 @@ const transformEventData = (data) => {
     "Mis Equipos": <div>Contenido del Formulario de Fechas</div>,
     "Seleccionar Disponibilidad": <AvailabilityCalendar />,
     "Fechas de presentación": <TutorEvents events={events} loading={loadingEvents}></TutorEvents>,
-    Revisiones: selectedGroupReview ? (
-      <GroupReview group={selectedGroupReview} />
+    Revisiones: selectedTeamReview ? (
+      <GroupReview group={selectedTeamReview} />
     ) : (
       <div>Selecciona un equipo para ver las revisiones</div>
     ),
@@ -281,12 +304,21 @@ const transformEventData = (data) => {
       contentMap[selectedMenu]
     ) : (
       <LearningPath
-        group_id={selectedGroup}
-        group={userGroups.find((group) => group.id === selectedGroup)}
+        team_id={selectedTeam}
+        team={userTeams.find((team) => team.id === selectedTeam)}
       />
     );
   };
 
+  const ListItem = ({ label, icon, menu }) => (
+    <ListItemStyled selected={selectedMenu === menu} onClick={() => setSelectedMenu(menu)}>
+      <ListItemIcon>{icon}</ListItemIcon>
+      <ListItemText primary={label} />
+    </ListItemStyled>
+  );
+  const periodParts = period.id.split("C")
+  const prettyPeriod = "Cuatrimestre " + periodParts[0] + "º"
+  const prettyPeriodYear = periodParts[1]
   return (
     <Container
       maxWidth={false}
@@ -301,29 +333,24 @@ const transformEventData = (data) => {
           {/* Sidebar */}
           <Grid item xs={3}>
             <SidebarContainer>
-              <Title variant="h4">{period.id}</Title>
+              <TitleTop variant="h4">{prettyPeriod}</TitleTop>
+              <Title variant="h3">{prettyPeriodYear}</Title>
               <SidebarList>
-                <ListItemStyled
-                  button
-                  selected={selectedMenu === "Inicio"}
-                  onClick={() => setSelectedMenu("Inicio")}
-                >
-                  Inicio
-                </ListItemStyled>
+                <ListItem label="Inicio" icon={<HomeIcon />} menu="Inicio" />
                 <Divider />
                 {/* Asignaciones - Mis Equipos */}
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     Mis Equipos
                   </AccordionSummary>
-                  <AccordionDetails>{renderGroups()}</AccordionDetails>
+                  <AccordionDetails>{renderTeams()}</AccordionDetails>
                 </Accordion>
 
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     Revisiones
                   </AccordionSummary>
-                  <AccordionDetails>{renderGroupsToReview()}</AccordionDetails>
+                  <AccordionDetails>{renderTeamsToReview()}</AccordionDetails>
                 </Accordion>
 
                 <Accordion defaultExpanded>
@@ -331,22 +358,8 @@ const transformEventData = (data) => {
                     Mis Presentaciones
                   </AccordionSummary>
                   <AccordionDetails>
-                    <ListItemStyled
-                      button
-                      selected={selectedMenu === "Seleccionar Disponibilidad"}
-                      onClick={() =>
-                        setSelectedMenu("Seleccionar Disponibilidad")
-                      }
-                    >
-                      Seleccionar Disponibilidad
-                    </ListItemStyled>
-                    <ListItemStyled
-                      button
-                      selected={selectedMenu === "Fechas de presentación"}
-                      onClick={() => setSelectedMenu("Fechas de presentación")}
-                    >
-                      Fechas de Presentaciones
-                    </ListItemStyled>
+                    <ListItem label="Seleccionar Disponibilidad" icon={<EditCalendarIcon />} menu="Seleccionar Disponibilidad" />
+                    <ListItem label="Fechas de Presentaciones" icon={<TodayIcon />} menu="Fechas de presentación" />
                   </AccordionDetails>
                 </Accordion>
               </SidebarList>
