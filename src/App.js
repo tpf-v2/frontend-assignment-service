@@ -31,6 +31,7 @@ import DashboardView from './views/Admin/DashboardView'
 import ChangePasswordView from './views/ChangePasswordView';
 import StudentForm from './components/Forms/StudentForm';
 import ProposeIdea from './components/Forms/ProposeIdea';
+
 import ExploreIdeas from './components/Exploration/ExploreIdeas';
 import StudentAvailabilityView from './views/Student/StudentAvailabilityView';
 import { setStudents } from './redux/slices/studentsSlice';

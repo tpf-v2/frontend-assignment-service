@@ -39,7 +39,7 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
   },
 }));
 
-const LearningPath = ({ group_id, group }) => {
+const LearningPath = ({ team_id, team }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [milestones, setMilestones] = useState([]);
@@ -59,25 +59,25 @@ const LearningPath = ({ group_id, group }) => {
   useEffect(() => {
     const fetchGroupAnswer = async () => {
       try {
-        const group = await dispatch(getGroupById(user, group_id));
+        const team = await dispatch(getGroupById(user, team_id));
 
         setMilestones([
           {
             phase: "Anteproyecto",
             tasks: [
               {
-                title: group.pre_report_date !== null ? "Enviado" : "No enviado",
-                completed: group.pre_report_date !== null ? true : false,
+                title: team.pre_report_date !== null ? "Enviado" : "No enviado",
+                completed: team.pre_report_date !== null ? true : false,
               },
-              { title: "Revisado", completed: group.pre_report_approved },
+              { title: "Revisado", completed: team.pre_report_approved },
             ],
           },
           {
             phase: "Entrega Intermedia",
             tasks: [
               {
-                title: group.intermediate_assigment_date !== null ? "Enviado" : "No enviado",
-                completed: group.intermediate_assigment_date !== null ? true : false,
+                title: team.intermediate_assigment_date !== null ? "Enviado" : "No enviado",
+                completed: team.intermediate_assigment_date !== null ? true : false,
               }
             ],
           },
@@ -86,13 +86,13 @@ const LearningPath = ({ group_id, group }) => {
             tasks: [
               {
                 title: "Enviado",
-                completed: group.final_report_date !== null ? true : false,
+                completed: team.final_report_date !== null ? true : false,
               }
             ],
           },
         ]);
       } catch (error) {
-        console.error(`Error when getting group ${group_id} by id: `, error);
+        console.error(`Error when getting team ${team_id} by id: `, error);
       } finally {
         setLoading(false); 
       }
@@ -127,11 +127,11 @@ const LearningPath = ({ group_id, group }) => {
       ) : (
         <>
           {selectedPhase === "anteproyecto" ? (
-            <GroupReview group={group}/>
+            <GroupReview group={team}/>
           ) : selectedPhase === "intermediate" ? ( 
-            <TutorIntermediateProjectComponent groupId={group_id} /> 
+            <TutorIntermediateProjectComponent groupId={team_id} /> 
           ) : selectedPhase === "final" ? ( 
-            <ProjectPdfComponent groupId={group_id} groupNumber={group.group_number} projectType={"Final"}/> 
+            <ProjectPdfComponent groupId={team_id} groupNumber={team.group_number} projectType={"Final"}/> 
           ) : (
             // Título de la sección
             <>              
@@ -141,7 +141,7 @@ const LearningPath = ({ group_id, group }) => {
                 gutterBottom
                 marginTop={1}
               >
-                Equipo {group.group_number}
+                Equipo {team.group_number}
               </Typography>
               <StyledCard>
                 <CardContent>
@@ -150,7 +150,7 @@ const LearningPath = ({ group_id, group }) => {
                       <Typography variant="h6" gutterBottom>
                         Estudiantes
                       </Typography>
-                      {group?.students.map((student) => (
+                      {team?.students.map((student) => (
                         <Box key={student.id} marginBottom={1}>
                           <Typography variant="body2">
                             <strong>
@@ -168,7 +168,7 @@ const LearningPath = ({ group_id, group }) => {
                       </Typography>
                       <Typography variant="body1">
                         <strong>
-                          {group?.topic.name || "Tema no asignado"}
+                          {team?.topic.name || "Tema no asignado"}
                         </strong>
                       </Typography>
                     </Grid>

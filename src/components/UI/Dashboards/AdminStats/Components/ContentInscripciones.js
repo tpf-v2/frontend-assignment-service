@@ -36,16 +36,16 @@ const ContentInscripciones = ({
   const studentsLength = Object.keys(students).filter(key => key !== '_persist').length;
   const tutorsLength = Object.keys(tutors).filter(key => key !== '_persist').length;
   const topicsLength = Object.keys(topics).filter(key => key !== '_persist').length;
-  const groups = Object.values(useSelector((state) => state.groups))
+  const teams = Object.values(useSelector((state) => state.groups))
   .map(({ version, rehydrated, ...rest }) => rest)
   .filter((item) => Object.keys(item).length > 0);
   // Filtrar los equipos sin preferencia de tema
-  if (groups.length > 0){
-    const groupsWithoutPreferredTopics = groups?.filter(group => !group.preferred_topics || group.preferred_topics.length === 0);
+  if (teams.length > 0){
+    const teamsWithoutPreferredTopics = teams?.filter(team => !team.preferred_topics || team.preferred_topics.length === 0);
 
     // Contar la cantidad de estudiantes en estos equipos y agregarlos a las categorías correspondientes
-    groupsWithoutPreferredTopics.forEach(group => {
-      const numStudents = group.students.length;
+    teamsWithoutPreferredTopics.forEach(team => {
+      const numStudents = team.students.length;
   
       // Verificar el número de estudiantes y agregar al gráfico
       if (dashboardData) { // PATCH: this would cause exception if dashboardData was null / loading = true

@@ -37,7 +37,7 @@ import { NumericFormat } from "react-number-format";
 const TopicTutor = () => {
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
-  const groups = Object.values(useSelector((state) => state.groups))
+  const teams = Object.values(useSelector((state) => state.groups))
     .sort((a, b) => a.group_number - b.group_number)
     .map(({ version, rehydrated, ...rest }) => rest)
     .filter((item) => Object.keys(item).length > 0);
@@ -63,9 +63,9 @@ const TopicTutor = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const getGroupById = (id) => {
-    const group = groups.find((g) => g.id === id);
-    return group ? group : "";
+  const getTeamById = (id) => {
+    const team = teams.find((g) => g.id === id);
+    return team ? team : "";
   };
 
   const getTopicNameById = (id) => {
@@ -100,9 +100,9 @@ const TopicTutor = () => {
     return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
   };
 
-  const getGroupNumberById = (id) => {
-    const group = groups.find((g) => g.id === id);
-    return group.group_number; // Si no encuentra el topic, mostrar 'Desconocido'
+  const getTeamNumberById = (id) => {
+    const team = teams.find((g) => g.id === id);
+    return team.group_number; // Si no encuentra el topic, mostrar 'Desconocido'
   }
   const handleRun = () => {
     setOpenDialog(true);
@@ -147,10 +147,10 @@ const TopicTutor = () => {
     return !assignments.some((assignment) => !assignment.topic);
   };
 
-  const handleChangeTutor = (groupId, tutorId) => {
+  const handleChangeTutor = (teamId, tutorId) => {
     setAssignments((prevAssignments) =>
       prevAssignments.map((assignment) =>
-        assignment.id === groupId
+        assignment.id === teamId
           ? {
               ...assignment,
               tutor: tutors.find((t) => t.id === tutorId),
@@ -161,10 +161,10 @@ const TopicTutor = () => {
     );
   };
 
-  const handleChangeTopic = (groupId, topicName) => {
+  const handleChangeTopic = (teamId, topicName) => {
     setAssignments((prevAssignments) =>
       prevAssignments.map((assignment) =>
-        assignment.id === groupId
+        assignment.id === teamId
           ? { ...assignment, topic: topics.find((t) => t.name === topicName) }
           : assignment
       )
@@ -182,7 +182,7 @@ const TopicTutor = () => {
         maxDifference,
         algorithmType
       );
-      console.log("Groups topic tutor response:", response);
+      console.log("Teams topic tutor response:", response);
       setAssignments(response.assigment);
       setDcg(response.dcg);
       setShowResults(true);
@@ -209,7 +209,7 @@ const TopicTutor = () => {
   };
 
   const handleAcceptResults = async () => {
-    const response = await confirmGroups(user, period, assignments, groups);
+    const response = await confirmGroups(user, period, assignments, teams);
     dispatch(setGroups(response));
     dispatch(
       togglePeriodSetting({ field: "topics_tutors_assignment_completed" })
@@ -244,29 +244,29 @@ const TopicTutor = () => {
       ].join(",")
     );
 
-    assignments.forEach((group, index) => {
-      // group.students.forEach((student, index) => {
+    assignments.forEach((team, index) => {
+      // team.students.forEach((student, index) => {
         const row = [
-          getGroupNumberById(group.id),
-          group.tutor ? (
-            `${group.tutor.name} ${group.tutor.last_name}`
+          getTeamNumberById(team.id),
+          team.tutor ? (
+            `${team.tutor.name} ${team.tutor.last_name}`
           ) : (
             "Sin asignar"
           ),
-          group.topic ? (
-            group.topic.name.replace(/,/g, "-")
+          team.topic ? (
+            team.topic.name.replace(/,/g, "-")
           ) : (
             "Sin asignar"
           ),
           getTopicNameById(
-            getGroupById(group.id).preferred_topics[0]
+            getTeamById(team.id).preferred_topics[0]
           ).replace(/,/g, "-") || "",
           getTopicNameById(
-            getGroupById(group.id).preferred_topics[1]
+            getTeamById(team.id).preferred_topics[1]
           ).replace(/,/g, "-") ||
           "",
           getTopicNameById(
-            getGroupById(group.id).preferred_topics[2]
+            getTeamById(team.id).preferred_topics[2]
           ).replace(/,/g, "-") ||
           ""
         ].join(",");
@@ -402,46 +402,46 @@ const TopicTutor = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {groups?.length > 0 ? (
-                      groups
+                    {teams?.length > 0 ? (
+                      teams
                         .filter(
-                          (group) =>
-                            group.preferred_topics &&
-                            group.preferred_topics.length > 0
+                          (team) =>
+                            team.preferred_topics &&
+                            team.preferred_topics.length > 0
                         )
-                        .map((group) => (
-                          <TableRow key={group.id}>
+                        .map((team) => (
+                          <TableRow key={team.id}>
                             <TableCell align="center">
-                              {group.group_number}
+                              {team.group_number}
                             </TableCell>
 
                             <TableCell>
-                              {group.tutor_period_id
+                              {team.tutor_period_id
                                 ? `${getTutorNameById(
-                                    group.tutor_period_id,
+                                    team.tutor_period_id,
                                     period.id
                                   )}`
                                 : "Sin asignar"}
                             </TableCell>
 
                             <TableCell>
-                              {group.topic ? group.topic.name : "Sin asignar"}
+                              {team.topic ? team.topic.name : "Sin asignar"}
                             </TableCell>
 
                             {/* Preferencias no editables */}
                             <TableCell align="center">
                               {getTopicNameById(
-                                getGroupById(group.id).preferred_topics[0]
+                                getTeamById(team.id).preferred_topics[0]
                               )}
                             </TableCell>
                             <TableCell align="center">
                               {getTopicNameById(
-                                getGroupById(group.id).preferred_topics[1]
+                                getTeamById(team.id).preferred_topics[1]
                               )}
                             </TableCell>
                             <TableCell align="center">
                               {getTopicNameById(
-                                getGroupById(group.id).preferred_topics[2]
+                                getTeamById(team.id).preferred_topics[2]
                               )}
                             </TableCell>
                           </TableRow>
@@ -588,7 +588,7 @@ const TopicTutor = () => {
                 {assignments?.length > 0 ? (
                   assignments.map((assignment) => (
                     <TableRow key={assignment.id}>
-                      <TableCell align="center">{getGroupNumberById(assignment.id)}</TableCell>
+                      <TableCell align="center">{getTeamNumberById(assignment.id)}</TableCell>
 
                       <TableCell>
                         {isEditing ? (
@@ -670,17 +670,17 @@ const TopicTutor = () => {
                       {/* Preferencias no editables */}
                       <TableCell >
                         {getTopicNameById(
-                          getGroupById(assignment.id).preferred_topics[0]
+                          getTeamById(assignment.id).preferred_topics[0]
                         )}
                       </TableCell>
                       <TableCell >
                         {getTopicNameById(
-                          getGroupById(assignment.id).preferred_topics[1]
+                          getTeamById(assignment.id).preferred_topics[1]
                         )}
                       </TableCell>
                       <TableCell >
                         {getTopicNameById(
-                          getGroupById(assignment.id).preferred_topics[2]
+                          getTeamById(assignment.id).preferred_topics[2]
                         )}
                       </TableCell>
                     </TableRow>

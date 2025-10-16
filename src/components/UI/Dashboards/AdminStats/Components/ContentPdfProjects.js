@@ -71,8 +71,8 @@ const ContentPdfProjects = ({
       await updateGroup(user, period.id, updatedTeam);
 
       // Crear una nueva lista de equipos actualizados
-      const updatedTeams = teams.map((group) =>
-        group.id === updatedTeam.id ? updatedTeam : group
+      const updatedTeams = teams.map((team) =>
+        team.id === updatedTeam.id ? updatedTeam : team
       );
 
       // Despachar la actualización solo del equipo modificado en Redux
@@ -85,10 +85,10 @@ const ContentPdfProjects = ({
     return parts[1]; // Devuelve el equipo
   }
 
-  function getGroupNumber(path) { // To-Do: función importable (usada tmb en TopicTutor)
+  function getTeamNumber(path) { // To-Do: función importable (usada tmb en TopicTutor)
     const parts = path.split("/");
-    const group = teams?.find((g) => g.id === parseInt(parts[1]));
-    return group ? group.group_number : null;
+    const team = teams?.find((g) => g.id === parseInt(parts[1]));
+    return team ? team.group_number : null;
   }
 
   return (
@@ -157,7 +157,7 @@ const ContentPdfProjects = ({
               {selectedEntregaron && (//Si es equipos que sí entregaron, muestro lo que había, que al
                 deliveries.map((entrega, index) => ( // basarse en deliveries son justamente quienes sí entregaron
                   <TableRow key={index}>
-                    <TableCell>{getGroupNumber(entrega.name)}</TableCell>
+                    <TableCell>{getTeamNumber(entrega.name)}</TableCell>
                     <TableCell>
                       {getTutorNameById(
                         teams.find(
@@ -171,11 +171,11 @@ const ContentPdfProjects = ({
                         ? teams.find(
                             (t) => parseInt(getTeam(entrega.name)) === t.id
                           )?.pre_report_title ||
-                          `Anteproyecto Equipo ${getGroupNumber(entrega.name)}`
+                          `Anteproyecto Equipo ${getTeamNumber(entrega.name)}`
                         : teams.find(
                             (t) => parseInt(getTeam(entrega.name)) === t.id
                           )?.final_report_title ||
-                          `Proyecto Final Equipo ${getGroupNumber(entrega.name)}`}
+                          `Proyecto Final Equipo ${getTeamNumber(entrega.name)}`}
                     </TableCell>
   
                     <TableCell>{formatDate(entrega.last_modified)}</TableCell>
@@ -212,7 +212,7 @@ const ContentPdfProjects = ({
                     )}
                     <TableCell>
                       <IconButton
-                        onClick={() => downloadFile(getTeam(entrega.name), getGroupNumber(entrega.name))}
+                        onClick={() => downloadFile(getTeam(entrega.name), getTeamNumber(entrega.name))}
                       >
                         <DownloadIcon />
                       </IconButton>
