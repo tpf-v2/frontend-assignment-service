@@ -16,7 +16,7 @@ import StudentsTable from './components/UI/Tables/ChildTables/StudentsTable';
 import TopicsTable from './components/UI/Tables/ChildTables/TopicsTable';
 import TutorsTable from './components/UI/Tables/ChildTables/TutorsTable';
 import FormAnswersTable from './components/UI/Tables/ChildTables/FormAnswersTable';
-import GroupsTable from './components/UI/Tables/ChildTables/GroupsTable';
+import TeamsTable from './components/UI/Tables/ChildTables/GroupsTable';
 import TokenManager from './components/TokenManager';
 import ProtectedRoute from './components/ProtectedRoute';
 import TutorDashboardView from './views/Tutor/TutorDashboardView';
@@ -30,12 +30,16 @@ import ResetPasswordView from './views/ResetPasswordView';
 import DashboardView from './views/Admin/DashboardView'
 import ChangePasswordView from './views/ChangePasswordView';
 import StudentForm from './components/Forms/StudentForm';
+import ProposeIdea from './components/Forms/ProposeIdea';
+
+import ExploreIdeas from './components/Exploration/ExploreIdeas';
 import StudentAvailabilityView from './views/Student/StudentAvailabilityView';
 import { setStudents } from './redux/slices/studentsSlice';
 import { setTutors } from './redux/slices/tutorsSlice';
 import { setTopics } from './redux/slices/topicsSlice';
 import Credits from './views/CreditsView';
 import PublicPDFView from './views/Admin/PublicView';
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -60,6 +64,7 @@ const App = () => {
 
   return (
     <HashRouter>
+      <ScrollToTop />
       <TokenManager />
       <Box
         className="main-container"
@@ -77,8 +82,8 @@ const App = () => {
           className="content-container"
           sx={{
             flex: '1',
-            minHeight: '1000px',
-            overflowY: 'auto', // Add scrolling if content exceeds
+            minHeight: 'auto',
+            overflowY: 'visible',
             display: 'flex',
             flexDirection: 'column',
           }}
@@ -98,11 +103,13 @@ const App = () => {
             <Route path="dashboard/:period/topics" element={<ProtectedRoute><TopicsTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/tutors" element={<ProtectedRoute><TutorsTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/form-answers" element={<ProtectedRoute><FormAnswersTable /></ProtectedRoute>} />
-            <Route path="dashboard/:period/teams" element={<ProtectedRoute><GroupsTable /></ProtectedRoute>} />
+            <Route path="dashboard/:period/teams" element={<ProtectedRoute><TeamsTable /></ProtectedRoute>} />
             {/* <Route path="/form-selection/:period" element={<FormSelection />} />             */}
             <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
             <Route path="/upload/:projectType" element={<ProtectedRoute><UploadView /></ProtectedRoute>} />
             <Route path="/student-form" element={<ProtectedRoute><StudentForm /></ProtectedRoute>} />
+            <Route path="/propose-idea" element={<ProtectedRoute><ProposeIdea /></ProtectedRoute>} />
+            <Route path="/explore/ideas" element={<ProtectedRoute><ExploreIdeas /></ProtectedRoute>} />
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
             <Route path="/tutor-cuatrimestre/:period" element={<ProtectedRoute><TutorDashboardView /></ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />
