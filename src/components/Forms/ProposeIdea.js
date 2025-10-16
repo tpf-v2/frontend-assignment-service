@@ -1,14 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Typography,
-  TextField,
   Button,
   Container,
   Paper,
   Alert,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import { Typography, Container, Alert } from "@mui/material";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import ClosedAlert from "../ClosedAlert"; // Ahora se conserva, en el futuro no existirá
