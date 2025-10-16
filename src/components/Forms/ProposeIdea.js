@@ -13,7 +13,6 @@ import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import ClosedAlert from "../ClosedAlert"; // Ahora se conserva, en el futuro no existirá
 import { proposeIdea } from "../../api/ideas";
-import { Root, Title, ButtonStyled } from "../../components/Root";
 import { WriteIdeaFields } from "./WriteIdeaFields";
 
 const Root = styled(Paper)(({ theme }) => ({
