@@ -31,6 +31,7 @@ const UploadView = () => {
         setLoading(false)
       } catch (error) {
         console.error("Error al obtener datos para el upload:", error);
+        setLoading(false)
       } 
     };
     getGroup();
