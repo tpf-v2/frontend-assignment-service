@@ -62,8 +62,12 @@ const ParentTable = ({
   csvRowKeys,
   enableEdit = true,
   enableDelete = true,
+  enableAdd = true,
 }) => {
-  const [data, setData] = useState([]);
+  // Data es la lista de elementos (estudiantes / tutores / temas / respuestas) a mostrar en la tabla
+  // Seteamos items para usar eso como valor inicial antes de hacer fetch
+  const [data, setData] = useState(items);
+
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -84,7 +88,7 @@ const ParentTable = ({
   const tutorsWithoutCapacityField = Object.values(useSelector((state) => state.tutors))
   .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
   .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
-  const tutors = addCapacityToTutors(tutorsWithoutCapacityField, period);
+  const tutors = addCapacityToTutors(tutorsWithoutCapacityField, period);  
 
   csvRowKeys = csvRowKeys || rowKeys;
   csvColumns = csvColumns || columns;
@@ -92,15 +96,20 @@ const ParentTable = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseData = await getTableData(endpoint, user);
-        if (title === TableType.TUTORS){
-          const tutorsWithCapacityField = addCapacityToTutors(responseData, period);
-          setData(tutorsWithCapacityField);
-        } else {
-          setData(responseData);
+        // Si sí hay endpoint, actualizamos la data
+        if (endpoint) {
+          const responseData = await getTableData(endpoint, user);
+
+          if (title === TableType.TUTORS){
+            const tutorsWithCapacityField = addCapacityToTutors(responseData, period);
+            setData(tutorsWithCapacityField);
+          } else {
+            setData(responseData);
+          }          
         }
         
         setLoading(false);
+
       } catch (error) {
         console.error("Error fetching data:", error);
         setLoading(false); // Handle error
@@ -115,7 +124,7 @@ const ParentTable = ({
     const addTutorCapacityField = () => {      
       if (title === TableType.TUTORS) {
         if (!data) {
-          // Seteo inicial xq hasta ahora data no vale nada
+          // Seteo inicial, con campo capacity
           // Así que agrego capacity a 'items'
           const tutorsWithCapacityField = addCapacityToTutors(items, period);
           setData(tutorsWithCapacityField);
@@ -313,17 +322,47 @@ const ParentTable = ({
   });
 
   if (loading) return <Typography variant="h6">Cargando...</Typography>;
-  const categories = title === TableType.TOPICS ? getCategories(data) : []; // debe ser sobre "data" y no otra variable.
+  const categories = title === TableType.TOPICS ? getCategories(data) : []; // debe ser sobre "data" y no otra variable.    
+
+  const copyEmailsToClipboard = async () => {
+    // Solo seguir para estas dos (y embedded), que son las que tienen campo email    
+    if (title !== TableType.STUDENTS && title!== TableType.TUTORS && !TableType.EMBEDDEDNOTITLE) return;
+
+    try {
+      const displayedEmails = filteredData.map(item => item.email).filter(Boolean); // el filter elimina undefined/null      
+
+      await navigator.clipboard.writeText(displayedEmails.join(", "));
+      setNotification({
+        open: true,
+        message: `Copiado al portapapeles`,
+        status: "success",
+      });
+      // Con esto logramos que el alert no aparezca antes que la notif (pasa, sin timeout, por funcionamiento de react)
+      setTimeout(() => {
+        alert("Emails copiados!");
+      }, 0);
+
+
+    } catch (err) {
+      console.error("Error al copiar al portapapeles:", err);
+      setNotification({
+        open: true,
+        message: `Error al copiar al portapapeles`,
+        status: "error",
+      });
+    }
+  };
+    
 
   return (
     <>
       <Container maxWidth="lg">
         <Root>
           {/* --- Header --- */}
-          <Title variant="h4">{title}</Title>
+          { title !== TableType.EMBEDDEDNOTITLE && (<Title variant="h4">{title}</Title>)}
           <TextField
             label="Buscar"
-            variant="outlined"
+            variant="outlined"            
             value={searchTerm}
             onChange={handleSearchChange}
             fullWidth
@@ -338,15 +377,24 @@ const ParentTable = ({
             <Button variant="contained" color="primary" onClick={downloadCSV}>
               Descargar como CSV
             </Button>
-            {/* {(AddButtonComponent && topicsCond) && <AddButtonComponent />} */}
-
-            {title !== TableType.RESPONSES && (
+            
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={copyEmailsToClipboard}
+              sx={{ ml: "auto" }} // ml empuja hacia la derecha (al gap lo maneja el último de la derecha)
+            >
+              Copiar emails al portapapeles
+            </Button>
+            
+            {title !== TableType.RESPONSES && enableAdd && (
               <Box>
                 <Fab
                   size="small"
                   color="primary"
                   aria-label="add"                  
                   onClick={() => setOpenAddModal(true)}
+                  sx={{ ml: 5 }} // ml ajusta el espacio al siguiente de su izquierda
                 >
                   <AddIcon />
                 </Fab>
@@ -410,8 +458,7 @@ const ParentTable = ({
           item={itemToPassToModal}
           setParentItem={setItemToPassToModal}
        />
-
-      }; 
+      }
       {title === TableType.TUTORS &&
         <TutorModals 
           openAddModal={openAddModal}
@@ -425,8 +472,7 @@ const ParentTable = ({
           item={itemToPassToModal}
           setParentItem={setItemToPassToModal}
         />
-        
-      };
+      }
       {title === TableType.TOPICS &&
         <TopicModals 
           openAddModal={openAddModal}
@@ -442,7 +488,7 @@ const ParentTable = ({
           tutors={tutors}
           categories={categories}
         />
-      };      
+      }
       <DeleteConfirmationModal
         openModal={openConfirmDeleteModal}
         setOpenModal={setOpenConfirmDeleteModal}

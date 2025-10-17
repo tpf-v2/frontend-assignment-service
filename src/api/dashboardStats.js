@@ -63,11 +63,11 @@ export const getDashboardData = async (period, user) => {
     data.tutors = responseTutors.data;
     data.students = responseStudents.data;
 
-    var clusteredGroups = countResponsesByStudentLength(responseAnswers.data);
-    data.answersChart[0].cantidad = clusteredGroups[1] || 0;
-    data.answersChart[1].cantidad = clusteredGroups[2] || 0;
-    data.answersChart[2].cantidad = clusteredGroups[3] || 0;
-    data.answersChart[3].cantidad = clusteredGroups[4] || 0;
+    var clusteredTeams = countResponsesByStudentLength(responseAnswers.data);
+    data.answersChart[0].cantidad = clusteredTeams[1] || 0;
+    data.answersChart[1].cantidad = clusteredTeams[2] || 0;
+    data.answersChart[2].cantidad = clusteredTeams[3] || 0;
+    data.answersChart[3].cantidad = clusteredTeams[4] || 0;
 
     return data; // Retorna la data
   } catch (error) {

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useSelector } from "react-redux";
 import {
-  Container,
   Button,
   Typography,
   Box,
@@ -11,6 +10,8 @@ import {
   DialogActions,
   DialogContent,
   TextField,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
@@ -46,7 +47,7 @@ const DropzoneBox = styled(Box)(({ theme }) => ({
   justifyContent: "center",
 }));
 
-const UploadFile = ({ projectType }) => {
+const UploadFile = ({ projectType, headerInfo, loadingHeaderInfo }) => {
   const [selectedFile, setSelectedFile] = useState(null); // Estado para archivos
   const [fileError, setFileError] = useState("");
   const [url, setUrl] = useState(""); // Estado para la URL (solo para entrega intermedia)
@@ -142,13 +143,26 @@ const UploadFile = ({ projectType }) => {
     "intermediate-project": "Entrega Intermedia",
     "final-project": "Entrega Final",
   };
-
   return (
-    <Container maxWidth="sm">
-      <Root>
+      <div>
         <Box textAlign="center">
           <Title variant="h5">Subir {projectNameKeyMap[projectType]}</Title>
         </Box>
+
+        {(!!headerInfo && !loadingHeaderInfo) ? (
+            <Alert severity="info">
+              {headerInfo}
+            </Alert>
+          ) : (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <CircularProgress />
+            </Box>
+          )
+        }
 
         <form onSubmit={handleSubmit}>
           {projectType === "intermediate-project" ? (
@@ -289,8 +303,7 @@ const UploadFile = ({ projectType }) => {
             </Button>
           </DialogActions>
         </Dialog>
-      </Root>
-    </Container>
+      </div>
   );
 };
 

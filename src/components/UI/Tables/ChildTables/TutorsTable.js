@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { TableType } from '../TableType';
 import { addCapacityToTutors } from '../../../../utils/addCapacityToTutors';
 
-const TutorsTable = () => {
+const TutorsTable = ({dataListToRender = null}) => {
   const { period } = useParams();
   const endpoint = `/tutors/periods/${period}`;
   const title = TableType.TUTORS;
@@ -42,9 +42,28 @@ const TutorsTable = () => {
     </>
   );
 
-  return (
-    <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} items={tutors} csvColumns={csvColumns} csvRowKeys={csvRowKeys}/>
-  );
+  if (dataListToRender === undefined) return;
+  
+  // Si le estoy pasando una dataListToRender, es que la estoy llamando para la Verificación previa
+  // a algoritmos, y no quiero que haga ningún fetch
+  if (dataListToRender !== null) {
+    return (
+      <ParentTable
+        columns={columns} rowKeys={rowKeys} renderRow={renderRow}
+        title={TableType.EMBEDDEDNOTITLE}
+        items={dataListToRender}
+        enableEdit={false}
+        enableDelete={false} // Consistencia con Verificación previa de equipos (no existe delete teams)
+        enableAdd={false}
+      />
+    );
+  } else {
+    // Si no le pasé nada, es el uso por defecto que ya existía, es para mostrar tabla de Estudiantes
+    return (
+      <ParentTable title={title} columns={columns} rowKeys={rowKeys} endpoint={endpoint} renderRow={renderRow} items={tutors}
+                    csvColumns={csvColumns} csvRowKeys={csvRowKeys}/> // []
+    );
+  }
 };
 
 export default TutorsTable;
