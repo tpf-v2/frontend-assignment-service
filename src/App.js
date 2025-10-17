@@ -93,6 +93,7 @@ const App = () => {
             {/* <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} /> */}
             <Route path="/dashboard/:period" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />
             <Route path="/public/:period" element={<PublicPDFView/>} />
+            <Route path="/public/" element={<PublicPDFView/>} />
             <Route path="/table-view" element={<ProtectedRoute><ParentTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/students" element={<ProtectedRoute><StudentsTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/topics" element={<ProtectedRoute><TopicsTable /></ProtectedRoute>} />

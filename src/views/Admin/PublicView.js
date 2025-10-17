@@ -17,7 +17,8 @@ const Root = styled(Paper)(({ theme }) => ({
 
 const PublicPDFView = () => {
   const user = useSelector((state) => state.user);
-  const period = useParams().period;
+  const _param_period = useParams().period;
+  const [period, setPeriod] = useState(_param_period);
   const [loadingFinalProjects, setLoadingFinalProjects] = useState(true);
   const [deliveries, setDeliveries] = useState(null);
 
