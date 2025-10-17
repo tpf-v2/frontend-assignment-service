@@ -99,13 +99,7 @@ const Sidebar = ({ selectedMenu, handleNavigation, period }) => {
             Entregas Individuales
           </AccordionSummary>
           <AccordionDetails>
-            <ListItemStyled
-              button
-              selected={selectedMenu === "PPS"}
-              onClick={() => handleNavigation("PPS")}
-            >
-              Informe de Cumplimiento PPS
-            </ListItemStyled>
+            <ListItem label="Informe de Cumplimiento PPS" icon={<EditNoteIcon />} menu="PPS"/>
           </AccordionDetails>
         </Accordion>
 
