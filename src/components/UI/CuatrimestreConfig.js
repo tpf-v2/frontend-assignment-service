@@ -62,7 +62,7 @@ const CuatrimestreConfig = () => {
           <TableHead>
             <TableRow>
             <StyledTableCell align="left">Entregas de Equipos</StyledTableCell> {/* Left title */}
-            <StyledTableCell align="right">Deshabilitar/Habilitar</StyledTableCell>   
+            <StyledTableCell align="right">Deshabilitar/Habilitar</StyledTableCell>
             </TableRow>
           </TableHead>
 
@@ -120,6 +120,32 @@ const CuatrimestreConfig = () => {
             </TableRow>
           </TableBody>
         </Table>
+
+
+        <Table>
+          <TableHead>
+            <TableRow>
+            <StyledTableCell align="left">Entregas Individuales</StyledTableCell> {/* Left title */}
+            <StyledTableCell align="right">Deshabilitar/Habilitar</StyledTableCell>
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {/* Mapea los campos del estado y crea una fila por cada uno */}
+            <TableRow>
+              <TableCell>Informe de Cumplimiento PPS</TableCell>
+              <TableCell align="right">
+                <Switch
+                  checked={settings.pps_report_active}
+                  onChange={() => handleToggle("pps_report_active")}
+                  color="primary"
+                />
+              </TableCell>
+            </TableRow>
+
+          </TableBody>
+        </Table>
+
       </StyledTableContainer>
     </Container>
   );

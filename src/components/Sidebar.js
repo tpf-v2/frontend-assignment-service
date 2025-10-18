@@ -93,6 +93,16 @@ const Sidebar = ({ selectedMenu, handleNavigation, period }) => {
             <ListItem label="Final" icon={<SchoolIcon />} menu="Final"/>
           </AccordionDetails>
         </Accordion>
+
+        <Accordion defaultExpanded>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            Entregas Individuales
+          </AccordionSummary>
+          <AccordionDetails>
+            <ListItem label="Informe de Cumplimiento PPS" icon={<EditNoteIcon />} menu="PPS"/>
+          </AccordionDetails>
+        </Accordion>
+
       </SidebarList>
       </SidebarContainer>
   );
