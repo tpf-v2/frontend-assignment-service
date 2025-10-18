@@ -67,7 +67,7 @@ const UploadView = () => {
     } else if (projectType=="initial-project") {
       return group.pre_report_date;
     } else if (projectType=="intermediate-project") {
-      return group.intermediate_report_date;
+      return group.intermediate_assignment_date;
     } else if (projectType=="pps-report") {
       return user.pps_report_date;
     }
