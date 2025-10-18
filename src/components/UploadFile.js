@@ -91,7 +91,7 @@ const UploadFile = ({ projectType, headerInfo, loadingHeaderInfo, ownershipType 
     }
     
     if (hasProjectTitle) {
-      if (!projectTitle.trim() && projectType !== "intermediate-project") {
+      if (!projectTitle.trim()) {
         setTitleError("Por favor ingrese el título del proyecto.");
         return;
       }

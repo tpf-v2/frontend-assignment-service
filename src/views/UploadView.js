@@ -53,7 +53,7 @@ const UploadView = () => {
 
   const hasProjectTitleMap = {
     "initial-project": true,
-    "intermediate-project": true,
+    "intermediate-project": false,
     "final-project": true,
     "pps-report": false
   };
