@@ -78,7 +78,7 @@ const DashboardView = () => {
     setShowUploadCSV(false);
     if (menu === "Anteproyecto") {
       setLoadingAnteproyectos(true);
-      const anteproyectosData = await getProjects(user, period.id, 'initial');
+      const anteproyectosData = await getProjects(user, period.id, 'initial-project');
       if (anteproyectosData) {
         setDeliveries(anteproyectosData);
       } else {
@@ -90,7 +90,7 @@ const DashboardView = () => {
       const finalProjectsData = await getProjects(
         user,
         period.id,
-        'final'
+        'final-project'
       );
       if (finalProjectsData) {
         setDeliveries(finalProjectsData);
@@ -104,7 +104,7 @@ const DashboardView = () => {
 
   const downloadInitialFile = async (groupId, groupNumber) => {
     try {
-      await downloadProject(groupId, user, period.id, "initial", groupNumber);
+      await downloadProject(groupId, user, period.id, "initial-project", groupNumber);
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }
@@ -112,7 +112,7 @@ const DashboardView = () => {
 
   const downloadFinalFile = async (groupId, groupNumber) => {
     try {
-      await downloadProject(groupId, user, period.id, "final", groupNumber);
+      await downloadProject(groupId, user, period.id, "final-project", groupNumber);
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }

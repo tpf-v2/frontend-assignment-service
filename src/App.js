@@ -38,6 +38,7 @@ import { setStudents } from './redux/slices/studentsSlice';
 import { setTutors } from './redux/slices/tutorsSlice';
 import { setTopics } from './redux/slices/topicsSlice';
 import Credits from './views/CreditsView';
+import PublicPDFView from './views/Admin/PublicView';
 import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
@@ -73,9 +74,9 @@ const App = () => {
           minHeight: '100vh',
         }}
       >
-        {user.token && (
+        {user.token ? (
           <Header user={user} color={color} handleHomeClick={resetUser} />
-        )}
+        ) : <Header user={undefined} color={color} handleHomeClick={resetUser} /> }
         <BackgroundContainer />
         <Box
           className="content-container"
@@ -96,6 +97,8 @@ const App = () => {
             <Route path="/credits" element={<Credits />} />
             {/* <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} /> */}
             <Route path="/dashboard/:period" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />
+            <Route path="/public/:period" element={<PublicPDFView/>} />
+            <Route path="/public/" element={<PublicPDFView/>} />
             <Route path="/table-view" element={<ProtectedRoute><ParentTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/students" element={<ProtectedRoute><StudentsTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/topics" element={<ProtectedRoute><TopicsTable /></ProtectedRoute>} />
