@@ -48,13 +48,7 @@ const ContentPublicPdfProjects = ({
       <TableContainer component={Paper} style={{ marginTop: "20px" }}>
         <Table stickyHeader>
           <TableBody>
-            {loadingProjects ? (
-              <TableRow>
-                <TableCell colSpan={4} align="center">
-                  <CircularProgress />
-                </TableCell>
-              </TableRow>
-            ) : (
+            {
               deliveries.length ? (
                 periods.map(period => {
                   return <div>
@@ -97,7 +91,7 @@ const ContentPublicPdfProjects = ({
 
                 })
               ) : <h2 style={{padding: "20px", fontStyle: 'italic'}}>No se encontraron entregas.</h2>
-            )}
+            }
           </TableBody>
         </Table>
       </TableContainer>
