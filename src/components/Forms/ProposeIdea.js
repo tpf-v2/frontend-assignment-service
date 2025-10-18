@@ -1,34 +1,11 @@
-import { useState } from "react";
-import {
-  Typography,
-  Button,
-  Container,
-  Paper,
-  Alert,
-} from "@mui/material";
-import { styled } from "@mui/system";
+import React, { useState } from "react";
+import { Typography, Container, Alert } from "@mui/material";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import ClosedAlert from "../ClosedAlert"; // Ahora se conserva, en el futuro no existirá
 import { proposeIdea } from "../../api/ideas";
+import { Root, Title, ButtonStyled } from "../../components/Root";
 import { WriteIdeaFields } from "./WriteIdeaFields";
-
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-  display: "block", // con esta prop + marginLeft se ajusta el botón a la derecha
-  marginLeft: "auto",
-}));
-
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-}));
 
 const ProposeIdea = () => {
   const user = useSelector((state) => state.user);
@@ -51,35 +28,18 @@ const ProposeIdea = () => {
     setNotification({ ...notification, open: false });
   };
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //setLoading(true);
     try {
-      const response = await proposeIdea(formData, period.id, user);
-      if (response.status === 201) {
-        setSubmitSuccess(true);
-        //setOpenDialog(false);
-      } else {
-        setNotification({
-          open: true,
-          message: response.data.detail,
-          status: "error",
-        });
-      }
+      await proposeIdea(formData, period.id, user);
+      setSubmitSuccess(true);
     } catch (error) {
       setNotification({
         open: true,
-        message: "Error al enviar el formulario",
+        message: "Error al enviar la idea",
         status: "error",
       });
-      console.error("Error al enviar el formulario", error);
-    } finally {
-      //setLoading(false)
+      console.error("Error al enviar la idea", error);
     }
   };
 
