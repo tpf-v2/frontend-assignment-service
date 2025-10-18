@@ -3,13 +3,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import UploadFile from "../components/UploadFile";
-import ClosedAlert from "../components/ClosedAlert";
 import ChangeDescription from "../components/ChangeDescription";
 import { getGroupById } from "../api/getGroupById";
 import { styled } from "@mui/system";
 import {
   Paper,
-  Container
+  Container,
+  Alert
 } from "@mui/material";
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -71,7 +71,7 @@ const UploadView = () => {
       {isProjectActive ? (
         <UploadFile projectType={projectType} headerInfo={msg} loadingHeaderInfo={loading} />
       ) : (
-        <ClosedAlert message="No se aceptan más entregas." />
+        <Alert severity="info">No se aceptan más entregas.</Alert>
       )
       }
       {
