@@ -49,16 +49,20 @@ const UploadView = () => {
   // TODO:WARNING: un nuevo tipo de proyecto, como PPS, requiere cambiar este código o producirá un mensaje incorrecto
   const isProjectActive = period[activeKey];
   let delivered = false;
+  let date_delivery = ""
   if (group && projectType=="final-project" && !!group.final_report_date) {
     delivered = true;
+    date_delivery = group.final_report_date.substring(0,10)
   }
   if (group && projectType=="initial-project" && !!group.pre_report_date) {
     delivered = true;
+    date_delivery = group.pre_report_date.substring(0,10)
   }
   if (group && projectType=="intermediate-project" && !!group.intermediate_report_date) {
     delivered = true;
+    date_delivery = group.intermediate_assignment_date.substring(0,10)
   }
-  let msg = delivered ? `Tu equipo ya realizó esta entrega el ${group.final_report_date.substring(0,10)}.` : "Tu equipo no ha realizado esta entrega aún."
+  let msg = delivered ? `Tu equipo ya realizó esta entrega el ${date_delivery}.` : "Tu equipo no ha realizado esta entrega aún."
   // TODO: poner spinning circle al cargar el mensaje "Tu equipo ya entregó"
   return (
     <Container maxWidth="sm">
