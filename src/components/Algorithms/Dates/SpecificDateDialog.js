@@ -126,6 +126,7 @@ const SpecificDateDialog = ({
               InputProps={{ readOnly: true }}
               variant="outlined"
               margin="dense"
+              disabled
             />
           </Grid>          
           <Grid item xs={12}>
@@ -136,6 +137,7 @@ const SpecificDateDialog = ({
               InputProps={{ readOnly: true }}
               variant="outlined"
               margin="dense"
+              disabled
             />
           </Grid>
 
