@@ -1,0 +1,117 @@
+import React, { useEffect, useState } from "react";
+import { Typography, Box, Button } from "@mui/material";
+import { styled } from "@mui/system";
+import { useSelector } from "react-redux";
+import { downloadProject, fetchProjectPdf } from "../../../../api/handleProjects";
+import MySnackbar from "../../MySnackBar";
+
+// Estilos
+const GroupReviewContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  marginTop: theme.spacing(2),
+  padding: theme.spacing(3),
+  // border: "1px solid #ccc",
+  borderRadius: "8px",
+  // boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  backgroundColor: "#ffffff",
+  width: "100%",
+}));
+
+const PdfPreviewBox = styled(Box)(({ theme }) => ({
+  width: "100%",
+  height: "500px", // Mantén altura fija
+  border: "1px solid #ccc",
+  borderRadius: "4px",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: "#f9f9f9",
+  marginTop: theme.spacing(2),
+}));
+
+const DownloadButton = styled(Button)(({ theme }) => ({
+  width: "100%", // Hacer que el botón sea igual de largo
+  marginTop: theme.spacing(2), // Espaciado superior
+  backgroundColor: "#0072C6",
+  color: "#ffffff",
+  "&:hover": {
+    backgroundColor: "#005B9A",
+  },
+  borderRadius: "4px",
+}));
+
+// Copypaste de Tutor/GroupReview sin funcionalidad de comentario
+const StudentOverview = ({ group }) => {
+  const [pdfUrl, setPdfUrl] = useState(null);
+  const period = useSelector((state) => state.period);
+  const user = useSelector((state) => state.user);
+
+  const [notification, setNotification] = useState({
+    open: false,
+    message: "",
+    status: "",
+  });
+
+  const handleSnackbarClose = () => {
+    setNotification({ ...notification, open: false });
+  };
+
+  const downloadFile = async () => {
+    try {
+      await downloadProject(group.id, user, period.id, 'initial-project', group.group_number);
+    } catch (error) {
+      console.error("Error al descargar el archivo:", error);
+    }
+  };
+
+  // Función para cargar el PDF en la previsualización
+  const loadPdfPreview = async () => {
+    try {
+      const url = await fetchProjectPdf(group.id, user, period.id, 'initial');
+      setPdfUrl(url); // Guarda la URL en el estado
+    } catch (error) {
+      console.error("Error al cargar la previsualización del PDF:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadPdfPreview();
+  }, [group.id, user, period]);
+
+  return (
+    <GroupReviewContainer>
+      <Typography variant="h4" align="center" gutterBottom>
+        Anteproyecto
+      </Typography>
+
+      <PdfPreviewBox>
+        {pdfUrl ? (
+          <iframe
+            src={pdfUrl}
+            title="Previsualización del PDF"
+            width="100%"
+            height="100%"
+            style={{ border: "none" }}
+          />
+        ) : (
+          <Typography>Cargando ...</Typography>
+        )}
+      </PdfPreviewBox>
+      {/* Botón para descargar el PDF */}
+      <DownloadButton variant="contained" onClick={downloadFile}>
+        Descargar PDF
+      </DownloadButton>
+
+      <MySnackbar
+        open={notification.open}
+        handleClose={handleSnackbarClose}
+        message={notification.message}
+        status={notification.status}
+      />
+    </GroupReviewContainer>
+  );
+};
+
+export default StudentOverview;
