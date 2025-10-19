@@ -58,7 +58,7 @@ const ContentPublicPdfProjects = ({
                       <TableRow key={index}>
                         <TableCell>
                           <IconButton
-                            onClick={() => downloadFile(entrega.project.id, entrega.group_number)}
+                            onClick={() => downloadFile(entrega.project.id, entrega.group_number, entrega.period_id)}
                           >
                           <DownloadIcon />
                           </IconButton>
