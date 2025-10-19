@@ -22,7 +22,7 @@ import { styled } from "@mui/system";
 import { sendGroupForm } from "../../api/sendGroupForm";
 import { getStudents } from "../../api/handleStudents";
 import { getTopics } from "../../api/handleTopics";
-import { getTutorsData } from "../../api/dashboardStats";
+import { getTutorsDataOnly } from "../../api/dashboardStats";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { NumericFormat } from "react-number-format";
@@ -100,7 +100,7 @@ const StudentForm = () => {
     const fetchTutors = async () => {
       try {
         // Obtenemos tutores y ordenamos en orden alfabético para mostrarlos en dropdown
-        const fetchedTutors = await getTutorsData(period.id, user);
+        const fetchedTutors = await getTutorsDataOnly(period.id, user);
         const sortedTutors = fetchedTutors.sort((a, b) => a.last_name.localeCompare(b.last_name));
         setTutors(sortedTutors);
       } catch (error) {
@@ -373,7 +373,7 @@ const StudentForm = () => {
                     onChange={handleChange}
                     required
                   />
-                  <FormControl fullWidth>
+                  <FormControl fullWidth margin="normal">
                     <InputLabel id="Tutor" shrink>Tutor *</InputLabel> 
                     <Select
                       labelId="Tutor" // Shrink para que el label flotante se vea siempre bien arriba
