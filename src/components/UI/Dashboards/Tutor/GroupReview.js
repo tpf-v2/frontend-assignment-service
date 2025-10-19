@@ -66,7 +66,7 @@ const GroupReview = ({ group }) => {
 
   const downloadFile = async () => {
     try {
-      await downloadProject(group.id, user, period.id, 'initial', group.group_number);
+      await downloadProject(group.id, user, period.id, 'initial-project', group.group_number);
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }

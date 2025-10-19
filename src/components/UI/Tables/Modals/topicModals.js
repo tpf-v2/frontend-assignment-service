@@ -163,8 +163,8 @@ export const TopicModals = ({
 
       return (
         <>
-            {addTopicModal()};
-            {editTopicModal()};
+            {addTopicModal()}
+            {editTopicModal()}
         </>
       )
 }

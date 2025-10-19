@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import App from "./App";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -9,6 +8,7 @@ import { store, persistor } from "./redux/store.js";
 import { PersistGate } from "redux-persist/integration/react";
 
 import * as Sentry from "@sentry/react";
+import { createRoot } from 'react-dom/client';
 
 if (process.env.REACT_APP_SENTRY_ENABLED == "true") {
   console.info("Sentry is enabled");
@@ -23,7 +23,8 @@ if (process.env.REACT_APP_SENTRY_ENABLED == "true") {
   console.warn("Sentry is disabled");
 }
 
-ReactDOM.render(
+const root = createRoot(document.getElementById("root"))
+root.render(
   <React.StrictMode>
     <Sentry.ErrorBoundary fallback={<div>Error</div>}>
       <Provider store={store}>
@@ -35,6 +36,5 @@ ReactDOM.render(
       </PersistGate>
       </Provider>
     </Sentry.ErrorBoundary>
-  </React.StrictMode>,
-  document.getElementById("root")
-);
+  </React.StrictMode>
+)

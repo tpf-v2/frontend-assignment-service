@@ -74,3 +74,27 @@ export const getDashboardData = async (period, user) => {
     throw error; // Lanza el error para manejarlo en el componente
   }
 };
+
+
+export const getTutorsData = async (period, user) => {
+  const tutorsEndpoint = `/tutors/periods/${period}`;
+  const data = {
+    "tutors": null
+  }
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+    params: {
+      cache_bust: new Date().getTime(), // add params to avoid caching
+    },
+  };
+
+  try {
+    const responseTutors = await axios.get(`${BASE_URL}${tutorsEndpoint}`, config);
+    data.tutors = responseTutors.data;
+    return data; // Retorna la data
+  } catch (error) {
+    throw error; // Lanza el error para manejarlo en el componente
+  }
+};

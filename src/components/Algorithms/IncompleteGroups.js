@@ -84,7 +84,6 @@ const IncompleteGroups = () => {
 
       // Obtiene los equipos incompletos
       const response = await incompleteTeams(user, period);
-      console.log("Incomplete teams response:", response);
 
       // Obtiene y actualiza los equipos en el estado global
       const teams = await getTeams(user, period);
