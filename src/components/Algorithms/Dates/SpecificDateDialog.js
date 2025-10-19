@@ -69,6 +69,8 @@ const SpecificDateDialog = ({
     onClose(); // Cierra el diálogo
   };
 
+  console.log("--- Recibo item:", item);
+
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle>Asignar Fecha a Equipo</DialogTitle>

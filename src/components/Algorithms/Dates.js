@@ -475,7 +475,7 @@ const Dates = ({setSelectedMenu}) => {
     setOpenConfirmDialog(false); // Cerrar el popup de confirmación
     setShowResults(false);
 
-    setInitialEvents((prevEvents) => [...prevEvents, ...events]);
+    setInitialEvents((prevEvents) => [...prevEvents, ...events]); // [] aux: ver acá tmb, si no está duplicando
   };
 
   const handleSelectSlot = ({ start, end }) => {
@@ -655,6 +655,10 @@ const Dates = ({setSelectedMenu}) => {
           events={initialEvents}
           defaultDate={initialDefaultDate}
           loadingDates={loadingDates}
+          
+          teams={teams}
+          tutors={tutors}
+          period={period}
         />
       </Grid>
 
