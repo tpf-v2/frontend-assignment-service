@@ -1,4 +1,3 @@
-import React from 'react';
 import { HashRouter, Route, Routes, Navigate } from 'react-router-dom';
 import TutorForm from './components/Forms/TutorForm';
 import AddTopicForm from './components/Forms/AddTopicForm';
@@ -23,6 +22,7 @@ import TutorDashboardView from './views/Tutor/TutorDashboardView';
 import UploadView from './views/UploadView';
 import CuatrimestreConfig from './components/UI/CuatrimestreConfig';
 import HomeView from './views/HomeView';
+import StudentDeliveryView from './views/Student/StudentDeliveryView';
 import LoginView from './views/LoginView';
 import ForgotPasswordView from './views/ForgotPasswordView';
 import ConfirmEmailView from './views/ConfirmEmailView';
@@ -94,6 +94,7 @@ const App = () => {
             <Route path="/confirm-email" element={<ConfirmEmailView />} />
             <Route path="/reset-password" element={<ResetPasswordView />} />
             <Route path="/home" element={<HomeView />} />
+            <Route path="/deliveries" element={<StudentDeliveryView />} />
             <Route path="/credits" element={<Credits />} />
             {/* <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} /> */}
             <Route path="/dashboard/:period" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />

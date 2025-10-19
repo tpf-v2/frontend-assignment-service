@@ -1,5 +1,3 @@
-
-import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { Container, Box, CircularProgress } from "@mui/material";
@@ -17,7 +15,6 @@ import PresentationDateCard from "../../components/UI/Dashboards/Student/Present
 const StudentHomeView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const periodId = useSelector((state) => state.user.period_id);
   const period = useSelector((state) => state.period);
  
   const [milestones, setMilestones] = useState([]);
@@ -52,10 +49,6 @@ const StudentHomeView = () => {
     const fetchTeamAnswer = async () => {
       try {
         const userData = await dispatch(getStudentInfo(user));
-
-        console.log("--- user.id:", user.id);
-        console.log("--- userData:", userData);
-        
         let team = {};
         if (userData.group_id !== 0) {
           team = await dispatch(getGroupById(user, userData.group_id));

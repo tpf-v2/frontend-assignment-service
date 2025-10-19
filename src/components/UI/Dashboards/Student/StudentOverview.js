@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Typography, Box, Button } from "@mui/material";
 import { styled } from "@mui/system";
 import { useSelector } from "react-redux";
@@ -43,9 +43,8 @@ const DownloadButton = styled(Button)(({ theme }) => ({
 }));
 
 // Copypaste de Tutor/GroupReview sin funcionalidad de comentario
-const StudentOverview = ({ group }) => {
+const StudentOverview = ({ group_id }) => {
   const [pdfUrl, setPdfUrl] = useState(null);
-  const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
 
   const [notification, setNotification] = useState({
@@ -60,25 +59,30 @@ const StudentOverview = ({ group }) => {
 
   const downloadFile = async () => {
     try {
-      await downloadProject(group.id, user, period.id, 'initial-project', group.group_number);
+      await downloadProject(group_id, user, user.period_id, 'initial-project',group_id);
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }
   };
-
-  // Función para cargar el PDF en la previsualización
-  const loadPdfPreview = async () => {
-    try {
-      const url = await fetchProjectPdf(group.id, user, period.id, 'initial');
-      setPdfUrl(url); // Guarda la URL en el estado
-    } catch (error) {
-      console.error("Error al cargar la previsualización del PDF:", error);
-    }
-  };
-
   useEffect(() => {
+      // Función para cargar el PDF en la previsualización
+    const loadPdfPreview = async () => {
+      try {
+        
+        if (!!user && !!user.period_id && !!group_id) {
+          console.log("good")
+          const url = await fetchProjectPdf(group_id, user, user.period_id, 'initial');
+          setPdfUrl(url); // Guarda la URL en el estado
+        } else {
+          console.log("BAAAAD %s %s %s", user, group_id)
+        }
+        
+      } catch (error) {
+        console.error("Error al cargar la previsualización del PDF:", error);
+      }
+    };
     loadPdfPreview();
-  }, [group.id, user, period]);
+  }, [user, group_id]);
 
   return (
     <GroupReviewContainer>
