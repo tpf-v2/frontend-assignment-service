@@ -12,7 +12,7 @@ const StudentsTable = ({dataListToRender = null}) => {
   const title = TableType.STUDENTS;
   const columns = ['Padron', 'Nombre', 'Apellido', 'Email']; // Specify your column names here
   const rowKeys = {
-    'Padron': 'id',
+    'Padron': 'student_number',
     'Nombre': 'name',
     'Apellido': 'last_name',
     'Email': 'email',
@@ -24,7 +24,7 @@ const StudentsTable = ({dataListToRender = null}) => {
   
   const renderRow = (item) => (
     <>
-      <TableCell>{item.id}</TableCell>
+      <TableCell>{item.student_number}</TableCell>
       <TableCell>{item.name}</TableCell>
       <TableCell>{item.last_name}</TableCell>
       <TableCell>{item.email}</TableCell>

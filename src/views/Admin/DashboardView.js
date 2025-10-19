@@ -49,6 +49,10 @@ const DashboardView = () => {
   const [uploadType, setUploadType] = useState("");
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [selectedMenu]);
+
+  useEffect(() => {
     const getData = async () => {
       try {
         const data = await getDashboardData(period.id, user);
@@ -177,8 +181,11 @@ const DashboardView = () => {
       maxWidth={false}
       sx={{
         width: "95%", // Ajusta el ancho al 90% del viewport
-        height: "120vh", // Ocupa el 100% de la altura de la pantalla
         maxWidth: "none", // Para que el maxWidth no limite el tamaño
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: 0
       }}
     >
       <Root>

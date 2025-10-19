@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Container, Box, CircularProgress, Button, Link } from "@mui/material";
+import { Typography, Container, Box, CircularProgress, Button, Link, Alert } from "@mui/material";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { Root, Title } from "../../components/Root";
@@ -47,8 +47,6 @@ const ExploreIdeas = () => {
 
     fetchIdeas();
   }, [user, period]);
-
-  console.log("--- ideas:", ideas);
 
   if (loading)
     return (
@@ -106,7 +104,13 @@ const ExploreIdeas = () => {
         Si se obtiene la aprobación de un/a tutor/a, luego, de querer elegirla se debe completar el formulario de equipos
         indicando la opción "Ya tengo tema y tutor".
         </Typography>
-        {/* Un renderizado de ideas mejorable */}        
+        {/* Si no hay ideas */}  
+        {ideas?.length === 0 && (
+          <Alert severity="info" sx={{ mt: 2 }}>
+            Aún no hay ideas propuestas por estudiantes este cuatrimestre.
+          </Alert>
+        )}
+        {/* Renderizado de ideas */}  
         {ideas?.map((idea) => (
           <Box key={idea?.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2 }}>
             {/* Botón en mismo renglón que título */}
