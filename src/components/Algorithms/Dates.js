@@ -659,6 +659,7 @@ const Dates = ({setSelectedMenu}) => {
           teams={teams}
           tutors={tutors}
           period={period}
+          hours={hours}
         />
       </Grid>
 

@@ -22,7 +22,7 @@ import { getTutorNameById } from "../../../utils/getEntitiesUtils"
 moment.tz.setDefault('America/Argentina/Buenos Aires')
 const localizer = momentLocalizer(moment);
 
-const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, period }) => {
+const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, period, hours }) => {
   const [openDetails, setOpenDetails] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null); // "item"
   const [editDateOpenDialog, setEditDateOpenDialog] = useState(false); // aux: nuevo, probando
@@ -51,7 +51,7 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
 
   // Aux: En construcción!!!
   const makeEditableItem = (event) => {
-    // 282024 no anda el tutor, revisar [], lo demás pasado anda :), y ver cómo pasar la fecha.
+    // 282024 no anda el tutor, revisar [], lo demás pasado anda :) (revisar las horas, igual).
     const editableItem = {
       team: {group_number: event.result?.group_number}, // []
       topic: teams?.find(
@@ -63,8 +63,8 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
          tutors
        ),
       evaluator: event.result.evaluator_id,
-      selectedDateTime: "",//event.start // Ver cómo usar la event.date que tiene toda esta info
-      selectedHour: "",
+      selectedDateTime: event.start, //"", // Ver cómo usar la event.date que tiene toda esta info
+      selectedHour: `${event.start.getHours()}:00`, //${event.start.getMinutes()}`, esto obtne '0', y las opciones son siempre en punto, nunca y media etc
     }
     return editableItem;
   }
@@ -203,7 +203,7 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
             tutors={tutors}
             period={period}
 
-            //hours={hours}
+            hours={hours} // AUX: debe calcular esto adentro []
             showLastPart={true}
             //handleAssignDate={handleAssignDate}
           />
