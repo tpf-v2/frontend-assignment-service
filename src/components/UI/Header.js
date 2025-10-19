@@ -109,7 +109,7 @@ const Header = ({ user, color, handleHomeClick }) => {
                     Ver Perfil
                 </MenuItem>
                 {user.role === "admin" && (
-                  <MenuItem onClick={handleChangeView}>
+                  <MenuItem onClick={() => {handleChangeView(); handleCloseMenu();}}>
                     Cambiar a Vista de {user.temporal_role === "admin" ? "Tutor" : "Admin"}
                   </MenuItem>
                 )}
@@ -121,7 +121,7 @@ const Header = ({ user, color, handleHomeClick }) => {
                     >
                       Cambiar Contraseña
                     </MenuItem>
-                <MenuItem onClick={handleLogout}>Cerrar Sesión</MenuItem>
+                <MenuItem onClick={() => {handleLogout(); handleCloseMenu();}}>Cerrar Sesión</MenuItem>
               </Menu>
             </Box>
           )}
