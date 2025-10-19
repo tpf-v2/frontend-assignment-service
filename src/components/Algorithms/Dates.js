@@ -302,6 +302,7 @@ const Dates = ({setSelectedMenu}) => {
   // Importante: esta función hace request al back para (entre otras cosas( editar la exhibition_date del equipo
   // y puede hacerlo porque los resultados ya fueron confirmados.
   const handleAssignDate = async (team, evaluator, selectedDateTime, selectedHour, handleClose) => {
+    console.log("--- handleAssignDate, recibo team:", team);
     if (!team || !evaluator || !selectedDateTime || !selectedHour) {
       handleSnackbarOpen(
         "Por favor completa todos los campos antes de asignar.",
@@ -315,7 +316,7 @@ const Dates = ({setSelectedMenu}) => {
       (t) =>
         t.tutor_periods &&
         t.tutor_periods.some(
-          (tp) => tp.period_id === period.id && tp.id === team.tutor_period_id
+          (tp) => tp.period_id === period.id && tp.id === team.tutor_period_id // <---
         )
     );
     try {
@@ -382,7 +383,8 @@ const Dates = ({setSelectedMenu}) => {
       }
     });
     } catch (e) {
-      handleSnackbarOpen("Hubo un error al asignar la fecha.", "error");
+      console.log("Error al asignar o editar la fecha:", e);
+      handleSnackbarOpen("Hubo un error al asignar la fecha", "error");
     } finally {
       setAssignDateOpenDialog(false); // Cerrar el diálogo después de asignar
     }
@@ -655,6 +657,8 @@ const Dates = ({setSelectedMenu}) => {
           events={initialEvents}
           defaultDate={initialDefaultDate}
           loadingDates={loadingDates}
+
+          handleAssignDate={handleAssignDate}
           
           teams={teams}
           tutors={tutors}

@@ -22,7 +22,7 @@ import { getTutorNameById } from "../../../utils/getEntitiesUtils"
 moment.tz.setDefault('America/Argentina/Buenos Aires')
 const localizer = momentLocalizer(moment);
 
-const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, period }) => {
+const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, period, handleAssignDate }) => {
   const [openDetails, setOpenDetails] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null); // "item"
   const [editDateOpenDialog, setEditDateOpenDialog] = useState(false); // aux: nuevo, probando
@@ -52,6 +52,11 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
   // Aux: En construcción!!!
   const makeEditableItem = (event) => {
     // 282024 no anda el tutor, revisar [], lo demás pasado anda :) (revisar las horas, igual).
+    // No anda la request, xq: acá estoy pasando mal el tutor que necesita para poder obtener el tutor para hacerle .name,
+    // y porque no tiene team.id que lo necesita para poder buscar... AL TUTOR (xq solo tiene un name acá)
+    // que lo necesita para hacerle tutor.id QUE ES EXACTAMENTE el 282024 que yo tengo acá ;-;
+    // O sea me está haciendo agregar campos para dar toda la vuelta y llegar al mismo dato :c.
+    // Es un lío esto. Pero también debe seguir andando el add que ya andaba. Ver cómo hacer.
     const editableItem = {
       team: {group_number: event.result?.group_number}, // []
       topic: teams?.find(
@@ -204,7 +209,7 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
             period={period}
 
             showLastPart={true}
-            //handleAssignDate={handleAssignDate}
+            handleAssignDate={handleAssignDate}
           />
         </>
 
