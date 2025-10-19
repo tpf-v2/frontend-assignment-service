@@ -33,7 +33,7 @@ const SpecificDateDialog = ({
   
 }) => {
   const [isAssignDisabled, setIsAssignDisabled] = useState(true);
-  const filteredTutors = tutors.filter((tutor) =>
+  const filteredTutors = tutors?.filter((tutor) =>
     tutor.tutor_periods.some(
       (tutor_period) =>
         tutor_period.period_id === period.id && tutor_period.is_evaluator
@@ -83,7 +83,7 @@ const SpecificDateDialog = ({
               fullWidth
               value={item?.team?.group_number || ""}
               onChange={(e) => {
-                const selectedTeam = teams.find(
+                const selectedTeam = teams?.find(
                   (t) => t.group_number === e.target.value
                 );
 
@@ -100,14 +100,14 @@ const SpecificDateDialog = ({
               }}
               displayEmpty
               renderValue={(selected) => {
-                const selectedTeam = teams.find((t) => t.group_number === selected);
+                const selectedTeam = teams?.find((t) => t.group_number === selected);
                 return selectedTeam ? `Equipo ${selectedTeam.group_number}` : "Selecciona un equipo";
               }}
             >
               <MenuItem value="" disabled>
                 Selecciona un equipo
               </MenuItem>
-              {teams.map((team) => (
+              {teams?.map((team) => (
                 <MenuItem key={team.id} value={team.group_number}>
                   {`Equipo ${team.group_number}`}
                 </MenuItem>
@@ -152,7 +152,7 @@ const SpecificDateDialog = ({
               <MenuItem value="" disabled>
                 Selecciona un evaluador
               </MenuItem>
-              {filteredTutors.map((tutor) => (
+              {filteredTutors?.map((tutor) => (
                 <MenuItem key={tutor.id} value={tutor.id}>
                   {`${tutor.name} ${tutor.last_name}`}
                 </MenuItem>
