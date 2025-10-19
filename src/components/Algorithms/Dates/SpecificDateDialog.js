@@ -19,12 +19,11 @@ import { getTutorNameById } from "../../../utils/getEntitiesUtils"
 const SpecificDateDialog = ({
   open,
   onClose,
-  period,  
+  period,
   teams,
 
-  handleAssignDate,  
-  hours,
-  
+  handleAssignDate,
+
   tutors,
   showLastPart=false,
 
@@ -33,6 +32,10 @@ const SpecificDateDialog = ({
   
 }) => {
   const [isAssignDisabled, setIsAssignDisabled] = useState(true);
+  
+  // Genera las opciones de horas (ej: 9:00, 10:00, ..., 17:00)
+  const hours = Array.from({ length: 13 }, (_, i) => `${9 + i}:00`);
+
   const filteredTutors = tutors?.filter((tutor) =>
     tutor.tutor_periods.some(
       (tutor_period) =>

@@ -78,8 +78,8 @@ const Dates = ({setSelectedMenu}) => {
 
   const [events, setEvents] = useState([]);
   const [initialEvents, setInitialEvents] = useState([]);
-
-  // Genera las opciones de horas (ej: 9:00, 10:00, ..., 17:00)
+  
+  // Genera las opciones de horas (ej: 9:00, 10:00, ..., 17:00) // Aux: borrar esto, lo muevo al Specific []
   const hours = Array.from({ length: 13 }, (_, i) => `${9 + i}:00`);
 
   const [assignDateOpenDialog, setAssignDateOpenDialog] = useState(false);
@@ -659,7 +659,6 @@ const Dates = ({setSelectedMenu}) => {
           teams={teams}
           tutors={tutors}
           period={period}
-          hours={hours}
         />
       </Grid>
 
@@ -687,7 +686,6 @@ const Dates = ({setSelectedMenu}) => {
         tutors={tutors}
         period={period}
 
-        hours={hours}
         showLastPart={true}
         handleAssignDate={handleAssignDate}
       />
@@ -701,8 +699,7 @@ const Dates = ({setSelectedMenu}) => {
         teams={teams}
         tutors={tutors}
         period={period}
-
-        hours={hours}
+        
         showLastPart={true}
         handleAssignDate={handleAssignDate}
       />*/}

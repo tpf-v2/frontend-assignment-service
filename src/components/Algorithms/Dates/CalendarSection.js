@@ -22,7 +22,7 @@ import { getTutorNameById } from "../../../utils/getEntitiesUtils"
 moment.tz.setDefault('America/Argentina/Buenos Aires')
 const localizer = momentLocalizer(moment);
 
-const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, period, hours }) => {
+const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, period }) => {
   const [openDetails, setOpenDetails] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null); // "item"
   const [editDateOpenDialog, setEditDateOpenDialog] = useState(false); // aux: nuevo, probando
@@ -203,7 +203,6 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
             tutors={tutors}
             period={period}
 
-            hours={hours} // AUX: debe calcular esto adentro []
             showLastPart={true}
             //handleAssignDate={handleAssignDate}
           />
