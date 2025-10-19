@@ -10,16 +10,16 @@ import { Container, Box, Grid, Paper } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
 import ContentInicio from "../../components/UI/Dashboards/AdminStats/Components/ContentInicio";
 import ContentInscripciones from "../../components/UI/Dashboards/AdminStats/Components/ContentInscripciones";
+import ContentPPS from "../../components/UI/Dashboards/AdminStats/Components/ContentPPS";
 import ContentPdfProjects from "../../components/UI/Dashboards/AdminStats/Components/ContentPdfProjects";
 import { setGroups } from "../../redux/slices/groupsSlice";
 import IncompleteGroups from "../../components/Algorithms/IncompleteGroups";
 import TopicTutor from "../../components/Algorithms/TopicTutor";
 import ContentIntermediateProject from "../../components/UI/Dashboards/AdminStats/Components/ContentIntermediateProject";
-import { downloadProject, getProjects } from "../../api/handleProjects";
+import { downloadProject, getProjects, getPPSReports } from "../../api/handleProjects";
 import AvailabilityCalendarAdmin from "../../components/AvailabilityCalendarAdmin";
 import Dates from "../../components/Algorithms/Dates";
 import { setStudents } from "../../redux/slices/studentsSlice";
-
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -42,11 +42,16 @@ const DashboardView = () => {
   const [loading, setLoading] = useState(true);
   const [loadingAnteproyectos, setLoadingAnteproyectos] = useState(true);
   const [loadingFinalProjects, setLoadingFinalProjects] = useState(true);
+  const [loadingPPS, setLoadingPPS] = useState(true);
 
   const [selectedMenu, setSelectedMenu] = useState("Inicio");
   const [deliveries, setDeliveries] = useState(null);
   const [showUploadCSV, setShowUploadCSV] = useState(false);
   const [uploadType, setUploadType] = useState("");
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [selectedMenu]);
 
   useEffect(() => {
     const getData = async () => {
@@ -74,7 +79,7 @@ const DashboardView = () => {
     setShowUploadCSV(false);
     if (menu === "Anteproyecto") {
       setLoadingAnteproyectos(true);
-      const anteproyectosData = await getProjects(user, period.id, 'initial');
+      const anteproyectosData = await getProjects(user, period.id, 'initial-project');
       if (anteproyectosData) {
         setDeliveries(anteproyectosData);
       } else {
@@ -86,7 +91,7 @@ const DashboardView = () => {
       const finalProjectsData = await getProjects(
         user,
         period.id,
-        'final'
+        'final-project'
       );
       if (finalProjectsData) {
         setDeliveries(finalProjectsData);
@@ -95,12 +100,17 @@ const DashboardView = () => {
       }
       setLoadingFinalProjects(false);
 
+    } else if (menu === "PPS") {
+      setLoadingPPS(true);
+      const ppsData = await getPPSReports(user, period.id);
+      setDeliveries(ppsData);
+      setLoadingPPS(false);
     }
   };
 
   const downloadInitialFile = async (groupId, groupNumber) => {
     try {
-      await downloadProject(groupId, user, period.id, "initial", groupNumber);
+      await downloadProject(groupId, user, period.id, "initial-project", groupNumber);
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }
@@ -108,7 +118,7 @@ const DashboardView = () => {
 
   const downloadFinalFile = async (groupId, groupNumber) => {
     try {
-      await downloadProject(groupId, user, period.id, "final", groupNumber);
+      await downloadProject(groupId, user, period.id, "final-project", groupNumber);
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }
@@ -162,6 +172,8 @@ const DashboardView = () => {
             projectType={"final"}
           />
         );
+      case "PPS":
+        return <ContentPPS students={students} deliveries={deliveries} loadingPPS={loadingPPS} />;
       case "Fechas de presentación":
         return <Dates setSelectedMenu={setSelectedMenu}/>;
       case "Disponibilidad fechas de Presentación":
@@ -177,8 +189,11 @@ const DashboardView = () => {
       maxWidth={false}
       sx={{
         width: "95%", // Ajusta el ancho al 90% del viewport
-        height: "120vh", // Ocupa el 100% de la altura de la pantalla
         maxWidth: "none", // Para que el maxWidth no limite el tamaño
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: 0
       }}
     >
       <Root>

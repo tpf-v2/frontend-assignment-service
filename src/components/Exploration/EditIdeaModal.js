@@ -45,8 +45,6 @@ export const EditIdeaModal = ({
           <form
             onSubmit={(e) => {
               e.preventDefault(); // previene el reload del form
-              // Técnicamente este handleConfirm, al crearse afuera,
-              // ya tiene el data y el setData. (Técnicamente también tiene el bool).
               handleConfirm(handleCloseModal, editType);
             }}
           >

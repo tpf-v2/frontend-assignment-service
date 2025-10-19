@@ -111,7 +111,6 @@ const TeamDataTable = ({
         const customTopics = data?.filter(team => !topics.some(t => t.id === team.topic?.id))
         .map(team => team.topic);
         setAllTopics({csvTopics: uniqueTopics, customTopics: customTopics});        
-        //console.log("--- uniqueTopics:", uniqueTopics);
 
         setLoading(false);
 

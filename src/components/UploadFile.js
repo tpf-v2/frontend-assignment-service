@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useSelector } from "react-redux";
 import {
-  Container,
   Button,
   Typography,
   Box,
@@ -11,6 +10,8 @@ import {
   DialogActions,
   DialogContent,
   TextField,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
@@ -46,7 +47,7 @@ const DropzoneBox = styled(Box)(({ theme }) => ({
   justifyContent: "center",
 }));
 
-const UploadFile = ({ projectType }) => {
+const UploadFile = ({ projectType, headerInfo, loadingHeaderInfo, ownershipType = "groups", hasProjectTitle = true }) => {
   const [selectedFile, setSelectedFile] = useState(null); // Estado para archivos
   const [fileError, setFileError] = useState("");
   const [url, setUrl] = useState(""); // Estado para la URL (solo para entrega intermedia)
@@ -60,7 +61,8 @@ const UploadFile = ({ projectType }) => {
   const [externalLink, setExternalLink] = useState("");
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
-  const groupId = useSelector((state) => state.user.group_id);
+  const id = 
+    useSelector((state) => ownershipType === "groups" ? state.user.group_id : state.user.id);
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -88,9 +90,11 @@ const UploadFile = ({ projectType }) => {
       return;
     }
     
-    if (!projectTitle.trim() && projectType !== "intermediate-project") {
-      setTitleError("Por favor ingrese el título del proyecto.");
-      return;
+    if (hasProjectTitle) {
+      if (!projectTitle.trim()) {
+        setTitleError("Por favor ingrese el título del proyecto.");
+        return;
+      }
     }
     setTitleError("");
 
@@ -117,7 +121,8 @@ const UploadFile = ({ projectType }) => {
 
     const { success, message } = await uploadProjects({
       projectType,
-      groupId,
+      subpath: ownershipType,
+      id,
       projectTitle,
       selectedFile,
       url,
@@ -141,14 +146,28 @@ const UploadFile = ({ projectType }) => {
     "initial-project": "Anteproyecto",
     "intermediate-project": "Entrega Intermedia",
     "final-project": "Entrega Final",
+    "pps-report": "Informe Cumplimiento PPS",
   };
-
   return (
-    <Container maxWidth="sm">
-      <Root>
+      <div>
         <Box textAlign="center">
           <Title variant="h5">Subir {projectNameKeyMap[projectType]}</Title>
         </Box>
+
+        {(!!headerInfo && !loadingHeaderInfo) ? (
+            <Alert severity="info">
+              {headerInfo}
+            </Alert>
+          ) : (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <CircularProgress />
+            </Box>
+          )
+        }
 
         <form onSubmit={handleSubmit}>
           {projectType === "intermediate-project" ? (
@@ -176,16 +195,18 @@ const UploadFile = ({ projectType }) => {
             </>
           ) : (
             <>
-              <TextField
-                label="Ingrese el título del proyecto"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={projectTitle}
+              {hasProjectTitle && (
+                <TextField
+                  label="Ingrese el título del proyecto"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={projectTitle}
                 onChange={(e) => setProjectTitle(e.target.value)}
-                error={Boolean(titleError)}
-                helperText={titleError}
-              />
+                  error={Boolean(titleError)}
+                  helperText={titleError}
+                />
+              )}
 
               <DropzoneBox {...getRootProps()}>
                 <input {...getInputProps()} />
@@ -289,8 +310,7 @@ const UploadFile = ({ projectType }) => {
             </Button>
           </DialogActions>
         </Dialog>
-      </Root>
-    </Container>
+      </div>
   );
 };
 
