@@ -649,7 +649,7 @@ const Dates = ({setSelectedMenu}) => {
         )}
       </Grid>
 
-      {/* Sección de Tabla y Botón a la derecha */}
+      {/* Sección de Tabla con resultados y Botón a la derecha */}
       <Grid item xs={12}>
         <CalendarSection
           events={initialEvents}
@@ -687,7 +687,7 @@ const Dates = ({setSelectedMenu}) => {
         handleAssignDate={handleAssignDate}
       />
 
-      <SpecificDateDialog // Asignar fecha a equipo manualmente, al clickear Editar en el slot ampliado
+      {/*<SpecificDateDialog // Asignar fecha a equipo manualmente, al clickear Editar en el slot ampliado
         open={editDateOpenDialog}
         onClose={() => setEditDateOpenDialog(false)}        
         item={item}
@@ -700,7 +700,7 @@ const Dates = ({setSelectedMenu}) => {
         hours={hours}
         showLastPart={true}
         handleAssignDate={handleAssignDate}
-      />
+      />*/}
 
       <ResultsDialog // Luego de correr el algoritmo
         open={showResults}

@@ -11,25 +11,28 @@ import {
   IconButton,
   Typography,
   Paper,
+  Button,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close"; // Importar el ícono de cerrar
 import 'moment/locale/es';
 import { useMemo } from 'react';
+import SpecificDateDialog from "./SpecificDateDialog";
 
 moment.tz.setDefault('America/Argentina/Buenos Aires')
 const localizer = momentLocalizer(moment);
 
 const CalendarSection = ({ events, defaultDate, loadingDates }) => {
-  const [open, setOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [openDetails, setOpenDetails] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null); // "item"
+  const [editDateOpenDialog, setEditDateOpenDialog] = useState(false); // aux: nuevo, probando
 
   const handleEventSelect = (event) => {
     setSelectedEvent(event);
-    setOpen(true);
+    setOpenDetails(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setOpenDetails(false);
     setSelectedEvent(null);
   };
   const { formats } = useMemo(() => ({
@@ -105,7 +108,7 @@ const CalendarSection = ({ events, defaultDate, loadingDates }) => {
               />
 
               {/* Dialog para mostrar la información del evento */}
-              <Dialog open={open} onClose={handleClose}>
+              <Dialog open={openDetails} onClose={handleClose}>
                 <DialogTitle>
                   Detalles del Evento
                   <IconButton
@@ -129,11 +132,19 @@ const CalendarSection = ({ events, defaultDate, loadingDates }) => {
                       <Typography variant="h6" gutterBottom>
                         {selectedEvent.title}
                       </Typography>
-                      <Typography variant="body1">
-                        {`Horario: ${moment(selectedEvent.start).format(
-                          "HH:mm"
-                        )} - ${moment(selectedEvent.end).format("HH:mm")}`}
-                      </Typography>
+                      <Box sx={{display: "flex"}}>
+                        <Typography variant="body1">
+                          {`Horario: ${moment(selectedEvent.start).format(
+                            "HH:mm"
+                          )} - ${moment(selectedEvent.end).format("HH:mm")}`}
+                        </Typography>
+                        <Button // aux: redundante el set selected con selected, probando
+                          onClick={() => {setEditDateOpenDialog(true); setSelectedEvent(selectedEvent)}}
+                          style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
+                          sx={{ml: "auto"}}>
+                          Editar
+                        </Button>
+                      </Box>
                     </Paper>
                   )}
                 </DialogContent>
@@ -149,7 +160,24 @@ const CalendarSection = ({ events, defaultDate, loadingDates }) => {
               <CircularProgress />
             </Box>
           )}
+
+          {/* Probando */}
+          <SpecificDateDialog // Asignar fecha a equipo manualmente, al clickear Editar en el slot ampliado
+            open={editDateOpenDialog}
+            onClose={() => setEditDateOpenDialog(false)}        
+            item={selectedEvent}
+            setItem={setSelectedEvent}
+
+            //teams={teams}
+            //tutors={tutors}
+            //period={period}
+
+            //hours={hours}
+            showLastPart={true}
+            //handleAssignDate={handleAssignDate}
+          />
         </>
+
       )}
     </>
   );
