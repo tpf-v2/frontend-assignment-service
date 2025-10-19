@@ -81,7 +81,6 @@ const Header = ({ user, color, handleHomeClick }) => {
               />
             </Box>
           </Box>
-          {user && (
             <Box>
               <IconButton
                 color="inherit"
@@ -90,41 +89,49 @@ const Header = ({ user, color, handleHomeClick }) => {
                 aria-haspopup="true"
               >
                 <Avatar style={{ backgroundColor: "#ff5733" }}>
-                  {getInitial(user.name)}
+                  {user ? getInitial(user.name) : "?"}
                 </Avatar>
               </IconButton>
-              <Menu
+              {user && (<Menu
                 id="profile-menu"
                 anchorEl={anchorEl}
                 keepMounted
                 open={Boolean(anchorEl)}
                 onClose={handleCloseMenu}
               >
-                <MenuItem
+                {
+                  <MenuItem
                   onClick={() => {
                     navigate("/profile");
                     handleCloseMenu();
                   }}
-                >
-                  Ver Perfil
-                </MenuItem>
-                {user.role === "admin" && (
+                  >
+                    Ver Perfil
+                  </MenuItem>
+                }
+                {(user && user.role === "admin") && (
                   <MenuItem onClick={handleChangeView}>
                     Cambiar a vista de {user.temporal_role === "admin" ? "tutor" : "admin"}
                   </MenuItem>
                 )}
-                <MenuItem
-                  onClick={() => {
-                    navigate("/change-password");
-                    handleCloseMenu();
-                  }}
-                >
-                  Cambiar contraseña
-                </MenuItem>
-                <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
+                {
+                  user && (
+                    <MenuItem
+                      onClick={() => {
+                        navigate("/change-password");
+                        handleCloseMenu();
+                      }}
+                    >
+                      Cambiar contraseña
+                    </MenuItem>
+                  )
+                }
+                {
+                  user && (<MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>)
+                }
               </Menu>
+            )}
             </Box>
-          )}
         </Toolbar>
       </Container>
     </AppBar>

@@ -3,24 +3,25 @@ import * as Sentry from "@sentry/react";
 import { waitForAsyncTask } from "./waitForAsyncTask";
 const BASE_URL = process.env.REACT_APP_API_URL;
 
-export const uploadProjects = async ({ projectType, groupId, projectTitle, selectedFile, url, token }) => {
+export const uploadProjects = async ({ projectType, subpath, id, projectTitle, selectedFile, url, token }) => {
   const projectNameKeyMap = {
     "initial-project": "Anteproyecto",
     "intermediate-project": "Entrega Intermedia",
     "final-project": "Entrega Final",
+    "pps-report": "Informe Cumplimiento PPS",
   };
 
   const errorMessage = `No se pudo completar el envío de la ${projectNameKeyMap[projectType]}. Por favor, inténtalo de nuevo.`;
   const successMessage = `¡Envío exitoso! Se ha registrado correctamente la ${projectNameKeyMap[projectType]}.`;
 
   try {
-    let apiUrl = `${BASE_URL}/groups/${groupId}/${projectType}?mode=async&project_title=${projectTitle}`;
+    let apiUrl = `${BASE_URL}/${subpath}/${id}/${projectType}?mode=async&project_title=${projectTitle}`;
     let response;
 
     // Si es entrega intermedia, enviar la URL
     if (projectType === "intermediate-project") {
       response = await axios.post(
-        `${BASE_URL}/groups/${groupId}/intermediate-report`,
+        `${BASE_URL}/${subpath}/${id}/intermediate-report`,
         { url },
         {
           headers: {
