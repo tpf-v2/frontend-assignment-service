@@ -76,7 +76,9 @@ const App = () => {
       >
         {user.token ? (
           <Header user={user} color={color} handleHomeClick={resetUser} />
-        ) : <Header user={undefined} color={color} handleHomeClick={resetUser} /> }
+        ) :
+          <Header user={null} color={color} handleHomeClick={resetUser} />
+        }
         <BackgroundContainer />
         <Box
           className="content-container"
