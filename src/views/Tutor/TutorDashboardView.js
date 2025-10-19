@@ -324,7 +324,6 @@ const transformEventData = (data) => {
       maxWidth={false}
       sx={{
         width: "95%",
-        height: "120vh",
         maxWidth: "none",
       }}
     >
