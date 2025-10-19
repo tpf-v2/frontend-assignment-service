@@ -3,7 +3,7 @@ import { Typography, Container, Box, CircularProgress } from "@mui/material";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { Root, Title } from "../../components/Root";
-import { getTutorsData } from "../../api/dashboardStats";
+import { getTutorsDataOnly } from "../../api/dashboardStats";
 
 const TutorEmails = () => {
   const user = useSelector((state) => state.user);
@@ -28,7 +28,7 @@ const TutorEmails = () => {
       try {
         setLoading(true);
         // Obtenemos tutores y ordenamos en orden alfabético
-        const fetchedTutors = await getTutorsData(period.id, user);
+        const fetchedTutors = await getTutorsDataOnly(period.id, user);
         const sortedTutors = fetchedTutors.sort((a, b) => a.last_name.localeCompare(b.last_name));
         setTutors(sortedTutors);
       } catch (error) {
