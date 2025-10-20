@@ -191,7 +191,7 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
             </Box>
           )}
 
-          {/* Probando */}
+          {/* Editar, luego de confirmados los resultados del algoritmo */}
           <SpecificDateDialog // Asignar fecha a equipo manualmente, al clickear Editar en el slot ampliado
             open={editDateOpenDialog}
             onClose={() => setEditDateOpenDialog(false)}        
@@ -204,6 +204,7 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
 
             showLastPart={true}
             handleAssignDate={handleAssignDate}
+            dialogTitle="Editar"
           />
         </>
 
