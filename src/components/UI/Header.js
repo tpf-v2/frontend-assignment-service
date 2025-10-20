@@ -2,7 +2,6 @@ import React from "react";
 import {
   AppBar,
   Toolbar,
-  Typography,
   Container,
   Box,
   IconButton,
@@ -52,6 +51,7 @@ const Header = ({ user, color, handleHomeClick }) => {
   };
 
   const handleChangeView = () => {
+    // Esto se usa para navigation
     const newRole = user.temporal_role === "admin" ? "tutor" : "admin";
     handleChangeRole(newRole);
     navigate("/home");
@@ -81,6 +81,7 @@ const Header = ({ user, color, handleHomeClick }) => {
               />
             </Box>
           </Box>
+          {user && (
             <Box>
               <IconButton
                 color="inherit"
@@ -89,49 +90,41 @@ const Header = ({ user, color, handleHomeClick }) => {
                 aria-haspopup="true"
               >
                 <Avatar style={{ backgroundColor: "#ff5733" }}>
-                  {user ? getInitial(user.name) : "?"}
+                  {getInitial(user.name)}
                 </Avatar>
               </IconButton>
-              {user && (<Menu
+              <Menu
                 id="profile-menu"
                 anchorEl={anchorEl}
                 keepMounted
                 open={Boolean(anchorEl)}
                 onClose={handleCloseMenu}
               >
-                {
-                  <MenuItem
+                <MenuItem
                   onClick={() => {
                     navigate("/profile");
                     handleCloseMenu();
                   }}
                   >
                     Ver Perfil
-                  </MenuItem>
-                }
-                {(user && user.role === "admin") && (
-                  <MenuItem onClick={handleChangeView}>
-                    Cambiar a vista de {user.temporal_role === "admin" ? "tutor" : "admin"}
+                </MenuItem>
+                {user.role === "admin" && (
+                  <MenuItem onClick={() => {handleChangeView(); handleCloseMenu();}}>
+                    Cambiar a Vista de {user.temporal_role === "admin" ? "Tutor" : "Admin"}
                   </MenuItem>
                 )}
-                {
-                  user && (
                     <MenuItem
                       onClick={() => {
                         navigate("/change-password");
                         handleCloseMenu();
                       }}
                     >
-                      Cambiar contraseña
+                      Cambiar Contraseña
                     </MenuItem>
-                  )
-                }
-                {
-                  user && (<MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>)
-                }
+                <MenuItem onClick={() => {handleLogout(); handleCloseMenu();}}>Cerrar Sesión</MenuItem>
               </Menu>
-            )}
             </Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>
