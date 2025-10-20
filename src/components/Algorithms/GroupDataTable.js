@@ -425,6 +425,9 @@ const TeamDataTable = ({
     }
   };
 
+  // Ordenamos en orden alfabético, para que sea más amigable al mostrar en lista desplegable en el modal
+  const sortedTutors = tutors.sort((a, b) => a.last_name.localeCompare(b.last_name));
+
   return (
       <>
         <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>
@@ -685,7 +688,7 @@ const TeamDataTable = ({
           setConflictMsg={setConflicts}
 
           topics={allTopics}
-          tutors={tutors}
+          tutors={sortedTutors}
           students={students}
           periodId={period.id}
         />  

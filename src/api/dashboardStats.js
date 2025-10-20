@@ -75,6 +75,26 @@ export const getDashboardData = async (period, user) => {
   }
 };
 
+// To-Do: estas dos funciones que siguen hacen exactamente lo mismo, la de abajo podría ser un wrapper de esta de acá,
+// se hicieron en ramas distintas y cada una devuelve en formato distinto. El "To-Do" es refactorizarlas a una sola.
+export const getTutorsDataOnly = async (periodId, user) => {
+  try {
+    const tutorsEndpoint = `/tutors/periods/${periodId}`;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+      params: {
+        cache_bust: new Date().getTime(), // add params to avoid caching
+      },
+    };
+    const response = await axios.get(`${BASE_URL}${tutorsEndpoint}`, config);
+  
+    return response.data
+  } catch (error) {
+    throw error;
+  }
+}
 
 export const getTutorsData = async (period, user) => {
   const tutorsEndpoint = `/tutors/periods/${period}`;
