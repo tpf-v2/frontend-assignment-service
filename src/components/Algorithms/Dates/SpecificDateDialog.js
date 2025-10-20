@@ -19,12 +19,13 @@ import { getTutorNameById } from "../../../utils/getEntitiesUtils"
 const SpecificDateDialog = ({
   open,
   onClose,
+  
   period,
   teams,
+  tutors,
 
   handleAssignDate,
 
-  tutors,
   showLastPart=false,
 
   item,
@@ -206,11 +207,14 @@ const SpecificDateDialog = ({
           Cancelar
         </Button>
         <Button
-          onClick={() => handleAssignDate(
+          onClick={() => {
+            console.log("desde adentro de Specific, item:", item);
+            handleAssignDate(
             item?.team, item?.evaluator,
             item?.selectedDateTime, item?.selectedHour,
-            handleClose
-          )}
+            handleClose)
+          }
+          }
           color="primary"
           variant="contained"
           disabled={isAssignDisabled}

@@ -57,16 +57,21 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
     // que lo necesita para hacerle tutor.id QUE ES EXACTAMENTE el 282024 que yo tengo acá ;-;
     // O sea me está haciendo agregar campos para dar toda la vuelta y llegar al mismo dato :c.
     // Es un lío esto. Pero también debe seguir andando el add que ya andaba. Ver cómo hacer.
+    const team = teams?.find(
+      (t) => t.group_number === event.result.group_number
+    );
+    console.log("--- en make, obtuve aux este team:", team);
     const editableItem = {
-      team: {group_number: event.result?.group_number}, // []
-      topic: teams?.find(
-         (t) => t.group_number === event.result.group_number
-         )?.topic.name, // "hermoso" -_-, esto es lo que hace el Specific xq no tenemos el team. Mandarlo a util al menos []
-      tutor: getTutorNameById(
-         event.result.tutor_id, // cuidado, no me acuerdo si es lo mismo, decía tutor_period_id, revisar (sí, el dato que veo suena a eso, x más que se llame tutor_id)
-         period.id,
-         tutors
-       ),
+      team: team, //{group_number: event.result?.group_number}, // []
+      topic: team?.topic.name,  //teams?.find(
+      //    (t) => t.group_number === event.result.group_number
+      //    )?.topic.name, // "hermoso" -_-, esto es lo que hace el Specific xq no tenemos el team. Mandarlo a util al menos []
+      tutor: getTutorNameById(team.tutor_period_id, period.id, tutors), 
+      // getTutorNameById(
+      //    event.result.tutor_id,// no anda // cuidado, no me acuerdo si es lo mismo, decía tutor_period_id, revisar (sí, el dato que veo suena a eso, x más que se llame tutor_id)
+      //    period.id,
+      //    tutors
+      //  ),
       evaluator: event.result.evaluator_id,
       selectedDateTime: event.start, //"", // Ver cómo usar la event.date que tiene toda esta info
       selectedHour: `${event.start.getHours()}:00`, //${event.start.getMinutes()}`, esto obtne '0', y las opciones son siempre en punto, nunca y media etc
