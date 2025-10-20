@@ -44,7 +44,8 @@ const DownloadButton = styled(Button)(({ theme }) => ({
 
 // Copypaste de Tutor/GroupReview sin funcionalidad de comentario
 const StudentOverview = ({ group_id }) => {
-  const [pdfUrl, setPdfUrl] = useState(null);
+  const [pdfUrlInitial, setPdfUrlInitial] = useState(null);
+  const [pdfUrlFinal, setPdfUrlFinal] = useState(null);
   const user = useSelector((state) => state.user);
 
   const [notification, setNotification] = useState({
@@ -57,9 +58,9 @@ const StudentOverview = ({ group_id }) => {
     setNotification({ ...notification, open: false });
   };
 
-  const downloadFile = async () => {
+  const downloadFile = async (projectType) => {
     try {
-      await downloadProject(group_id, user, user.period_id, 'initial-project',group_id);
+      await downloadProject(group_id, user, user.period_id, projectType, group_id);
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
     }
@@ -71,10 +72,10 @@ const StudentOverview = ({ group_id }) => {
         
         if (!!user && !!user.period_id && !!group_id) {
           console.log("good")
-          const url = await fetchProjectPdf(group_id, user, user.period_id, 'initial');
-          setPdfUrl(url); // Guarda la URL en el estado
-        } else {
-          console.log("BAAAAD %s %s %s", user, group_id)
+          const urlinit = await fetchProjectPdf(group_id, user, user.period_id, 'initial');
+          setPdfUrlInitial(urlinit); // Guarda la URL en el estado
+          const urlfin = await fetchProjectPdf(group_id, user, user.period_id, 'final');
+          setPdfUrlFinal(urlfin); // Guarda la URL en el estado
         }
         
       } catch (error) {
@@ -87,13 +88,34 @@ const StudentOverview = ({ group_id }) => {
   return (
     <GroupReviewContainer>
       <Typography variant="h4" align="center" gutterBottom>
+        Entregas
+      </Typography>
+      <Typography variant="h5" align="center" marginTop="1em">
         Anteproyecto
       </Typography>
-
       <PdfPreviewBox>
-        {pdfUrl ? (
+        {pdfUrlInitial ? (
           <iframe
-            src={pdfUrl}
+            src={pdfUrlInitial}
+            title="Previsualización del PDF"
+            width="100%"
+            height="100%"
+            style={{ border: "none" }}
+          />
+        ) : (
+          <Typography>Cargando ...</Typography>
+        )}
+      </PdfPreviewBox>
+      <DownloadButton variant="contained" onClick={event => downloadFile('initial-project')} marginBottom="1rem">
+        Descargar PDF
+      </DownloadButton>
+      <Typography variant="h5" align="center" marginTop="1em">
+        Reporte Final
+      </Typography>
+      <PdfPreviewBox>
+        {pdfUrlFinal ? (
+          <iframe
+            src={pdfUrlFinal}
             title="Previsualización del PDF"
             width="100%"
             height="100%"
@@ -104,7 +126,7 @@ const StudentOverview = ({ group_id }) => {
         )}
       </PdfPreviewBox>
       {/* Botón para descargar el PDF */}
-      <DownloadButton variant="contained" onClick={downloadFile}>
+      <DownloadButton variant="contained" onClick={event => downloadFile('final-project')} marginBottom="1rem">
         Descargar PDF
       </DownloadButton>
 
