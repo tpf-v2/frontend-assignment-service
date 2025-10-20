@@ -1,6 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import {Navigate } from 'react-router-dom';
 import { Container, Box, CircularProgress } from "@mui/material";
 import { getGroupById } from "../../api/getGroupById";
 import StudentOverview from "../../components/UI/Dashboards/Student/StudentOverview";
