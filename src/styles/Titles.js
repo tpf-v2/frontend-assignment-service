@@ -32,15 +32,6 @@ fontSize: "2rem",
 fontWeight: "bold",
 }));
 
-export const ShadowTitle = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(0),
-  color: '#0072C6',
-  textAlign: 'center',
-  fontSize: '2rem',
-  fontWeight: 'bold',
-  textShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
-}));
-
 export const FlexGrowTitle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(3),
   color: '#0072C6',
@@ -48,4 +39,9 @@ export const FlexGrowTitle = styled(Typography)(({ theme }) => ({
   fontSize: '2rem',
   fontWeight: 'bold',
   flexGrow: 1, // Asegura que ocupa todo el espacio
+}));
+
+export const HomeViewTitle = styled(Typography)(({ theme }) => ({
+  marginBottom: theme.spacing(4),
+  color: theme.palette.primary.main,
 }));

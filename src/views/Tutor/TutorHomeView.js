@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getPeriodById, getTutorPeriods } from '../../api/handlePeriods'
 import MySnackbar from '../../components/UI/MySnackBar';
 import { setPeriod } from '../../redux/slices/periodSlice';
-
+import { HomeViewTitle } from '../../styles/Titles';
 const Root = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(8),
   display: 'flex',
@@ -43,10 +43,7 @@ const CardStyled = styled(Card)(({ theme }) => ({
   },
 }));
 
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(4),
-  color: theme.palette.primary.main,
-}));
+const Title = HomeViewTitle;
 
 
 const TutorHomeView = () => {

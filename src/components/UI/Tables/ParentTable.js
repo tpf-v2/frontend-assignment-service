@@ -34,7 +34,7 @@ import { TutorModals } from "./Modals/tutorModals";
 import { TopicModals } from "./Modals/topicModals";
 import { addCapacityToTutors } from "../../../utils/addCapacityToTutors";
 import { DeleteConfirmationModal } from "./Modals/deleteConfirmationModal";
-
+import { TitleSpaced } from "../../../styles/Titles";
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(4),
   padding: theme.spacing(4),
@@ -43,13 +43,7 @@ const Root = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[3],
 }));
 
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(2),
-  color: "#0072C6",
-  textAlign: "center",
-  fontSize: "2rem",
-  fontWeight: "bold",
-}));
+const Title = TitleSpaced;
 
 const ParentTable = ({
   title,
