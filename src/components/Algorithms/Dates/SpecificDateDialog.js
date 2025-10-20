@@ -14,7 +14,10 @@ import {
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import "dayjs/locale/es"
+import { esES } from "@mui/x-date-pickers/locales";
 import { getTutorNameById } from "../../../utils/getEntitiesUtils"
+dayjs.locale("es"); // para mostrar texto en español
 
 const SpecificDateDialog = ({
   open,
@@ -169,7 +172,11 @@ const SpecificDateDialog = ({
           {showLastPart && (
             <>
               <Grid item xs={6}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <LocalizationProvider // Parámetros "es", para que mes y días de la semana estén en español
+                  dateAdapter={AdapterDayjs}
+                  adapterLocale="es"
+                  localeText={esES.components.MuiLocalizationProvider.defaultProps.localeText}
+                >
                   <DatePicker
                     label="Fecha"                    
                     value={item?.selectedDateTime ? dayjs(item.selectedDateTime) : null}

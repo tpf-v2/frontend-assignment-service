@@ -833,7 +833,6 @@ const Dates = ({setSelectedMenu}) => {
         open={snackbarOpen}
         handleClose={handleSnackbarClose}
       />
-      {/* </Grid> */}
     </Box>
   );
 };
