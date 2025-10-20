@@ -11,16 +11,7 @@ import TimelineIcon from '@mui/icons-material/Timeline';
 import EmojiFlagsIcon from '@mui/icons-material/EmojiFlags';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-import { Title } from "../styles/Titles";
-
-const TitleTop = styled(Typography)(({ theme }) => ({
-  color: "#0072C6",
-  textAlign: "center",
-  fontSize: "1rem",
-  fontWeight: "bold",
-  flexGrow: 1,
-  overflowWrap: "break-word",
-}));
+import { Title, TitleTop } from "../styles/Titles";
 
 const SidebarList = styled(List)(({ theme }) => ({
   marginTop: theme.spacing(4),

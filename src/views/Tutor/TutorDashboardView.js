@@ -31,7 +31,7 @@ import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import TodayIcon from '@mui/icons-material/Today';
 import GroupsIcon from '@mui/icons-material/Groups';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
-import { Title } from "../../styles/Titles";
+import { Title, TitleTop } from "../../styles/Titles";
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -56,18 +56,6 @@ const ListItemStyled = styled(ListItemButton)(({ selected }) => ({
   "&:hover": {
     backgroundColor: selected ? "#005B9A" : "#D6E4F0",
   },
-}));
-
-
-
-const TitleTop = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(0),
-  color: "#0072C6",
-  textAlign: "center",
-  fontSize: "1rem",
-  fontWeight: "bold",
-  flexGrow: 1,
-  overflowWrap: "break-word",
 }));
 
 // Loader de puntos animados
