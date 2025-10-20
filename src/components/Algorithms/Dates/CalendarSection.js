@@ -74,7 +74,7 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
   console.log("---selectedEvent:", selectedEvent);
   return (
     <>
-      {loadingDates ? (
+      {loadingDates || !defaultDate ? (
         <Box
           display="flex"
           justifyContent="center"
