@@ -168,8 +168,10 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
                           onClick={() => {
                             const constructedItem = makeEditableItem(selectedEvent);
                             setSelectedEvent(constructedItem);
-                            setEditDateOpenDialog(true)}
-                          }
+                            setEditDateOpenDialog(true);
+                            // Cerramos este modal de details, pero sin flushear los datos xq los necesitamos para editar
+                            setOpenDetails(false);
+                          }}
                           style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja // Aux: pienso cambiar la estética []
                           sx={{ml: "auto"}}>
                           Editar
