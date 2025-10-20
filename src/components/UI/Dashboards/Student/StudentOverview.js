@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Typography, Box, Button } from "@mui/material";
+import { Typography, Box, Button, Link } from "@mui/material";
 import { styled } from "@mui/system";
 import { useSelector } from "react-redux";
 import { downloadProject, fetchProjectPdf } from "../../../../api/handleProjects";
 import MySnackbar from "../../MySnackBar";
+import { getIntermediateProject } from "../../../../api/intermeadiateProjects";
 
 // Estilos
 const GroupReviewContainer = styled(Box)(({ theme }) => ({
@@ -47,6 +48,16 @@ const StudentOverview = ({ group_id }) => {
   const [pdfUrlInitial, setPdfUrlInitial] = useState(null);
   const [pdfUrlFinal, setPdfUrlFinal] = useState(null);
   const user = useSelector((state) => state.user);
+  const [videoUrl, setVideoUrl] = useState(null);
+
+  const loadIntermediateProject = async () => {
+    try {
+      const response = await getIntermediateProject(group_id, user, user.period_id);
+      setVideoUrl(response.intermediate_assigment); // Guarda la URL en el estado
+    } catch (error) {
+      console.error("Error al cargar la previsualización del video:", error);
+    }
+  };
 
   const [notification, setNotification] = useState({
     open: false,
@@ -65,6 +76,10 @@ const StudentOverview = ({ group_id }) => {
       console.error("Error al descargar el archivo:", error);
     }
   };
+
+  useEffect(() => {
+    loadIntermediateProject();
+  }, [group_id, user, user.period_id]);
   useEffect(() => {
       // Función para cargar el PDF en la previsualización
     const loadPdfPreview = async () => {
@@ -74,12 +89,22 @@ const StudentOverview = ({ group_id }) => {
           console.log("good")
           const urlinit = await fetchProjectPdf(group_id, user, user.period_id, 'initial');
           setPdfUrlInitial(urlinit); // Guarda la URL en el estado
+        }
+        
+      } catch (error) {
+        console.error("Error al cargar la previsualización del PDF inicial:", error);
+        setPdfUrlInitial("failed"); // Guarda la URL en el estado
+      }
+      try {
+        if (!!user && !!user.period_id && !!group_id) {
+          console.log("good")
           const urlfin = await fetchProjectPdf(group_id, user, user.period_id, 'final');
           setPdfUrlFinal(urlfin); // Guarda la URL en el estado
         }
         
       } catch (error) {
-        console.error("Error al cargar la previsualización del PDF:", error);
+        console.error("Error al cargar la previsualización del PDF final:", error);
+          setPdfUrlFinal("failed"); // Guarda la URL en el estado
       }
     };
     loadPdfPreview();
@@ -93,42 +118,56 @@ const StudentOverview = ({ group_id }) => {
       <Typography variant="h5" align="center" marginTop="1em">
         Anteproyecto
       </Typography>
-      <PdfPreviewBox>
-        {pdfUrlInitial ? (
-          <iframe
-            src={pdfUrlInitial}
-            title="Previsualización del PDF"
-            width="100%"
-            height="100%"
-            style={{ border: "none" }}
-          />
-        ) : (
-          <Typography>Cargando ...</Typography>
-        )}
-      </PdfPreviewBox>
-      <DownloadButton variant="contained" onClick={event => downloadFile('initial-project')} marginBottom="1rem">
-        Descargar PDF
+      {pdfUrlInitial != "failed" ? (
+        <>
+        <PdfPreviewBox>
+          {!!pdfUrlInitial ? (
+            <iframe
+              src={pdfUrlInitial}
+              title="Previsualización del PDF"
+              width="100%"
+              height="100%"
+              style={{ border: "none" }}
+            />
+          ) : (
+            <Typography>Cargando ...</Typography>
+          )}
+        </PdfPreviewBox>
+        <DownloadButton variant="contained" onClick={event => downloadFile('initial-project')} marginbottom="1rem">
+          Descargar PDF
+        </DownloadButton>
+        </>
+      ) : <Typography>No entregado.</Typography>}
+      <Typography variant="h5" align="center" marginTop="1em">
+        Entrega Intermedia
+      </Typography>
+      <DownloadButton href={videoUrl} target="_blank" rel="noopener">
+        Ver Video
       </DownloadButton>
       <Typography variant="h5" align="center" marginTop="1em">
         Reporte Final
       </Typography>
-      <PdfPreviewBox>
-        {pdfUrlFinal ? (
-          <iframe
-            src={pdfUrlFinal}
-            title="Previsualización del PDF"
-            width="100%"
-            height="100%"
-            style={{ border: "none" }}
-          />
-        ) : (
-          <Typography>Cargando ...</Typography>
-        )}
-      </PdfPreviewBox>
+      {pdfUrlFinal != "failed" ? (
+        <>
+        <PdfPreviewBox>
+          {!!pdfUrlFinal ? (
+            <iframe
+              src={pdfUrlFinal}
+              title="Previsualización del PDF"
+              width="100%"
+              height="100%"
+              style={{ border: "none" }}
+            />
+          ) : (
+            <Typography>Cargando ...</Typography>
+          )}
+        </PdfPreviewBox>
+        <DownloadButton variant="contained" onClick={event => downloadFile('final-project')} marginbottom="1rem">
+          Descargar PDF
+        </DownloadButton>
+        </>
+      ) : <Typography>No entregado.</Typography>}
       {/* Botón para descargar el PDF */}
-      <DownloadButton variant="contained" onClick={event => downloadFile('final-project')} marginBottom="1rem">
-        Descargar PDF
-      </DownloadButton>
 
       <MySnackbar
         open={notification.open}
