@@ -18,21 +18,13 @@ import { useNavigate } from "react-router-dom";
 import { uploadProjects } from "../api/uploadProjects";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
-
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
+import { TitleSimple } from "../styles/Titles";
 
 const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
 
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-}));
+const Title = TitleSimple
 
 const DropzoneBox = styled(Box)(({ theme }) => ({
   border: "2px dashed #cccccc",

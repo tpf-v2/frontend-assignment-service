@@ -7,6 +7,7 @@ import { togglePasswordVisibility } from "./PasswordVisibility.js";
 import { resetPassword } from '../api/postChangePassword.js';
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { TitleSimple } from '../styles/Titles.js';
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -18,10 +19,7 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
 
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-}));
+const Title = TitleSimple
 
 const ChangePasswordView = () => {
   const [currentPassword, setCurrentPassword] = useState('');

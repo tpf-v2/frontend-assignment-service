@@ -3,6 +3,7 @@
 
 import { styled } from "@mui/system";
 import { Paper, Button, Typography } from "@mui/material";
+import { TitleSimple } from "../styles/Titles";
 
 // Usados en varios forms de lado estudiante, ej Proponer Idea
 
@@ -18,7 +19,4 @@ export const ButtonStyled = styled(Button)(({ theme }) => ({
   marginLeft: "auto",
 }));
 
-export const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-}));
+export const Title = TitleSimple

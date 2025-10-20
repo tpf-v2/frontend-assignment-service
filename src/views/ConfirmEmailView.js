@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/system";
 import BackgroundContainer from "../components/UI/BackgroundContainer.js";
 import EmailIcon from '@mui/icons-material/Email';
+import { TitleSimple } from "../styles/Titles.js";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -17,10 +18,7 @@ const Root = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[10],
 }));
 
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-}));
+const Title = TitleSimple
 
 const ConfirmEmailView = () => {
   const navigate = useNavigate();

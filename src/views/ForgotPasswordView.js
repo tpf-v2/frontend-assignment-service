@@ -12,6 +12,7 @@ import { styled } from "@mui/system";
 import BackgroundContainer from "../components/UI/BackgroundContainer.js";
 import MySnackbar from "../components/UI/MySnackBar.js";
 import { requestPasswordReset } from "../api/auth.js";
+import { TitleSimple } from "../styles/Titles.js";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -23,10 +24,7 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
 
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-}));
+const Title = TitleSimple
 
 const ForgotPasswordView = () => {
   const [email, setEmail] = useState("");

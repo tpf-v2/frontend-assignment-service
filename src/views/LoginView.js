@@ -15,6 +15,7 @@ import BackgroundContainer from "../components/UI/BackgroundContainer.js";
 import { authenticateUser } from "../api/auth.js"; // Importa las funciones desde auth.js
 import { useDispatch, useSelector } from "react-redux";
 import MySnackbar from "../components/UI/MySnackBar.js";
+import { TitleSimple } from "../styles/Titles.js";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -26,10 +27,7 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
 
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-}));
+const Title = TitleSimple
 
 const LoginView = () => {
   const [email, setEmail] = useState("");

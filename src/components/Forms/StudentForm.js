@@ -26,6 +26,7 @@ import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { NumericFormat } from "react-number-format";
 import ClosedAlert from "../ClosedAlert";
+import { TitleSimple } from "../../styles/Titles";
 
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
@@ -37,10 +38,7 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
 
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-}));
+const Title = TitleSimple
 
 const StudentForm = () => {
   const user = useSelector((state) => state.user);
