@@ -29,7 +29,7 @@ const SpecificDateDialog = ({
 
   handleAssignDate,
   showLastPart=false,
-  dialogTitle="Asignar", // "Asignar" o "Editar"
+  dialogTitle="Agregar", // "Agregar" o "Editar"
 }) => {
   const [isAssignDisabled, setIsAssignDisabled] = useState(true);
   
@@ -76,7 +76,7 @@ const SpecificDateDialog = ({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle>{dialogTitle} Fecha a Equipo</DialogTitle>
+      <DialogTitle>{dialogTitle} Asignación de Fecha a Equipo</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
           {/* Selección de Equipo */}
