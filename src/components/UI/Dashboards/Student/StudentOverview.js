@@ -141,9 +141,9 @@ const StudentOverview = ({ group_id }) => {
       <Typography variant="h5" align="center" marginTop="1em">
         Entrega Intermedia
       </Typography>
-      <DownloadButton href={videoUrl} target="_blank" rel="noopener">
+      {!!videoUrl ? (<DownloadButton href={videoUrl} target="_blank" rel="noopener">
         Ver Video
-      </DownloadButton>
+      </DownloadButton>) : <Typography>No entregado.</Typography>}
       <Typography variant="h5" align="center" marginTop="1em">
         Reporte Final
       </Typography>
