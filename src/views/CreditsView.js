@@ -16,7 +16,9 @@ function Credits() {
         { name: 'Victoria Abril Lopez', github: 'https://github.com/vickyylopezz', linkedin: 'https://www.linkedin.com/in/victoria-abril-lopez/' },
         { name: 'Ivan Pfaab', github: 'https://github.com/ivanpfaab', linkedin: 'https://www.linkedin.com/in/ivan-pfaab/' },
         { name: 'Celeste Dituro', github: 'https://github.com/celedituro', linkedin: 'https://www.linkedin.com/in/celeste-dituro/' }
-      ]
+      ],
+      tutor_gender_string: "Tutor",
+      tutor: "Mg. Ing. Carlos Fontela",
     },
     {
       period: "1º y 2º cuatrimestre 2025",
@@ -26,7 +28,9 @@ function Credits() {
         { name: 'Roberto Dario Seminara', github: 'https://github.com/tario', linkedin: '' },
         { name: 'Aldana Lescano Maier', github: 'https://github.com/Aldy09', linkedin: '' },
         { name: 'Joaquín Emanuel Hetrea', github: 'https://github.com/JoaquinHetrea', linkedin: '' },
-      ]
+      ],
+      tutor_gender_string: "Tutora",
+      tutor: "Ing. Maia Naftali",
     }
   ];
 
@@ -86,6 +90,7 @@ function Credits() {
 
           <Stack spacing={3} sx={{ mt: 4, mx: 4 }}>
             {teams.map((team, teamIndex) => (
+            <>
               <Box key={teamIndex} sx={{ mb: 5 }}>
                 {teamIndex > 0 && <Divider sx={{ my: 3, opacity: 0.6 }} />}
                 <Typography variant="h6" color="textPrimary" align="center" gutterBottom>
@@ -126,17 +131,18 @@ function Credits() {
                   ))}
                 </Stack>
               </Box>
+              <Divider sx={{ my: 3 }} />
+
+              <Typography variant="h6" color="textPrimary" align="center" sx={{ mt: 3 }}>
+                {team.tutor_gender_string}
+              </Typography>
+              <Typography variant="body1" color="textPrimary" align="center" sx={{ fontWeight: 500 }}>
+                {team.tutor}
+              </Typography>
+            </>
             ))}
           </Stack>
-
-          <Divider sx={{ my: 3 }} />
-
-          <Typography variant="h6" color="textPrimary" align="center" sx={{ mt: 3 }}>
-            Tutor
-          </Typography>
-          <Typography variant="body1" color="textPrimary" align="center" sx={{ fontWeight: 500 }}>
-          Mg. Ing. Carlos Fontela
-          </Typography>
+          
         </CardContent>
       </Card>
     </Box>
