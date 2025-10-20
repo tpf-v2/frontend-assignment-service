@@ -58,15 +58,15 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
     //    que sí, el tutor_id es exactamente lo que tengo acá ahora. No lo puedo usar directamente y me obliga a dar toda la vuelta,
     //    porque así funciona el add que también usa el mismo SpecificDateDialog.
     const team = teams?.find( // <-- workaround
-      (t) => t.group_number === event.result.group_number
+      (t) => t.group_number === event.result?.group_number
     );
     const editableItem = {
       team: team,
       topic: team?.topic.name,
-      tutor: getTutorNameById(team.tutor_period_id, period.id, tutors), // <-- workaround
-      evaluator: event.result.evaluator_id,
-      selectedDateTime: event.start,
-      selectedHour: `${event.start.getHours()}:00`, //${event.start.getMinutes()}`, esto obtne '0', y las opciones son siempre en punto, nunca y media etc
+      tutor: getTutorNameById(team?.tutor_period_id, period.id, tutors), // <-- workaround
+      evaluator: event.result?.evaluator_id,
+      selectedDateTime: event.start || null,
+      selectedHour: `${event.start?.getHours()}:00` || null, //${event.start.getMinutes()}`, esto obtne '0', y las opciones son siempre en punto, nunca y media etc
     }
     return editableItem;
   }

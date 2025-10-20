@@ -651,7 +651,8 @@ const Dates = ({setSelectedMenu}) => {
         )}
       </Grid>
 
-      {/* Sección de Tabla con resultados y Botón a la derecha */}
+      {/* Sección de Tabla con resultados (Calendario grande) y Botón a la derecha */}
+      {/* El cartel de edición, similar al de agregar, se llama dentro de CalendarSection */}
       <Grid item xs={12}>
         <CalendarSection
           events={initialEvents}
@@ -692,21 +693,7 @@ const Dates = ({setSelectedMenu}) => {
 
         showLastPart={true}
         handleAssignDate={handleAssignDate}
-      />
-
-      {/*<SpecificDateDialog // Asignar fecha a equipo manualmente, al clickear Editar en el slot ampliado
-        open={editDateOpenDialog}
-        onClose={() => setEditDateOpenDialog(false)}        
-        item={item}
-        setItem={setItem}
-
-        teams={teams}
-        tutors={tutors}
-        period={period}
-        
-        showLastPart={true}
-        handleAssignDate={handleAssignDate}
-      />*/}
+      />      
 
       <ResultsDialog // Luego de correr el algoritmo
         open={showResults}
