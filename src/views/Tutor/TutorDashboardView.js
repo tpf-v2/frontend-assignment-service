@@ -31,7 +31,7 @@ import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import TodayIcon from '@mui/icons-material/Today';
 import GroupsIcon from '@mui/icons-material/Groups';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
-
+import { Title } from "../../styles/Titles";
 // Estilos
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -58,14 +58,7 @@ const ListItemStyled = styled(ListItemButton)(({ selected }) => ({
   },
 }));
 
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: 0,
-  color: "#0072C6",
-  textAlign: "center",
-  fontSize: "2rem",
-  fontWeight: "bold",
-  flexGrow: 1,
-}));
+
 
 const TitleTop = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(0),

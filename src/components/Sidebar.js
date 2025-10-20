@@ -11,15 +11,7 @@ import TimelineIcon from '@mui/icons-material/Timeline';
 import EmojiFlagsIcon from '@mui/icons-material/EmojiFlags';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: 0,
-  color: "#0072C6",
-  textAlign: "center",
-  fontSize: "2rem",
-  fontWeight: "bold",
-  flexGrow: 1,
-}));
+import { Title } from "../styles/Titles";
 
 const TitleTop = styled(Typography)(({ theme }) => ({
   color: "#0072C6",
