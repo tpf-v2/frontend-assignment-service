@@ -49,37 +49,29 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
     },
   }))
 
-  // Aux: En construcción!!!
+  // Transformar el formato para pasarle a SpecificDateDialog el item precargado con el formato que espera.
   const makeEditableItem = (event) => {
-    // 282024 no anda el tutor, revisar [], lo demás pasado anda :) (revisar las horas, igual).
-    // No anda la request, xq: acá estoy pasando mal el tutor que necesita para poder obtener el tutor para hacerle .name,
-    // y porque no tiene team.id que lo necesita para poder buscar... AL TUTOR (xq solo tiene un name acá)
-    // que lo necesita para hacerle tutor.id QUE ES EXACTAMENTE el 282024 que yo tengo acá ;-;
-    // O sea me está haciendo agregar campos para dar toda la vuelta y llegar al mismo dato :c.
-    // Es un lío esto. Pero también debe seguir andando el add que ya andaba. Ver cómo hacer.
-    const team = teams?.find(
+    // To-Do: refactor para evitar toda esta vuelta:
+    //  - tendría que ser "tutor = getTutorNameById(event.result.tutor_id,..." pero no anda, xq es otro dato.
+    //  - el team debe tener id (debo buscarlo como acá entonces) xq afuera usa el team.id para obtener el team y con eso
+    //    hacer tutor=getTutorById(team.tutor_period_id) y obtener el "tutor_id":
+    //    que sí, el tutor_id es exactamente lo que tengo acá ahora. No lo puedo usar directamente y me obliga a dar toda la vuelta,
+    //    porque así funciona el add que también usa el mismo SpecificDateDialog.
+    const team = teams?.find( // <-- workaround
       (t) => t.group_number === event.result.group_number
     );
-    console.log("--- en make, obtuve aux este team:", team);
     const editableItem = {
-      team: team, //{group_number: event.result?.group_number}, // []
-      topic: team?.topic.name,  //teams?.find(
-      //    (t) => t.group_number === event.result.group_number
-      //    )?.topic.name, // "hermoso" -_-, esto es lo que hace el Specific xq no tenemos el team. Mandarlo a util al menos []
-      tutor: getTutorNameById(team.tutor_period_id, period.id, tutors), 
-      // getTutorNameById(
-      //    event.result.tutor_id,// no anda // cuidado, no me acuerdo si es lo mismo, decía tutor_period_id, revisar (sí, el dato que veo suena a eso, x más que se llame tutor_id)
-      //    period.id,
-      //    tutors
-      //  ),
+      team: team,
+      topic: team?.topic.name,
+      tutor: getTutorNameById(team.tutor_period_id, period.id, tutors), // <-- workaround
       evaluator: event.result.evaluator_id,
-      selectedDateTime: event.start, //"", // Ver cómo usar la event.date que tiene toda esta info
+      selectedDateTime: event.start,
       selectedHour: `${event.start.getHours()}:00`, //${event.start.getMinutes()}`, esto obtne '0', y las opciones son siempre en punto, nunca y media etc
     }
     return editableItem;
   }
 
-  console.log("---selectedEvent:", selectedEvent); //aux: esta cosa no tiene el formato que espera Specific...
+  console.log("---selectedEvent:", selectedEvent);
   return (
     <>
       {loadingDates ? (
@@ -172,16 +164,13 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
                             "HH:mm"
                           )} - ${moment(selectedEvent.end).format("HH:mm")}`}
                         </Typography>
-                        <Button // Aux: probando
-                          //onClick={() => {setSelectedEvent(selectedEvent.result); setEditDateOpenDialog(true)}}
+                        <Button
                           onClick={() => {
-                            console.log("--- selectedEvent aux:", selectedEvent); // cosas
                             const constructedItem = makeEditableItem(selectedEvent);
                             setSelectedEvent(constructedItem);
-                            console.log("--- constructedItem:", constructedItem); // undefined, y el sgte selectedEvent undefined entonces
                             setEditDateOpenDialog(true)}
                           }
-                          style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
+                          style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja // Aux: pienso cambiar la estética []
                           sx={{ml: "auto"}}>
                           Editar
                         </Button>
