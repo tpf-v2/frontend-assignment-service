@@ -265,7 +265,6 @@ const Dates = ({setSelectedMenu}) => {
       console.log("Running the algorithm!");
 
       const response = await dates(user, period, maxDifference, maxTeams);
-      console.log("---response:", response);
 
       setDatesResult(response.assigments);
     } catch (error) {
@@ -302,7 +301,6 @@ const Dates = ({setSelectedMenu}) => {
   // Importante: esta función hace request al back para (entre otras cosas( editar la exhibition_date del equipo
   // y puede hacerlo porque los resultados ya fueron confirmados.
   const handleAssignDate = async (team, evaluator, selectedDateTime, selectedHour, handleClose) => {
-    console.log("--- handleAssignDate, recibo team:", team);
     if (!team || !evaluator || !selectedDateTime || !selectedHour) {
       handleSnackbarOpen(
         "Por favor completa todos los campos antes de asignar.",
