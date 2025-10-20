@@ -44,12 +44,12 @@ const DownloadButton = styled(Button)(({ theme }) => ({
 }));
 
 // Copypaste de Tutor/GroupReview sin funcionalidad de comentario
-const StudentOverview = ({ group_id }) => {
+const StudentOverview = ({ group_id, team }) => {
   const [pdfUrlInitial, setPdfUrlInitial] = useState(null);
   const [pdfUrlFinal, setPdfUrlFinal] = useState(null);
   const user = useSelector((state) => state.user);
   const [videoUrl, setVideoUrl] = useState(null);
-
+  console.log("Inside got team: %s", team)
   const loadIntermediateProject = async () => {
     try {
       const response = await getIntermediateProject(group_id, user, user.period_id);
@@ -84,22 +84,27 @@ const StudentOverview = ({ group_id }) => {
       // Función para cargar el PDF en la previsualización
     const loadPdfPreview = async () => {
       try {
-        
-        if (!!user && !!user.period_id && !!group_id) {
-          console.log("good")
-          const urlinit = await fetchProjectPdf(group_id, user, user.period_id, 'initial');
-          setPdfUrlInitial(urlinit); // Guarda la URL en el estado
+
+        if (!!user && !!user.period_id && !!group_id && !!team) {
+          if (!!team.pre_report_date) {
+            const urlinit = await fetchProjectPdf(group_id, user, user.period_id, 'initial');
+            setPdfUrlInitial(urlinit); // Guarda la URL en el estado
+          } else {
+            setPdfUrlInitial("failed")
+          }
         }
-        
       } catch (error) {
         console.error("Error al cargar la previsualización del PDF inicial:", error);
         setPdfUrlInitial("failed"); // Guarda la URL en el estado
       }
       try {
-        if (!!user && !!user.period_id && !!group_id) {
-          console.log("good")
-          const urlfin = await fetchProjectPdf(group_id, user, user.period_id, 'final');
-          setPdfUrlFinal(urlfin); // Guarda la URL en el estado
+        if (!!user && !!user.period_id && !!group_id && !!team) {
+          if (!!team.final_report_date) {
+            const urlfin = await fetchProjectPdf(group_id, user, user.period_id, 'final');
+            setPdfUrlFinal(urlfin); // Guarda la URL en el estado
+          } else {
+            setPdfUrlFinal("failed"); // Guarda la URL en el estado
+          }
         }
         
       } catch (error) {

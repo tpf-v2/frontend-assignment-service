@@ -94,7 +94,7 @@ const App = () => {
             <Route path="/confirm-email" element={<ConfirmEmailView />} />
             <Route path="/reset-password" element={<ResetPasswordView />} />
             <Route path="/home" element={<HomeView />} />
-            <Route path="/deliveries" element={<StudentDeliveryView />} />
+            <Route path="/deliveries" element={<ProtectedRoute><StudentDeliveryView /></ProtectedRoute>} />
             <Route path="/credits" element={<Credits />} />
             {/* <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} /> */}
             <Route path="/dashboard/:period" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />
