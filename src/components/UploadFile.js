@@ -5,7 +5,6 @@ import {
   Button,
   Typography,
   Box,
-  Paper,
   Dialog,
   DialogActions,
   DialogContent,

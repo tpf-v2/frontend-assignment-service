@@ -2,7 +2,7 @@
 // e irlos reemplazando de a poco para poder probar su funcionamiento y asegurar que no rompimos nada.
 
 import { styled } from "@mui/system";
-import { Paper, Button, Typography } from "@mui/material";
+import { Paper, Button } from "@mui/material";
 import { TitleSimple } from "../styles/Titles";
 
 // Usados en varios forms de lado estudiante, ej Proponer Idea

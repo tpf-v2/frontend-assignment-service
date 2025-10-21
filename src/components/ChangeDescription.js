@@ -3,7 +3,6 @@ import {
   Button,
   Typography,
   Box,
-  Paper,
   Dialog,
   DialogActions,
   DialogContent,
@@ -12,7 +11,6 @@ import {
   Divider,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import { useNavigate } from "react-router-dom";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import { uploadDescription } from "../api/postDescription";
@@ -29,7 +27,6 @@ const ChangeDescription = ({ projectType, headerInfo, user, group }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

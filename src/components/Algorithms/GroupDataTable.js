@@ -5,7 +5,6 @@ import {
   Container,
   CircularProgress,
   Paper,
-  Typography,
   Table,
   TableBody,
   TableCell,
