@@ -27,7 +27,7 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
 
-const Title = TitleSimple
+const Title = TitleSimple;
 
 const LoginView = () => {
   const [email, setEmail] = useState("");

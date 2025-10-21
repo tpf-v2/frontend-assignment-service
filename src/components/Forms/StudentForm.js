@@ -38,7 +38,7 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
 
-const Title = TitleSimple
+const Title = TitleSimple;
 
 const StudentForm = () => {
   const user = useSelector((state) => state.user);

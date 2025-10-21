@@ -19,4 +19,4 @@ export const ButtonStyled = styled(Button)(({ theme }) => ({
   marginLeft: "auto",
 }));
 
-export const Title = TitleSimple
+export const Title = TitleSimple;

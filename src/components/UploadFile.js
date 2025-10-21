@@ -23,7 +23,7 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
 
-const Title = TitleSimple
+const Title = TitleSimple;
 
 const DropzoneBox = styled(Box)(({ theme }) => ({
   border: "2px dashed #cccccc",

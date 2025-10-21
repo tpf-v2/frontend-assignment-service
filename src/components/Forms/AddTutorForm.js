@@ -14,7 +14,7 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
 
-const Title = TitleSimple
+const Title = TitleSimple;
 
 const AddTutorForm = () => {
   const [corrector, setCorrector] = useState({

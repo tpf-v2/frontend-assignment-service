@@ -18,7 +18,7 @@ const Root = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[10],
 }));
 
-const Title = TitleSimple
+const Title = TitleSimple;
 
 const ConfirmEmailView = () => {
   const navigate = useNavigate();
