@@ -18,7 +18,7 @@ const Root = styled(Paper)(({ theme }) => ({
 const PublicPDFView = () => {
   const user = useSelector((state) => state.user);
   const _param_period = useParams().period;
-  const [period, setPeriod] = useState(_param_period);
+  const [period, setPeriod] = useState(_param_period); // Da warning set no usado; debería ser const period = seState(_param_period);
   const [loadingFinalProjects, setLoadingFinalProjects] = useState(true);
   const [deliveries, setDeliveries] = useState(null);
 
@@ -64,7 +64,6 @@ const PublicPDFView = () => {
         maxWidth={false}
         sx={{
           width: "95%", // Ajusta el ancho al 90% del viewport
-          height: "120vh", // Ocupa el 100% de la altura de la pantalla
           maxWidth: "none", // Para que el maxWidth no limite el tamaño
         }}
       >
