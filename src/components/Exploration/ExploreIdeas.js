@@ -5,12 +5,20 @@ import MySnackbar from "../UI/MySnackBar";
 import { Root, Title } from "../../components/Root";
 import { getPeriodIdeas, editIdeaContent, editIdeaStatus } from "../../api/ideas";
 import { EditIdeaModal, EditType } from "./EditIdeaModal";
+import SubmitButton from "../../components/Buttons/SubmitButton";
+import { useNavigate } from "react-router-dom";
+import { getGroupByIdSimple } from "../../api/getGroupById";
 
 const ExploreIdeas = () => {
+  const navigate = useNavigate();
+  const handleNavigation = (url) => {
+    navigate(url);
+  };
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
 
   const [ideas, setIdeas] = useState([]);
+  const [team, setTeam] = useState(null);
   const [loading, setLoading] = useState(false);
   const [editingIdea, setEditingIdea] = useState();
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -30,8 +38,12 @@ const ExploreIdeas = () => {
     const fetchIdeas = async () => {
       try {
         setLoading(true);
-        const response = await getPeriodIdeas(period.id, user);        
+        const response = await getPeriodIdeas(user.period_id, user);        
         setIdeas(response);
+        if (user?.temporal_role === 'student') {
+          const team = await getGroupByIdSimple(user, user.group_id)
+          setTeam(team)
+        }
       } catch (error) {
         console.error("Error al obtener las ideas del cuatrimestre", error);
         setNotification({
@@ -155,6 +167,13 @@ const ExploreIdeas = () => {
             </Typography>
           </Box>        
         ))}
+        <SubmitButton
+          url="/propose-idea"
+          title="Proponer Idea"
+          width="100%"
+          handleSubmit={() => handleNavigation("/propose-idea")}
+          disabled={team && team.pre_report_date == null}
+        />
                       
       </Root>
       {/* Modals para editar el contenido y el full_team */}

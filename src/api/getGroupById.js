@@ -16,3 +16,19 @@ export const getGroupById = (user, group_id) => async () => {
   const response = await axios.get(`${BASE_URL}/groups/states/${group_id}`, config);
   return response.data;
 };
+
+
+export const getGroupByIdSimple = async (user, group_id) => {
+  
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+    params: {
+      cache_bust: new Date().getTime(), // add params to avoid caching
+    },
+  };
+
+  const response = await axios.get(`${BASE_URL}/groups/states/${group_id}`, config);
+  return response.data;
+};
