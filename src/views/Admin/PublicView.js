@@ -18,7 +18,7 @@ const Root = styled(Paper)(({ theme }) => ({
 const PublicPDFView = () => {
   const user = useSelector((state) => state.user);
   const _param_period = useParams().period;
-  const [period, setPeriod] = useState(_param_period);
+  const [period, setPeriod] = useState(_param_period); // Da warning set no usado; debería ser const period = seState(_param_period);
   const [loadingFinalProjects, setLoadingFinalProjects] = useState(true);
   const [deliveries, setDeliveries] = useState(null);
 

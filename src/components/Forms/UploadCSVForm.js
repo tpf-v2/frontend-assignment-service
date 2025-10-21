@@ -115,7 +115,7 @@ const UploadCSVForm = ({ formType, setItems }) => {
         setIsSuccess(false);
       }
     } catch (error) {
-      let errorMessage = "Error al cargar el archivo de ${TITLE_DICT[formType]}";
+      let errorMessage = `Error al cargar el archivo de ${TITLE_DICT[formType]}`;
       if (error.response && error.response.data && error.response.data.detail) {
         errorMessage = error.response.data.detail;
       }
