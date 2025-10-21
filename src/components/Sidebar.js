@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, List, ListItemText, ListItemIcon, Accordion, AccordionSummary, AccordionDetails, Divider, ListItemButton } from "@mui/material";
+import { Box, List, ListItemText, ListItemIcon, Accordion, AccordionSummary, AccordionDetails, Divider, ListItemButton } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/system";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -11,24 +11,7 @@ import TimelineIcon from '@mui/icons-material/Timeline';
 import EmojiFlagsIcon from '@mui/icons-material/EmojiFlags';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: 0,
-  color: "#0072C6",
-  textAlign: "center",
-  fontSize: "2rem",
-  fontWeight: "bold",
-  flexGrow: 1,
-}));
-
-const TitleTop = styled(Typography)(({ theme }) => ({
-  color: "#0072C6",
-  textAlign: "center",
-  fontSize: "1rem",
-  fontWeight: "bold",
-  flexGrow: 1,
-  overflowWrap: "break-word",
-}));
+import { Title, TitleTop } from "../styles/Titles";
 
 const SidebarList = styled(List)(({ theme }) => ({
   marginTop: theme.spacing(4),

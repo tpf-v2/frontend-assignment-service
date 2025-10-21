@@ -5,7 +5,6 @@ import {
   Container,
   CircularProgress,
   Paper,
-  Typography,
   Table,
   TableBody,
   TableCell,
@@ -30,6 +29,7 @@ import { editTeam, addTeam } from "../../api/sendGroupForm";
 import MySnackbar from "../UI/MySnackBar";
 import { getTableData } from "../../api/handleTableData";
 import AddIcon from "@mui/icons-material/Add";
+import { TitleSpaced } from "../../styles/Titles";
 
 // Componente para la tabla de equipos
 const TeamDataTable = ({
@@ -85,13 +85,8 @@ const TeamDataTable = ({
     backgroundColor: "#ffffff",
     boxShadow: theme.shadows[3],
   }));
-  const Title = styled(Typography)(({ theme }) => ({
-    marginBottom: theme.spacing(2),
-    color: "#0072C6",
-    textAlign: "center",
-    fontSize: "2rem",
-    fontWeight: "bold",
-  }));
+  
+  const Title = TitleSpaced;
 
   // useEffect
   useEffect(() => {
