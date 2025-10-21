@@ -6,6 +6,7 @@ import { Root, Title } from "../../components/Root";
 import { getPeriodIdeas, editIdeaContent, editIdeaStatus } from "../../api/ideas";
 import { EditIdeaModal, EditType } from "./EditIdeaModal";
 import SubmitButton from "../../components/Buttons/SubmitButton";
+import DeEmphasizedSubmitButton from "../../components/Buttons/DeEmphasizedSubmitButton";
 import { useNavigate } from "react-router-dom";
 import { getGroupByIdSimple } from "../../api/getGroupById";
 
@@ -172,6 +173,13 @@ const ExploreIdeas = () => {
           title="Proponer Idea"
           width="100%"
           handleSubmit={() => handleNavigation("/propose-idea")}
+          disabled={team && team.pre_report_date == null}
+        />
+        <DeEmphasizedSubmitButton
+          url="/public"
+          title="Ver proyectos anteriores"
+          width="100%"
+          handleSubmit={() => handleNavigation("/public")}
           disabled={team && team.pre_report_date == null}
         />
                       
