@@ -8,19 +8,11 @@ import {
   CircularProgress,
   Paper,
   IconButton,
-  Typography
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
-import { styled } from "@mui/system";
+import { FlexGrowTitle } from "../../../../../styles/Titles";
 
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: "#0072C6",
-  textAlign: "center",
-  fontSize: "2rem",
-  fontWeight: "bold",
-  flexGrow: 1,
-}));
+const Title = FlexGrowTitle;
 
 const ContentPublicPdfProjects = ({
   loadingProjects,
@@ -58,7 +50,7 @@ const ContentPublicPdfProjects = ({
                       <TableRow key={index}>
                         <TableCell>
                           <IconButton
-                            onClick={() => downloadFile(entrega.project.id, entrega.group_number)}
+                            onClick={() => downloadFile(entrega.project.id, entrega.group_number, entrega.period_id)}
                           >
                           <DownloadIcon />
                           </IconButton>
