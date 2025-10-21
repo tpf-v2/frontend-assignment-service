@@ -143,7 +143,7 @@ const StudentHomeView = () => {
             {/* AUX PROBANDO: estos dos primeros botones no van a ir acá, solo estoy probando */}
             <SubmitButton
               url="/explore/ideas"
-              title="Explorar Ideas"
+              title="Explorar Ideas de Temas"
               width="100%"
               handleSubmit={() => handleNavigation("/explore/ideas")}
               disabled={!milestones[0]?.tasks[0].completed}
