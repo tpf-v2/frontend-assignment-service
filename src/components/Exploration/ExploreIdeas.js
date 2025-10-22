@@ -112,7 +112,7 @@ const ExploreIdeas = () => {
         )}
         {/* Renderizado de ideas */}  
         {ideas?.map((idea) => (
-          <Box key={idea?.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2 }}>
+          <Box key={idea?.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2}}>
             {/* Botón en mismo renglón que título */}
             <Box
               sx={{ 
@@ -120,6 +120,7 @@ const ExploreIdeas = () => {
                 gap: 2,
                 justifyContent: 'space-between',
                 alignItems: 'center',
+                marginBottom: '1rem'
               }}
             >
               <Typography variant="subtitle1" fontWeight="bold">               
