@@ -52,10 +52,6 @@ const StudentHomeView = () => {
     const fetchTeamAnswer = async () => {
       try {
         const userData = await dispatch(getStudentInfo(user));
-
-        console.log("--- user.id:", user.id);
-        console.log("--- userData:", userData);
-        
         let team = {};
         if (userData.group_id !== 0) {
           team = await dispatch(getGroupById(user, userData.group_id));
@@ -153,18 +149,11 @@ const StudentHomeView = () => {
               disabled={!milestones[0]?.tasks[0].completed}
             />
             <SubmitButton
-              url="/propose-idea"
-              title="Proponer Idea"
-              width="100%"
-              handleSubmit={() => handleNavigation("/propose-idea")}
-              disabled={!milestones[0]?.tasks[0].completed}
-            />
-            <SubmitButton
               url="/explore/ideas"
-              title="Explorar Ideas"
+              title="Explorar Ideas de Temas"
               width="100%"
               handleSubmit={() => handleNavigation("/explore/ideas")}
-              disabled={!milestones[0]?.tasks[0].completed}
+              disabled={milestones[0]?.tasks[0].completed}
             />
             <SubmitButton
               url="/student-form"
