@@ -123,7 +123,21 @@ const ExploreIdeas = () => {
             Aún no hay ideas propuestas por estudiantes este cuatrimestre.
           </Alert>
         )}
-        {/* Renderizado de ideas */}  
+        {/* Renderizado de ideas */}
+        <SubmitButton
+          url="/propose-idea"
+          title="Proponer Idea"
+          width="100%"
+          handleSubmit={() => handleNavigation("/propose-idea")}
+          disabled={team && team.pre_report_date == null}
+        />
+        <DeEmphasizedSubmitButton
+          url="/public"
+          title="Ver proyectos anteriores"
+          width="100%"
+          handleSubmit={() => handleNavigation("/public")}
+          disabled={team && team.pre_report_date == null}
+        />
         {ideas?.map((idea) => (
           <Box key={idea?.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2 }}>
             {/* Botón en mismo renglón que título */}
@@ -168,20 +182,6 @@ const ExploreIdeas = () => {
             </Typography>
           </Box>        
         ))}
-        <SubmitButton
-          url="/propose-idea"
-          title="Proponer Idea"
-          width="100%"
-          handleSubmit={() => handleNavigation("/propose-idea")}
-          disabled={team && team.pre_report_date == null}
-        />
-        <DeEmphasizedSubmitButton
-          url="/public"
-          title="Ver proyectos anteriores"
-          width="100%"
-          handleSubmit={() => handleNavigation("/public")}
-          disabled={team && team.pre_report_date == null}
-        />
                       
       </Root>
       {/* Modals para editar el contenido y el full_team */}
