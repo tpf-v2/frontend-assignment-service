@@ -40,7 +40,7 @@ const ExploreIdeas = () => {
         setLoading(true);
         const response = await getPeriodIdeas(user.period_id, user);        
         setIdeas(response);
-        if (user?.temporal_role === 'student') {
+        if (user.temporal_role === 'student' && !!user.group_id) {
           const team = await getGroupByIdSimple(user, user.group_id)
           setTeam(team)
         }
