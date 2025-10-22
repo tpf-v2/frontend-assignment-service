@@ -146,7 +146,7 @@ const StudentHomeView = () => {
               title="Explorar Ideas de Temas"
               width="100%"
               handleSubmit={() => handleNavigation("/explore/ideas")}
-              disabled={!milestones[0]?.tasks[0].completed}
+              disabled={milestones[0]?.tasks[0].completed}
             />
             <SubmitButton
               url="/student-form"
