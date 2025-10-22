@@ -74,8 +74,8 @@ export const addTeam = async (newItem, user, periodId, confirm_move=false, confi
     },
   };
   const intStudentIds = newItem.students
-  .map(s => s.id)
-  .filter(id => Number.isInteger(id));
+  .map(s => s.student_number)
+  .filter(number => !!number); // un filter de front no es necesario por tener dropdown
   
   // Construyo un payload para reutilizar la función createTeam
   const payload = {
@@ -105,8 +105,8 @@ export const editTeam = async (groupId, periodId, teamToEdit, user, confirm_move
   const studentsInput = teamToEdit.students;
   
   const intStudentIds = studentsInput
-  .map(s => s.id)
-  .filter(id => Number.isInteger(id));
+  .map(s => s.group_number)
+  .filter(number => !!number);; // un filter de front no es necesario por tener dropdown
 
   const sendableTeamToEdit = {
     "students_ids": intStudentIds,
