@@ -7,16 +7,9 @@ import { getPeriodById, getTutorPeriods } from '../../api/handlePeriods'
 import MySnackbar from '../../components/UI/MySnackBar';
 import { setPeriod } from '../../redux/slices/periodSlice';
 import { HomeViewTitle } from '../../styles/Titles';
-const Root = styled(Container)(({ theme }) => ({
-  marginTop: theme.spacing(8),
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  padding: theme.spacing(4),
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[3],
-  backgroundColor: '#E3F2FD', // Celeste FIUBA
-}));
+import { RootCeleste } from '../../components/Root';
+
+const Root = RootCeleste;
 
 const CardContainer = styled(Box)(({ theme }) => ({
   display: 'flex',

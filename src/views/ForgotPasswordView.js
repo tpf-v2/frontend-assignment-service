@@ -13,12 +13,7 @@ import BackgroundContainer from "../components/UI/BackgroundContainer.js";
 import MySnackbar from "../components/UI/MySnackBar.js";
 import { requestPasswordReset } from "../api/auth.js";
 import { TitleSimple } from "../styles/Titles.js";
-
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
+import { Root } from "../components/Root.js";
 
 const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),

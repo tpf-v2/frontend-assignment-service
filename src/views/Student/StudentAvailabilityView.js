@@ -1,19 +1,10 @@
-
-import React from "react";
-import { Container, Paper } from "@mui/material";
+import { Container } from "@mui/material";
 import AvailabilityCalendar from "../../components/AvailabilityCalendar";
-import { styled } from "@mui/material/styles";
 import { useSelector } from "react-redux";
 import ClosedAlert from "../../components/ClosedAlert";
-
+import { RootWhite } from "../../components/Root";
 // Estilos
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  padding: theme.spacing(2),
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: "#ffffff",
-  boxShadow: theme.shadows[3],
-}));
+const Root = RootWhite;
 
 const StudentAvailabilityView = () => {
   const period = useSelector((state) => state.period);

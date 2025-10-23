@@ -5,15 +5,9 @@ import { useSelector } from "react-redux";
 import { Container, Box, Grid, Paper } from "@mui/material";
 import { downloadProject, getPublicProjects } from "../../api/handleProjects";
 import ContentPublicPdfProjects from "../../components/UI/Dashboards/AdminStats/Components/ContentPublicProjectPDFs";
-
+import { RootWhite } from "../../components/Root";
 // Estilos
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  padding: theme.spacing(2),
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: "#ffffff",
-  boxShadow: theme.shadows[3],
-}));
+const Root = RootWhite;
 
 const PublicPDFView = () => {
   const user = useSelector((state) => state.user);
