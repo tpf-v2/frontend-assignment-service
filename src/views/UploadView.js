@@ -56,19 +56,19 @@ const UploadView = () => {
 
 
   function getProjectDeliveredDate() {
-    if (projectType=="final-project") {
+    if (projectType==="final-project") {
       return group.final_report_date;
-    } else if (projectType=="initial-project") {
+    } else if (projectType==="initial-project") {
       return group.pre_report_date;
-    } else if (projectType=="intermediate-project") {
+    } else if (projectType==="intermediate-project") {
       return group.intermediate_assignment_date;
-    } else if (projectType=="pps-report") {
+    } else if (projectType==="pps-report") {
       return user.pps_report_date;
     }
   }
 
   function getProjectDeliveredMessage() {
-    if (projectType == "pps-report") {
+    if (projectType === "pps-report") {
       return "Ya realizaste esta entrega el " + getProjectDeliveredDate().substring(0,10) + ".";
     } else {
       return "Tu equipo ya realizó esta entrega el " + getProjectDeliveredDate().substring(0,10) + ".";
@@ -76,7 +76,7 @@ const UploadView = () => {
   }
 
   function getProjectNotDeliveredMessage() {
-    if (projectType == "pps-report") {
+    if (projectType === "pps-report") {
       return "No realizaste esta entrega aún.";
     } else {
       return "Tu equipo no ha realizado esta entrega aún.";
@@ -88,15 +88,15 @@ const UploadView = () => {
 
   const isProjectActive = period[activeKey];
   let delivered = false;
-  if (group && projectType=="final-project" && !!group.final_report_date) {
+  if (group && projectType==="final-project" && !!group.final_report_date) {
     delivered = true;
   }
-  if (group && projectType=="initial-project" && !!group.pre_report_date) {
+  if (group && projectType==="initial-project" && !!group.pre_report_date) {
     delivered = true;
   }
-  if (group && projectType=="intermediate-project" && !!group.intermediate_assigment_date) {
+  if (group && projectType==="intermediate-project" && !!group.intermediate_assigment_date) {
     delivered = true;
-  } else if (projectType=="pps-report" && !!user.pps_report_date) {
+  } else if (projectType==="pps-report" && !!user.pps_report_date) {
     delivered = true;
   }
 
@@ -115,7 +115,7 @@ const UploadView = () => {
       )
       }
       {
-        (delivered && projectType == "final-project") ? <ChangeDescription projectType={"final-project"} headerInfo={null} user={user} group={group}/> : null
+        (delivered && projectType === "final-project") ? <ChangeDescription projectType={"final-project"} headerInfo={null} user={user} group={group}/> : null
       }
       </Root>
     </Container>
