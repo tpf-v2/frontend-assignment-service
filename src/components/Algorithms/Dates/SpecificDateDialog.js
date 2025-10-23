@@ -193,7 +193,8 @@ const SpecificDateDialog = ({
                     value={item?.selectedDateTime ? dayjs(item.selectedDateTime) : null}
                     onChange={(newValue) => setItem({...item, selectedDateTime: newValue.startOf("day")})}
                     format="DD/MM/YYYY"
-                    minDate={dayjs.min(dayjs(initialDate), dayjs())} // Desde qué fecha permite seleccionar
+                    minDate={initialDate ? dayjs.min(dayjs(initialDate), dayjs()) : dayjs()} // Desde qué fecha permite seleccionar
+                    defaultCalendarMonth={initialDate ? dayjs.min(dayjs(initialDate), dayjs()) : dayjs()}
                     shouldDisableDate={(date) => {
                       const day = date.day();
                       return day === 0 || day === 6; // No permitir seleccionar fines de semana
