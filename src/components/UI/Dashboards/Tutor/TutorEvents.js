@@ -113,7 +113,7 @@ const TutorEvents = ({ events, loading }) => {
                       />{" "}
                       {/* Espacio entre el icono y el título */}
                       <ListItemText
-                        primary={`Grupo ${event.id} - ${event.topic}`}
+                        primary={`Equipo ${event.id} - ${event.topic}`}
                       />
                     </EventInfo>
                     <TimeRemaining>
