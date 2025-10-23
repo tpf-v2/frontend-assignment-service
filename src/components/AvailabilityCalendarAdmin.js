@@ -248,6 +248,7 @@ const AvailabilityCalendarAdmin = () => {
         open={confirmDeleteOpen}
         onClose={() => setConfirmDeleteOpen(false)}
         onConfirm={handleDeleteEvent}
+        showExtraWarningFor={"admin"}
       />
 
       <MySnackbar

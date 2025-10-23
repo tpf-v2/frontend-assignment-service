@@ -2,7 +2,7 @@
 import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 
-const ConfirmDeleteModal = ({ open, onClose, onConfirm }) => {
+const ConfirmDeleteModal = ({ open, onClose, onConfirm, showExtraWarningFor=undefined }) => {
   const handleConfirm = () => {
     onConfirm(); // Llama a onConfirm sin parámetros
   };
@@ -12,6 +12,10 @@ const ConfirmDeleteModal = ({ open, onClose, onConfirm }) => {
       <DialogTitle>Eliminar Evento</DialogTitle>
       <DialogContent>
         <p>¿Estás seguro de que deseas eliminar este bloque de disponibilidad?</p>
+        {showExtraWarningFor === "admin" && (
+          <p><strong>Importante: esto eliminará irreversiblemente las disponibilidades que equipos y tutores hayan            
+            cargado dentro de esta franja horaria ¿Eliminar?</strong></p>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary" variant="outlined">
