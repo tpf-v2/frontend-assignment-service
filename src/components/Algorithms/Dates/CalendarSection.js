@@ -198,6 +198,7 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
             onClose={() => setEditDateOpenDialog(false)}        
             item={selectedEvent}
             setItem={setSelectedEvent}
+            initialDate={defaultDate}
 
             teams={teams}
             tutors={tutors}

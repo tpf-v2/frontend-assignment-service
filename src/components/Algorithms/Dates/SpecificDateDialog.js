@@ -15,16 +15,18 @@ import { getTutorNameById } from "../../../utils/getEntitiesUtils";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import "dayjs/locale/es"
+import "dayjs/locale/es";
 import { esES } from "@mui/x-date-pickers/locales";
 import updateLocale from "dayjs/plugin/updateLocale";
+import minMax from "dayjs/plugin/minMax";
 // Ajustes, para DatePicker
 dayjs.locale("es"); // para mostrar texto en español
 // para que la semana siga iniciando en domingo (y no en lunes)
 dayjs.extend(updateLocale);
 dayjs.updateLocale("es",{
   weekStart: 0
-})
+});
+dayjs.extend(minMax); // para poder comparar ("min")
 
 const SpecificDateDialog = ({
   open,
@@ -32,6 +34,8 @@ const SpecificDateDialog = ({
 
   item,
   setItem,
+
+  initialDate,
   
   period,
   teams,
@@ -189,7 +193,7 @@ const SpecificDateDialog = ({
                     value={item?.selectedDateTime ? dayjs(item.selectedDateTime) : null}
                     onChange={(newValue) => setItem({...item, selectedDateTime: newValue.startOf("day")})}
                     format="DD/MM/YYYY"
-                    minDate={dayjs()}
+                    minDate={dayjs.min(dayjs(initialDate), dayjs())} // Desde qué fecha permite seleccionar
                     shouldDisableDate={(date) => {
                       const day = date.day();
                       return day === 0 || day === 6; // No permitir seleccionar fines de semana

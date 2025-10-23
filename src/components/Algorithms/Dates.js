@@ -690,6 +690,7 @@ const Dates = ({setSelectedMenu}) => {
         onClose={() => setAssignDateOpenDialog(false)}        
         item={item}
         setItem={setItem}
+        initialDate={defaultDate}
 
         teams={teams}
         tutors={tutors}
@@ -727,6 +728,7 @@ const Dates = ({setSelectedMenu}) => {
         onClose={() => setModalOpen(false)}
         item={item}
         setItem={setItem}
+        initialDate={defaultDate}
 
         teams={teams}
         tutors={tutors}
