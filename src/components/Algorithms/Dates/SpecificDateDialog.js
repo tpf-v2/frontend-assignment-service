@@ -183,6 +183,10 @@ const SpecificDateDialog = ({
                     onChange={(newValue) => setItem({...item, selectedDateTime: newValue.startOf("day")})}
                     format="DD/MM/YYYY"
                     minDate={dayjs()}
+                    shouldDisableDate={(date) => {
+                      const day = date.day();
+                      return day === 0 || day === 6; // No permitir seleccionar fines de semana
+                    }}
                   />
                 </LocalizationProvider>
               </Grid>
