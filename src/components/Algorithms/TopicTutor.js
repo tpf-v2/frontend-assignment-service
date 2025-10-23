@@ -235,7 +235,7 @@ const TopicTutor = () => {
     const csvRows = [];
     csvRows.push(
       [
-        "Grupo número",
+        "Equipo número",
         "Tutor asignado",
         "Tema asignado",
         "Preferencia 1",
