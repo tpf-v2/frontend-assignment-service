@@ -17,7 +17,6 @@ import PresentationDateCard from "../../components/UI/Dashboards/Student/Present
 const StudentHomeView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const periodId = useSelector((state) => state.user.period_id);
   const period = useSelector((state) => state.period);
  
   const [milestones, setMilestones] = useState([]);
