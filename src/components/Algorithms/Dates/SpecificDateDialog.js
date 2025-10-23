@@ -11,13 +11,20 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
+import { getTutorNameById } from "../../../utils/getEntitiesUtils";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import "dayjs/locale/es"
 import { esES } from "@mui/x-date-pickers/locales";
-import { getTutorNameById } from "../../../utils/getEntitiesUtils"
+import updateLocale from "dayjs/plugin/updateLocale";
+// Ajustes, para DatePicker
 dayjs.locale("es"); // para mostrar texto en español
+// para que la semana siga iniciando en domingo (y no en lunes)
+dayjs.extend(updateLocale);
+dayjs.updateLocale("es",{
+  weekStart: 0
+})
 
 const SpecificDateDialog = ({
   open,
