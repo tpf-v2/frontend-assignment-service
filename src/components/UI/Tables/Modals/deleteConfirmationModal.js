@@ -1,4 +1,3 @@
-import {React, useEffect} from "react";
 import {
   Button,
   TextField,
@@ -7,7 +6,6 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
-import { useOpenCloseStateModalLogic } from "./useOpenCloseStateModalLogic";
 
 /* Modals para Agregar y Editar un/a estudiante */
 export const DeleteConfirmationModal = ({
