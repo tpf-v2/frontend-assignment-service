@@ -16,12 +16,7 @@ import { authenticateUser } from "../api/auth.js"; // Importa las funciones desd
 import { useDispatch, useSelector } from "react-redux";
 import MySnackbar from "../components/UI/MySnackBar.js";
 import { TitleSimple } from "../styles/Titles.js";
-
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
+import { Root } from "../components/Root.js";
 
 const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),

@@ -1,15 +1,10 @@
 import { styled } from "@mui/system";
+import { Root } from "./Root";
 import {
     Container,
     Paper,
     Alert,
   } from "@mui/material";
-
-const Root = styled(Paper)(({ theme }) => ({
-    marginTop: theme.spacing(10),
-    padding: theme.spacing(4),
-    boxShadow: theme.shadows[10],
-  }));
 
 const ClosedAlert = ({ message }) => {
   return (

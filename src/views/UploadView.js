@@ -5,17 +5,11 @@ import { useParams } from 'react-router-dom';
 import UploadFile from "../components/UploadFile";
 import ChangeDescription from "../components/ChangeDescription";
 import { getGroupById } from "../api/getGroupById";
-import { styled } from "@mui/system";
+import { Root } from "../components/Root";
 import {
-  Paper,
   Container,
   Alert
 } from "@mui/material";
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
 const UploadView = () => {
   const dispatch = useDispatch();
   const { projectType } = useParams();  // Extrae el projectType desde la URL

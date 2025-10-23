@@ -21,12 +21,7 @@ import { setTopics } from "../../redux/slices/topicsSlice";
 import { setStudents } from "../../redux/slices/studentsSlice";
 import { setTutors } from "../../redux/slices/tutorsSlice";
 import { TitleSimple } from "../../styles/Titles";
-
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
+import { Root } from "../Root";
 
 const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),

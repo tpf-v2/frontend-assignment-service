@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Container, TextField, Button, Box, Paper } from '@mui/material';
 import { styled } from '@mui/system';
 import BackgroundContainer from '../components/UI/BackgroundContainer.js';
@@ -8,12 +8,7 @@ import { resetPassword } from '../api/postChangePassword.js';
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { TitleSimple } from '../styles/Titles.js';
-
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
+import { Root } from '../components/Root.js';
 
 const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
