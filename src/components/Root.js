@@ -46,3 +46,7 @@ export const ButtonStyled = styled(Button)(({ theme }) => ({
 }));
 
 export const Title = TitleSimple;
+
+export const ButtonSimple = styled(Button)(({ theme }) => ({
+  marginTop: theme.spacing(2),
+}));

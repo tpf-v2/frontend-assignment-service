@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   TextField,
@@ -10,17 +10,14 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { styled } from "@mui/system";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import BackgroundContainer from "../components/UI/BackgroundContainer.js";
 import MySnackbar from "../components/UI/MySnackBar.js";
 import { resetPasswordWithToken } from "../api/auth.js";
 import { TitleSimple } from "../styles/Titles.js";
-import { Root } from "../components/Root.js";
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
+import { Root, ButtonSimple } from "../components/Root.js";
 
+const ButtonStyled = ButtonSimple;
 const Title = TitleSimple;
 
 const ResetPasswordView = () => {

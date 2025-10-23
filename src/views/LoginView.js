@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Container,
   TextField,
@@ -16,12 +16,9 @@ import { authenticateUser } from "../api/auth.js"; // Importa las funciones desd
 import { useDispatch, useSelector } from "react-redux";
 import MySnackbar from "../components/UI/MySnackBar.js";
 import { TitleSimple } from "../styles/Titles.js";
-import { Root } from "../components/Root.js";
+import { Root, ButtonSimple } from "../components/Root.js";
 
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
-
+const ButtonStyled = ButtonSimple;
 const Title = TitleSimple;
 
 const LoginView = () => {

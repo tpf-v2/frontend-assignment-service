@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Container,
   TextField,
@@ -13,11 +13,9 @@ import BackgroundContainer from "../components/UI/BackgroundContainer.js";
 import MySnackbar from "../components/UI/MySnackBar.js";
 import { requestPasswordReset } from "../api/auth.js";
 import { TitleSimple } from "../styles/Titles.js";
-import { Root } from "../components/Root.js";
+import { Root, ButtonSimple } from "../components/Root.js";
 
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
+const ButtonStyled = ButtonSimple;
 
 const Title = TitleSimple;
 

@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Typography,
   TextField,
   Button,
   Container,
-  Paper,
   FormControl,
   InputLabel,
   Select,
@@ -18,7 +17,6 @@ import {
   RadioGroup,
   FormControlLabel,
 } from "@mui/material";
-import { styled } from "@mui/system";
 import { sendGroupForm } from "../../api/sendGroupForm";
 import { getStudents } from "../../api/handleStudents";
 import { getTopics } from "../../api/handleTopics";
@@ -28,12 +26,9 @@ import MySnackbar from "../UI/MySnackBar";
 import { NumericFormat } from "react-number-format";
 import ClosedAlert from "../ClosedAlert";
 import { TitleSimple } from "../../styles/Titles";
-import { Root } from "../Root";
+import { Root, ButtonSimple } from "../Root";
 
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
-
+const ButtonStyled = ButtonSimple;
 const Title = TitleSimple;
 
 const StudentForm = () => {

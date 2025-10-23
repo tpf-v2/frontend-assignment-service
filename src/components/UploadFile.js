@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useSelector } from "react-redux";
 import {
@@ -18,11 +18,9 @@ import { uploadProjects } from "../api/uploadProjects";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import { TitleSimple } from "../styles/Titles";
+import { ButtonSimple } from "./Root";
 
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
-
+const ButtonStyled = ButtonSimple;
 const Title = TitleSimple;
 
 const DropzoneBox = styled(Box)(({ theme }) => ({
