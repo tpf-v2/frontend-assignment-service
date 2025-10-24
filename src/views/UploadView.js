@@ -15,6 +15,8 @@ const UploadView = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { projectType } = useParams();  // Extrae el projectType desde la URL, TODO: no funciona en botones
+  console.log("!!!!!!!!!!!!!")
+  console.log(projectType)
   const id = useSelector((state) => state.user.group_id);
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
@@ -67,7 +69,9 @@ const UploadView = () => {
     } else if (projectType==="initial-project") {
       return group.pre_report_date;
     } else if (projectType==="intermediate-project") {
-      return group.intermediate_assignment_date;
+      console.log("?????????")
+      console.log(group)
+      return group.intermediate_assigment_date;
     } else if (projectType==="pps-report") {
       return user.pps_report_date;
     }
