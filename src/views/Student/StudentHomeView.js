@@ -113,7 +113,7 @@ const StudentHomeView = () => {
               {
                 title: !!userData.pps_report_date ? "Enviado" : "No enviado",
                 completed: !!userData.pps_report_date,
-                urlNotCompleted: "upload/pps-report",
+                urlNotCompleted: "/upload/pps-report",
                 urlCompleted: ""
               }
             ],
