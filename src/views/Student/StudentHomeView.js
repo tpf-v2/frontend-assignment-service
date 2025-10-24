@@ -62,28 +62,21 @@ const StudentHomeView = () => {
         setMilestones([
           {
             phase: "Inscripción",
+            description: topic_completed ? "Tema y tutor asignado" : "Tema sin asignar",
             tasks: [
               {
                 title: form_completed ? "Formulario enviado" : "Formulario no enviado",
                 completed: form_completed,
-              },
-              {
-                title: topic_completed ? "Tema y tutor asignado" : "Tema sin asignar",
-                completed: topic_completed,
-              },
-              
+              },  
             ],
           },
           {
             phase: "Anteproyecto",
+            description: team.pre_report_approved ? "Revisión terminada" : "Revisión de tutor",
             tasks: [
               {
                 title: !!team.pre_report_date ? "Enviado" : "No enviado",
                 completed: !!team.pre_report_date,
-              },
-              {
-                title: team.pre_report_approved ?  "Revisión terminada" : "Revisión de tutor",
-                completed: team.pre_report_approved,
               },
             ],
           },
@@ -211,6 +204,7 @@ const StudentHomeView = () => {
                 key={index}
                 phase={phase.phase}
                 tasks={phase.tasks}
+                description={phase.description}
                 circle={true}
               />
             ))
