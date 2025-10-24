@@ -1,4 +1,3 @@
-import React from 'react';
 import { HashRouter, Route, Routes, Navigate } from 'react-router-dom';
 import TutorForm from './components/Forms/TutorForm';
 import AddTopicForm from './components/Forms/AddTopicForm';

@@ -1,26 +1,11 @@
-import React from "react";
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import StatCard from "./StatCard"; // Asegúrate de tener este componente
-import { styled } from "@mui/system";
 import { useState } from "react";
 import DownloadIcon from "@mui/icons-material/Download";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Paper } from "@mui/material";
 import { formatDate } from "../../../../../utils/getEntitiesUtils";
 import { downloadPPSReport } from "../../../../../api/handleProjects";
 import { useSelector } from "react-redux";
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  margin: theme.spacing(2),
-  width: "48%",
-  padding: theme.spacing(1.5),
-  fontSize: "1rem",
-  backgroundColor: "#0072C6",
-  color: "#ffffff",
-  transition: "background-color 0.3s",
-  "&:hover": {
-    backgroundColor: "#005B9A",
-  },
-}));
 
 const ContentPPS = ({ students, deliveries, loadingPPS }) => {
     const [selectedEntregaron, setSelectedEntregaron] = useState(true);
