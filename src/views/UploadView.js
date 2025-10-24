@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import UploadFile from "../components/UploadFile";
 import ChangeDescription from "../components/ChangeDescription";
 import { getGroupById } from "../api/getGroupById";
@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 const UploadView = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { projectType } = useParams();  // Extrae el projectType desde la URL
   const id = useSelector((state) => state.user.group_id);
   const period = useSelector((state) => state.period);
@@ -20,7 +21,11 @@ const UploadView = () => {
   useEffect(() => {
     const getGroup = async () => {
       try {
-        setGroup(await dispatch(getGroupById(user,id)))
+        if (id !== 0) {
+          setGroup(await dispatch(getGroupById(user,id)))
+        } else {
+          navigate("/")
+        }
         setLoading(false)
       } catch (error) {
         console.error("Error al obtener datos para el upload:", error);
@@ -59,9 +64,9 @@ const UploadView = () => {
       return group.final_report_date;
     } else if (projectType==="initial-project") {
       return group.pre_report_date;
-    } else if (projectType==="intermediate-project") {
-      return group.intermediate_assignment_date;
-    } else if (projectType==="pps-report") {
+    } else if (projectType=="intermediate-project") {
+      return group.intermediate_assigment_date;
+    } else if (projectType=="pps-report") {
       return user.pps_report_date;
     }
   }
