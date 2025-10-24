@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import UploadFile from "../components/UploadFile";
 import ChangeDescription from "../components/ChangeDescription";
@@ -9,7 +10,9 @@ import {
   Container,
   Alert
 } from "@mui/material";
+
 const UploadView = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { projectType } = useParams();  // Extrae el projectType desde la URL, TODO: no funciona en botones
   const id = useSelector((state) => state.user.group_id);
@@ -20,7 +23,11 @@ const UploadView = () => {
   useEffect(() => {
     const getGroup = async () => {
       try {
-        setGroup(await dispatch(getGroupById(user,id)))
+        if (id !== 0) {
+          setGroup(await dispatch(getGroupById(user,id)))
+        } else {
+          navigate("/")
+        }
         setLoading(false)
       } catch (error) {
         console.error("Error al obtener datos para el upload:", error);
