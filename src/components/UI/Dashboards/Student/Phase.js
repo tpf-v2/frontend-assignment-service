@@ -59,7 +59,7 @@ const Phase = ({ phase, tasks, circle, description }) => {
       </Typography>
       <MilestoneContainer>
         {tasks.map((task, index) => (
-          <Milestone key={index} title={task.title} completed={task.completed} url={ task.available ? (task.completed ? task.urlCompleted : task.urlNotCompleted) : null} />
+          <Milestone key={index} title={task.title} completed={task.available} url={ task.available ? (task.completed ? task.urlCompleted : task.urlNotCompleted) : null} />
         ))}
       {!!description && <Alert severity="info">{description}</Alert>}
       </MilestoneContainer>

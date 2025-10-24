@@ -1,5 +1,3 @@
-
-import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { Container, Box, CircularProgress } from "@mui/material";
@@ -61,7 +59,7 @@ const StudentHomeView = () => {
         const topic_completed = userData.topic && userData.tutor
         setMilestones([
           {
-            phase: "Inscripción",
+            phase: "Formulario de inscripción",
             description: topic_completed ? "Tema y tutor asignado" : "Tema sin asignar",
             tasks: [
               {
@@ -78,7 +76,7 @@ const StudentHomeView = () => {
             description: team.pre_report_approved ? "Entrega aprobada" : "Revisión de tutor pendiente",
             tasks: [
               {
-                title: !!team.pre_report_date ? "Enviado" : "No enviado",
+                title: !team.pre_report_date ? (!!period.initial_project_active ? "Enviar" : "No disponible") : "Enviado",
                 completed: !!team.pre_report_date,
                 available: period.initial_project_active && !!user.group_id,
                 urlNotCompleted: "/upload/initial-project",
@@ -90,7 +88,7 @@ const StudentHomeView = () => {
             phase: "Entrega Intermedia",
             tasks: [
               {
-                title: !!team.intermediate_assigment_date ? "Enviada" : "No enviada",
+                title: !team.intermediate_assigment_date ? (period.intermediate_project_active ? "Enviar" : "No disponible") : "Enviada",
                 completed:
                   !!team.intermediate_assigment_date,
                 available: period.intermediate_project_active && !!user.group_id,
@@ -103,7 +101,7 @@ const StudentHomeView = () => {
             phase: "Entrega Final",
             tasks: [
               {
-                title: !!team.final_report_date ? "Enviada" : "No enviada",
+                title: !team.final_report_date ? (!!period.final_project_active ? "Enviar" : "No disponible") : "Enviada",
                 completed: !!team.final_report_date,
                 available: period.final_project_active && !!user.group_id,
                 urlNotCompleted: "/upload/final-project",
@@ -115,7 +113,7 @@ const StudentHomeView = () => {
             phase: "Informe de Cumplimiento PPS",
             tasks: [
               {
-                title: !!userData.pps_report_date ? "Enviado" : "No enviado",
+                title: !userData.pps_report_date ? (!!period.pps_report_active ? "Enviar" : "No disponible") : "Enviado",
                 completed: !!userData.pps_report_date,
                 available: period.pps_report_active && !!user.group_id,
                 urlNotCompleted: "/upload/pps-report",
@@ -127,12 +125,14 @@ const StudentHomeView = () => {
       } catch (error) {
         console.error("Error al obtener las respuestas", error);
       } finally {
-        setLoading(false); // Finalizar la carga de datos
+        if (!!period) {
+          setLoading(false);
+        } // Finalizar la carga de datos
       }
     };
 
     fetchTeamAnswer();
-  }, [dispatch, user]);
+  }, [dispatch, user, period]);
 
   const navigate = useNavigate();
   const handleNavigation = (url) => {
