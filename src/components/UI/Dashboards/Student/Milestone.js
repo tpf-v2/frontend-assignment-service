@@ -20,7 +20,14 @@ const MilestoneContainer = styled(Button)(({ completed }) => ({
 const Milestone = ({ title, completed, url }) => {
   const navigate = useNavigate(); // navigate(url)
   return (
-    <MilestoneContainer completed={completed} onClick={()=>navigate(url)}>
+    <MilestoneContainer completed={completed} onClick={()=> {
+      if(!!url) {
+        console.log("yesurl" + url)
+        navigate(url)
+      } else {
+        console.log("no url")
+      }
+    }}>
       <Typography variant="body1" fontWeight="bold">
         {title}
       </Typography>

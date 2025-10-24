@@ -67,6 +67,7 @@ const StudentHomeView = () => {
               {
                 title: form_completed ? "Formulario enviado" : "Formulario no enviado",
                 completed: form_completed,
+                available: period.form_active,
                 urlNotCompleted: "/student-form",
                 urlCompleted:"",
               },  
@@ -79,6 +80,7 @@ const StudentHomeView = () => {
               {
                 title: !!team.pre_report_date ? "Enviado" : "No enviado",
                 completed: !!team.pre_report_date,
+                available: period.initial_project_active && !!user.group_id,
                 urlNotCompleted: "/upload/initial-project",
                 urlCompleted: "/upload/initial-project"
               },
@@ -91,6 +93,7 @@ const StudentHomeView = () => {
                 title: !!team.intermediate_assigment_date ? "Enviada" : "No enviada",
                 completed:
                   !!team.intermediate_assigment_date,
+                available: period.intermediate_project_active && !!user.group_id,
                 urlNotCompleted: "/upload/intermediate-project",
                 urlCompleted: "/upload/intermediate-project"
               },
@@ -102,6 +105,7 @@ const StudentHomeView = () => {
               {
                 title: !!team.final_report_date ? "Enviada" : "No enviada",
                 completed: !!team.final_report_date,
+                available: period.final_project_active && !!user.group_id,
                 urlNotCompleted: "/upload/final-project",
                 urlCompleted: "/upload/final-project"
               }
@@ -113,6 +117,7 @@ const StudentHomeView = () => {
               {
                 title: !!userData.pps_report_date ? "Enviado" : "No enviado",
                 completed: !!userData.pps_report_date,
+                available: period.pps_report_active && !!user.group_id,
                 urlNotCompleted: "/upload/pps-report",
                 urlCompleted: "/upload/pps-report"
               }
