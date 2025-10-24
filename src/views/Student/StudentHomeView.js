@@ -80,7 +80,7 @@ const StudentHomeView = () => {
                 title: !!team.pre_report_date ? "Enviado" : "No enviado",
                 completed: !!team.pre_report_date,
                 urlNotCompleted: "/upload/initial-project",
-                urlCompleted: ""
+                urlCompleted: "/upload/initial-project"
               },
             ],
           },
@@ -92,7 +92,7 @@ const StudentHomeView = () => {
                 completed:
                   !!team.intermediate_assigment_date,
                 urlNotCompleted: "/upload/intermediate-project",
-                urlCompleted: ""
+                urlCompleted: "/upload/intermediate-project"
               },
             ],
           },
@@ -103,7 +103,7 @@ const StudentHomeView = () => {
                 title: !!team.final_report_date ? "Enviada" : "No enviada",
                 completed: !!team.final_report_date,
                 urlNotCompleted: "/upload/final-project",
-                urlCompleted: ""
+                urlCompleted: "/upload/final-project"
               }
             ],
           },
@@ -114,7 +114,7 @@ const StudentHomeView = () => {
                 title: !!userData.pps_report_date ? "Enviado" : "No enviado",
                 completed: !!userData.pps_report_date,
                 urlNotCompleted: "/upload/pps-report",
-                urlCompleted: ""
+                urlCompleted: "/upload/pps-report"
               }
             ],
           }
