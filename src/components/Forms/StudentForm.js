@@ -44,9 +44,8 @@ const Title = TitleSimple;
 const StudentForm = () => {
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
-
   const [formData, setFormData] = useState({
-    uid: user.id,
+    uid: user.student_number,
     uid2: undefined,
     uid3: undefined,
     uid4: undefined,

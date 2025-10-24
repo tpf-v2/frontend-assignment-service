@@ -52,10 +52,6 @@ const StudentHomeView = () => {
     const fetchTeamAnswer = async () => {
       try {
         const userData = await dispatch(getStudentInfo(user));
-
-        console.log("--- user.id:", user.id);
-        console.log("--- userData:", userData);
-        
         let team = {};
         if (userData.group_id !== 0) {
           team = await dispatch(getGroupById(user, userData.group_id));
@@ -144,20 +140,20 @@ const StudentHomeView = () => {
         {!loading && team.exhibition_date && <PresentationDateCard presentationDate={team.exhibition_date}/>}
         {!loading && (
           <>
-            {/* AUX PROBANDO: estos dos primeros botones no van a ir acá, solo estoy probando */}
+            {/* AUX PROBANDO: estos primeros botones no van a ir acá, solo estoy probando */}
             <SubmitButton
-              url="/propose-idea"
-              title="Proponer Idea"
+              url="/explore/tutor-emails"
+              title="Ver Mails de Tutores"
               width="100%"
-              handleSubmit={() => handleNavigation("/propose-idea")}
+              handleSubmit={() => handleNavigation("/explore/tutor-emails")}
               disabled={!milestones[0]?.tasks[0].completed}
             />
             <SubmitButton
               url="/explore/ideas"
-              title="Explorar Ideas"
+              title="Explorar Ideas de Temas"
               width="100%"
               handleSubmit={() => handleNavigation("/explore/ideas")}
-              disabled={!milestones[0]?.tasks[0].completed}
+              disabled={milestones[0]?.tasks[0].completed}
             />
             <SubmitButton
               url="/student-form"

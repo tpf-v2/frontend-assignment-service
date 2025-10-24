@@ -45,6 +45,7 @@ export const userSlice = createSlice({
       state.teammates = action.payload.teammates;
       state.period_id = action.payload.period_id;
       state.group_number = action.payload.group_number;
+      state.student_number = action.payload.student_number;
     },
     setTemporalRole: (state, action) => {
       state.temporal_role = action.payload; 

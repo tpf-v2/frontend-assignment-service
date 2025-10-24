@@ -127,7 +127,7 @@ export const TeamModals = ({
                           <Autocomplete
                             disablePortal
                             options={students || []}
-                            getOptionLabel={(option) => option.id? `${option.id} - ${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
+                            getOptionLabel={(option) => option.student_number? `${option.student_number} - ${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
                             sx={{ width: '100%' }}
                             clearText={CLEARSTRING}
                             renderInput={(students) => <TextField {...students}
@@ -522,7 +522,7 @@ export const TeamModals = ({
                           <Autocomplete              
                             disablePortal
                             options={students || []}
-                            getOptionLabel={(option) => option.id? `${option.id} - ${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
+                            getOptionLabel={(option) => option.id? `${option.student_number} - ${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
                             sx={{ width: '100%' }}
                             clearText={CLEARSTRING}
                             renderInput={(students) => <TextField {...students}

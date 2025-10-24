@@ -33,6 +33,7 @@ import StudentForm from './components/Forms/StudentForm';
 import ProposeIdea from './components/Forms/ProposeIdea';
 
 import ExploreIdeas from './components/Exploration/ExploreIdeas';
+import TutorEmails from './components/Exploration/TutorEmails';
 import StudentAvailabilityView from './views/Student/StudentAvailabilityView';
 import { setStudents } from './redux/slices/studentsSlice';
 import { setTutors } from './redux/slices/tutorsSlice';
@@ -112,7 +113,8 @@ const App = () => {
             <Route path="/upload/:projectType" element={<ProtectedRoute><UploadView /></ProtectedRoute>} />
             <Route path="/student-form" element={<ProtectedRoute><StudentForm /></ProtectedRoute>} />
             <Route path="/propose-idea" element={<ProtectedRoute><ProposeIdea /></ProtectedRoute>} />
-            <Route path="/explore/ideas" element={<ProtectedRoute><ExploreIdeas /></ProtectedRoute>} />
+            <Route path="/explore/ideas" element={<ProtectedRoute><ExploreIdeas /></ProtectedRoute>} />            
+            <Route path="/explore/tutor-emails" element={<ProtectedRoute><TutorEmails /></ProtectedRoute>} />
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
             <Route path="/tutor-cuatrimestre/:period" element={<ProtectedRoute><TutorDashboardView /></ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />
