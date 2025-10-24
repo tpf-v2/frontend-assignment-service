@@ -1,7 +1,8 @@
-import { Box, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { styled } from '@mui/system';
+import { useNavigate } from 'react-router-dom';
 
-const MilestoneContainer = styled(Box)(({ completed }) => ({
+const MilestoneContainer = styled(Button)(({ completed }) => ({
   backgroundColor: completed ? '#c8debf' : '#e0e0e0',
   color: completed ? '#146b34' : '#7a7979',
   padding: '10px 8px',
@@ -16,9 +17,10 @@ const MilestoneContainer = styled(Box)(({ completed }) => ({
   },
 }));
 
-const Milestone = ({ title, completed }) => {
+const Milestone = ({ title, completed, url }) => {
+  const navigate = useNavigate(); // navigate(url)
   return (
-    <MilestoneContainer completed={completed}>
+    <MilestoneContainer completed={completed} onClick={()=>navigate(url)}>
       <Typography variant="body1" fontWeight="bold">
         {title}
       </Typography>

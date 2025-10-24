@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 const UploadView = () => {
   const dispatch = useDispatch();
-  const { projectType } = useParams();  // Extrae el projectType desde la URL
+  const { projectType } = useParams();  // Extrae el projectType desde la URL, TODO: no funciona en botones
   const id = useSelector((state) => state.user.group_id);
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
@@ -68,9 +68,9 @@ const UploadView = () => {
 
   function getProjectDeliveredMessage() {
     if (projectType === "pps-report") {
-      return "Ya realizaste esta entrega el " + getProjectDeliveredDate().substring(0,10) + ".";
+      return "Ya realizaste esta entrega el " + getProjectDeliveredDate()?.substring(0,10) + ".";
     } else {
-      return "Tu equipo ya realizó esta entrega el " + getProjectDeliveredDate().substring(0,10) + ".";
+      return "Tu equipo ya realizó esta entrega el " + getProjectDeliveredDate()?.substring(0,10) + ".";
     }
   }
 

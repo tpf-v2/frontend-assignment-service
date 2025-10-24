@@ -67,16 +67,20 @@ const StudentHomeView = () => {
               {
                 title: form_completed ? "Formulario enviado" : "Formulario no enviado",
                 completed: form_completed,
+                urlNotCompleted: "/student-form",
+                urlCompleted:"",
               },  
             ],
           },
           {
             phase: "Anteproyecto",
-            description: team.pre_report_approved ? "Revisión terminada" : "Revisión de tutor",
+            description: team.pre_report_approved ? "Entrega aprobada" : "Revisión de tutor pendiente",
             tasks: [
               {
                 title: !!team.pre_report_date ? "Enviado" : "No enviado",
                 completed: !!team.pre_report_date,
+                urlNotCompleted: "/upload/initial-project",
+                urlCompleted: ""
               },
             ],
           },
@@ -87,6 +91,8 @@ const StudentHomeView = () => {
                 title: !!team.intermediate_assigment_date ? "Enviada" : "No enviada",
                 completed:
                   !!team.intermediate_assigment_date,
+                urlNotCompleted: "/upload/intermediate-project",
+                urlCompleted: ""
               },
             ],
           },
@@ -96,6 +102,8 @@ const StudentHomeView = () => {
               {
                 title: !!team.final_report_date ? "Enviada" : "No enviada",
                 completed: !!team.final_report_date,
+                urlNotCompleted: "/upload/final-project",
+                urlCompleted: ""
               }
             ],
           },
@@ -105,6 +113,8 @@ const StudentHomeView = () => {
               {
                 title: !!userData.pps_report_date ? "Enviado" : "No enviado",
                 completed: !!userData.pps_report_date,
+                urlNotCompleted: "upload/pps-report",
+                urlCompleted: ""
               }
             ],
           }
@@ -148,46 +158,11 @@ const StudentHomeView = () => {
               disabled={milestones[0]?.tasks[0].completed}
             />
             <SubmitButton
-              url="/student-form"
-              title="Enviar Formulario de Equipo"
-              width="100%"
-              handleSubmit={() => handleNavigation("/student-form")}
-              disabled={milestones[0]?.tasks[0].completed}
-            />
-            <SubmitButton
-              url="/upload/initial-project"
-              title="Enviar Anteproyecto"
-              width="100%"
-              handleSubmit={() => handleNavigation("/upload/initial-project")}
-              disabled={milestones[1]?.tasks[0].completed}
-            />
-            <SubmitButton
-              url="/upload/intermediate-project"
-              title="Enviar Entrega Intermedia"
-              width="100%"
-              handleSubmit={() => handleNavigation("/upload/intermediate-project")}
-              disabled={milestones[2]?.tasks[0].completed}
-            />
-            <SubmitButton
               url="/availability-view"
               title="Disponibilidades de Exposición"
               width="100%"
               disabled={!period.presentation_dates_available}
               handleSubmit={() => handleNavigation("/availability-view")}
-            />
-            <SubmitButton
-              url="/upload/final-project"
-              title="Enviar Entrega Final"
-              width="100%"
-              handleSubmit={() => handleNavigation("/upload/final-project")}
-              disabled={milestones[3]?.tasks[0].completed}
-            />
-            <SubmitButton
-              url="/upload/pps-report"
-              title="Enviar Informe Cumplimiento PPS"
-              width="100%"
-              handleSubmit={() => handleNavigation("/upload/pps-report")}
-              disabled={milestones[4]?.tasks[0].completed}
             />
           </>
         )}
