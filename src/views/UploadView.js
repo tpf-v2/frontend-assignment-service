@@ -105,7 +105,6 @@ const UploadView = () => {
   }
 
   let msg = delivered ? getProjectDeliveredMessage() : getProjectNotDeliveredMessage()
-  // TODO: poner spinning circle al cargar el mensaje "Tu equipo ya entregó"
   const ownershipType = ownershipTypeMap[projectType];
   const hasProjectTitle = hasProjectTitleMap[projectType];
 
