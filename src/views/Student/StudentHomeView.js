@@ -153,7 +153,6 @@ const StudentHomeView = () => {
               title="Ver Mails de Tutores"
               width="100%"
               handleSubmit={() => handleNavigation("/explore/tutor-emails")}
-              disabled={!milestones[0]?.tasks[0].completed}
             />
             <SubmitButton
               url="/explore/ideas"

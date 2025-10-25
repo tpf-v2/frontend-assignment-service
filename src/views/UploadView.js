@@ -1,7 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import UploadFile from "../components/UploadFile";
 import ChangeDescription from "../components/ChangeDescription";
 import { getGroupById } from "../api/getGroupById";
@@ -14,9 +13,8 @@ import {
 const UploadView = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { projectType } = useParams();  // Extrae el projectType desde la URL, TODO: no funciona en botones
-  console.log("!!!!!!!!!!!!!")
-  console.log(projectType)
+  const navigate = useNavigate();
+  const { projectType } = useParams();  // Extrae el projectType desde la URL
   const id = useSelector((state) => state.user.group_id);
   const period = useSelector((state) => state.period);
   const user = useSelector((state) => state.user);
@@ -69,8 +67,6 @@ const UploadView = () => {
     } else if (projectType==="initial-project") {
       return group.pre_report_date;
     } else if (projectType==="intermediate-project") {
-      console.log("?????????")
-      console.log(group)
       return group.intermediate_assigment_date;
     } else if (projectType==="pps-report") {
       return user.pps_report_date;
@@ -111,7 +107,6 @@ const UploadView = () => {
   }
 
   let msg = delivered ? getProjectDeliveredMessage() : getProjectNotDeliveredMessage()
-  // TODO: poner spinning circle al cargar el mensaje "Tu equipo ya entregó"
   const ownershipType = ownershipTypeMap[projectType];
   const hasProjectTitle = hasProjectTitleMap[projectType];
 
