@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -21,16 +21,9 @@ import { setTopics } from "../../redux/slices/topicsSlice";
 import { setStudents } from "../../redux/slices/studentsSlice";
 import { setTutors } from "../../redux/slices/tutorsSlice";
 import { TitleSimple } from "../../styles/Titles";
+import { Root, ButtonSimple } from "../Root";
 
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
+const ButtonStyled = ButtonSimple;
 
 const DropzoneBox = styled(Box)(({ theme }) => ({
   border: "2px dashed #cccccc",

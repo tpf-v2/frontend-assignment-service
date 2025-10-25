@@ -32,14 +32,9 @@ import TodayIcon from '@mui/icons-material/Today';
 import GroupsIcon from '@mui/icons-material/Groups';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
 import { Title, TitleTop } from "../../styles/Titles";
+import { RootWhite } from "../../components/Root";
 // Estilos
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  padding: theme.spacing(2),
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: "#ffffff",
-  boxShadow: theme.shadows[3],
-}));
+const Root = RootWhite;
 
 const SidebarContainer = styled(Box)(({ theme }) => ({
   paddingRight: theme.spacing(3),

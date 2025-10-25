@@ -30,7 +30,7 @@ export const uploadProjects = async ({ projectType, subpath, id, projectTitle, s
         }
       );
 
-      if (response.status == 200 || response.status == 201 || response.status == 202) {
+      if (response.status === 200 || response.status === 201 || response.status === 202) {
         return {
           success: true,
           message: successMessage,
@@ -52,7 +52,7 @@ export const uploadProjects = async ({ projectType, subpath, id, projectTitle, s
         },
       });
 
-      if ((response.status == 200 || response.status == 201 || response.status == 202) && response.data.task_id && response.data.status == "pending") {
+      if ((response.status === 200 || response.status === 201 || response.status === 202) && response.data.task_id && response.data.status === "pending") {
         const result = await waitForAsyncTask(response.data.task_id, token);
         if (result.success) {
           return {

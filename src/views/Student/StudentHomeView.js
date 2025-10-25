@@ -17,7 +17,6 @@ import PresentationDateCard from "../../components/UI/Dashboards/Student/Present
 const StudentHomeView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const periodId = useSelector((state) => state.user.period_id);
   const period = useSelector((state) => state.period);
  
   const [milestones, setMilestones] = useState([]);
@@ -146,7 +145,6 @@ const StudentHomeView = () => {
               title="Ver Mails de Tutores"
               width="100%"
               handleSubmit={() => handleNavigation("/explore/tutor-emails")}
-              disabled={!milestones[0]?.tasks[0].completed}
             />
             <SubmitButton
               url="/explore/ideas"
@@ -167,14 +165,14 @@ const StudentHomeView = () => {
               title="Enviar Anteproyecto"
               width="100%"
               handleSubmit={() => handleNavigation("/upload/initial-project")}
-              disabled={milestones[1]?.tasks[0].completed}
+
             />
             <SubmitButton
               url="/upload/intermediate-project"
               title="Enviar Entrega Intermedia"
               width="100%"
               handleSubmit={() => handleNavigation("/upload/intermediate-project")}
-              disabled={milestones[2]?.tasks[0].completed}
+
             />
             <SubmitButton
               url="/availability-view"
@@ -188,14 +186,12 @@ const StudentHomeView = () => {
               title="Enviar Entrega Final"
               width="100%"
               handleSubmit={() => handleNavigation("/upload/final-project")}
-              disabled={milestones[3]?.tasks[0].completed}
             />
             <SubmitButton
               url="/upload/pps-report"
               title="Enviar Informe Cumplimiento PPS"
               width="100%"
               handleSubmit={() => handleNavigation("/upload/pps-report")}
-              disabled={milestones[4]?.tasks[0].completed}
             />
           </>
         )}

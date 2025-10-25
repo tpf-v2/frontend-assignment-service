@@ -1,23 +1,14 @@
-import React from "react";
 import {
   Container,
   Typography,
   Box,
-  Paper,
   Button,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { styled } from "@mui/system";
 import BackgroundContainer from "../components/UI/BackgroundContainer.js";
 import EmailIcon from '@mui/icons-material/Email';
 import { TitleSimple } from "../styles/Titles.js";
-
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
-
+import { Root } from "../components/Root.js";
 const Title = TitleSimple;
 
 const ConfirmEmailView = () => {
