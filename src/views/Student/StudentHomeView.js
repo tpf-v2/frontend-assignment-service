@@ -105,7 +105,7 @@ const StudentHomeView = () => {
                 completed: !!team.final_report_date,
               }
             ],
-          },
+          }/*,
           {
             phase: "Informe de Cumplimiento PPS",
             tasks: [
@@ -114,7 +114,7 @@ const StudentHomeView = () => {
                 completed: !!userData.pps_report_date,
               }
             ],
-          }
+          }*/
         ]);
       } catch (error) {
         console.error("Error al obtener las respuestas", error);
@@ -187,12 +187,12 @@ const StudentHomeView = () => {
               width="100%"
               handleSubmit={() => handleNavigation("/upload/final-project")}
             />
-            <SubmitButton
+            {/*<SubmitButton
               url="/upload/pps-report"
               title="Enviar Informe Cumplimiento PPS"
               width="100%"
               handleSubmit={() => handleNavigation("/upload/pps-report")}
-            />
+            />*/}
           </>
         )}
       </Box>
