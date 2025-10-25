@@ -5,7 +5,6 @@ import {
   Container,
   CircularProgress,
   Paper,
-  Typography,
   Table,
   TableBody,
   TableCell,
@@ -30,6 +29,7 @@ import { editTeam, addTeam } from "../../api/sendGroupForm";
 import MySnackbar from "../UI/MySnackBar";
 import { getTableData } from "../../api/handleTableData";
 import AddIcon from "@mui/icons-material/Add";
+import { TitleSpaced } from "../../styles/Titles";
 
 // Componente para la tabla de equipos
 const TeamDataTable = ({
@@ -85,13 +85,8 @@ const TeamDataTable = ({
     backgroundColor: "#ffffff",
     boxShadow: theme.shadows[3],
   }));
-  const Title = styled(Typography)(({ theme }) => ({
-    marginBottom: theme.spacing(2),
-    color: "#0072C6",
-    textAlign: "center",
-    fontSize: "2rem",
-    fontWeight: "bold",
-  }));
+  
+  const Title = TitleSpaced;
 
   // useEffect
   useEffect(() => {
@@ -111,7 +106,6 @@ const TeamDataTable = ({
         const customTopics = data?.filter(team => !topics.some(t => t.id === team.topic?.id))
         .map(team => team.topic);
         setAllTopics({csvTopics: uniqueTopics, customTopics: customTopics});        
-        //console.log("--- uniqueTopics:", uniqueTopics);
 
         setLoading(false);
 
@@ -357,7 +351,7 @@ const TeamDataTable = ({
           student.name,
           student.last_name,
           student.email,
-          student.id,
+          student.student_number,
           index === 0
             ? getTutorNameById(team.tutor_period_id, period.id) ||
               "Sin asignar"
@@ -425,6 +419,9 @@ const TeamDataTable = ({
       });
     }
   };
+
+  // Ordenamos en orden alfabético, para que sea más amigable al mostrar en lista desplegable en el modal
+  const sortedTutors = tutors.sort((a, b) => a.last_name.localeCompare(b.last_name));
 
   return (
       <>
@@ -568,8 +565,8 @@ const TeamDataTable = ({
                         {team.group_number}
                       </TableCell>
                       {team.students?.map((student, index) => (
-                        <TableRow key={student.id}>
-                          <TableCell>{student.id}</TableCell>
+                        <TableRow key={student.student_number}>
+                          <TableCell>{student.student_number}</TableCell>
                           <TableCell>{student.name}</TableCell>
                           <TableCell>{student.last_name}</TableCell>
                           <TableCell>{student.email}</TableCell>
@@ -686,7 +683,7 @@ const TeamDataTable = ({
           setConflictMsg={setConflicts}
 
           topics={allTopics}
-          tutors={tutors}
+          tutors={sortedTutors}
           students={students}
           periodId={period.id}
         />  

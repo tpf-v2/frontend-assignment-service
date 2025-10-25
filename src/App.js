@@ -1,4 +1,3 @@
-import React from 'react';
 import { HashRouter, Route, Routes, Navigate } from 'react-router-dom';
 import TutorForm from './components/Forms/TutorForm';
 import AddTopicForm from './components/Forms/AddTopicForm';
@@ -30,11 +29,16 @@ import ResetPasswordView from './views/ResetPasswordView';
 import DashboardView from './views/Admin/DashboardView'
 import ChangePasswordView from './views/ChangePasswordView';
 import StudentForm from './components/Forms/StudentForm';
+import ProposeIdea from './components/Forms/ProposeIdea';
+
+import ExploreIdeas from './components/Exploration/ExploreIdeas';
+import TutorEmails from './components/Exploration/TutorEmails';
 import StudentAvailabilityView from './views/Student/StudentAvailabilityView';
 import { setStudents } from './redux/slices/studentsSlice';
 import { setTutors } from './redux/slices/tutorsSlice';
 import { setTopics } from './redux/slices/topicsSlice';
 import Credits from './views/CreditsView';
+import PublicPDFView from './views/Admin/PublicView';
 import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
@@ -70,9 +74,11 @@ const App = () => {
           minHeight: '100vh',
         }}
       >
-        {user.token && (
+        {user.token ? (
           <Header user={user} color={color} handleHomeClick={resetUser} />
-        )}
+        ) :
+          <Header user={null} color={color} handleHomeClick={resetUser} />
+        }
         <BackgroundContainer />
         <Box
           className="content-container"
@@ -93,6 +99,8 @@ const App = () => {
             <Route path="/credits" element={<Credits />} />
             {/* <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} /> */}
             <Route path="/dashboard/:period" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />
+            <Route path="/public/:period" element={<PublicPDFView/>} />
+            <Route path="/public/" element={<PublicPDFView/>} />
             <Route path="/table-view" element={<ProtectedRoute><ParentTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/students" element={<ProtectedRoute><StudentsTable /></ProtectedRoute>} />
             <Route path="dashboard/:period/topics" element={<ProtectedRoute><TopicsTable /></ProtectedRoute>} />
@@ -103,6 +111,9 @@ const App = () => {
             <Route path="/cuatrimestre-config" element={<CuatrimestreConfig />} />
             <Route path="/upload/:projectType" element={<ProtectedRoute><UploadView /></ProtectedRoute>} />
             <Route path="/student-form" element={<ProtectedRoute><StudentForm /></ProtectedRoute>} />
+            <Route path="/propose-idea" element={<ProtectedRoute><ProposeIdea /></ProtectedRoute>} />
+            <Route path="/explore/ideas" element={<ProtectedRoute><ExploreIdeas /></ProtectedRoute>} />            
+            <Route path="/explore/tutor-emails" element={<ProtectedRoute><TutorEmails /></ProtectedRoute>} />
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
             <Route path="/tutor-cuatrimestre/:period" element={<ProtectedRoute><TutorDashboardView /></ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />

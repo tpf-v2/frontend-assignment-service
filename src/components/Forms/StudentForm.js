@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Typography,
   TextField,
   Button,
   Container,
-  Paper,
   FormControl,
   InputLabel,
   Select,
@@ -18,36 +17,25 @@ import {
   RadioGroup,
   FormControlLabel,
 } from "@mui/material";
-import { styled } from "@mui/system";
 import { sendGroupForm } from "../../api/sendGroupForm";
 import { getStudents } from "../../api/handleStudents";
 import { getTopics } from "../../api/handleTopics";
+import { getTutorsDataOnly } from "../../api/dashboardStats";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { NumericFormat } from "react-number-format";
 import ClosedAlert from "../ClosedAlert";
+import { TitleSimple } from "../../styles/Titles";
+import { Root, ButtonSimple } from "../Root";
 
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
-
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-}));
+const ButtonStyled = ButtonSimple;
+const Title = TitleSimple;
 
 const StudentForm = () => {
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
-
   const [formData, setFormData] = useState({
-    uid: user.id,
+    uid: user.student_number,
     uid2: undefined,
     uid3: undefined,
     uid4: undefined,
@@ -65,6 +53,7 @@ const StudentForm = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [studentNames, setStudentNames] = useState([]);
   const [topics, setTopics] = useState([]);
+  const [tutors, setTutors] = useState([]);
   const [loading, setLoading] = useState(false)
   const [notification, setNotification] = useState({
     open: false,
@@ -89,13 +78,33 @@ const StudentForm = () => {
         setNotification({
           open: true,
           message:
-            "Error al obtener los temas. Por favor contactar al administrador",
+            "Error al obtener los temas",
           status: "error",
         });
       }
     };
+    
+    const fetchTutors = async () => {
+      try {
+        // Obtenemos tutores y ordenamos en orden alfabético para mostrarlos en dropdown
+        const fetchedTutors = await getTutorsDataOnly(period.id, user);
+        const sortedTutors = fetchedTutors.sort((a, b) => a.last_name.localeCompare(b.last_name));
+        setTutors(sortedTutors);
+      } catch (error) {
+
+        console.error("Error al obtener tutores", error);
+        setNotification({
+          open: true,
+          message:
+            "Error al obtener tutores",
+          status: "error",
+        });
+
+      }
+    }
 
     fetchTopics();
+    fetchTutors();
   }, []);
 
   const handleChange = (e) => {
@@ -130,23 +139,23 @@ const StudentForm = () => {
 
   const handleConfirm = async () => {
     setLoading(true);
-    const existingGroup = formData.selectedOption === "existing" ? true : false;
+    const existingTeam = formData.selectedOption === "existing" ? true : false;
     const payload = {
       user_id_sender: formData.uid,
       user_id_student_2: formData.uid2 || null,
       user_id_student_3: formData.uid3 || null,
       user_id_student_4: formData.uid4 || null,
       answer_id: new Date().toISOString(),
-      topic_1: existingGroup ? formData.specificTopic : formData.topic1,
-      topic_2: existingGroup ? formData.specificTopic : formData.topic2,
-      topic_3: existingGroup ? formData.specificTopic : formData.topic3,
-      tutor_name: existingGroup ? formData.tutorName : null,
-      tutor_last_name: existingGroup ? formData.tutorLastName : null,
-      tutor_email: existingGroup ? formData.tutorEmail : null,
+      topic_1: existingTeam ? formData.specificTopic : formData.topic1,
+      topic_2: existingTeam ? formData.specificTopic : formData.topic2,
+      topic_3: existingTeam ? formData.specificTopic : formData.topic3,
+      tutor_name: existingTeam ? formData.tutorName : null,
+      tutor_last_name: existingTeam ? formData.tutorLastName : null,
+      tutor_email: existingTeam ? formData.tutorEmail : null,
     };
 
     try {
-      const response = await sendGroupForm(period.id, payload, existingGroup, user);
+      const response = await sendGroupForm(period.id, payload, existingTeam, user);
       if (response.status === 201) {
         setSubmitSuccess(true);
         setOpenDialog(false);
@@ -351,17 +360,35 @@ const StudentForm = () => {
                     onChange={handleChange}
                     required
                   />
-                  <TextField
-                    label="Email del Tutor"
-                    name="tutorEmail"
-                    type="email"
-                    fullWidth
-                    margin="normal"
-                    variant="outlined"
-                    value={formData.tutorEmail}
-                    onChange={handleChange}
-                    required
-                  />
+                  <FormControl fullWidth margin="normal">
+                    <InputLabel id="Tutor" shrink>Tutor *</InputLabel> 
+                    <Select
+                      labelId="Tutor" // Shrink para que el label flotante se vea siempre bien arriba
+                      name="tutorEmail"
+                      value={formData.tutorEmail || ""} // se deja vacío y entonces (con el displayEmpty) cae al MenuItem por defecto
+                      displayEmpty
+                      label="Tutor"
+                      onChange={handleChange}
+                      required
+                      fullWidth
+                    >
+                      <MenuItem key="" value="" // a este MenuItem cae cuando el value está vacío
+                        disabled> 
+                        Seleccionar tutor
+                      </MenuItem>
+                      {tutors.map((tutor) => {
+                        const tp = tutor.tutor_periods.find((tp) => tp.period_id === period.id);
+                        if (!tp) return null; // ignorar si no hay uno del period pedido
+                        
+                        return (
+                            <MenuItem key={tutor.email} value={tutor.email}>
+                            {tutor.name} {tutor.last_name}
+                            </MenuItem>
+                        );
+                        })}
+
+                    </Select>
+                  </FormControl>
                 </>
               )}
   

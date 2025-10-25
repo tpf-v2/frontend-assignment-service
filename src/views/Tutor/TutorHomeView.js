@@ -6,17 +6,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getPeriodById, getTutorPeriods } from '../../api/handlePeriods'
 import MySnackbar from '../../components/UI/MySnackBar';
 import { setPeriod } from '../../redux/slices/periodSlice';
+import { HomeViewTitle } from '../../styles/Titles';
+import { RootCeleste } from '../../components/Root';
 
-const Root = styled(Container)(({ theme }) => ({
-  marginTop: theme.spacing(8),
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  padding: theme.spacing(4),
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[3],
-  backgroundColor: '#E3F2FD', // Celeste FIUBA
-}));
+const Root = RootCeleste;
 
 const CardContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -43,10 +36,7 @@ const CardStyled = styled(Card)(({ theme }) => ({
   },
 }));
 
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(4),
-  color: theme.palette.primary.main,
-}));
+const Title = HomeViewTitle;
 
 
 const TutorHomeView = () => {

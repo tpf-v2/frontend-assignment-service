@@ -2,7 +2,6 @@ import React from "react";
 import {
   AppBar,
   Toolbar,
-  Typography,
   Container,
   Box,
   IconButton,
@@ -11,7 +10,7 @@ import {
   Avatar,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import fiubaLogo from "../../assets/Logo-fiuba_big_face.png";
+import fiubaLogo from "../../assets/title-logo.png";
 import { useDispatch } from "react-redux";
 import { clearUser } from "../../redux/slices/userSlice";
 import { clearTopics } from "../../redux/slices/topicsSlice";
@@ -52,6 +51,7 @@ const Header = ({ user, color, handleHomeClick }) => {
   };
 
   const handleChangeView = () => {
+    // Esto se usa para navigation
     const newRole = user.temporal_role === "admin" ? "tutor" : "admin";
     handleChangeRole(newRole);
     navigate("/home");
@@ -77,9 +77,8 @@ const Header = ({ user, color, handleHomeClick }) => {
               <img
                 src={fiubaLogo}
                 alt="FIUBA Logo"
-                style={{ height: "40px", marginRight: "15px" }}
+                style={{ height: "70px", marginRight: "15px" }}
               />
-              <Typography variant="h6">FIUBA</Typography>
             </Box>
           </Box>
           {user && (
@@ -106,23 +105,23 @@ const Header = ({ user, color, handleHomeClick }) => {
                     navigate("/profile");
                     handleCloseMenu();
                   }}
-                >
-                  Ver Perfil
+                  >
+                    Ver Perfil
                 </MenuItem>
                 {user.role === "admin" && (
-                  <MenuItem onClick={handleChangeView}>
-                    Cambiar a vista de {user.temporal_role === "admin" ? "tutor" : "admin"}
+                  <MenuItem onClick={() => {handleChangeView(); handleCloseMenu();}}>
+                    Cambiar a Vista de {user.temporal_role === "admin" ? "Tutor" : "Admin"}
                   </MenuItem>
                 )}
-                <MenuItem
-                  onClick={() => {
-                    navigate("/change-password");
-                    handleCloseMenu();
-                  }}
-                >
-                  Cambiar contraseña
-                </MenuItem>
-                <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        navigate("/change-password");
+                        handleCloseMenu();
+                      }}
+                    >
+                      Cambiar Contraseña
+                    </MenuItem>
+                <MenuItem onClick={() => {handleLogout(); handleCloseMenu();}}>Cerrar Sesión</MenuItem>
               </Menu>
             </Box>
           )}

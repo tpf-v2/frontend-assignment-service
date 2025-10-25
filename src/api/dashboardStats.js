@@ -63,12 +63,56 @@ export const getDashboardData = async (period, user) => {
     data.tutors = responseTutors.data;
     data.students = responseStudents.data;
 
-    var clusteredGroups = countResponsesByStudentLength(responseAnswers.data);
-    data.answersChart[0].cantidad = clusteredGroups[1] || 0;
-    data.answersChart[1].cantidad = clusteredGroups[2] || 0;
-    data.answersChart[2].cantidad = clusteredGroups[3] || 0;
-    data.answersChart[3].cantidad = clusteredGroups[4] || 0;
+    var clusteredTeams = countResponsesByStudentLength(responseAnswers.data);
+    data.answersChart[0].cantidad = clusteredTeams[1] || 0;
+    data.answersChart[1].cantidad = clusteredTeams[2] || 0;
+    data.answersChart[2].cantidad = clusteredTeams[3] || 0;
+    data.answersChart[3].cantidad = clusteredTeams[4] || 0;
 
+    return data; // Retorna la data
+  } catch (error) {
+    throw error; // Lanza el error para manejarlo en el componente
+  }
+};
+
+// To-Do: estas dos funciones que siguen hacen exactamente lo mismo, la de abajo podría ser un wrapper de esta de acá,
+// se hicieron en ramas distintas y cada una devuelve en formato distinto. El "To-Do" es refactorizarlas a una sola.
+export const getTutorsDataOnly = async (periodId, user) => {
+  try {
+    const tutorsEndpoint = `/tutors/periods/${periodId}`;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+      params: {
+        cache_bust: new Date().getTime(), // add params to avoid caching
+      },
+    };
+    const response = await axios.get(`${BASE_URL}${tutorsEndpoint}`, config);
+  
+    return response.data
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const getTutorsData = async (period, user) => {
+  const tutorsEndpoint = `/tutors/periods/${period}`;
+  const data = {
+    "tutors": null
+  }
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+    params: {
+      cache_bust: new Date().getTime(), // add params to avoid caching
+    },
+  };
+
+  try {
+    const responseTutors = await axios.get(`${BASE_URL}${tutorsEndpoint}`, config);
+    data.tutors = responseTutors.data;
     return data; // Retorna la data
   } catch (error) {
     throw error; // Lanza el error para manejarlo en el componente

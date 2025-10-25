@@ -2,7 +2,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { Container, Box, Typography, CircularProgress } from "@mui/material"; // Importar CircularProgress
+import { Container, Box, CircularProgress } from "@mui/material";
 import MySnackbar from "../../components/UI/MySnackBar";
 import SubmitButton from "../../components/Buttons/SubmitButton";
 import StudentInfo from "../../components/UI/Dashboards/Student/StudentInfo";
@@ -17,10 +17,10 @@ import PresentationDateCard from "../../components/UI/Dashboards/Student/Present
 const StudentHomeView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const period = useSelector((state) => state.user.period_id);
+  const period = useSelector((state) => state.period);
  
   const [milestones, setMilestones] = useState([]);
-  const [group, setGroup] = useState({});
+  const [team, setTeam] = useState({});
   const [loading, setLoading] = useState(true); // Estado para manejar la carga
   const [notification, setNotification] = useState({
     open: false,
@@ -43,21 +43,20 @@ const StudentHomeView = () => {
         }
       }
     };
-
+    
     fetchPeriod();
   }, [user, dispatch]);
-
+  
   useEffect(() => {
-    const fetchGroupAnswer = async () => {
+    const fetchTeamAnswer = async () => {
       try {
         const userData = await dispatch(getStudentInfo(user));
-
-        let group = {};
+        let team = {};
         if (userData.group_id !== 0) {
-          group = await dispatch(getGroupById(user, userData.group_id));
+          team = await dispatch(getGroupById(user, userData.group_id));
         }
-
-        setGroup(group);
+        
+        setTeam(team);
         const form_completed = userData.form_answered || (userData.topic && userData.tutor)
         const topic_completed = userData.topic && userData.tutor
         setMilestones([
@@ -72,18 +71,19 @@ const StudentHomeView = () => {
                 title: topic_completed ? "Tema y tutor asignado" : "Tema sin asignar",
                 completed: topic_completed,
               },
+              
             ],
           },
           {
             phase: "Anteproyecto",
             tasks: [
               {
-                title: !!group.pre_report_date ? "Enviado" : "No enviado",
-                completed: !!group.pre_report_date,
+                title: !!team.pre_report_date ? "Enviado" : "No enviado",
+                completed: !!team.pre_report_date,
               },
               {
-                title: group.pre_report_approved ?  "Revisión terminada" : "Revisión de tutor",
-                completed: group.pre_report_approved,
+                title: team.pre_report_approved ?  "Revisión terminada" : "Revisión de tutor",
+                completed: team.pre_report_approved,
               },
             ],
           },
@@ -91,9 +91,9 @@ const StudentHomeView = () => {
             phase: "Entrega Intermedia",
             tasks: [
               {
-                title: !!group.intermediate_assigment_date ? "Enviada" : "No enviada",
+                title: !!team.intermediate_assigment_date ? "Enviada" : "No enviada",
                 completed:
-                  !!group.intermediate_assigment_date,
+                  !!team.intermediate_assigment_date,
               },
             ],
           },
@@ -101,11 +101,20 @@ const StudentHomeView = () => {
             phase: "Entrega Final",
             tasks: [
               {
-                title: !!group.final_report_date ? "Enviada" : "No enviada",
-                completed: !!group.final_report_date,
+                title: !!team.final_report_date ? "Enviada" : "No enviada",
+                completed: !!team.final_report_date,
               }
             ],
-          },
+          }/*,
+          {
+            phase: "Informe de Cumplimiento PPS",
+            tasks: [
+              {
+                title: !!userData.pps_report_date ? "Enviado" : "No enviado",
+                completed: !!userData.pps_report_date,
+              }
+            ],
+          }*/
         ]);
       } catch (error) {
         console.error("Error al obtener las respuestas", error);
@@ -114,7 +123,7 @@ const StudentHomeView = () => {
       }
     };
 
-    fetchGroupAnswer();
+    fetchTeamAnswer();
   }, [dispatch, user]);
 
   const navigate = useNavigate();
@@ -127,31 +136,43 @@ const StudentHomeView = () => {
       <Box sx={{ flex: 1, mr: 8, mt: 8 }}>
         <StudentInfo />
         <Box sx={{ mb: 1 }} />
-        {!loading && group.exhibition_date && <PresentationDateCard presentationDate={group.exhibition_date}/>}
+        {!loading && team.exhibition_date && <PresentationDateCard presentationDate={team.exhibition_date}/>}
         {!loading && (
           <>
+            {/* AUX PROBANDO: estos primeros botones no van a ir acá, solo estoy probando */}
+            <SubmitButton
+              url="/explore/tutor-emails"
+              title="Ver Mails de Tutores"
+              width="100%"
+              handleSubmit={() => handleNavigation("/explore/tutor-emails")}
+            />
+            <SubmitButton
+              url="/explore/ideas"
+              title="Explorar Ideas de Temas"
+              width="100%"
+              handleSubmit={() => handleNavigation("/explore/ideas")}
+              disabled={milestones[0]?.tasks[0].completed}
+            />
             <SubmitButton
               url="/student-form"
               title="Enviar Formulario de Equipo"
               width="100%"
               handleSubmit={() => handleNavigation("/student-form")}
-              disabled={!milestones[0]?.tasks[0].completed}
+              disabled={milestones[0]?.tasks[0].completed}
             />
             <SubmitButton
               url="/upload/initial-project"
               title="Enviar Anteproyecto"
               width="100%"
               handleSubmit={() => handleNavigation("/upload/initial-project")}
-              disabled={!milestones[1]?.tasks[0].completed}
+
             />
             <SubmitButton
               url="/upload/intermediate-project"
               title="Enviar Entrega Intermedia"
               width="100%"
-              handleSubmit={() =>
-                handleNavigation("/upload/intermediate-project")
-              }
-              disabled={!milestones[2]?.tasks[0].completed}
+              handleSubmit={() => handleNavigation("/upload/intermediate-project")}
+
             />
             <SubmitButton
               url="/availability-view"
@@ -165,8 +186,13 @@ const StudentHomeView = () => {
               title="Enviar Entrega Final"
               width="100%"
               handleSubmit={() => handleNavigation("/upload/final-project")}
-              disabled={!milestones[3]?.tasks[0].completed}
             />
+            {/*<SubmitButton
+              url="/upload/pps-report"
+              title="Enviar Informe Cumplimiento PPS"
+              width="100%"
+              handleSubmit={() => handleNavigation("/upload/pps-report")}
+            />*/}
           </>
         )}
       </Box>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 
 const EventModal = ({ open, onClose, onConfirm }) => {

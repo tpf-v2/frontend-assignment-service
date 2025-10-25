@@ -7,6 +7,7 @@ const initialState = {
   initial_project_active: false,
   intermediate_project_active: false,
   final_project_active: false,
+  pps_report_active: false
 };
 
 export const periodSlice = createSlice({

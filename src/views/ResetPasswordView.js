@@ -1,35 +1,22 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   TextField,
-  Button,
   Typography,
   Box,
-  Paper,
   IconButton,
   InputAdornment,
 } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { styled } from "@mui/system";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import BackgroundContainer from "../components/UI/BackgroundContainer.js";
 import MySnackbar from "../components/UI/MySnackBar.js";
 import { resetPasswordWithToken } from "../api/auth.js";
+import { TitleSimple } from "../styles/Titles.js";
+import { Root, ButtonSimple } from "../components/Root.js";
 
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
-
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-}));
+const ButtonStyled = ButtonSimple;
+const Title = TitleSimple;
 
 const ResetPasswordView = () => {
   const [password, setPassword] = useState("");

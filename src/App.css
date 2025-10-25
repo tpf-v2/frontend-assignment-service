@@ -54,3 +54,8 @@ html, body, #root {
 .content-container {
   flex: 1;
 }
+
+
+.description.empty {
+  color: red !important;
+}

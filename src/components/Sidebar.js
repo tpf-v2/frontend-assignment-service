@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, List, ListItemText, ListItemIcon, Accordion, AccordionSummary, AccordionDetails, Divider, ListItemButton } from "@mui/material";
+import { Box, List, ListItemText, ListItemIcon, Accordion, AccordionSummary, AccordionDetails, Divider, ListItemButton } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/system";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -11,15 +11,7 @@ import TimelineIcon from '@mui/icons-material/Timeline';
 import EmojiFlagsIcon from '@mui/icons-material/EmojiFlags';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: "#0072C6",
-  textAlign: "center",
-  fontSize: "2rem",
-  fontWeight: "bold",
-  flexGrow: 1,
-}));
+import { Title, TitleTop } from "../styles/Titles";
 
 const SidebarList = styled(List)(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -46,9 +38,14 @@ const Sidebar = ({ selectedMenu, handleNavigation, period }) => {
     </ListItemStyled>
   );
 
+  const periodParts = period.split("C")
+  const prettyPeriod = "Cuatrimestre " + periodParts[0] + "º"
+  const prettyPeriodYear = periodParts[1]
+
   return (
     <SidebarContainer>
-      <Title variant="h4">{period}</Title>
+      <TitleTop variant="h4">{prettyPeriod}</TitleTop>
+      <Title variant="h3">{prettyPeriodYear}</Title>
       <SidebarList>
         {/* Botón no desplegable */}
         <ListItem label="Inicio" icon={<HomeIcon />} menu="Inicio" />
@@ -79,6 +76,16 @@ const Sidebar = ({ selectedMenu, handleNavigation, period }) => {
             <ListItem label="Final" icon={<SchoolIcon />} menu="Final"/>
           </AccordionDetails>
         </Accordion>
+{/*
+        <Accordion defaultExpanded>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            Entregas Individuales
+          </AccordionSummary>
+          <AccordionDetails>
+            <ListItem label="Informe de Cumplimiento PPS" icon={<EditNoteIcon />} menu="PPS"/>
+          </AccordionDetails>
+        </Accordion>
+*/}
       </SidebarList>
       </SidebarContainer>
   );

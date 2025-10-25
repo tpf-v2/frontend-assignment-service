@@ -65,7 +65,7 @@ const Dates = ({setSelectedMenu}) => {
   const tutors = Object.values(useSelector((state) => state.tutors))
     .map(({ version, rehydrated, ...rest }) => rest) // Filtra las propiedades 'version' y 'rehydrated'
     .filter((item) => Object.keys(item).length > 0); // Elimina objetos vacíos
-  const groups = Object.values(useSelector((state) => state.groups))
+  const teams = Object.values(useSelector((state) => state.groups))
     .sort((a, b) => a.group_number - b.group_number)
     .map(({ version, rehydrated, ...rest }) => rest)
     .filter((item) => Object.keys(item).length > 0);
@@ -75,7 +75,7 @@ const Dates = ({setSelectedMenu}) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [openEvaluatorDialog, setOpenEvaluatorDialog] = useState(false);
   // const [selectedTutors, setSelectedTutors] = useState([]);
-  const [group, setGroup] = useState("");
+  const [team, setTeam] = useState("");
   const [tutor, setTutor] = useState("");
   const [topic, setTopic] = useState("");
   const [selectedHour, setSelectedHour] = useState("");
@@ -91,7 +91,7 @@ const Dates = ({setSelectedMenu}) => {
   const [openRunDialog, setOpenRunDialog] = useState(false);
   const [running, setRunning] = useState(false);
   const [maxDifference, setMaxDifference] = useState("");
-  const [maxGroups, setMaxGroups] = useState("");
+  const [maxTeams, setMaxTeams] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [datesResult, setDatesResult] = useState([]);
   const [isEditing, setIsEditing] = useState(null); // Almacena el id del equipo que está siendo editado
@@ -125,7 +125,6 @@ const Dates = ({setSelectedMenu}) => {
         setLoadingDates(true);
         const data = await getInputAnalysis(endpoint, period.id, user);        
         setInputInfo(data);
-        console.log("--- seteo input info:", data);
 
       } catch (error) {
         setLoadingDates(false);
@@ -264,7 +263,7 @@ const Dates = ({setSelectedMenu}) => {
 
       console.log("Running the algorithm!");
 
-      const response = await dates(user, period, maxDifference, maxGroups);
+      const response = await dates(user, period, maxDifference, maxTeams);
 
       setDatesResult(response.assigments);
     } catch (error) {
@@ -297,7 +296,7 @@ const Dates = ({setSelectedMenu}) => {
   }
 
   const handleAssignDate = async () => {
-    if (!group || !evaluador || !selectedDateTime || !selectedHour) {
+    if (!team || !evaluador || !selectedDateTime || !selectedHour) {
       handleSnackbarOpen(
         "Por favor completa todos los campos antes de asignar.",
         "error"
@@ -309,13 +308,13 @@ const Dates = ({setSelectedMenu}) => {
       (t) =>
         t.tutor_periods &&
         t.tutor_periods.some(
-          (tp) => tp.period_id === period.id && tp.id === group.tutor_period_id
+          (tp) => tp.period_id === period.id && tp.id === team.tutor_period_id
         )
     );
     try {
       await assignSpecificDate(
         user,
-        group.id,
+        team.id,
         tutor.id,
         evaluador,
         formatUpdatedDateTime(selectedDateTime, selectedHour),
@@ -325,7 +324,7 @@ const Dates = ({setSelectedMenu}) => {
       const color = getEvaluatorColor(evaluador, evaluatorColorMap);
 
       const newEvent = {
-        title: `Grupo ${group.group_number} - Tutor ${getTutorNameByTutorId(
+        title: `Grupo ${team.group_number} - Tutor ${getTutorNameByTutorId(
           tutor.id
         )} - Evaluador ${getTutorNameByTutorId(evaluador)}`,
         start: new Date(
@@ -343,15 +342,15 @@ const Dates = ({setSelectedMenu}) => {
               60 * 60 * 1000 * 3
           ),
           evaluator_id: evaluador,
-          group_id: group.id,
-          group_number: group.group_number,
+          group_id: team.id,
+          group_number: team.group_number,
           tutor_id: tutor.id,
         },
       };
       // Actualizar el evento si existe, o agregar uno nuevo si no existe
     setInitialEvents((prevEvents) => {
       const eventIndex = prevEvents.findIndex(
-        (event) => event.result.group_id === group.id
+        (event) => event.result.group_id === team.id
       );
 
       if (eventIndex !== -1) {
@@ -422,15 +421,15 @@ const Dates = ({setSelectedMenu}) => {
   };
 
   const handleSaveChanges = () => {
-    const groupDateCount = {};
+    const teamDateCount = {};
 
     events.forEach((event) => {
-      const groupId = event.result.group_id;
-      groupDateCount[groupId] = (groupDateCount[groupId] || 0) + 1;
+      const teamId = event.result.group_id;
+      teamDateCount[teamId] = (teamDateCount[teamId] || 0) + 1;
     });
 
     // Verificar si algún equipo tiene más de una fecha asignada
-    const hasMultipleDates = Object.values(groupDateCount).some(
+    const hasMultipleDates = Object.values(teamDateCount).some(
       (count) => count > 1
     );
 
@@ -450,7 +449,7 @@ const Dates = ({setSelectedMenu}) => {
     setErrorDialogOpen(false);
     setShowResults(false); // Cierra el diálogo de resultados
     setMaxDifference(""); // Reinicia el valor del límite máximo
-    setMaxGroups("");
+    setMaxTeams("");
     handleRun(); // Abre el diálogo para seleccionar el límite máximo
   };
 
@@ -532,20 +531,20 @@ const Dates = ({setSelectedMenu}) => {
   };
 
   const handleConfirmEvent = async () => {
-    if (selectedSlot && group) {
-      const groupTutor = tutors.find(
+    if (selectedSlot && team) {
+      const teamTutor = tutors.find(
         (t) =>
           t.tutor_periods &&
           t.tutor_periods.some(
             (tp) =>
-              tp.period_id === period.id && tp.id === group.tutor_period_id
+              tp.period_id === period.id && tp.id === team.tutor_period_id
           )
       );
       const color = getEvaluatorColor(evaluador, evaluatorColorMap);
 
       const newEvent = {
-        title: `Grupo ${group.group_number} - Tutor ${getTutorNameByTutorId(
-          groupTutor.id
+        title: `Grupo ${team.group_number} - Tutor ${getTutorNameByTutorId(
+          teamTutor.id
         )} - Evaluador ${getTutorNameByTutorId(evaluador)}`,
         start: selectedSlot.start,
         end: selectedSlot.end,
@@ -553,8 +552,8 @@ const Dates = ({setSelectedMenu}) => {
         result: {
           date: selectedSlot.start,
           evaluator_id: evaluador,
-          group_id: group.id,
-          tutor_id: groupTutor.id,
+          group_id: team.id,
+          tutor_id: teamTutor.id,
         },
       };
       setEvents((prevEvents) => [...prevEvents, newEvent]);
@@ -649,7 +648,7 @@ const Dates = ({setSelectedMenu}) => {
       <SpecificDateDialog
         open={assignDateOpenDialog}
         onClose={() => setAssignDateOpenDialog(false)}
-        groups={groups}
+        teams={teams}
         period={period}
         tutor={tutor}
         topic={topic}
@@ -663,8 +662,8 @@ const Dates = ({setSelectedMenu}) => {
         getTutorNameById={getTutorNameById}
         hours={hours}
         tutors={tutors}
-        group={group}
-        setGroup={setGroup}
+        team={team}
+        setTeam={setTeam}
         setTutor={setTutor}
         setTopic={setTopic}
       />
@@ -708,12 +707,12 @@ const Dates = ({setSelectedMenu}) => {
               <Select
                 fullWidth
                 displayEmpty
-                value={group.group_number}
+                value={team.group_number}
                 onChange={(e) => {
-                  const selectedGroup = groups.find(
+                  const selectedGroup = teams.find(
                     (g) => g.group_number === e.target.value
                   );
-                  setGroup(selectedGroup);
+                  setTeam(selectedGroup);
 
                   const selectedTutor = getTutorNameById(
                     selectedGroup.tutor_period_id,
@@ -723,7 +722,7 @@ const Dates = ({setSelectedMenu}) => {
                   setTopic(selectedGroup.topic ? selectedGroup.topic.name : "[No tiene tema asignado.]");
                 }}
                 renderValue={(selected) => {
-                  const selectedGroup = groups.find(
+                  const selectedGroup = teams.find(
                     (g) => g.group_number === selected
                   );
                   return selectedGroup
@@ -731,9 +730,9 @@ const Dates = ({setSelectedMenu}) => {
                     : "Selecciona un Grupo";
                 }}
               >
-                {groups.map((group) => (
-                  <MenuItem key={group.id} value={group.group_number}>
-                    {`Grupo ${group.group_number}`}
+                {teams.map((team) => (
+                  <MenuItem key={team.id} value={team.group_number}>
+                    {`Grupo ${team.group_number}`}
                   </MenuItem>
                 ))}
               </Select>
@@ -816,8 +815,8 @@ const Dates = ({setSelectedMenu}) => {
             label="Máximo equipos por semana"
             type="number"
             fullWidth
-            value={maxGroups}
-            onChange={(e) => setMaxGroups(e.target.value)}
+            value={maxTeams}
+            onChange={(e) => setMaxTeams(e.target.value)}
           />
         </DialogContent>
         <DialogActions sx={{ padding: "16px 24px" }}>
