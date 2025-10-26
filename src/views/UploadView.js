@@ -9,6 +9,7 @@ import {
   Container,
   Alert
 } from "@mui/material";
+
 const UploadView = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -72,10 +73,11 @@ const UploadView = () => {
   }
 
   function getProjectDeliveredMessage() {
+    date = getProjectDeliveredDate()
     if (projectType === "pps-report") {
-      return "Ya realizaste esta entrega el " + getProjectDeliveredDate().substring(0,10) + ".";
+      return "Ya realizaste esta entrega el " + date.substring(0,10) + ".";
     } else {
-      return "Tu equipo ya realizó esta entrega el " + getProjectDeliveredDate().substring(0,10) + ".";
+      return "Tu equipo ya realizó esta entrega el " + date.substring(0,10) + ".";
     }
   }
 
@@ -94,11 +96,9 @@ const UploadView = () => {
   let delivered = false;
   if (group && projectType==="final-project" && !!group.final_report_date) {
     delivered = true;
-  }
-  if (group && projectType==="initial-project" && !!group.pre_report_date) {
+  } else if (group && projectType==="initial-project" && !!group.pre_report_date) {
     delivered = true;
-  }
-  if (group && projectType==="intermediate-project" && !!group.intermediate_assigment_date) {
+  } else if (group && projectType==="intermediate-project" && !!group.intermediate_assigment_date) {
     delivered = true;
   } else if (projectType==="pps-report" && !!user.pps_report_date) {
     delivered = true;

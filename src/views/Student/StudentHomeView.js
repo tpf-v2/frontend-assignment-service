@@ -1,5 +1,3 @@
-
-import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { Container, Box, CircularProgress } from "@mui/material";
@@ -61,29 +59,28 @@ const StudentHomeView = () => {
         const topic_completed = userData.topic && userData.tutor
         setMilestones([
           {
-            phase: "Inscripción",
+            phase: "Formulario de inscripción",
+            description: topic_completed ? "Tema y tutor asignado" : "Tema sin asignar",
             tasks: [
               {
                 title: form_completed ? "Formulario enviado" : "Formulario no enviado",
                 completed: form_completed,
-              },
-              {
-                title: topic_completed ? "Tema y tutor asignado" : "Tema sin asignar",
-                completed: topic_completed,
-              },
-              
+                available: period.form_active,
+                urlNotCompleted: "/student-form",
+                urlCompleted:"",
+              },  
             ],
           },
           {
             phase: "Anteproyecto",
+            description: team.pre_report_approved ? "Entrega aprobada" : "Revisión de tutor pendiente",
             tasks: [
               {
-                title: !!team.pre_report_date ? "Enviado" : "No enviado",
+                title: !team.pre_report_date ? (!!period.initial_project_active ? "Enviar" : "No disponible") : "Enviado",
                 completed: !!team.pre_report_date,
-              },
-              {
-                title: team.pre_report_approved ?  "Revisión terminada" : "Revisión de tutor",
-                completed: team.pre_report_approved,
+                available: period.initial_project_active && !!user.group_id,
+                urlNotCompleted: "/upload/initial-project",
+                urlCompleted: "/upload/initial-project"
               },
             ],
           },
@@ -91,9 +88,12 @@ const StudentHomeView = () => {
             phase: "Entrega Intermedia",
             tasks: [
               {
-                title: !!team.intermediate_assigment_date ? "Enviada" : "No enviada",
+                title: !team.intermediate_assigment_date ? (period.intermediate_project_active ? "Enviar" : "No disponible") : "Enviada",
                 completed:
                   !!team.intermediate_assigment_date,
+                available: period.intermediate_project_active && !!user.group_id,
+                urlNotCompleted: "/upload/intermediate-project",
+                urlCompleted: "/upload/intermediate-project"
               },
             ],
           },
@@ -101,8 +101,11 @@ const StudentHomeView = () => {
             phase: "Entrega Final",
             tasks: [
               {
-                title: !!team.final_report_date ? "Enviada" : "No enviada",
+                title: !team.final_report_date ? (!!period.final_project_active ? "Enviar" : "No disponible") : "Enviada",
                 completed: !!team.final_report_date,
+                available: period.final_project_active && !!user.group_id,
+                urlNotCompleted: "/upload/final-project",
+                urlCompleted: "/upload/final-project"
               }
             ],
           }/*,
@@ -110,8 +113,11 @@ const StudentHomeView = () => {
             phase: "Informe de Cumplimiento PPS",
             tasks: [
               {
-                title: !!userData.pps_report_date ? "Enviado" : "No enviado",
+                title: !userData.pps_report_date ? (!!period.pps_report_active ? "Enviar" : "No disponible") : "Enviado",
                 completed: !!userData.pps_report_date,
+                available: period.pps_report_active && !!user.group_id,
+                urlNotCompleted: "/upload/pps-report",
+                urlCompleted: "/upload/pps-report"
               }
             ],
           }*/
@@ -119,12 +125,14 @@ const StudentHomeView = () => {
       } catch (error) {
         console.error("Error al obtener las respuestas", error);
       } finally {
-        setLoading(false); // Finalizar la carga de datos
+        if (!!period) {
+          setLoading(false);
+        } // Finalizar la carga de datos
       }
     };
 
     fetchTeamAnswer();
-  }, [dispatch, user]);
+  }, [dispatch, user, period]);
 
   const navigate = useNavigate();
   const handleNavigation = (url) => {
@@ -154,45 +162,12 @@ const StudentHomeView = () => {
               disabled={milestones[0]?.tasks[0].completed}
             />
             <SubmitButton
-              url="/student-form"
-              title="Enviar Formulario de Equipo"
-              width="100%"
-              handleSubmit={() => handleNavigation("/student-form")}
-              disabled={milestones[0]?.tasks[0].completed}
-            />
-            <SubmitButton
-              url="/upload/initial-project"
-              title="Enviar Anteproyecto"
-              width="100%"
-              handleSubmit={() => handleNavigation("/upload/initial-project")}
-
-            />
-            <SubmitButton
-              url="/upload/intermediate-project"
-              title="Enviar Entrega Intermedia"
-              width="100%"
-              handleSubmit={() => handleNavigation("/upload/intermediate-project")}
-
-            />
-            <SubmitButton
               url="/availability-view"
               title="Disponibilidades de Exposición"
               width="100%"
               disabled={!period.presentation_dates_available}
               handleSubmit={() => handleNavigation("/availability-view")}
             />
-            <SubmitButton
-              url="/upload/final-project"
-              title="Enviar Entrega Final"
-              width="100%"
-              handleSubmit={() => handleNavigation("/upload/final-project")}
-            />
-            {/*<SubmitButton
-              url="/upload/pps-report"
-              title="Enviar Informe Cumplimiento PPS"
-              width="100%"
-              handleSubmit={() => handleNavigation("/upload/pps-report")}
-            />*/}
           </>
         )}
       </Box>
@@ -208,6 +183,7 @@ const StudentHomeView = () => {
                 key={index}
                 phase={phase.phase}
                 tasks={phase.tasks}
+                description={phase.description}
                 circle={true}
               />
             ))
