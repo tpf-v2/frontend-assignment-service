@@ -73,7 +73,7 @@ const UploadView = () => {
   }
 
   function getProjectDeliveredMessage() {
-    date = getProjectDeliveredDate()
+    const date = getProjectDeliveredDate()
     if (projectType === "pps-report") {
       return "Ya realizaste esta entrega el " + date.substring(0,10) + ".";
     } else {
