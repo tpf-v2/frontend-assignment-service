@@ -108,7 +108,7 @@ const StudentHomeView = () => {
                 urlCompleted: "/upload/final-project"
               }
             ],
-          },
+          }/*,
           {
             phase: "Informe de Cumplimiento PPS",
             tasks: [
@@ -120,7 +120,7 @@ const StudentHomeView = () => {
                 urlCompleted: "/upload/pps-report"
               }
             ],
-          }
+          }*/
         ]);
       } catch (error) {
         console.error("Error al obtener las respuestas", error);
