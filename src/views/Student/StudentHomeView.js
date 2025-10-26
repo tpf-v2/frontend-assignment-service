@@ -59,7 +59,7 @@ const StudentHomeView = () => {
         const topic_completed = userData.topic && userData.tutor
         setMilestones([
           {
-            phase: "Formulario de inscripción",
+            phase: "Formulario de Inscripción",
             description: topic_completed ? "Tema y tutor asignado" : "Tema sin asignar",
             tasks: [
               {
@@ -98,18 +98,6 @@ const StudentHomeView = () => {
             ],
           },
           {
-            phase: "Exposición de Proyecto Final",
-            tasks: [
-              {
-                title: "Enviar disponibilidad de fechas",
-                completed: false,
-                available: period.presentation_dates_available && !!user.group_id,
-                urlNotCompleted: "/availability-view",
-                urlCompleted: "/availability-view"
-              },
-            ],
-          },
-          {
             phase: "Entrega Final",
             tasks: [
               {
@@ -119,6 +107,18 @@ const StudentHomeView = () => {
                 urlNotCompleted: "/upload/final-project",
                 urlCompleted: "/upload/final-project"
               }
+            ],
+          },
+          {
+            phase: "Exposición de Proyecto Final",
+            tasks: [
+              {
+                title: "Enviar disponibilidad de fechas",
+                completed: false,
+                available: period.presentation_dates_available && !!user.group_id,
+                urlNotCompleted: "/availability-view",
+                urlCompleted: "/availability-view"
+              },
             ],
           }/*,
           {
