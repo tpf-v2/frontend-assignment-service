@@ -10,14 +10,11 @@ import {
   TextField,
   DialogActions,
   Button,
-  MenuItem,
-  Select,
   DialogContentText,
 } from "@mui/material";
 import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
-import dayjs from "dayjs";
 import Description from "./Dates/Description";
 import ButtonSection from "./Dates/ButtonSection";
 import CalendarSection from "./Dates/CalendarSection";
@@ -49,6 +46,7 @@ const evaluatorColors = [
 ];
 
 // Función para asignar un color a cada evaluador de manera dinámica
+// Obs: Depende de la length y se va appendeando! O sea que dep del orden en que llegan evaluadores
 const getEvaluatorColor = (evaluatorId, evaluatorColorMap) => {
   if (!evaluatorColorMap[evaluatorId]) {
     const colorIndex =
@@ -75,19 +73,17 @@ const Dates = ({setSelectedMenu}) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [openEvaluatorDialog, setOpenEvaluatorDialog] = useState(false);
   // const [selectedTutors, setSelectedTutors] = useState([]);
-  const [team, setTeam] = useState("");
-  const [tutor, setTutor] = useState("");
-  const [topic, setTopic] = useState("");
-  const [selectedHour, setSelectedHour] = useState("");
+
+  const [item, setItem] = useState({}); // Un elemento, evento, a asignar / editar.
 
   const [events, setEvents] = useState([]);
   const [initialEvents, setInitialEvents] = useState([]);
-
-  // Genera las opciones de horas (ej: 9:00, 10:00, ..., 17:00)
+  
+  // Genera las opciones de horas (ej: 9:00, 10:00, ..., 17:00) // Aux: borrar esto, lo muevo al Specific []
   const hours = Array.from({ length: 13 }, (_, i) => `${9 + i}:00`);
-  const [evaluador, setEvaluador] = useState("");
+
   const [assignDateOpenDialog, setAssignDateOpenDialog] = useState(false);
-  const [selectedDateTime, setSelectedDateTime] = useState(dayjs());
+  const [editDateOpenDialog, setEditDateOpenDialog] = useState(false); 
   const [openRunDialog, setOpenRunDialog] = useState(false);
   const [running, setRunning] = useState(false);
   const [maxDifference, setMaxDifference] = useState("");
@@ -134,6 +130,7 @@ const Dates = ({setSelectedMenu}) => {
 
     // Fechas
     const fetchData = async () => {
+      if (!period) return; // AUX PROBANDO SIN PERIOD EN DEPS.
       setLoadingDates(true);
       try {
         const dates = await getAssignedDates(user, period);
@@ -145,8 +142,10 @@ const Dates = ({setSelectedMenu}) => {
               evaluatorColorMap
             );
 
+            // Es otro componente, como el del modal de confirmar resultados (pero cambian las start y end)
+            // Fetch, debajo del botón Correr se muestran estos resultados
             return {
-              title: `Grupo ${
+              title: `Equipo ${
                 result.group_number
               } - Tutor ${getTutorNameByTutorId(
                 result.tutor_id
@@ -177,7 +176,8 @@ const Dates = ({setSelectedMenu}) => {
     fetchData();
     getInputInfo();    
     setLoadingDates(false);
-  }, [period, user]);
+  //}, [period, user]);
+  }, [user]);
 
   // Transforma datesResult en eventos para el calendario
   useEffect(() => {
@@ -185,8 +185,9 @@ const Dates = ({setSelectedMenu}) => {
       const formattedEvents = datesResult.map((result) => {
         const color = getEvaluatorColor(result.evaluator_id, evaluatorColorMap);
 
+        // Rectangulitos de colores (resultados) en el modal de confirmación, y su onhover
         return {
-          title: `Grupo ${result.group_number} - Tutor ${getTutorNameByTutorId(
+          title: `Equipo ${result.group_number} - Tutor ${getTutorNameByTutorId(
             result.tutor_id
           )} - Evaluador ${getTutorNameByTutorId(result.evaluator_id)}`,
           start: new Date(result.date),
@@ -212,9 +213,9 @@ const Dates = ({setSelectedMenu}) => {
     setEvaluatorColorMap((prevMap) => ({ ...prevMap }));
   }, [events]);
 
-  const generateCSVData = () => {
+  const generateCSVData = () => { // botón csv de afuera, hay otro en el modal de confirmar resultados
     return initialEvents.map((event) => ({
-      "Numero de grupo": event.result.group_number,
+      "Numero de equipo": event.result.group_number,
       "Nombre y apellido del tutor": getTutorNameByTutorId(
         event.result.tutor_id
       ),
@@ -264,6 +265,7 @@ const Dates = ({setSelectedMenu}) => {
       console.log("Running the algorithm!");
 
       const response = await dates(user, period, maxDifference, maxTeams);
+      console.log("---response:", response);
 
       setDatesResult(response.assigments);
     } catch (error) {
@@ -295,20 +297,26 @@ const Dates = ({setSelectedMenu}) => {
     return date.toISOString();
   }
 
-  const handleAssignDate = async () => {
-    if (!team || !evaluador || !selectedDateTime || !selectedHour) {
+  // Busca los datos del equipo, hace request para agregar la asignación manual,
+  // y crea y agrega el resultado de color al estado que renderiza el componente de resultados
+  // Importante: esta función hace request al back para (entre otras cosas( editar la exhibition_date del equipo
+  // y puede hacerlo porque los resultados ya fueron confirmados.
+  const handleAssignDate = async (team, evaluator, selectedDateTime, selectedHour, handleClose) => {
+    console.log("--- handleAssignDate, recibo team:", team);
+    if (!team || !evaluator || !selectedDateTime || !selectedHour) {
       handleSnackbarOpen(
         "Por favor completa todos los campos antes de asignar.",
         "error"
       );
       return;
     }
-
+    
+    // Lo busca, porque el item.tutor es solamente el nombre, lo mismo topic.
     const tutor = tutors.find(
       (t) =>
         t.tutor_periods &&
         t.tutor_periods.some(
-          (tp) => tp.period_id === period.id && tp.id === team.tutor_period_id
+          (tp) => tp.period_id === period.id && tp.id === team.tutor_period_id // <---
         )
     );
     try {
@@ -316,17 +324,23 @@ const Dates = ({setSelectedMenu}) => {
         user,
         team.id,
         tutor.id,
-        evaluador,
+        evaluator,
         formatUpdatedDateTime(selectedDateTime, selectedHour),
         period.id
       );
+      handleClose();
       handleSnackbarOpen("Fecha asignada correctamente", "success");
-      const color = getEvaluatorColor(evaluador, evaluatorColorMap);
+      // El resultado luego de asignar fecha a un equipo manualmente
+      const color = getEvaluatorColor(evaluator, evaluatorColorMap);
+
+      console.log("----- Viendo formato");
+      console.log("--- selectedDateTime:", selectedDateTime);
+      console.log("--- selectedHour:", selectedHour);
 
       const newEvent = {
-        title: `Grupo ${team.group_number} - Tutor ${getTutorNameByTutorId(
+        title: `Equipo ${team.group_number} - Tutor ${getTutorNameByTutorId(
           tutor.id
-        )} - Evaluador ${getTutorNameByTutorId(evaluador)}`,
+        )} - Evaluador ${getTutorNameByTutorId(evaluator)}`,
         start: new Date(
           new Date(formatUpdatedDateTime(selectedDateTime, selectedHour)).getTime() +
             60 * 60 * 1000 * 3
@@ -341,12 +355,13 @@ const Dates = ({setSelectedMenu}) => {
             new Date(formatUpdatedDateTime(selectedDateTime, selectedHour)).getTime() +
               60 * 60 * 1000 * 3
           ),
-          evaluator_id: evaluador,
+          evaluator_id: evaluator,
           group_id: team.id,
           group_number: team.group_number,
           tutor_id: tutor.id,
         },
       };
+      console.log("--- newEvent:", newEvent);
       // Actualizar el evento si existe, o agregar uno nuevo si no existe
     setInitialEvents((prevEvents) => {
       const eventIndex = prevEvents.findIndex(
@@ -368,20 +383,11 @@ const Dates = ({setSelectedMenu}) => {
       }
     });
     } catch (e) {
-      handleSnackbarOpen("Hubo un error al asignar la fecha.", "error");
+      console.log("Error al asignar o editar la fecha:", e);
+      handleSnackbarOpen("Hubo un error al asignar la fecha", "error");
     } finally {
       setAssignDateOpenDialog(false); // Cerrar el diálogo después de asignar
     }
-  };
-
-  const getTutorNameById = (id, periodId) => {
-    const tutor = tutors.find(
-      (t) =>
-        t.tutor_periods &&
-        t.tutor_periods.some((tp) => tp.period_id === periodId && tp.id === id)
-    );
-
-    return tutor ? tutor.name + " " + tutor.last_name : "Sin asignar"; // Si no encuentra el tutor, mostrar 'Sin asignar'
   };
 
   const getTutorNameByTutorId = (tutor_id) => {
@@ -398,13 +404,6 @@ const Dates = ({setSelectedMenu}) => {
   const handleConfirmResults = async () => {
     setOpenConfirmDialog(true); // Abrir el popup de confirmación
   };
-
-  const filteredTutors = tutors.filter((tutor) =>
-    tutor.tutor_periods.some(
-      (tutor_period) =>
-        tutor_period.period_id === period.id && tutor_period.is_evaluator
-    )
-  );
 
   const handleAssignEspecificDate = () => {
     setAssignDateOpenDialog(true);
@@ -478,7 +477,7 @@ const Dates = ({setSelectedMenu}) => {
     setOpenConfirmDialog(false); // Cerrar el popup de confirmación
     setShowResults(false);
 
-    setInitialEvents((prevEvents) => [...prevEvents, ...events]);
+    setInitialEvents((prevEvents) => [...prevEvents, ...events]); // [] aux: ver acá tmb, si no está duplicando
   };
 
   const handleSelectSlot = ({ start, end }) => {
@@ -506,8 +505,10 @@ const Dates = ({setSelectedMenu}) => {
         return;
       }
 
-      // Guardar el intervalo seleccionado
-      setSelectedSlot({ start, end });
+      // Guardar el intervalo seleccionado (clickeado)
+      setSelectedSlot({ start , end });
+      console.log("--- selectedSlot:", selectedSlot);
+      
       setModalOpen(true); // Abrir el modal para confirmar
     }
   };
@@ -530,37 +531,65 @@ const Dates = ({setSelectedMenu}) => {
     }
   };
 
-  const handleConfirmEvent = async () => {
-    if (selectedSlot && team) {
+  // Al confirmar la asignación manual de fecha desde ResultsDialog -> "Editar"
+  // Importante: los resultados todavía no fueron confirmados, por lo que esto no hace requests
+  // al back sino que maneja las ediciones en el front. Actualmente esto hace que un eq pueda
+  // aparecer en más de una fecha (y luego el front impide cerrar modal hasta que se resuelva manualmente)
+  const handleConfirmEvent = async (team, evaluator, _selectedDateTime, _selectedHour, handleClose) => {
+    // Crea un evento (una asignación), solo la setea y cierra el dialog    
+    // El selectSlot no es de item, es el slot en que clickeaste (en él querés ubicar al equipo)
+    if (selectedSlot && item?.team) {
+      console.log("--- selectedSlot, veamos:", selectedSlot);
       const teamTutor = tutors.find(
         (t) =>
           t.tutor_periods &&
           t.tutor_periods.some(
             (tp) =>
-              tp.period_id === period.id && tp.id === team.tutor_period_id
+              tp.period_id === period.id && tp.id === item?.team.tutor_period_id
           )
       );
-      const color = getEvaluatorColor(evaluador, evaluatorColorMap);
+      handleClose()
+      const color = getEvaluatorColor(evaluator, evaluatorColorMap);
 
-      const newEvent = {
-        title: `Grupo ${team.group_number} - Tutor ${getTutorNameByTutorId(
+      // Hay que pasar la hora por la función de formattedData, ajuste xq viene de selectedSlot con otro formato
+      const localDate = new Date(
+        selectedSlot.start.getTime() - selectedSlot.start.getTimezoneOffset() * 60000
+      );
+      const datePart = localDate.toISOString().slice(0, 10);
+      const hourPart = selectedSlot.start.getHours().toString().padStart(2, "0") + ":" +
+                       selectedSlot.start.getMinutes().toString().padStart(2, "0");
+
+      // Ahora sí llamamos a la función
+      const selectedRealUtc = formatUpdatedDateTime(datePart, hourPart);
+      console.log("---- selectedRealUtc:", selectedRealUtc);
+      console.log("---- selectedSlot:", selectedSlot);
+      
+      const newEvent = { //
+        title: `Equipo ${item?.team.group_number} - Tutor ${getTutorNameByTutorId(
           teamTutor.id
-        )} - Evaluador ${getTutorNameByTutorId(evaluador)}`,
-        start: selectedSlot.start,
-        end: selectedSlot.end,
+        )} - Evaluador ${getTutorNameByTutorId(evaluator)}`,
+        start: new Date(new Date(selectedRealUtc).getTime() +
+          60 * 60 * 1000 * 3), // Para mostrar, hay que volverlo a la hora actual o se mostrará más temprano
+        end: new Date(new Date(selectedRealUtc).getTime() + 60 * 60 * 1000 * 4), // 1 hora        
         color: color,
         result: {
-          date: selectedSlot.start,
-          evaluator_id: evaluador,
+          date: new Date(new Date(selectedRealUtc).getTime() +
+            60 * 60 * 1000 * 3),
+          evaluator_id: evaluator,
           group_id: team.id,
           tutor_id: teamTutor.id,
         },
       };
-      setEvents((prevEvents) => [...prevEvents, newEvent]);
+      setEvents((prevEvents) => [...prevEvents, newEvent]); // [] Aux: Acá es donde duplica los eventos sin importarle nada (arreglar esto)
       setModalOpen(false);
+
+      console.log("--- newEvent, veamoss:", newEvent);
+      console.log("--- events, veamoss:", events);
     }
   };
-
+  console.log("--- events, cada tanto:", events);
+  console.log("--- initialEvents, cada tanto:", initialEvents);
+  
   return (
     <Box sx={{ padding: 3 }}>
       <Grid container spacing={2}>
@@ -622,12 +651,19 @@ const Dates = ({setSelectedMenu}) => {
         )}
       </Grid>
 
-      {/* Sección de Tabla y Botón a la derecha */}
+      {/* Sección de Tabla con resultados (Calendario grande) y Botón a la derecha */}
+      {/* El cartel de edición, similar al de agregar, se llama dentro de CalendarSection */}
       <Grid item xs={12}>
         <CalendarSection
           events={initialEvents}
           defaultDate={initialDefaultDate}
           loadingDates={loadingDates}
+
+          handleAssignDate={handleAssignDate}
+          
+          teams={teams}
+          tutors={tutors}
+          period={period}
         />
       </Grid>
 
@@ -638,37 +674,28 @@ const Dates = ({setSelectedMenu}) => {
         loading={running}
       />
 
-      <EvaluatorDialog
+      <EvaluatorDialog // El de tildar quiénes son evaluadores
         user={user}
         open={openEvaluatorDialog}
         handleClose={handleEvaluatorDialogClose}
         handleEvaluatorDialogClose={handleEvaluatorDialogClose}
       />
 
-      <SpecificDateDialog
+      <SpecificDateDialog // Asignar fecha a equipo (manualmente)
         open={assignDateOpenDialog}
-        onClose={() => setAssignDateOpenDialog(false)}
-        teams={teams}
-        period={period}
-        tutor={tutor}
-        topic={topic}
-        evaluador={evaluador}
-        setEvaluador={setEvaluador}
-        selectedDateTime={selectedDateTime}
-        setSelectedDateTime={setSelectedDateTime}
-        selectedHour={selectedHour}
-        setSelectedHour={setSelectedHour}
-        handleAssignDate={handleAssignDate}
-        getTutorNameById={getTutorNameById}
-        hours={hours}
-        tutors={tutors}
-        team={team}
-        setTeam={setTeam}
-        setTutor={setTutor}
-        setTopic={setTopic}
-      />
+        onClose={() => setAssignDateOpenDialog(false)}        
+        item={item}
+        setItem={setItem}
 
-      <ResultsDialog
+        teams={teams}
+        tutors={tutors}
+        period={period}
+
+        showLastPart={true}
+        handleAssignDate={handleAssignDate}
+      />      
+
+      <ResultsDialog // Luego de correr el algoritmo
         open={showResults}
         onClose={handleCloseResults}
         events={events}
@@ -685,116 +712,26 @@ const Dates = ({setSelectedMenu}) => {
         getTutorNameByTutorId={getTutorNameByTutorId}
       />
 
-      <ConfirmDeleteModal
+      <ConfirmDeleteModal // Viendo resultados del algoritmo -> editar -> click para elim un resultado
         open={confirmDeleteOpen}
         onClose={() => setConfirmDeleteOpen(false)}
         onConfirm={handleDeleteEvent}
       />
 
-      <Dialog
+      <SpecificDateDialog // Asignar manualmente: ResultsDialog -> Editar -> clickear un slot vacío
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>Asignar Fecha a Equipo</DialogTitle>
+        item={item}
+        setItem={setItem}
 
-        <DialogContent>
-          <Grid container spacing={3}>
-            {/* Selección de Equipo */}
-            <Grid item xs={12}>
-              <Typography variant="subtitle1">Equipo</Typography>
-              <Select
-                fullWidth
-                displayEmpty
-                value={team.group_number}
-                onChange={(e) => {
-                  const selectedGroup = teams.find(
-                    (g) => g.group_number === e.target.value
-                  );
-                  setTeam(selectedGroup);
+        teams={teams}
+        tutors={tutors}
+        period={period}
+        
+        handleAssignDate={handleConfirmEvent} // <--
+      />
 
-                  const selectedTutor = getTutorNameById(
-                    selectedGroup.tutor_period_id,
-                    period.id
-                  );
-                  setTutor(selectedTutor ? selectedTutor : "");
-                  setTopic(selectedGroup.topic ? selectedGroup.topic.name : "[No tiene tema asignado.]");
-                }}
-                renderValue={(selected) => {
-                  const selectedGroup = teams.find(
-                    (g) => g.group_number === selected
-                  );
-                  return selectedGroup
-                    ? `Grupo ${selectedGroup.group_number}`
-                    : "Selecciona un Grupo";
-                }}
-              >
-                {teams.map((team) => (
-                  <MenuItem key={team.id} value={team.group_number}>
-                    {`Grupo ${team.group_number}`}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Grid>
-
-            {/* Tutor y Tema */}
-            <Grid item xs={12} md={12}>
-              <TextField
-                label="Tutor"
-                value={tutor}
-                fullWidth
-                InputProps={{ readOnly: true }}
-                variant="filled"
-              />
-            </Grid>
-            <Grid item xs={12} md={12}>
-              <TextField
-                label="Tema"
-                value={topic}
-                fullWidth
-                InputProps={{ readOnly: true }}
-                variant="filled"
-              />
-            </Grid>
-
-            {/* Selección de Evaluador */}
-            <Grid item xs={12}>
-              <Typography variant="subtitle1">Evaluador</Typography>
-              <Select
-                fullWidth
-                displayEmpty
-                value={evaluador}
-                onChange={(e) => setEvaluador(e.target.value)}
-              >
-                {filteredTutors.map((tutor) => (
-                  <MenuItem key={tutor.id} value={tutor.id}>
-                    {`${tutor.name} ${tutor.last_name}`}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Grid>
-          </Grid>
-        </DialogContent>
-
-        <DialogActions sx={{ padding: "16px 24px" }}>
-          <Button
-            onClick={() => setModalOpen(false)}
-            color="error"
-            variant="outlined"
-          >
-            Cancelar
-          </Button>
-          <Button
-            onClick={handleConfirmEvent}
-            color="primary"
-            variant="contained"
-          >
-            Asignar
-          </Button>
-        </DialogActions>
-      </Dialog>
-
+      {/* Correr el algoritmo */}
       <Dialog open={openRunDialog} onClose={handleCloseRunDialog}>
         <DialogTitle>
           Seleccione la diferencia de equipos entre evaluadores y el límite
@@ -837,7 +774,7 @@ const Dates = ({setSelectedMenu}) => {
         </DialogActions>
       </Dialog>
 
-      {/* Popup de Confirmación */}
+      {/* Popup de Confirmación Para Correr el Algoritmo*/}
       <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>
         <DialogTitle>Confirmar Resultados</DialogTitle>
         <DialogContent>

@@ -11,26 +11,31 @@ import {
   IconButton,
   Typography,
   Paper,
+  Button,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close"; // Importar el ícono de cerrar
 import 'moment/locale/es';
 import { useMemo } from 'react';
+import SpecificDateDialog from "./SpecificDateDialog";
+import { getTutorNameById } from "../../../utils/getEntitiesUtils"
 
 moment.tz.setDefault('America/Argentina/Buenos Aires')
 const localizer = momentLocalizer(moment);
 
-const CalendarSection = ({ events, defaultDate, loadingDates }) => {
-  const [open, setOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, period, handleAssignDate }) => {
+  const [openDetails, setOpenDetails] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null); // "item"
+  const [editDateOpenDialog, setEditDateOpenDialog] = useState(false); // aux: nuevo, probando
 
   const handleEventSelect = (event) => {
     setSelectedEvent(event);
-    setOpen(true);
+    setOpenDetails(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setOpenDetails(false);
     setSelectedEvent(null);
+    console.log("seteando a null"); // aux
   };
   const { formats } = useMemo(() => ({
     formats: {
@@ -43,6 +48,30 @@ const CalendarSection = ({ events, defaultDate, loadingDates }) => {
         localizer.format(end,  'dddd D, YYYY', culture),
     },
   }))
+
+  // Transformar el formato para pasarle a SpecificDateDialog el item precargado con el formato que espera.
+  const makeEditableItem = (event) => {
+    // To-Do: refactor para evitar toda esta vuelta:
+    //  - tendría que ser "tutor = getTutorNameById(event.result.tutor_id,..." pero no anda, xq es otro dato.
+    //  - el team debe tener id (debo buscarlo como acá entonces) xq afuera usa el team.id para obtener el team y con eso
+    //    hacer tutor=getTutorById(team.tutor_period_id) y obtener el "tutor_id":
+    //    que sí, el tutor_id es exactamente lo que tengo acá ahora. No lo puedo usar directamente y me obliga a dar toda la vuelta,
+    //    porque así funciona el add que también usa el mismo SpecificDateDialog.
+    const team = teams?.find( // <-- workaround
+      (t) => t.group_number === event.result?.group_number
+    );
+    const editableItem = {
+      team: team,
+      topic: team?.topic.name,
+      tutor: getTutorNameById(team?.tutor_period_id, period.id, tutors), // <-- workaround
+      evaluator: event.result?.evaluator_id,
+      selectedDateTime: event.start || null,
+      selectedHour: `${event.start?.getHours()}:00` || null, //${event.start.getMinutes()}`, esto obtne '0', y las opciones son siempre en punto, nunca y media etc
+    }
+    return editableItem;
+  }
+
+  console.log("---selectedEvent:", selectedEvent);
   return (
     <>
       {loadingDates ? (
@@ -105,7 +134,7 @@ const CalendarSection = ({ events, defaultDate, loadingDates }) => {
               />
 
               {/* Dialog para mostrar la información del evento */}
-              <Dialog open={open} onClose={handleClose}>
+              <Dialog open={openDetails} onClose={handleClose}>
                 <DialogTitle>
                   Detalles del Evento
                   <IconButton
@@ -129,11 +158,25 @@ const CalendarSection = ({ events, defaultDate, loadingDates }) => {
                       <Typography variant="h6" gutterBottom>
                         {selectedEvent.title}
                       </Typography>
-                      <Typography variant="body1">
-                        {`Horario: ${moment(selectedEvent.start).format(
-                          "HH:mm"
-                        )} - ${moment(selectedEvent.end).format("HH:mm")}`}
-                      </Typography>
+                      <Box sx={{display: "flex"}}>
+                        <Typography variant="body1">
+                          {`Horario: ${moment(selectedEvent.start).format(
+                            "HH:mm"
+                          )} - ${moment(selectedEvent.end).format("HH:mm")}`}
+                        </Typography>
+                        <Button
+                          onClick={() => {
+                            const constructedItem = makeEditableItem(selectedEvent);
+                            setSelectedEvent(constructedItem);
+                            setEditDateOpenDialog(true);
+                            // Cerramos este modal de details, pero sin flushear los datos xq los necesitamos para editar
+                            setOpenDetails(false);
+                          }}
+                          style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja // Aux: pienso cambiar la estética []
+                          sx={{ml: "auto"}}>
+                          Editar
+                        </Button>
+                      </Box>
                     </Paper>
                   )}
                 </DialogContent>
@@ -149,7 +192,24 @@ const CalendarSection = ({ events, defaultDate, loadingDates }) => {
               <CircularProgress />
             </Box>
           )}
+
+          {/* Editar, luego de confirmados los resultados del algoritmo */}
+          <SpecificDateDialog // Asignar fecha a equipo manualmente, al clickear Editar en el slot ampliado
+            open={editDateOpenDialog}
+            onClose={() => setEditDateOpenDialog(false)}        
+            item={selectedEvent}
+            setItem={setSelectedEvent}
+
+            teams={teams}
+            tutors={tutors}
+            period={period}
+
+            showLastPart={true}
+            handleAssignDate={handleAssignDate}
+            dialogTitle="Editar"
+          />
         </>
+
       )}
     </>
   );
