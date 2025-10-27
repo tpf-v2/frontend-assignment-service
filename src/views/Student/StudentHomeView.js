@@ -2,7 +2,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { Container, Box, CircularProgress } from "@mui/material";
 import MySnackbar from "../../components/UI/MySnackBar";
-import SubmitButton from "../../components/Buttons/SubmitButton";
 import StudentInfo from "../../components/UI/Dashboards/Student/StudentInfo";
 import Phase from "../../components/UI/Dashboards/Student/Phase";
 import { getStudentInfo } from "../../api/handleStudents";
@@ -11,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { getPeriodById } from "../../api/handlePeriods";
 import { setPeriod } from "../../redux/slices/periodSlice";
 import PresentationDateCard from "../../components/UI/Dashboards/Student/PresentationDateCard";
+import StudentSidebar from "./StudentSidebar";
 
 const StudentHomeView = () => {
   const dispatch = useDispatch();
@@ -59,7 +59,7 @@ const StudentHomeView = () => {
         const topic_completed = userData.topic && userData.tutor
         setMilestones([
           {
-            phase: "Formulario de inscripción",
+            phase: "Formulario de Inscripción",
             description: topic_completed ? "Tema y tutor asignado" : "Tema sin asignar",
             tasks: [
               {
@@ -98,18 +98,6 @@ const StudentHomeView = () => {
             ],
           },
           {
-            phase: "Exposición de Proyecto Final",
-            tasks: [
-              {
-                title: "Enviar disponibilidad de fechas",
-                completed: false,
-                available: period.presentation_dates_available && !!user.group_id,
-                urlNotCompleted: "/availability-view",
-                urlCompleted: "/availability-view"
-              },
-            ],
-          },
-          {
             phase: "Entrega Final",
             tasks: [
               {
@@ -119,6 +107,18 @@ const StudentHomeView = () => {
                 urlNotCompleted: "/upload/final-project",
                 urlCompleted: "/upload/final-project"
               }
+            ],
+          },
+          {
+            phase: "Exposición de Proyecto Final",
+            tasks: [
+              {
+                title: "Enviar disponibilidad de fechas",
+                completed: false,
+                available: period.presentation_dates_available && !!user.group_id,
+                urlNotCompleted: "/availability-view",
+                urlCompleted: "/availability-view"
+              },
             ],
           }/*,
           {
@@ -158,22 +158,7 @@ const StudentHomeView = () => {
         <Box sx={{ mb: 1 }} />
         {!loading && team.exhibition_date && <PresentationDateCard presentationDate={team.exhibition_date}/>}
         {!loading && (
-          <>
-            {/* AUX PROBANDO: estos primeros botones no van a ir acá, solo estoy probando */}
-            <SubmitButton
-              url="/explore/tutor-emails"
-              title="Ver Mails de Tutores"
-              width="100%"
-              handleSubmit={() => handleNavigation("/explore/tutor-emails")}
-            />
-            <SubmitButton
-              url="/explore/ideas"
-              title="Explorar Ideas de Temas"
-              width="100%"
-              handleSubmit={() => handleNavigation("/explore/ideas")}
-              disabled={milestones[0]?.tasks[0].completed}
-            />
-          </>
+          <StudentSidebar selectedMenu={null} handleNavigation={handleNavigation} period={period} />
         )}
       </Box>
       <Box sx={{ flex: 2 }}>
