@@ -63,7 +63,7 @@ const StudentHomeView = () => {
             description: topic_completed ? "Tema y tutor asignado" : "Tema sin asignar",
             tasks: [
               {
-                title: form_completed ? "Formulario enviado" : "Formulario no enviado",
+                title: form_completed ? "Formulario enviado" : "Enviar formulario",
                 completed: form_completed,
                 available: period.form_active,
                 urlNotCompleted: "/student-form",
@@ -94,6 +94,18 @@ const StudentHomeView = () => {
                 available: period.intermediate_project_active && !!user.group_id,
                 urlNotCompleted: "/upload/intermediate-project",
                 urlCompleted: "/upload/intermediate-project"
+              },
+            ],
+          },
+          {
+            phase: "Exposición de Proyecto Final",
+            tasks: [
+              {
+                title: "Enviar disponibilidad de fechas",
+                completed: false,
+                available: period.presentation_dates_available && !!user.group_id,
+                urlNotCompleted: "/availability-view",
+                urlCompleted: "/availability-view"
               },
             ],
           },
@@ -160,13 +172,6 @@ const StudentHomeView = () => {
               width="100%"
               handleSubmit={() => handleNavigation("/explore/ideas")}
               disabled={milestones[0]?.tasks[0].completed}
-            />
-            <SubmitButton
-              url="/availability-view"
-              title="Disponibilidades de Exposición"
-              width="100%"
-              disabled={!period.presentation_dates_available}
-              handleSubmit={() => handleNavigation("/availability-view")}
             />
           </>
         )}
