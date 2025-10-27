@@ -107,7 +107,7 @@ const Dates = ({setSelectedMenu}) => {
   const [errorDialogOpen, setErrorDialogOpen] = useState(false);
 
   const [defaultDate, setDefaultDate] = useState(null); // Fecha inicial a mostrar en los calendarios
-  const [initialDefaultDate, setInitialDefaultDate] = useState(null); // Estado para la fecha predeterminada
+  const [initialDefaultDate, setInitialDefaultDate] = useState(undefined); // Estado para la fecha predeterminada
 
   const [loadingDates, setLoadingDates] = useState(false);
 
@@ -168,6 +168,9 @@ const Dates = ({setSelectedMenu}) => {
             setInitialDefaultDate(new Date(sortedEvents[0].start));
           }
           setInitialEvents(formattedEvents);
+        } else {
+          // Caso no hay resultados: no se ejecutó el algoritmo y Tampoco se asignó manualmente
+          setInitialDefaultDate(null); // para indicar explícitamente que no valdrá nada esta fecha
         }
       } catch (error) {
         console.error("Error fetching assigned dates:", error);
