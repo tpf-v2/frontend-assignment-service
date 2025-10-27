@@ -1,8 +1,7 @@
-import React from 'react';
-import { Container, Typography, Button, Paper, Box } from '@mui/material';
+import { Container, Typography, Paper, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
-
+import { ButtonSimple } from '../Root';
 const Root = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(10),
   padding: theme.spacing(4),
@@ -10,9 +9,7 @@ const Root = styled(Paper)(({ theme }) => ({
   textAlign: 'center',
 }));
 
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  margin: theme.spacing(2),
-}));
+const ButtonStyled = ButtonSimple;
 
 const AdminForm = () => {
   const navigate = useNavigate();

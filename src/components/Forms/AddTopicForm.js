@@ -1,22 +1,11 @@
-import React, { useState } from 'react';
-import { Typography, TextField, Button, Paper } from '@mui/material';
-import { styled } from '@mui/system';
+import { useState } from 'react';
+import { TextField } from '@mui/material';
+import { TitleSimple } from '../../styles/Titles';
+import { RootMargin, ButtonSimple } from '../Root';
 
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-  marginBottom: theme.spacing(5),
-}));
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
-
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-}));
+const Root = RootMargin;
+const ButtonStyled = ButtonSimple;
+const Title = TitleSimple;
 
 const AddTopicForm = () => {
   const [newTopic, setNewTopic] = useState('');

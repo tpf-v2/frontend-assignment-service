@@ -7,22 +7,14 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
-    //
-    Select,
-    MenuItem,
     InputLabel,
-    //
-    FormControl,
-    //Autocomplete,
-    //
     RadioGroup,
     Radio,
     FormControlLabel,
-    //createFilterOptions
-
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
+import { getTutorById, getTutorsForPeriod } from "../../../../utils/getEntitiesUtils";
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 const filter = createFilterOptions();
 
@@ -78,13 +70,6 @@ export const TeamModals = ({
         if (id === "") return // AUX: agrego esta línea, para usar la función desde el modal de confirm, puedo mandarle "" si no tenía tema asignado.
         const topic = topics.csvTopics?.find((t) => t.id === id);        
         return topic ? topic.name : ""; // Si no encuentra el topic, mostrar 'Desconocido'
-      };
-        
-      // Nueva función, para obtener el objeto topic
-      // Ya no es necesaria desde que migramos a Autocomplete
-      const getTopicById = (id) => {
-        const topic = topics.csvTopics?.find((t) => t.id === id);
-        return topic ? topic : ""; // Si no encuentra el topic, mostrar 'Desconocido'
       };
 
       /////// Modals ///////
@@ -142,7 +127,7 @@ export const TeamModals = ({
                           <Autocomplete
                             disablePortal
                             options={students || []}
-                            getOptionLabel={(option) => option.id? `${option.id} - ${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
+                            getOptionLabel={(option) => option.student_number? `${option.student_number} - ${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
                             sx={{ width: '100%' }}
                             clearText={CLEARSTRING}
                             renderInput={(students) => <TextField {...students}
@@ -188,15 +173,17 @@ export const TeamModals = ({
                   <Grid item xs={6} md={6}>
 
                   {/* Tema y tutor */}
-                  <InputLabel>Tema y Tutor/a</InputLabel>
-                  
+                  <InputLabel sx={{ mb: 2 }}>Tema y Tutor/a</InputLabel>
+                  <Grid container spacing={2}>
+                    
+                    <Grid item xs={12} md={12}>
                       <Autocomplete
                         disablePortal
                         options={topics.csvTopics ?? []}
                         // manera básica: getOptionLabel={(option) => option?.name ?? ""} // cómo mostrar el texto
                         sx={{ width: '100%' }}
                         isOptionEqualToValue={(option, value) => option?.id === value?.id} // <-- esto compara por id
-                        clearText="Desasignar tema"                        
+                        clearText="Desasignar tema"                     
                         renderInput={(params) => <TextField {...params} label="Tema"/>} // label es la etiqueta a mostrar
                         value={item?.topic ?? null} // la opción seteada actual
                         
@@ -254,39 +241,33 @@ export const TeamModals = ({
                         }}
 
                       />
-
-                  <FormControl fullWidth variant="outlined" margin="normal">
-                    {<InputLabel margin="normal">Tutor/a</InputLabel>
-                    }
-                    <Select
-                      margin="normal"
-                      value={item.tutor_period_id || ""}
-                      label="Tutor"
-                      onChange={(e) =>
-                        setItem({ ...item, tutor_period_id: e.target.value })
-                      }
-                      required
-                      fullWidth
-                    >
-                      <MenuItem key="" value="" disabled>
-                        Seleccionar tutor
-                      </MenuItem>
-                      {tutors.map((tutor) => {
-                        const tp = tutor.tutor_periods.find((tp) => tp.period_id === periodId);
-                        if (!tp) return null; // ignorar si no hay uno del period pedido
-
-                        return (
-                            <MenuItem key={tp.id} value={tp.id}>
-                            {tutor.name} {tutor.last_name}
-                            </MenuItem>
-                        );
-                        })}
-
-                    </Select>
-                  </FormControl>
-
+                    </Grid>
+                    
+                    <Grid item xs={12} md={12}>
+                      <Autocomplete
+                        disablePortal
+                        options={getTutorsForPeriod(periodId, tutors) || []}
+                        getOptionLabel={(option) => option.name? `${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
+                        sx={{ width: '100%' }}
+                        clearText="Desasignar tutor"
+                        renderInput={(tutors) => <TextField {...tutors}
+                                                      label="Tutor/a"/>} // label es la etiqueta a mostrar
+                        onChange={(event, newValue) => {    
+                          // Tenemos newvalue que es un objeto tutor, no queremos setearlo directamente (completo)
+                          // sino que hay que setear un campo suyo
+                          const tp = newValue?.tutor_periods.find((tp) => tp.period_id === periodId);
+                          if (newValue) {
+                            setItem({ ...item, tutor_period_id: tp?.id })                                
+                          } else {
+                            setItem({ ...item, tutor_period_id: null }) // dejarlo vacío al quitar la selección
+                          }
+                        }}
+                        value={getTutorById(item?.tutor_period_id, periodId, tutors) || null}
+                      />
+                      </Grid>
 
                   {/* Las tres preferencias, no editables */}
+                  <Grid item xs={12} md={12}>
                   <InputLabel>Preferencias</InputLabel>
                   <TextField
                     variant="outlined"
@@ -319,8 +300,10 @@ export const TeamModals = ({
                     disabled
                   />
                   </Grid>
+                  </Grid>
 
                 </Grid> 
+              </Grid>
               </DialogContent>
 
               <DialogActions>
@@ -539,7 +522,7 @@ export const TeamModals = ({
                           <Autocomplete              
                             disablePortal
                             options={students || []}
-                            getOptionLabel={(option) => option.id? `${option.id} - ${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
+                            getOptionLabel={(option) => option.id? `${option.student_number} - ${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
                             sx={{ width: '100%' }}
                             clearText={CLEARSTRING}
                             renderInput={(students) => <TextField {...students}
@@ -585,8 +568,11 @@ export const TeamModals = ({
                   <Grid item xs={6} md={6}>
 
                   {/* Tema y tutor */}
-                  <InputLabel>Tema y Tutor/a</InputLabel>
-                  <Autocomplete // Igual que en el modal de editar []
+                  <InputLabel sx={{ mb: 2 }}>Tema y Tutor/a</InputLabel>
+                  <Grid container spacing={2}>
+
+                    <Grid item xs={12} md={12}>
+                      <Autocomplete // Igual que en el modal de editar []
                         disablePortal
                         options={topics.csvTopics ?? []}
                         // manera básica: getOptionLabel={(option) => option?.name ?? ""} // cómo mostrar el texto
@@ -650,36 +636,34 @@ export const TeamModals = ({
                         }}
 
                       />
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+
+                      <Autocomplete // igual que en Editar []
+                        disablePortal
+                        options={getTutorsForPeriod(periodId, tutors) || []}
+                        getOptionLabel={(option) => option.name? `${option.name} ${option.last_name}` : ""} // cómo mostrar el texto
+                        sx={{ width: '100%' }}
+                        clearText="Desasignar tutor"
+                        renderInput={(tutors) => <TextField {...tutors}
+                                                      label="Tutor/a"/>} // label es la etiqueta a mostrar
+                        onChange={(event, newValue) => {    
+                          // Tenemos newvalue que es un objeto tutor, no queremos setearlo directamente (completo)
+                          // sino que hay que setear un campo suyo
+                          const tp = newValue?.tutor_periods.find((tp) => tp.period_id === periodId);
+                          if (newValue) {
+                            setItem({ ...item, tutor_period_id: tp?.id })                                
+                          } else {
+                            setItem({ ...item, tutor_period_id: null }) // dejarlo vacío al quitar la selección
+                          }
+                        }}
+                        value={getTutorById(item?.tutor_period_id, periodId, tutors) || null}
+                      />
+                    </Grid>
+
+                  </Grid>
                   
-                  <FormControl fullWidth variant="outlined" margin="normal">
-                    {<InputLabel margin="normal">Tutor/a</InputLabel>
-                    }
-                    <Select
-                      margin="normal"
-                      value={item.tutor_period_id || ""}
-                      label="Tutor"
-                      onChange={(e) =>
-                        setItem({ ...item, tutor_period_id: e.target.value })
-                      }
-                      required
-                      fullWidth
-                    >
-                      <MenuItem key="" value="" disabled>
-                        Seleccionar tutor
-                      </MenuItem>
-                      {tutors.map((tutor) => {
-                        const tp = tutor.tutor_periods.find((tp) => tp.period_id === periodId);
-                        if (!tp) return null; // ignorar si no hay uno del period pedido
-
-                        return (
-                            <MenuItem key={tp.id} value={tp.id}>
-                            {tutor.name} {tutor.last_name}
-                            </MenuItem>
-                        );
-                        })}
-
-                    </Select>
-                  </FormControl>
+                  
                   {/* Las tres preferencias, no editables - resulta ser que sí las queremos editables []
                     * No irán a este endpoint de add_team, es otro endpoint el de las answers.
                   */}

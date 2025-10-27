@@ -24,7 +24,8 @@ export const getStudentInfo = (user) => async (dispatch) => {
     topic: response.data.topic,
     teammates: response.data.teammates ? response.data.teammates.join(" , ") : "",
     period_id: response.data.period_id,
-    group_number: response.data.group_number
+    group_number: response.data.group_number,
+    student_number: response.data.student_number
   };
 
   // Guarda la informacion del usuario

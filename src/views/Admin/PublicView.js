@@ -5,20 +5,14 @@ import { useSelector } from "react-redux";
 import { Container, Box, Grid, Paper } from "@mui/material";
 import { downloadProject, getPublicProjects } from "../../api/handleProjects";
 import ContentPublicPdfProjects from "../../components/UI/Dashboards/AdminStats/Components/ContentPublicProjectPDFs";
-
+import { RootWhite } from "../../components/Root";
 // Estilos
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  padding: theme.spacing(2),
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: "#ffffff",
-  boxShadow: theme.shadows[3],
-}));
+const Root = RootWhite;
 
 const PublicPDFView = () => {
   const user = useSelector((state) => state.user);
   const _param_period = useParams().period;
-  const [period, setPeriod] = useState(_param_period);
+  const [period, setPeriod] = useState(_param_period); // Da warning set no usado; debería ser const period = seState(_param_period);
   const [loadingFinalProjects, setLoadingFinalProjects] = useState(true);
   const [deliveries, setDeliveries] = useState(null);
 
@@ -64,7 +58,6 @@ const PublicPDFView = () => {
         maxWidth={false}
         sx={{
           width: "95%", // Ajusta el ancho al 90% del viewport
-          height: "120vh", // Ocupa el 100% de la altura de la pantalla
           maxWidth: "none", // Para que el maxWidth no limite el tamaño
         }}
       >

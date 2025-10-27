@@ -3,7 +3,6 @@ import {
   Button,
   Typography,
   Box,
-  Paper,
   Dialog,
   DialogActions,
   DialogContent,
@@ -12,24 +11,13 @@ import {
   Divider,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import { useNavigate } from "react-router-dom";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import { uploadDescription } from "../api/postDescription";
-
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
+import { TitleSimple } from "../styles/Titles";
 
 const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
-}));
-
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
 }));
 
 const ChangeDescription = ({ projectType, headerInfo, user, group }) => {
@@ -39,7 +27,6 @@ const ChangeDescription = ({ projectType, headerInfo, user, group }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -78,7 +65,7 @@ const ChangeDescription = ({ projectType, headerInfo, user, group }) => {
       <Box padding={"2em"} ><Divider /></Box>
 
       <Box textAlign="center">
-        <Title variant="h5">Descripción de {projectNameKeyMap[projectType]}</Title>
+        <TitleSimple variant="h5">Descripción de {projectNameKeyMap[projectType]}</TitleSimple>
       </Box>
 
       {!!headerInfo ? (

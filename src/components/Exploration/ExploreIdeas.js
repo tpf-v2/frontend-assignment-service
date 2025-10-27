@@ -5,12 +5,20 @@ import MySnackbar from "../UI/MySnackBar";
 import { Root, Title } from "../../components/Root";
 import { getPeriodIdeas, editIdeaContent, editIdeaStatus } from "../../api/ideas";
 import { EditIdeaModal, EditType } from "./EditIdeaModal";
+import SubmitButton from "../../components/Buttons/SubmitButton";
+import { useNavigate } from "react-router-dom";
+import { getGroupByIdSimple } from "../../api/getGroupById";
 
 const ExploreIdeas = () => {
+  const navigate = useNavigate();
+  const handleNavigation = (url) => {
+    navigate(url);
+  };
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
 
   const [ideas, setIdeas] = useState([]);
+  const [team, setTeam] = useState(null);
   const [loading, setLoading] = useState(false);
   const [editingIdea, setEditingIdea] = useState();
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -30,8 +38,12 @@ const ExploreIdeas = () => {
     const fetchIdeas = async () => {
       try {
         setLoading(true);
-        const response = await getPeriodIdeas(period.id, user);        
+        const response = await getPeriodIdeas(user.period_id, user);        
         setIdeas(response);
+        if (user.temporal_role === 'student' && !!user.group_id) {
+          const team = await getGroupByIdSimple(user, user.group_id)
+          setTeam(team)
+        }
       } catch (error) {
         console.error("Error al obtener las ideas del cuatrimestre", error);
         setNotification({
@@ -110,7 +122,22 @@ const ExploreIdeas = () => {
             Aún no hay ideas propuestas por estudiantes este cuatrimestre.
           </Alert>
         )}
-        {/* Renderizado de ideas */}  
+        {/* Renderizado de ideas */}
+        <SubmitButton
+          url="/propose-idea"
+          title="Proponer Idea"
+          width="100%"
+          handleSubmit={() => handleNavigation("/propose-idea")}
+          disabled={team && team.pre_report_date == null}
+        />
+        <SubmitButton
+          url="/public"
+          title="Ver proyectos anteriores"
+          width="100%"
+          handleSubmit={() => handleNavigation("/public")}
+          disabled={team && team.pre_report_date == null}
+          variant='outlined'
+        />
         {ideas?.map((idea) => (
           <Box key={idea?.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2 }}>
             {/* Botón en mismo renglón que título */}

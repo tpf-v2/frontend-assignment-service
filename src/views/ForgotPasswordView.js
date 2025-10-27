@@ -1,32 +1,20 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Container,
   TextField,
-  Button,
   Typography,
   Box,
-  Paper,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { styled } from "@mui/system";
 import BackgroundContainer from "../components/UI/BackgroundContainer.js";
 import MySnackbar from "../components/UI/MySnackBar.js";
 import { requestPasswordReset } from "../api/auth.js";
+import { TitleSimple } from "../styles/Titles.js";
+import { Root, ButtonSimple } from "../components/Root.js";
 
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
+const ButtonStyled = ButtonSimple;
 
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
-
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-}));
+const Title = TitleSimple;
 
 const ForgotPasswordView = () => {
   const [email, setEmail] = useState("");

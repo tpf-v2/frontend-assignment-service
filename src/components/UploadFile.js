@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useSelector } from "react-redux";
 import {
   Button,
   Typography,
   Box,
-  Paper,
   Dialog,
   DialogActions,
   DialogContent,
@@ -18,21 +17,11 @@ import { useNavigate } from "react-router-dom";
 import { uploadProjects } from "../api/uploadProjects";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
+import { TitleSimple } from "../styles/Titles";
+import { ButtonSimple } from "./Root";
 
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
-
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-}));
+const ButtonStyled = ButtonSimple;
+const Title = TitleSimple;
 
 const DropzoneBox = styled(Box)(({ theme }) => ({
   border: "2px dashed #cccccc",

@@ -1,27 +1,16 @@
-import React, { useState } from 'react';
-import { Container, TextField, Button, Typography, Box, Paper } from '@mui/material';
-import { styled } from '@mui/system';
+import { useState } from 'react';
+import { Container, TextField, Box } from '@mui/material';
 import BackgroundContainer from '../components/UI/BackgroundContainer.js';
 import MySnackbar from '../components/UI/MySnackBar.js';
 import { togglePasswordVisibility } from "./PasswordVisibility.js";
 import { resetPassword } from '../api/postChangePassword.js';
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { TitleSimple } from '../styles/Titles.js';
+import { Root, ButtonSimple } from '../components/Root.js';
 
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
-
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-}));
+const ButtonStyled = ButtonSimple;
+const Title = TitleSimple;
 
 const ChangePasswordView = () => {
   const [currentPassword, setCurrentPassword] = useState('');

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -20,21 +20,10 @@ import ErrorIcon from "@mui/icons-material/Error";
 import { setTopics } from "../../redux/slices/topicsSlice";
 import { setStudents } from "../../redux/slices/studentsSlice";
 import { setTutors } from "../../redux/slices/tutorsSlice";
+import { TitleSimple } from "../../styles/Titles";
+import { Root, ButtonSimple } from "../Root";
 
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
-
-const Title = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  color: theme.palette.primary.main,
-}));
+const ButtonStyled = ButtonSimple;
 
 const DropzoneBox = styled(Box)(({ theme }) => ({
   border: "2px dashed #cccccc",
@@ -119,7 +108,7 @@ const UploadCSVForm = ({ formType, setItems }) => {
         setIsSuccess(false);
       }
     } catch (error) {
-      let errorMessage = "Error al cargar el archivo de ${TITLE_DICT[formType]}";
+      let errorMessage = `Error al cargar el archivo de ${TITLE_DICT[formType]}`;
       if (error.response && error.response.data && error.response.data.detail) {
         errorMessage = error.response.data.detail;
       }
@@ -159,7 +148,7 @@ const UploadCSVForm = ({ formType, setItems }) => {
     <Container maxWidth="sm">
       <Root>
         <Box textAlign="center">
-          <Title variant="h5">Cargar Archivo de {capitalizeFirstLetter(TITLE_DICT[formType])}</Title>
+          <TitleSimple variant="h5">Cargar Archivo de {capitalizeFirstLetter(TITLE_DICT[formType])}</TitleSimple>
         </Box>
 
         <form onSubmit={handleSubmit}>

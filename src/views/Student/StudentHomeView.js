@@ -137,20 +137,19 @@ const StudentHomeView = () => {
         {!loading && team.exhibition_date && <PresentationDateCard presentationDate={team.exhibition_date}/>}
         {!loading && (
           <>
-            {/* AUX PROBANDO: estos dos primeros botones no van a ir acá, solo estoy probando */}
+            {/* AUX PROBANDO: estos primeros botones no van a ir acá, solo estoy probando */}
             <SubmitButton
-              url="/propose-idea"
-              title="Proponer Idea"
+              url="/explore/tutor-emails"
+              title="Ver Mails de Tutores"
               width="100%"
-              handleSubmit={() => handleNavigation("/propose-idea")}
-              disabled={!milestones[0]?.tasks[0].completed}
+              handleSubmit={() => handleNavigation("/explore/tutor-emails")}
             />
             <SubmitButton
               url="/explore/ideas"
-              title="Explorar Ideas"
+              title="Explorar Ideas de Temas"
               width="100%"
               handleSubmit={() => handleNavigation("/explore/ideas")}
-              disabled={!milestones[0]?.tasks[0].completed}
+              disabled={milestones[0]?.tasks[0].completed}
             />
             <SubmitButton
               url="/student-form"
@@ -164,14 +163,14 @@ const StudentHomeView = () => {
               title="Enviar Anteproyecto"
               width="100%"
               handleSubmit={() => handleNavigation("/upload/initial-project")}
-              disabled={milestones[1]?.tasks[0].completed}
+
             />
             <SubmitButton
               url="/upload/intermediate-project"
               title="Enviar Entrega Intermedia"
               width="100%"
               handleSubmit={() => handleNavigation("/upload/intermediate-project")}
-              disabled={milestones[2]?.tasks[0].completed}
+
             />
             <SubmitButton
               url="/availability-view"
@@ -185,14 +184,12 @@ const StudentHomeView = () => {
               title="Enviar Entrega Final"
               width="100%"
               handleSubmit={() => handleNavigation("/upload/final-project")}
-              disabled={milestones[3]?.tasks[0].completed}
             />
             <SubmitButton
               url="/upload/pps-report"
               title="Enviar Informe Cumplimiento PPS"
               width="100%"
               handleSubmit={() => handleNavigation("/upload/pps-report")}
-              disabled={milestones[4]?.tasks[0].completed}
             />
           </>
         )}
