@@ -76,19 +76,22 @@ const Dates = ({setSelectedMenu}) => {
 
   const [item, setItem] = useState({}); // Un elemento, evento, a asignar / editar.
 
-  const [events, setEvents] = useState([]);
+  // Datos del fetch inicial, descargar csv, y lo que se muestra en el calendario grande principal
+  // Se setean al agregar / editar manualmente, y al aceptar resultados del algoritmo (handleAcceptResults)
   const [initialEvents, setInitialEvents] = useState([]);
+  // Lo que se muestra en el modal de resultados y todo lo relacionado a su modo de edición (agregar, eliminar)
+  const [events, setEvents] = useState([]);
   
   // Genera las opciones de horas (ej: 9:00, 10:00, ..., 17:00) // Aux: borrar esto, lo muevo al Specific []
   const hours = Array.from({ length: 13 }, (_, i) => `${9 + i}:00`);
 
   const [assignDateOpenDialog, setAssignDateOpenDialog] = useState(false);
-  const [editDateOpenDialog, setEditDateOpenDialog] = useState(false); 
   const [openRunDialog, setOpenRunDialog] = useState(false);
   const [running, setRunning] = useState(false);
   const [maxDifference, setMaxDifference] = useState("");
   const [maxTeams, setMaxTeams] = useState("");
   const [showResults, setShowResults] = useState(false);
+  // Setea resultados de response del algoritmo, para ser dibujados en modal de resultados
   const [datesResult, setDatesResult] = useState([]);
   const [isEditing, setIsEditing] = useState(null); // Almacena el id del equipo que está siendo editado
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false); // Dialogo para confirmar resultados
@@ -96,18 +99,19 @@ const Dates = ({setSelectedMenu}) => {
   const [modalOpen, setModalOpen] = useState(false); // Estado para el EventModal
 
   const [evaluatorColorMap, setEvaluatorColorMap] = useState({});
-  const [originalEvents, setOriginalEvents] = useState([]); // Estado para almacenar los eventos originales
+  // Guarda copia de lo que había, al iniciar modo de edición, la restaura si luego de eso se Cancela
+  const [originalEvents, setOriginalEvents] = useState([]);
 
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
   const [errorDialogOpen, setErrorDialogOpen] = useState(false);
 
-  const [defaultDate, setDefaultDate] = useState(null); // Estado para la fecha predeterminada
+  const [defaultDate, setDefaultDate] = useState(null); // Fecha inicial a mostrar en los calendarios
   const [initialDefaultDate, setInitialDefaultDate] = useState(null); // Estado para la fecha predeterminada
 
   const [loadingDates, setLoadingDates] = useState(false);
 
-  const [inputInfo, setInputInfo] = useState();
+  const [inputInfo, setInputInfo] = useState(); // Verificación previa a ejecutar, sobre input de algoritmo
 
   const dispatch = useDispatch();
 
@@ -179,7 +183,8 @@ const Dates = ({setSelectedMenu}) => {
   //}, [period, user]);
   }, [user]);
 
-  // Transforma datesResult en eventos para el calendario
+  // Transforma datesResult en eventos para el calendario, en modal en que se muestran los resultados
+  // cuando se ejecuta el algoritmo (calendario grande similar al de pantalla de fechas, pero en modal)
   useEffect(() => {
     if (datesResult.length > 0) {
       const formattedEvents = datesResult.map((result) => {
@@ -265,13 +270,13 @@ const Dates = ({setSelectedMenu}) => {
       console.log("Running the algorithm!");
 
       const response = await dates(user, period, maxDifference, maxTeams);
-      console.log("---response:", response);
 
       setDatesResult(response.assigments);
     } catch (error) {
       console.error("Error running algorithm:", error);
       setErrorDialogOpen(true);
       setRunning(false);
+      setOpenDialog(false);
     }
   };
 
@@ -302,7 +307,6 @@ const Dates = ({setSelectedMenu}) => {
   // Importante: esta función hace request al back para (entre otras cosas( editar la exhibition_date del equipo
   // y puede hacerlo porque los resultados ya fueron confirmados.
   const handleAssignDate = async (team, evaluator, selectedDateTime, selectedHour, handleClose) => {
-    console.log("--- handleAssignDate, recibo team:", team);
     if (!team || !evaluator || !selectedDateTime || !selectedHour) {
       handleSnackbarOpen(
         "Por favor completa todos los campos antes de asignar.",
@@ -686,6 +690,7 @@ const Dates = ({setSelectedMenu}) => {
         onClose={() => setAssignDateOpenDialog(false)}        
         item={item}
         setItem={setItem}
+        initialDate={defaultDate}
 
         teams={teams}
         tutors={tutors}
@@ -723,6 +728,7 @@ const Dates = ({setSelectedMenu}) => {
         onClose={() => setModalOpen(false)}
         item={item}
         setItem={setItem}
+        initialDate={defaultDate}
 
         teams={teams}
         tutors={tutors}
@@ -833,7 +839,6 @@ const Dates = ({setSelectedMenu}) => {
         open={snackbarOpen}
         handleClose={handleSnackbarClose}
       />
-      {/* </Grid> */}
     </Box>
   );
 };

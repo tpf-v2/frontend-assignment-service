@@ -13,7 +13,7 @@ import {
   Paper,
   Button,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close"; // Importar el ícono de cerrar
+import CloseIcon from "@mui/icons-material/Close";
 import 'moment/locale/es';
 import { useMemo } from 'react';
 import SpecificDateDialog from "./SpecificDateDialog";
@@ -24,8 +24,8 @@ const localizer = momentLocalizer(moment);
 
 const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, period, handleAssignDate }) => {
   const [openDetails, setOpenDetails] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null); // "item"
-  const [editDateOpenDialog, setEditDateOpenDialog] = useState(false); // aux: nuevo, probando
+  const [selectedEvent, setSelectedEvent] = useState(null); // Construiré "item" a editar, a partir de esto
+  const [editDateOpenDialog, setEditDateOpenDialog] = useState(false); // Editar luego de confirmar resultados
 
   const handleEventSelect = (event) => {
     setSelectedEvent(event);
@@ -35,7 +35,6 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
   const handleClose = () => {
     setOpenDetails(false);
     setSelectedEvent(null);
-    console.log("seteando a null"); // aux
   };
   const { formats } = useMemo(() => ({
     formats: {
@@ -74,7 +73,7 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
   console.log("---selectedEvent:", selectedEvent);
   return (
     <>
-      {loadingDates ? (
+      {loadingDates || !defaultDate ? (
         <Box
           display="flex"
           justifyContent="center"
@@ -199,6 +198,7 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
             onClose={() => setEditDateOpenDialog(false)}        
             item={selectedEvent}
             setItem={setSelectedEvent}
+            initialDate={defaultDate}
 
             teams={teams}
             tutors={tutors}
