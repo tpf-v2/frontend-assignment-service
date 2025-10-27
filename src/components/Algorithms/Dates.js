@@ -366,26 +366,22 @@ const Dates = ({setSelectedMenu}) => {
         },
       };
       console.log("--- newEvent:", newEvent);
-      // Actualizar el evento si existe, o agregar uno nuevo si no existe
-    setInitialEvents((prevEvents) => {
-      const eventIndex = prevEvents.findIndex(
-        (event) => event.result.group_id === team.id
-      );
+      // Actualizar el evento si existe, o agregarlo en índice nuevo si no existe
+      setInitialEvents((prevEvents) => {
+        const eventIndex = prevEvents.findIndex(
+          (event) => event.result.group_id === team.id
+        );
 
-      if (eventIndex !== -1) {
-        // Si el evento existe, actualiza el start y end
-        const updatedEvents = [...prevEvents];
-        updatedEvents[eventIndex] = {
-          ...updatedEvents[eventIndex],
-          start: newEvent.start,
-          end: newEvent.end,
-        };
-        return updatedEvents;
-      } else {
-        // Si no existe, agrega el nuevo evento
-        return [...prevEvents, newEvent];
-      }
-    });
+        if (eventIndex !== -1) {
+          // Si el evento existe, se queda con su versión actualizada
+          const updatedEvents = [...prevEvents];
+          updatedEvents[eventIndex] = newEvent; 
+          return updatedEvents;
+        } else {
+          // Si no existe, agrega el nuevo evento
+          return [...prevEvents, newEvent];
+        }
+      });
     } catch (e) {
       console.log("Error al asignar o editar la fecha:", e);
       handleSnackbarOpen("Hubo un error al asignar la fecha", "error");
