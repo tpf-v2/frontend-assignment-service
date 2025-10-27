@@ -10,9 +10,9 @@ const StudentsTable = ({dataListToRender = null}) => {
   const period = useSelector((state) => state.period);
   const endpoint = `/students/?period=${period.id}`; // Replace with your endpoint
   const title = TableType.STUDENTS;
-  const columns = ['Padron', 'Nombre', 'Apellido', 'Email']; // Specify your column names here
+  const columns = ['Padrón', 'Nombre', 'Apellido', 'Email']; // Specify your column names here
   const rowKeys = {
-    'Padron': 'student_number',
+    'Padrón': 'student_number',
     'Nombre': 'name',
     'Apellido': 'last_name',
     'Email': 'email',
