@@ -41,8 +41,6 @@ export const downloadProject = async (groupId, user, period_id, projectType, gro
 
 export const fetchProjectPdf = async (groupId, user, period_id, projectType) => {
   const projectName = projectType === 'final' ? 'final-project' : 'initial-project';
-  console.log("Group id")
-  console.log(groupId)
   try {
     return await fetchUrlForProject(groupId, projectName, user, period_id);
   } catch (error) {
