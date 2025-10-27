@@ -167,6 +167,7 @@ const Dates = ({setSelectedMenu}) => {
           if (sortedEvents.length > 0) {
             setInitialDefaultDate(new Date(sortedEvents[0].start));
           }
+          console.log("--- Hice fetchData y sí hay eventos, los estoy por setear en initialEvents, sortedEvents:", sortedEvents);
           setInitialEvents(formattedEvents);
         } else {
           // Caso no hay resultados: no se ejecutó el algoritmo y Tampoco se asignó manualmente
@@ -525,9 +526,14 @@ const Dates = ({setSelectedMenu}) => {
 
   const handleDeleteEvent = async () => {
     if (eventToDelete) {
+      // La UI de este modo edición no permite 2 a la misma hora, pero con el group_id
+      // nos aseguramos de eliminar el correcto (por si el algoritmo así lo arrojara)
       const updatedEvents = events.filter(
-        (event) =>
-          event.start !== eventToDelete.start || event.end !== eventToDelete.end
+        (event) => (
+          event.start !== eventToDelete.start ||
+          event.end !== eventToDelete.end ||
+          event.result.group_id !== eventToDelete.result.group_id
+        )
       );
       setConfirmDeleteOpen(false);
       setEvents(updatedEvents);
