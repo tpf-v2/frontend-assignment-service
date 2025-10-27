@@ -49,7 +49,7 @@ const ChangeDescription = ({ projectType, headerInfo, user, group }) => {
       setLoading(false);
       setOpenDialog(true);
     } catch (error) {
-      setResponseMessage("Error al publicar:" + error.message); // TODO: revisar response code
+      setResponseMessage("Error al publicar:" +  error.response ? error.response.data.detail : error.message.toString()); // TODO: revisar response code
       setIsSuccess(false);
       setLoading(false);
       setOpenDialog(true);
