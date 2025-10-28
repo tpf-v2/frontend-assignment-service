@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IconButton, Tooltip } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import { DeleteButton } from "../../Buttons/DeleteButton"
+import { EditButton, DeleteButton } from "../../Buttons/DeleteButton"
 import {
   Container,
   Typography,
@@ -418,32 +416,20 @@ const ParentTable = ({
                     {(enableEdit || enableDelete) && <TableCell>
                       <Stack direction="row" spacing={1}>
                         {enableEdit && (
-                          
-                          <Tooltip title="Editar">
-                            <IconButton
-                              onClick={() => {
-                                setOpenEditModal(true);
-                                setItemToPassToModal(item);
-                              }}
-                              sx={{
-                                color: "#757575",
-                                "&:hover": {
-                                  color: "#e0711d", // naranja al hover
-                                  backgroundColor: "rgba(224, 113, 29, 0.08)", // leve fondo naranja
-                                },
-                              }}
-                            >
-                              <EditIcon />
-                            </IconButton>
-                          </Tooltip>
+                          <EditButton
+                            onClick={() => {
+                              setOpenEditModal(true);
+                              setItemToPassToModal(item);
+                            }}
+                          />
                         )}
                         {enableDelete && (
                           <DeleteButton
                             onClick={() => {
                               setOpenConfirmDeleteModal(true);
-                              setItemToPassToModal(item);}
-                            }
-                          />                          
+                              setItemToPassToModal(item);
+                            }}
+                          />
                         )}
                       </Stack>
                     </TableCell> }                    
