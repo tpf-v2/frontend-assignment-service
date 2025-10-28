@@ -172,14 +172,16 @@ const ExploreIdeas = () => {
             </Typography>
             <Typography variant="body2">
               Equipo: {idea?.full_team ? "Completo" : "Aún buscando integrantes"} {""}
-              <Link
-                component="span"
-                onClick={() => {setEditingIdea(idea); setOpenChangeStatusModal(true)}}
-                underline="always"
-                sx={{ color: "grey", fontWeight: "bold", cursor: "pointer"}}
-              >
-                Cambiar
-              </Link>.
+              {isMyIdea(idea) && (
+                <Link
+                  component="span"
+                  onClick={() => {setEditingIdea(idea); setOpenChangeStatusModal(true)}}
+                  underline="always"
+                  sx={{ color: "grey", fontWeight: "bold", cursor: "pointer"}}
+                >
+                  Cambiar
+                </Link>
+              )}
             </Typography>
           </Box>        
         ))}
