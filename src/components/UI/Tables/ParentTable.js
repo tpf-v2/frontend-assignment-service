@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IconButton, Tooltip } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteButton from "../../Buttons/DeleteButton"
 import {
   Container,
   Typography,
@@ -437,52 +438,14 @@ const ParentTable = ({
                             </IconButton>
                           </Tooltip>
                         )}
-                        {enableDelete && (                          
-                          <Tooltip
+                        {enableDelete && (
+                          <DeleteButton
+                            onClick={() => {
+                              setOpenConfirmDeleteModal(true);
+                              setItemToPassToModal(item);}
+                            }
                             title="Eliminar"
-                            placement="top" // fuerza que aparezca arriba
-                            arrow // "flechita" visual, en el cartel de hover (x def es solo un rectángulo)
-                            slotProps={{
-                              tooltip: {
-                                sx: {
-                                  backgroundColor: "black",
-                                  color: "white",
-                                  fontSize: "0.875rem",
-                                },
-                              },
-                              arrow: {
-                                sx: {
-                                  color: "black", // color de la flecha
-                                },
-                              },
-                            }}
-                            PopperProps={{
-                              modifiers: [
-                                {
-                                  name: "offset",
-                                  options: {
-                                    offset: [0, 0], // reduce la distancia entre ícono y tooltip (vert: por defecto ~8)
-                                  },
-                                },
-                              ],
-                            }}
-                          >
-                            <IconButton
-                              onClick={() => {
-                                setOpenConfirmDeleteModal(true);
-                                setItemToPassToModal(item);
-                              }}
-                              sx={{
-                                color: "#757575", // gris medio
-                                "&:hover": {
-                                  color: "#d32f2f", // rojo al pasar el mouse
-                                  backgroundColor: "rgba(211, 47, 47, 0.08)", // leve fondo rojo transparente
-                                },
-                              }}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </Tooltip>
+                          />
                           
                         )}
                       </Stack>

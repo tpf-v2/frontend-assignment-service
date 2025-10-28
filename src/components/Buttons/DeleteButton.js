@@ -55,3 +55,5 @@ const DeleteButton = ({
         </Tooltip>
     )
 }
+
+export default DeleteButton;
