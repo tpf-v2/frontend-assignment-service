@@ -161,6 +161,7 @@ const ExploreIdeas = () => {
                     setEditingIdea(idea);
                     setOpenEditModal(true)
                   }}
+                  sx={{ml: "auto"}} // a la derecha
                 />
               )}
             </Box>
