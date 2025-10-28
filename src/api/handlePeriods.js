@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { getConfigLoginCached } from "./config/getConfig";
 const BASE_URL = process.env.REACT_APP_API_URL;
 
 export const getAllPeriods = async (user) => {
@@ -18,12 +18,7 @@ export const getAllPeriods = async (user) => {
 };
 
 export const addPeriod = async (newEntry, user) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-  };
-
+  const config = getConfigLoginCached(user)
   try {
     const url = `${BASE_URL}/api/periods/`;
     const response = await axios.post(url, { id: newEntry }, config);
@@ -34,11 +29,7 @@ export const addPeriod = async (newEntry, user) => {
 };
 
 export const getTutorPeriods = async (user) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-  };
+  const config = getConfigLoginCached(user)
   try {
     var url = "";
     if (user.role === "admin") {
@@ -62,11 +53,7 @@ export const getTutorPeriods = async (user) => {
 
 export const getPeriodById = async (user, periodId=undefined) => {
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
+    const config = getConfigLoginCached(user)
     const periodRequest = periodId? periodId : user.period_id
     const response = await axios.get(
       `${BASE_URL}/api/periods/${periodRequest}`,

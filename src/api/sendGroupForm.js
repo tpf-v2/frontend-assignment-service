@@ -1,13 +1,9 @@
 import axios from 'axios';
-
+import { getConfigLoginCached } from './config/getConfig';
 const BASE_URL = process.env.REACT_APP_API_URL;
 
 export const sendGroupForm = async (period, payload, existingGroup, user) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-  };
+  const config = getConfigLoginCached(user);
   try {
     var response;
     if(!existingGroup){
@@ -68,11 +64,7 @@ export const createTeam = async (periodId, payload, config, confirm_move=false, 
 }
 
 export const addTeam = async (newItem, user, periodId, confirm_move=false, confirm_topic_move=false) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-  };
+  const config = getConfigLoginCached(user);
   const intStudentIds = newItem.students
   .map(s => s.student_number)
   .filter(number => !!number); // un filter de front no es necesario por tener dropdown
@@ -93,11 +85,7 @@ export const addTeam = async (newItem, user, periodId, confirm_move=false, confi
 }
 
 export const editTeam = async (groupId, periodId, teamToEdit, user, confirm_move=false, confirm_topic_move=false) => {
-  const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
+  const config = getConfigLoginCached(user);
 
 
   // Con esto enviamos Exactamente los campos que el back espera (y excluimos el id, que ya está

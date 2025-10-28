@@ -1,13 +1,9 @@
 import axios from 'axios';
-
+import { getConfigLoginCached } from './config/getConfig';
 const BASE_URL = process.env.REACT_APP_API_URL;
 
 export const sendAvailability = async (user, slots, period_id) => {
-  const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
+  const config = getConfigLoginCached(user);
   
     try {
       const url = `${BASE_URL}/dates/?period=${period_id}`;
@@ -19,11 +15,7 @@ export const sendAvailability = async (user, slots, period_id) => {
 };
 
 export const sendStudentAvailability = async (user, slots, group_id,period_id) => {
-  const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
+  const config = getConfigLoginCached(user);
   
     try {
       const url = `${BASE_URL}/api/dates/groups?group_id=${group_id}&period=${period_id}`;
@@ -35,11 +27,7 @@ export const sendStudentAvailability = async (user, slots, group_id,period_id) =
 };
 
 export const sendTutorAvailability = async (user, slots, tutor_id, period_id) => {
-  const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
+  const config = getConfigLoginCached(user);
   
     try {
       const url = `${BASE_URL}/api/dates/tutors?tutor_id=${tutor_id}&period=${period_id}`;
@@ -51,11 +39,7 @@ export const sendTutorAvailability = async (user, slots, tutor_id, period_id) =>
 };
 
 export const fetchAvailability = async (user, period_id) => {
-  const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
+  const config = getConfigLoginCached(user);
   
     try {
       const url = `${BASE_URL}/dates/?period=${period_id}`;
@@ -67,11 +51,7 @@ export const fetchAvailability = async (user, period_id) => {
 };
 
 export const putAvailability = async (user, slots, period_id) => {
-  const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
+  const config = getConfigLoginCached(user);
   
     try {
       const url = `${BASE_URL}/dates/?period=${period_id}`;
@@ -83,11 +63,7 @@ export const putAvailability = async (user, slots, period_id) => {
 };
 
 export const putStudentAvailability = async (user, slots, group_id, period_id) => {
-  const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
+  const config = getConfigLoginCached(user);
   
     try {
       const url = `${BASE_URL}/dates/groups?group_id=${group_id}&period=${period_id}`;
@@ -99,11 +75,7 @@ export const putStudentAvailability = async (user, slots, group_id, period_id) =
 };
 
 export const putTutorAvailability = async (user, slots, tutor_id, period_id) => {
-  const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
+  const config = getConfigLoginCached(user);
   
     try {
       const url = `${BASE_URL}/dates/tutors?tutor_id=${tutor_id}&period=${period_id}`;
@@ -115,11 +87,7 @@ export const putTutorAvailability = async (user, slots, tutor_id, period_id) => 
 };
 
 export const fetchStudentAvailability = async (user, group_id) => {
-  const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
+  const config = getConfigLoginCached(user);
   
     try {
       const url = `${BASE_URL}/dates/groups/${group_id}`;
@@ -131,11 +99,7 @@ export const fetchStudentAvailability = async (user, group_id) => {
 };
 
 export const fetchTutorAvailability = async (user, tutor_id, period_id) => {
-  const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
+  const config = getConfigLoginCached(user);
   
     try {
       const url = `${BASE_URL}/dates/tutors/${tutor_id}?period=${period_id}`;

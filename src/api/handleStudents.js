@@ -1,18 +1,11 @@
 import axios from "axios";
 import { setUserInfo } from "../redux/slices/userSlice";
-
+import { getConfigLogin, getConfigLoginCached } from "./config/getConfig";
 const BASE_URL = process.env.REACT_APP_API_URL;
 
 export const getStudentInfo = (user) => async (dispatch) => {
   
-  const config = {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-    params: {
-      cache_bust: new Date().getTime(), // Añadir parámetro para evitar caché
-    },
-  };
+  const config = getConfigLogin(user);
 
   // Realiza la solicitud GET con los parámetros de consulta dinámicos
   const response = await axios.get(`${BASE_URL}/students/info/me`, config);
@@ -58,11 +51,7 @@ export const getStudents = async (period, uids, user) => {
   
   
   export const getAllStudents = async (user) => {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      }
-    };
+    const config = getConfigLoginCached(user)
   
     // Realiza la solicitud GET con los parámetros de consulta dinámicos
     const response = await axios.get(`${BASE_URL}/students/`, config);
@@ -71,11 +60,7 @@ export const getStudents = async (period, uids, user) => {
 };
   
 export const addStudent = async (newStudent, user, period_id) => {
-    const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
+    const config = getConfigLoginCached(user)
     
     try {
         const url = `${BASE_URL}/students?period=${period_id}`;
@@ -88,12 +73,7 @@ export const addStudent = async (newStudent, user, period_id) => {
 };
 
 export const editStudent = async (original_student_id, period_id, studentToEdit, user) => {
-  const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
-  
+  const config = getConfigLoginCached(user)
   try {
       const url = `${BASE_URL}/students/${original_student_id}/periods/${period_id}`;
       const response = await axios.patch(url, studentToEdit, config);

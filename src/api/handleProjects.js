@@ -14,6 +14,17 @@ function _config(period_id, user) {
   };
 }
 
+function _blob_config(period_id, user) {
+  return {
+    params: {
+      period: period_id
+    },
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
+}
+
 export const downloadProject = async (groupId, user, period_id, projectType, groupNumber) => {
   const projectName = projectType;
   const fileName = projectType === 'final-project' ? `EntregaFinal_equipo${groupNumber}.pdf` : `EntregaInicial_equipo${groupNumber}.pdf`;
@@ -51,16 +62,7 @@ export const fetchProjectPdf = async (groupId, user, period_id, projectType) => 
 
 export const downloadPPSReport = async (user, student_id, period_id, fileName) => {
   try {
-
-    const config = {
-      params: {
-        period: period_id
-      },
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-      responseType: 'blob',
-    };
+    const config = _blob_config(period_id, user)
 
     const response = await axios.get(`${BASE_URL}/students/${student_id}/pps-report`, config);
 
@@ -89,14 +91,7 @@ export const downloadPPSReport = async (user, student_id, period_id, fileName) =
 
 export const getPPSReports = async (user, period_id) => {
 
-  const config = {
-    params: {
-      period: period_id
-    },
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-  };
+  const config = _config(period_id, user);
 
   const response = await axios.get(`${BASE_URL}/students/pps-reports`, config);
   return response.data.map(row => {
@@ -127,15 +122,7 @@ export const getPublicProjects = async (user, period_id) => {
   return response.data;
 };
 async function fetchUrlForProject(groupId, projectName, user, period_id) {
-  const CONFIG_BLOB = {
-    params: {
-      period: period_id,
-    },
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-    responseType: 'blob', // Esto asegura que la respuesta se maneje como un archivo binario
-  };
+  const CONFIG_BLOB = _blob_config(period_id, user)
   const response = await axios.get(`${BASE_URL}/groups/${groupId}/${projectName}`, CONFIG_BLOB);
   const blob = new Blob([response.data], { type: response.headers['content-type'] });
   const url = window.URL.createObjectURL(blob);

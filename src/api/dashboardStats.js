@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getConfigLogin } from "./config/getConfig";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
@@ -25,14 +26,7 @@ export const getDashboardData = async (period, user) => {
   const topicsEndpoint = `/topics/?period=${period}`;
   const tutorsEndpoint = `/tutors/periods/${period}`;
 
-  const config = {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-    params: {
-      cache_bust: new Date().getTime(), // add params to avoid caching
-    },
-  };
+  const config = getConfigLogin(user)
 
   try {
     const responseStudents = await axios.get(`${BASE_URL}${studentEndpoint}`, config);
@@ -80,14 +74,7 @@ export const getDashboardData = async (period, user) => {
 export const getTutorsDataOnly = async (periodId, user) => {
   try {
     const tutorsEndpoint = `/tutors/periods/${periodId}`;
-    const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-      params: {
-        cache_bust: new Date().getTime(), // add params to avoid caching
-      },
-    };
+    const config = getConfigLogin(user)
     const response = await axios.get(`${BASE_URL}${tutorsEndpoint}`, config);
   
     return response.data
@@ -101,14 +88,7 @@ export const getTutorsData = async (period, user) => {
   const data = {
     "tutors": null
   }
-  const config = {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-    params: {
-      cache_bust: new Date().getTime(), // add params to avoid caching
-    },
-  };
+  const config = getConfigLogin(user)
 
   try {
     const responseTutors = await axios.get(`${BASE_URL}${tutorsEndpoint}`, config);

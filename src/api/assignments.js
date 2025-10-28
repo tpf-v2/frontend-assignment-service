@@ -1,18 +1,10 @@
 import axios from "axios";
 import { waitForAsyncTask } from "./waitForAsyncTask";
-
+import { getConfigLogin, getConfigLoginCached } from "./config/getConfig";
 const BASE_URL = process.env.REACT_APP_API_URL;
 
 export const incompleteTeams = async (user, period) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-    params: {
-      cache_bust: new Date().getTime(), // add params to avoid caching
-    },
-  };
-
+  const config = getConfigLogin(user);
   try {
     const url = `${BASE_URL}/assignments/incomplete-groups?period_id=${period.id}&mode=async`;
     const response = await axios.post(url, {}, config);
@@ -31,15 +23,7 @@ export const incompleteTeams = async (user, period) => {
 export const groupsTopicTutor = async (user, period, balance_limit, algorithmType) => {
   const algorithm = algorithmType === "Programacion Lineal" ? "lp" : "flow";
   
-  const config = {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-    params: {
-      cache_bust: new Date().getTime(), // add params to avoid caching
-    },
-  };
-
+  const config = getConfigLogin(user);
   try {
     const url = `${BASE_URL}/assignments/group-topic-tutor?period_id=${period.id}&balance_limit=${balance_limit}&method=${algorithm}`;
     const response = await axios.post(url, {}, config);
@@ -58,14 +42,7 @@ export const dates = async (user, period, balance_limit, max_groups) => {
   }
 
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-      params: {
-        cache_bust: new Date().getTime(), // add params to avoid caching
-      },
-    };
+    const config = getConfigLogin(user);
 
     let response;
     try {
@@ -92,15 +69,7 @@ export const dates = async (user, period, balance_limit, max_groups) => {
         const task_id = response.data.task_id;
 
         while (true) {
-          const config = {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
-            params: {
-              cache_bust: new Date().getTime(), // add params to avoid caching
-            },
-          };
-  
+          const config = getConfigLogin(user);
           await new Promise((resolve) => setTimeout(resolve, 1000));
           const task_url = `${BASE_URL}/assignments/date-assigment-results?task_id=${task_id}`;
           const task_response = await axios.get(task_url, config);
@@ -125,14 +94,7 @@ export const assignSpecificDate = async (
   date,
   period_id
 ) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-    params: {
-      cache_bust: new Date().getTime(), // add params to avoid caching
-    },
-  };
+  const config = getConfigLogin(user);
 
   const body = [
     {
@@ -153,11 +115,7 @@ export const assignSpecificDate = async (
 };
 
 export const confirmDates = async (user, events, period_id) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-  };
+  const config = getConfigLoginCached(user)
 
   // Crear el body a partir de los eventos
   const body = events.map((event) => {
@@ -179,14 +137,7 @@ export const confirmDates = async (user, events, period_id) => {
 };
 
 export const getAssignedDates = async (user, period) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-    params: {
-      cache_bust: new Date().getTime(), // add params to avoid caching
-    },
-  };
+  const config = getConfigLogin(user);
 
   try {
     const url = `${BASE_URL}/assignments/date-assigment?period_id=${period.id}`;

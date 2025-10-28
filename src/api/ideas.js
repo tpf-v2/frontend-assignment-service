@@ -1,13 +1,9 @@
 import axios from 'axios';
-
+import { getConfigLoginCached } from './config/getConfig';
 const BASE_URL = process.env.REACT_APP_API_URL;
 
 export const proposeIdea = async (ideaData, periodId, user) => {
-    const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
+    const config = getConfigLoginCached(user)
   
     // Pasamos los campos
     const sendableIdeaData = {
@@ -28,11 +24,7 @@ export const proposeIdea = async (ideaData, periodId, user) => {
   
 
   export const getPeriodIdeas = async (periodId, user) => {
-    const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
+    const config = getConfigLoginCached(user)
   
     try {
         const url = `${BASE_URL}/periods/${periodId}/ideas/`;
@@ -70,11 +62,7 @@ export const proposeIdea = async (ideaData, periodId, user) => {
   };
 
   export const editIdeaStatus = async (ideaData, periodId, user) => {
-    const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
+    const config = getConfigLoginCached(user)
   
     // Pasamos los campos
     const sendableIdeaData = {
