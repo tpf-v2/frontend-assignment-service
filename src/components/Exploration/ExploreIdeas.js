@@ -6,6 +6,7 @@ import { Root, Title } from "../../components/Root";
 import { getPeriodIdeas, editIdeaContent, editIdeaStatus } from "../../api/ideas";
 import { EditIdeaModal, EditType } from "./EditIdeaModal";
 import SubmitButton from "../../components/Buttons/SubmitButton";
+import { EditButton } from "../Buttons/CustomButtons"
 import { useNavigate } from "react-router-dom";
 import { getGroupByIdSimple } from "../../api/getGroupById";
 
@@ -147,7 +148,7 @@ const ExploreIdeas = () => {
                 gap: 2,
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginBottom: '1rem'
+                marginBottom: '1rem'                
               }}
             >
               <Typography variant="subtitle1" fontWeight="bold">               
@@ -155,13 +156,12 @@ const ExploreIdeas = () => {
               </Typography>
               
               {isMyIdea(idea) && (
-                <Button
-                  onClick={() => {setEditingIdea(idea); setOpenEditModal(true)}}
-                  style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
-                  sx={{ ml: "auto" }}
-                >
-                  Editar
-                </Button>
+                <EditButton
+                  onClick={() => {
+                    setEditingIdea(idea);
+                    setOpenEditModal(true)
+                  }}
+                />
               )}
             </Box>
 
