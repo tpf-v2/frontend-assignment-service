@@ -11,9 +11,9 @@ import {
   IconButton,
   Typography,
   Paper,
-  Button,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { EditButton } from "../../Buttons/CustomButtons";
 import 'moment/locale/es';
 import { useMemo } from 'react';
 import SpecificDateDialog from "./SpecificDateDialog";
@@ -165,7 +165,7 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
                             "HH:mm"
                           )} - ${moment(selectedEvent.end).format("HH:mm")}`}
                         </Typography>
-                        <Button
+                        <EditButton
                           onClick={() => {
                             const constructedItem = makeEditableItem(selectedEvent);
                             setSelectedEvent(constructedItem);
@@ -173,10 +173,8 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
                             // Cerramos este modal de details, pero sin flushear los datos xq los necesitamos para editar
                             setOpenDetails(false);
                           }}
-                          style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja // Aux: pienso cambiar la estética []
-                          sx={{ml: "auto"}}>
-                          Editar
-                        </Button>
+                          sx={{ml: "auto"}}
+                        /> 
                       </Box>
                     </Paper>
                   )}
