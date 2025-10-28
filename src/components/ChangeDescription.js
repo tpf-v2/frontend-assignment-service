@@ -103,7 +103,7 @@ const ChangeDescription = ({ projectType, headerInfo, user, group }) => {
               multiline={true}
               minRows={10}
               value={description}
-              onChange={async (e) => await setDescription(e.target.value)}
+              onChange={setDescription(e.target.value)}
               error={Boolean(descriptionError)}
               helperText={descriptionError}
             />
@@ -186,3 +186,4 @@ const ChangeDescription = ({ projectType, headerInfo, user, group }) => {
 };
 
 export default ChangeDescription;
+
