@@ -37,7 +37,7 @@ const GenericButton = ({
     hoverIconColor,
     hoverTransparentBg,
     offset = [0,0], // más alto es cartel hover más lejos del ícono
-    actionIcon,
+    actionIcon, // el componente del ícono a mostrar
 }) => {
     return (
         <Tooltip // Cartel negro estándar al hacer hover
@@ -72,7 +72,7 @@ const GenericButton = ({
             <IconButton
                 onClick={onClick}
                 sx={{
-                    color: iconColor, // gris medio
+                    color: iconColor, // gris
                     "&:hover": {
                         color: hoverIconColor, // color al pasar el mouse
                         backgroundColor: hoverTransparentBg, // fondo leve color transparente
