@@ -1,5 +1,20 @@
 import { Tooltip, IconButton } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+
+export const EditButton = ({
+    onClick,
+}) => {
+    return (
+        <GenericButton
+            onClick={onClick}
+            title="Editar"
+            hoverIconColor="#e0711d" // naranja
+            hoverTransparentBg="rgba(224, 113, 29, 0.08)" // naranja leve transparente
+            actionIcon={<EditIcon />}
+        />
+    )
+}
 
 export const DeleteButton = ({
     onClick,
@@ -10,6 +25,7 @@ export const DeleteButton = ({
             title="Eliminar"
             hoverIconColor="#d32f2f" // rojo
             hoverTransparentBg="rgba(211, 47, 47, 0.08)" // rojo leve transparente
+            actionIcon={<DeleteIcon />}
         />
     )
 }
@@ -21,10 +37,10 @@ const GenericButton = ({
     hoverIconColor,
     hoverTransparentBg,
     offset = [0,0], // más alto es cartel hover más lejos del ícono
-
+    actionIcon,
 }) => {
     return (
-        <Tooltip
+        <Tooltip // Cartel negro estándar al hacer hover
             title={title}
             placement="top" // fuerza que aparezca arriba
             arrow // "flechita" visual, en el cartel de hover (x def es solo un rectángulo)
@@ -63,7 +79,7 @@ const GenericButton = ({
                     },
                 }}
             >
-                <DeleteIcon />
+                {actionIcon}
             </IconButton>
         </Tooltip>
     )
