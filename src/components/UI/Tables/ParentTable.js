@@ -418,16 +418,16 @@ const ParentTable = ({
                         {enableEdit && (
                           <EditButton
                             onClick={() => {
-                              setOpenEditModal(true);
                               setItemToPassToModal(item);
+                              setOpenEditModal(true);
                             }}
                           />
                         )}
                         {enableDelete && (
                           <DeleteButton
                             onClick={() => {
-                              setOpenConfirmDeleteModal(true);
                               setItemToPassToModal(item);
+                              setOpenConfirmDeleteModal(true);
                             }}
                           />
                         )}

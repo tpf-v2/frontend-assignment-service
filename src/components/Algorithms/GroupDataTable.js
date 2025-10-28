@@ -638,8 +638,8 @@ const TeamDataTable = ({
                                 {enableEdit && (
                                   <EditButton
                                     onClick={() => {
-                                      setOpenEditModal(true);
                                       setItemToPassToModal(team);
+                                      setOpenEditModal(true);
                                     }}
                                   />                                  
                                 )}
