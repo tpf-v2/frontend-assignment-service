@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { EditButton, DeleteButton } from "../../Buttons/DeleteButton"
+import { EditButton, DeleteButton } from "../../Buttons/CustomButtons"
 import {
   Container,
   Typography,
