@@ -76,7 +76,7 @@ const StudentHomeView = () => {
             description: team.pre_report_approved ? "Entrega aprobada" : "Revisión de tutor pendiente",
             tasks: [
               {
-                title: !team.pre_report_date ? (!!period.initial_project_active ? "Enviar" : "No disponible") : "Enviado",
+                title: !team.pre_report_date ? (!!period.initial_project_active ? "Enviar" : "No disponible") :(!!period.initial_project_active ? "Re-entregar" : "Entregado"),
                 completed: !!team.pre_report_date,
                 available: period.initial_project_active && !!user.group_id,
                 urlNotCompleted: "/upload/initial-project",
@@ -88,7 +88,7 @@ const StudentHomeView = () => {
             phase: "Entrega Intermedia",
             tasks: [
               {
-                title: !team.intermediate_assigment_date ? (period.intermediate_project_active ? "Enviar" : "No disponible") : "Enviada",
+                title: !team.intermediate_assigment_date ? (!!period.intermediate_project_active ? "Enviar" : "No disponible") : (period.intermediate_project_active ? "Re-entregar" : "Entregada"),
                 completed:
                   !!team.intermediate_assigment_date,
                 available: period.intermediate_project_active && !!user.group_id,
@@ -101,7 +101,7 @@ const StudentHomeView = () => {
             phase: "Entrega Final",
             tasks: [
               {
-                title: !team.final_report_date ? (!!period.final_project_active ? "Enviar" : "No disponible") : "Enviada",
+                title: !team.final_report_date ? (!!period.final_project_active ? "Enviar" : "No disponible") : (period.final_project_active ? "Re-entregar" : "Entregada"),
                 completed: !!team.final_report_date,
                 available: period.final_project_active && !!user.group_id,
                 urlNotCompleted: "/upload/final-project",
