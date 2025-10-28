@@ -1,12 +1,26 @@
 import { Tooltip, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const DeleteButton = ({
+export const DeleteButton = ({
+    onClick,
+}) => {
+    return (
+        <GenericButton
+            onClick={onClick}
+            title="Eliminar"
+            //iconColor={} // gris medio
+            hoverIconColor="#d32f2f" // rojo
+            hoverTransparentBg="rgba(211, 47, 47, 0.08)" // rojo leve transparente
+        />
+    )
+}
+
+const GenericButton = ({
     onClick,
     title,
-    iconColor,
-    hoverColor,
-    hoverBg,
+    iconColor="#757575", // gris medio
+    hoverIconColor,
+    hoverTransparentBg,
     offset = [0,0],
 
 }) => {
@@ -45,8 +59,8 @@ const DeleteButton = ({
                 sx={{
                     color: {iconColor}, // gris medio
                     "&:hover": {
-                        color: {hoverColor}, // color al pasar el mouse
-                        backgroundColor: {hoverBg}, // fondo leve color transparente
+                        color: {hoverIconColor}, // color al pasar el mouse
+                        backgroundColor: {hoverTransparentBg}, // fondo leve color transparente
                     },
                 }}
             >
@@ -55,5 +69,3 @@ const DeleteButton = ({
         </Tooltip>
     )
 }
-
-export default DeleteButton;

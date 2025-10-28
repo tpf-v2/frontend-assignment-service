@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { IconButton, Tooltip } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import DeleteButton from "../../Buttons/DeleteButton"
+import { DeleteButton } from "../../Buttons/DeleteButton"
 import {
   Container,
   Typography,
@@ -444,9 +443,7 @@ const ParentTable = ({
                               setOpenConfirmDeleteModal(true);
                               setItemToPassToModal(item);}
                             }
-                            title="Eliminar"
-                          />
-                          
+                          />                          
                         )}
                       </Stack>
                     </TableCell> }                    
