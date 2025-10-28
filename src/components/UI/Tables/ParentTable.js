@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { IconButton, Tooltip } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Container,
   Typography,
@@ -415,21 +418,73 @@ const ParentTable = ({
                     {(enableEdit || enableDelete) && <TableCell>
                       <Stack direction="row" spacing={1}>
                         {enableEdit && (
-                          <Button
-                            onClick={() => {setOpenEditModal(true); setItemToPassToModal(item)}}
-                            style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
+                          
+                          <Tooltip title="Editar">
+                            <IconButton
+                              onClick={() => {
+                                setOpenEditModal(true);
+                                setItemToPassToModal(item);
+                              }}
+                              sx={{
+                                color: "#757575",
+                                "&:hover": {
+                                  color: "#e0711d", // naranja al hover
+                                  backgroundColor: "rgba(224, 113, 29, 0.08)", // leve fondo naranja
+                                },
+                              }}
                             >
-                            Editar
-                          </Button>
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
                         )}
-                        {enableDelete && (
-                          <Button
-                            onClick={() => {setOpenConfirmDeleteModal(true); setItemToPassToModal(item)}}
-                            style={{ backgroundColor: "red", color: "white" }}
+                        {enableDelete && (                          
+                          <Tooltip
+                            title="Eliminar"
+                            placement="top" // fuerza que aparezca arriba
+                            arrow // "flechita" visual, en el cartel de hover (x def es solo un rectángulo)
+                            slotProps={{
+                              tooltip: {
+                                sx: {
+                                  backgroundColor: "black",
+                                  color: "white",
+                                  fontSize: "0.875rem",
+                                },
+                              },
+                              arrow: {
+                                sx: {
+                                  color: "black", // color de la flecha
+                                },
+                              },
+                            }}
+                            PopperProps={{
+                              modifiers: [
+                                {
+                                  name: "offset",
+                                  options: {
+                                    offset: [0, 0], // reduce la distancia entre ícono y tooltip (vert: por defecto ~8)
+                                  },
+                                },
+                              ],
+                            }}
+                          >
+                            <IconButton
+                              onClick={() => {
+                                setOpenConfirmDeleteModal(true);
+                                setItemToPassToModal(item);
+                              }}
+                              sx={{
+                                color: "#757575", // gris medio
+                                "&:hover": {
+                                  color: "#d32f2f", // rojo al pasar el mouse
+                                  backgroundColor: "rgba(211, 47, 47, 0.08)", // leve fondo rojo transparente
+                                },
+                              }}
                             >
-                            Eliminar
-                          </Button>
-                        )}                        
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>
+                          
+                        )}
                       </Stack>
                     </TableCell> }                    
                   </TableRow>
