@@ -145,13 +145,13 @@ const StudentOverview = ({ group_id, team, period }) => {
             Descargar PDF
           </DownloadButton>
         }
-        {
-          !!period.initial_project_active && <DownloadButton variant="contained" onClick={event => navigate("/upload/initial-project")} marginbottom="1rem">
-            Entregar
-          </DownloadButton>
-        }
         </>
       ) : <Typography>No entregado.</Typography>}
+      {
+        !!period.initial_project_active && <DownloadButton variant="contained" onClick={event => navigate("/upload/initial-project")} marginbottom="1rem">
+          Entregar
+        </DownloadButton>
+      }
       <Typography variant="h5" align="center" marginTop="1em">
         Entrega Intermedia
       </Typography>
@@ -186,11 +186,11 @@ const StudentOverview = ({ group_id, team, period }) => {
             Descargar PDF
           </DownloadButton>
         }
-        <DownloadButton variant="contained" onClick={event => navigate("/upload/final-project")} marginbottom="1rem">
-          Entregar
-        </DownloadButton>
         </>
       ) : <Typography>No entregado.</Typography>}
+      <DownloadButton variant="contained" onClick={event => navigate("/upload/final-project")} marginbottom="1rem">
+        Entregar
+      </DownloadButton>
       {/* Botón para descargar el PDF */}
 
       <MySnackbar
