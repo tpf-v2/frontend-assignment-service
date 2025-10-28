@@ -8,7 +8,6 @@ export const DeleteButton = ({
         <GenericButton
             onClick={onClick}
             title="Eliminar"
-            //iconColor={} // gris medio
             hoverIconColor="#d32f2f" // rojo
             hoverTransparentBg="rgba(211, 47, 47, 0.08)" // rojo leve transparente
         />
@@ -21,7 +20,7 @@ const GenericButton = ({
     iconColor="#757575", // gris medio
     hoverIconColor,
     hoverTransparentBg,
-    offset = [0,0],
+    offset = [0,0], // más alto es cartel hover más lejos del ícono
 
 }) => {
     return (
@@ -48,7 +47,7 @@ const GenericButton = ({
                     {
                         name: "offset",
                         options: {
-                            offset: {offset}, // reduce la distancia entre ícono y tooltip (vert: por defecto ~8)
+                            offset: offset, // reduce la distancia entre ícono y tooltip (vert: por defecto ~8)
                         },
                     },
                 ],
@@ -57,10 +56,10 @@ const GenericButton = ({
             <IconButton
                 onClick={onClick}
                 sx={{
-                    color: {iconColor}, // gris medio
+                    color: iconColor, // gris medio
                     "&:hover": {
-                        color: {hoverIconColor}, // color al pasar el mouse
-                        backgroundColor: {hoverTransparentBg}, // fondo leve color transparente
+                        color: hoverIconColor, // color al pasar el mouse
+                        backgroundColor: hoverTransparentBg, // fondo leve color transparente
                     },
                 }}
             >
