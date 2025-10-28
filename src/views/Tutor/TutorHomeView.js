@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Box, Card, CardContent, Typography} from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Box, Card, CardContent, Typography} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';

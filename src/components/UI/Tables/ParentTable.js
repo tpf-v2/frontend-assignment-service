@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { EditButton, DeleteButton } from "../../Buttons/CustomButtons"
 import {
   Container,
   Typography,
@@ -415,21 +416,21 @@ const ParentTable = ({
                     {(enableEdit || enableDelete) && <TableCell>
                       <Stack direction="row" spacing={1}>
                         {enableEdit && (
-                          <Button
-                            onClick={() => {setOpenEditModal(true); setItemToPassToModal(item)}}
-                            style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
-                            >
-                            Editar
-                          </Button>
+                          <EditButton
+                            onClick={() => {
+                              setItemToPassToModal(item);
+                              setOpenEditModal(true);
+                            }}
+                          />
                         )}
                         {enableDelete && (
-                          <Button
-                            onClick={() => {setOpenConfirmDeleteModal(true); setItemToPassToModal(item)}}
-                            style={{ backgroundColor: "red", color: "white" }}
-                            >
-                            Eliminar
-                          </Button>
-                        )}                        
+                          <DeleteButton
+                            onClick={() => {
+                              setItemToPassToModal(item);
+                              setOpenConfirmDeleteModal(true);
+                            }}
+                          />
+                        )}
                       </Stack>
                     </TableCell> }                    
                   </TableRow>

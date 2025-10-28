@@ -40,7 +40,7 @@ const ExploreIdeas = () => {
         setLoading(true);
         const response = await getPeriodIdeas(user.period_id, user);        
         setIdeas(response);
-        if (user.temporal_role === 'student' && !!user.group_id) {
+        if (user.temporal_role === 'student' && !!user.group_id && user.group_id != 0) {
           const team = await getGroupByIdSimple(user, user.group_id)
           setTeam(team)
         }
@@ -139,7 +139,7 @@ const ExploreIdeas = () => {
           variant='outlined'
         />
         {ideas?.map((idea) => (
-          <Box key={idea?.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2 }}>
+          <Box key={idea?.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2}}>
             {/* Botón en mismo renglón que título */}
             <Box
               sx={{ 
@@ -147,6 +147,7 @@ const ExploreIdeas = () => {
                 gap: 2,
                 justifyContent: 'space-between',
                 alignItems: 'center',
+                marginBottom: '1rem'
               }}
             >
               <Typography variant="subtitle1" fontWeight="bold">               
@@ -171,14 +172,16 @@ const ExploreIdeas = () => {
             </Typography>
             <Typography variant="body2">
               Equipo: {idea?.full_team ? "Completo" : "Aún buscando integrantes"} {""}
-              <Link
-                component="span"
-                onClick={() => {setEditingIdea(idea); setOpenChangeStatusModal(true)}}
-                underline="always"
-                sx={{ color: "grey", fontWeight: "bold", cursor: "pointer"}}
-              >
-                Cambiar
-              </Link>.
+              {isMyIdea(idea) && (
+                <Link
+                  component="span"
+                  onClick={() => {setEditingIdea(idea); setOpenChangeStatusModal(true)}}
+                  underline="always"
+                  sx={{ color: "grey", fontWeight: "bold", cursor: "pointer"}}
+                >
+                  Cambiar
+                </Link>
+              )}
             </Typography>
           </Box>        
         ))}
