@@ -478,8 +478,8 @@ const Dates = ({setSelectedMenu}) => {
     setShowResults(false);
 
     // Actualiza los initial events (del fetch + asignaciones manuales) con lo de Resultados+ModoEdición
-    // No duplica xq events además de tener al principio los resultados del algoritomo tmb tiene a initialEvents
-    setInitialEvents((prevEvents) => [...prevEvents, ...events]); // Aux: claro, ahora sí duplica initialEvents xq los tiene (pero podría haberse eliminado o modificado alguno de initial, tmb)
+    // Se pisa directamente xq events ya incluía a initialEvents (+ posteriores posibles modificaciones)
+    setInitialEvents(events);
   };
 
   const handleSelectSlot = ({ start, end }) => {
