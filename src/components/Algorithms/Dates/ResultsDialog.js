@@ -93,8 +93,8 @@ const ResultsDialog = ({
         dividers
         sx={{ maxHeight: "90vh", backgroundColor: "#f4f6f8" }}
       >
-        {/* To-Do: acá sería bueno decir cuántos equipos tienen fecha, pero por cómo afecta el modo de edición
-            a los events, eso no es posible xq termina dando información errónea. */}
+        {/* To-Do: acá sería bueno decir acá también cuántos equipos tienen fecha, pero por cómo afecta el
+            modo de edición a los events, eso no es posible xq termina dando información errónea. */}
         <CalendarStyled
           messages = {{next: "Siguiente",previous: "Atrás",today: "Hoy"}}
           localizer={localizer}
