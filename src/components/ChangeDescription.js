@@ -42,12 +42,18 @@ const ChangeDescription = ({ projectType, headerInfo, user, group }) => {
     }
     setDescriptionError("");
     setLoading(true);
-    const upload = await uploadDescription(user, description)
-
-    setResponseMessage("Descripción publicada."); // TODO: revisar response code
-    setIsSuccess(true);
-    setLoading(false);
-    setOpenDialog(true);
+    try {
+      await uploadDescription(user, description)
+      setResponseMessage("Descripción publicada."); // TODO: revisar response code
+      setIsSuccess(true);
+      setLoading(false);
+      setOpenDialog(true);
+    } catch (error) {
+      setResponseMessage("Error al publicar:" +  error.response ? error.response.data.detail : error.message.toString()); // TODO: revisar response code
+      setIsSuccess(false);
+      setLoading(false);
+      setOpenDialog(true);
+    }
   };
 
   const handleCloseDialog = () => {
@@ -171,7 +177,7 @@ const ChangeDescription = ({ projectType, headerInfo, user, group }) => {
               },
             }}
           >
-            Enviar entrega
+            Aceptar
           </Button>
         </DialogActions>
       </Dialog>
@@ -180,3 +186,5 @@ const ChangeDescription = ({ projectType, headerInfo, user, group }) => {
 };
 
 export default ChangeDescription;
+
+
