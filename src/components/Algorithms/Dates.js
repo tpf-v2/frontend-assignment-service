@@ -81,9 +81,6 @@ const Dates = ({setSelectedMenu}) => {
   const [initialEvents, setInitialEvents] = useState([]);
   // Lo que se muestra en el modal de resultados y todo lo relacionado a su modo de edición (agregar, eliminar)
   const [events, setEvents] = useState([]);
-  
-  // Genera las opciones de horas (ej: 9:00, 10:00, ..., 17:00) // Aux: borrar esto, lo muevo al Specific []
-  const hours = Array.from({ length: 13 }, (_, i) => `${9 + i}:00`);
 
   const [assignDateOpenDialog, setAssignDateOpenDialog] = useState(false);
   const [openRunDialog, setOpenRunDialog] = useState(false);
@@ -211,7 +208,9 @@ const Dates = ({setSelectedMenu}) => {
         setDefaultDate(new Date(sortedEvents[0].start));
       }
 
-      setEvents(formattedEvents);
+      // El algoritmo ignora los equipos a los que ya les asigné manualmente en initialEvents
+      // por lo que sé que no estarán duplicados (los junto)
+      setEvents([...initialEvents, ...formattedEvents]);
       setShowResults(true);
     }
     setRunning(false);
@@ -306,11 +305,12 @@ const Dates = ({setSelectedMenu}) => {
     return date.toISOString();
   }
 
-  // Busca los datos del equipo, hace request para agregar la asignación manual,
-  // y crea y agrega el resultado de color al estado que renderiza el componente de resultados
+  // Asignar/Editar manualmente, desde la pantalla principal de fechas.
   // Importante: esta función hace request al back para (entre otras cosas( editar la exhibition_date del equipo
   // y puede hacerlo porque los resultados ya fueron confirmados.
   const handleAssignDate = async (team, evaluator, selectedDateTime, selectedHour, handleClose) => {
+    // Busca los datos del equipo, hace request para agregar la asignación manual,
+    // y crea y agrega el resultado de color al estado que renderiza el componente de resultados
     if (!team || !evaluator || !selectedDateTime || !selectedHour) {
       handleSnackbarOpen(
         "Por favor completa todos los campos antes de asignar.",
@@ -340,10 +340,6 @@ const Dates = ({setSelectedMenu}) => {
       handleSnackbarOpen("Fecha asignada correctamente", "success");
       // El resultado luego de asignar fecha a un equipo manualmente
       const color = getEvaluatorColor(evaluator, evaluatorColorMap);
-
-      console.log("----- Viendo formato");
-      console.log("--- selectedDateTime:", selectedDateTime);
-      console.log("--- selectedHour:", selectedHour);
 
       const newEvent = {
         title: `Equipo ${team.group_number} - Tutor ${getTutorNameByTutorId(
@@ -481,7 +477,9 @@ const Dates = ({setSelectedMenu}) => {
     setOpenConfirmDialog(false); // Cerrar el popup de confirmación
     setShowResults(false);
 
-    setInitialEvents((prevEvents) => [...prevEvents, ...events]); // [] aux: ver acá tmb, si no está duplicando
+    // Actualiza los initial events (del fetch + asignaciones manuales) con lo de Resultados+ModoEdición
+    // No duplica xq events además de tener al principio los resultados del algoritomo tmb tiene a initialEvents
+    setInitialEvents((prevEvents) => [...prevEvents, ...events]); // Aux: claro, ahora sí duplica initialEvents xq los tiene (pero podría haberse eliminado o modificado alguno de initial, tmb)
   };
 
   const handleSelectSlot = ({ start, end }) => {
@@ -548,7 +546,6 @@ const Dates = ({setSelectedMenu}) => {
     // Crea un evento (una asignación), solo la setea y cierra el dialog    
     // El selectSlot no es de item, es el slot en que clickeaste (en él querés ubicar al equipo)
     if (selectedSlot && item?.team) {
-      console.log("--- selectedSlot, veamos:", selectedSlot);
       const teamTutor = tutors.find(
         (t) =>
           t.tutor_periods &&
@@ -570,8 +567,6 @@ const Dates = ({setSelectedMenu}) => {
 
       // Ahora sí llamamos a la función
       const selectedRealUtc = formatUpdatedDateTime(datePart, hourPart);
-      console.log("---- selectedRealUtc:", selectedRealUtc);
-      console.log("---- selectedSlot:", selectedSlot);
       
       const newEvent = { //
         title: `Equipo ${item?.team.group_number} - Tutor ${getTutorNameByTutorId(
@@ -589,7 +584,8 @@ const Dates = ({setSelectedMenu}) => {
           tutor_id: teamTutor.id,
         },
       };
-      setEvents((prevEvents) => [...prevEvents, newEvent]); // [] Aux: Acá es donde duplica los eventos sin importarle nada (arreglar esto)
+      // El modo edición no me deja agregar dos eventos a la misma hora, por lo que esto No duplica
+      setEvents((prevEvents) => [...prevEvents, newEvent]); // Aux ver [], sí me deja, no me lo informa al ppio que es distinto
       setModalOpen(false);
 
       console.log("--- newEvent, veamoss:", newEvent);
