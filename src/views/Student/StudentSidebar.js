@@ -1,7 +1,7 @@
 import { Box, List, ListItemText, ListItemIcon, Accordion, AccordionSummary, AccordionDetails, ListItemButton } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/system";
-import { Light, Lightbulb } from "@mui/icons-material";
+import { Lightbulb } from "@mui/icons-material";
 import { FileCopy } from "@mui/icons-material";
 import { Email } from "@mui/icons-material";
 const SidebarList = styled(List)(({ theme }) => ({
