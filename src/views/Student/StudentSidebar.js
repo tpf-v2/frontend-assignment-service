@@ -1,4 +1,4 @@
-import { Box, List, ListItemText, ListItemIcon, Accordion, AccordionSummary, AccordionDetails, Divider, ListItemButton } from "@mui/material";
+import { Box, List, ListItemText, ListItemIcon, Accordion, AccordionSummary, AccordionDetails, ListItemButton } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/system";
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
