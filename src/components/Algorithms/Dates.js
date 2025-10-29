@@ -12,6 +12,7 @@ import {
   Button,
   DialogContentText,
 } from "@mui/material";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
@@ -594,7 +595,13 @@ const Dates = ({setSelectedMenu}) => {
   };
   console.log("--- events, cada tanto:", events);
   console.log("--- initialEvents, cada tanto:", initialEvents);
-  
+  const teamsWithAssignmMsg = () => {
+    const len = initialEvents.length;
+    if (len == 0) return "No se encontraron asignaciones de fechas para equipos.";
+    if (len == 1) return `Se encontraron asignaciones para 1 equipo.`;
+    return `Se encontraron asignaciones para ${initialEvents.length} equipos.`;
+  };
+
   return (
     <Box sx={{ padding: 3 }}>
       <Grid container spacing={2}>
@@ -657,7 +664,13 @@ const Dates = ({setSelectedMenu}) => {
       </Grid>
 
       {/* Sección de Tabla con resultados (Calendario grande) y Botón a la derecha */}
-      {/* El cartel de edición, similar al de agregar, se llama dentro de CalendarSection */}
+      {/* El cartel de edición, similar al de agregar, se llama dentro de CalendarSection */}      
+      <Grid item xs={12} md={12} sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 2 }}>     
+        <InfoOutlinedIcon sx={{ color: "#0288d1" }} />
+        <Typography variant="body1" sx={{ textAlign: "justify" }}>
+          {teamsWithAssignmMsg()}
+        </Typography>
+      </Grid>
       <Grid item xs={12}>
         <CalendarSection
           events={initialEvents}
