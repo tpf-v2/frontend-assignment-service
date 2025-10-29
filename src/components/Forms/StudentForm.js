@@ -25,11 +25,7 @@ import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { NumericFormat } from "react-number-format";
 import ClosedAlert from "../ClosedAlert";
-import { TitleSimple } from "../../styles/Titles";
-import { Root, ButtonSimple } from "../Root";
-
-const ButtonStyled = ButtonSimple;
-const Title = TitleSimple;
+import { Root, Title, ButtonStyled } from "../Root";
 
 const StudentForm = () => {
   const user = useSelector((state) => state.user);
@@ -199,7 +195,7 @@ const StudentForm = () => {
     <Container maxWidth="sm">
       {period.form_active ? (
         <Root>
-          <Title variant="h5">Formulario de Equipo</Title>
+          <Title variant="h5" align= "center">Formulario de Equipo</Title>
           {submitSuccess && (
             <Alert severity="success">
               Gracias por enviar el formulario de equipo.
@@ -392,8 +388,8 @@ const StudentForm = () => {
                 </>
               )}
   
-              <ButtonStyled variant="contained" color="primary" type="submit">
-                Enviar Formulario
+              <ButtonStyled variant="contained" color="primary" type="submit" align="right">
+                Enviar
               </ButtonStyled>
             </form>
           )}
