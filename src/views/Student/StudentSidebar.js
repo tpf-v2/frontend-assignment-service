@@ -1,7 +1,7 @@
 import { Box, List, ListItemText, ListItemIcon, Accordion, AccordionSummary, AccordionDetails, ListItemButton } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/system";
-import { Lightbulb } from "@mui/icons-material";
+import { Lightbulb, Inventory } from "@mui/icons-material";
 import { FileCopy } from "@mui/icons-material";
 import { Email } from "@mui/icons-material";
 const SidebarList = styled(List)(({ theme }) => ({
@@ -26,18 +26,19 @@ const StudentSidebar = ({ selectedMenu, handleNavigation, period }) => {
   return (
     <Box>
       <SidebarList>
-        <Accordion disableGutters elevation={0} >
+        <Accordion defaultExpanded disableGutters elevation={0} >
           <AccordionSummary>
             <ListItem label="Tus Entregas" icon={<FileCopy />} menu="/deliveries"/>
           </AccordionSummary>
         </Accordion>
         <Accordion defaultExpanded disableGutters elevation={0} >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <ListItemText primary="Explorar Ideas" />
+            <ListItemText primary="Explorar ideas de estudiantes"/>
           </AccordionSummary>
           <AccordionDetails>
             <ListItem label="Ideas de Estudiantes" icon={<Lightbulb />} menu="/explore/ideas"/>
-            <ListItem label="Mails de Tutores" icon={<Email />} menu="/explore/tutor-emails"/>
+            <ListItem label="Contactar Tutores" icon={<Email />} menu="/explore/tutor-emails"/>
+            <ListItem label="Trabajos Anteriores" icon={<Inventory />} menu="/public"/>
           </AccordionDetails>
         </Accordion>
       </SidebarList>
