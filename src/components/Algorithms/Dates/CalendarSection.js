@@ -69,8 +69,7 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
     }
     return editableItem;
   }
-
-  console.log("---selectedEvent:", selectedEvent);
+  
   // Distinguimos casos, defaultDate puede valer una fecha y renderizamos,
   // undefined (cargando) y va spinner, o null (no hay datos) y no mostramos spinner y sí calendar.
   return (

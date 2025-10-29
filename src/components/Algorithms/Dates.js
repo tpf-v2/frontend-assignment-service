@@ -166,7 +166,6 @@ const Dates = ({setSelectedMenu}) => {
           if (sortedEvents.length > 0) {
             setInitialDefaultDate(new Date(sortedEvents[0].start));
           }
-          console.log("--- Hice fetchData y sí hay eventos, los estoy por setear en initialEvents, sortedEvents:", sortedEvents);
           setInitialEvents(formattedEvents);
         } else {
           // Caso no hay resultados: no se ejecutó el algoritmo y Tampoco se asignó manualmente
@@ -366,7 +365,7 @@ const Dates = ({setSelectedMenu}) => {
           tutor_id: tutor.id,
         },
       };
-      console.log("--- newEvent:", newEvent);
+
       // Actualizar el evento si existe, o agregarlo en índice nuevo si no existe
       setInitialEvents((prevEvents) => {
         const eventIndex = prevEvents.findIndex(
@@ -510,7 +509,6 @@ const Dates = ({setSelectedMenu}) => {
 
       // Guardar el intervalo seleccionado (clickeado)
       setSelectedSlot({ start , end });
-      console.log("--- selectedSlot:", selectedSlot);
       
       setModalOpen(true); // Abrir el modal para confirmar
     }
@@ -589,13 +587,9 @@ const Dates = ({setSelectedMenu}) => {
       // ni confirmar resultados con mismo equipo en horas distintas, por lo que esto No duplica
       setEvents((prevEvents) => [...prevEvents, newEvent]);
       setModalOpen(false);
-
-      console.log("--- newEvent, veamoss:", newEvent);
-      console.log("--- events, veamoss:", events);
     }
   };
-  console.log("--- events, cada tanto:", events);
-  console.log("--- initialEvents, cada tanto:", initialEvents);
+
   const teamsWithAssignmMsg = () => {
     const len = initialEvents.length;
     if (len == 0) return "No se encontraron asignaciones de fechas para equipos.";
