@@ -1,6 +1,7 @@
 /// Este archivo es similar a ParentTable, pero tanto el contenido de la tabla que se renderiza como
 // el flujo de editar equipo (con dos modales, analizando si hubo o no conflicto) es diferente a ParentTable,
 // por lo que se optó por mantener los archivos separados en pos de la legibilidad.
+import { EditButton } from "../Buttons/CustomButtons"
 import {
   Container,
   CircularProgress,
@@ -635,20 +636,16 @@ const TeamDataTable = ({
                             <TableCell rowSpan={team.students.length}>
                               <Stack direction="row" spacing={1}>                          
                                 {enableEdit && (
-                                  <Button
-                                  onClick={() => {setOpenEditModal(true); setItemToPassToModal(team)}}
-                                  style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
-                                  >
-                                  Editar
-                                </Button>
+                                  <EditButton
+                                    onClick={() => {
+                                      setItemToPassToModal(team);
+                                      setOpenEditModal(true);
+                                    }}
+                                  />                                  
                                 )}
                               
                                 {false && (
-                                  <Button
-                                    style={{ backgroundColor: "red", color: "white" }}
-                                    >
-                                    Eliminar
-                                  </Button>
+                                  {/*<DeleteButton />*/}
                                 )}
                               </Stack>
                             </TableCell>

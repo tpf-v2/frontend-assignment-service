@@ -64,10 +64,10 @@ const ResetPasswordView = () => {
     setLoading(true);
 
     // Validaciones
-    if (password.length < 6) {
+    if (password.length < 8) {
       setNotification({
         open: true,
-        message: "La contraseña debe tener al menos 6 caracteres",
+        message: "La contraseña debe tener al menos 8 caracteres",
         status: "error",
       });
       setLoading(false);

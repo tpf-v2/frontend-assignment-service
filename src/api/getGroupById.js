@@ -4,7 +4,6 @@ const BASE_URL = process.env.REACT_APP_API_URL;
 
 // función dispatch / redux
 export const getGroupById = (user, group_id) => async () => {
-  
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,

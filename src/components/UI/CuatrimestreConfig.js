@@ -99,7 +99,7 @@ const CuatrimestreConfig = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Disponibilidades de presentación</TableCell> 
+              <TableCell>Disponibilidades de Presentación</TableCell> 
               <TableCell align="right">
                 <Switch
                   checked={settings.presentation_dates_available}
@@ -121,17 +121,16 @@ const CuatrimestreConfig = () => {
           </TableBody>
         </Table>
 
-
+{/*
         <Table>
           <TableHead>
             <TableRow>
-            <StyledTableCell align="left">Entregas Individuales</StyledTableCell> {/* Left title */}
+            <StyledTableCell align="left">Entregas Individuales</StyledTableCell>
             <StyledTableCell align="right">Deshabilitar/Habilitar</StyledTableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {/* Mapea los campos del estado y crea una fila por cada uno */}
             <TableRow>
               <TableCell>Informe de Cumplimiento PPS</TableCell>
               <TableCell align="right">
@@ -145,7 +144,7 @@ const CuatrimestreConfig = () => {
 
           </TableBody>
         </Table>
-
+*/}
       </StyledTableContainer>
     </Container>
   );
