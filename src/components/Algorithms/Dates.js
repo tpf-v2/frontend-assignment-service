@@ -209,7 +209,7 @@ const Dates = ({setSelectedMenu}) => {
       }
 
       // El algoritmo ignora los equipos a los que ya les asigné manualmente en initialEvents
-      // por lo que sé que no estarán duplicados (los junto)
+      // Por eso sé que no estarán duplicados y los combino para no ignorar los asignados inicialmente
       setEvents([...initialEvents, ...formattedEvents]);
       setShowResults(true);
     }
