@@ -132,7 +132,8 @@ const Dates = ({setSelectedMenu}) => {
 
     // Fechas
     const fetchData = async () => {
-      if (!period) return; // AUX PROBANDO SIN PERIOD EN DEPS.
+      // No hacemos request si period todavía no está cargado
+      if (!period) return;
       setLoadingDates(true);
       try {
         const dates = await getAssignedDates(user, period);
@@ -182,8 +183,7 @@ const Dates = ({setSelectedMenu}) => {
     fetchData();
     getInputInfo();    
     setLoadingDates(false);
-  //}, [period, user]);
-  }, [user]);
+  }, [period, user]);
 
   // Transforma datesResult en eventos para el calendario, en modal en que se muestran los resultados
   // cuando se ejecuta el algoritmo (calendario grande similar al de pantalla de fechas, pero en modal)
@@ -585,8 +585,9 @@ const Dates = ({setSelectedMenu}) => {
           tutor_id: teamTutor.id,
         },
       };
-      // El modo edición no me deja agregar dos eventos a la misma hora, por lo que esto No duplica
-      setEvents((prevEvents) => [...prevEvents, newEvent]); // Aux ver [], sí me deja, no me lo informa al ppio que es distinto
+      // El modo edición no me deja agregar dos eventos a la misma hora,
+      // ni confirmar resultados con mismo equipo en horas distintas, por lo que esto No duplica
+      setEvents((prevEvents) => [...prevEvents, newEvent]);
       setModalOpen(false);
 
       console.log("--- newEvent, veamoss:", newEvent);
