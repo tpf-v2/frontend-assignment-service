@@ -1,11 +1,10 @@
-import { Box, List, ListItemText, ListItemIcon, Accordion, AccordionSummary, AccordionDetails, Divider, ListItemButton } from "@mui/material";
+import { Box, List, ListItemText, ListItemIcon, Accordion, AccordionSummary, AccordionDetails, ListItemButton } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/system";
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-
+import { Lightbulb, Inventory } from "@mui/icons-material";
+import { FileCopy } from "@mui/icons-material";
+import { Email } from "@mui/icons-material";
 const SidebarList = styled(List)(({ theme }) => ({
-  marginTop: theme.spacing(4),
 }));
 
 const ListItemStyled = styled(ListItemButton)(({ selected }) => ({
@@ -16,8 +15,6 @@ const ListItemStyled = styled(ListItemButton)(({ selected }) => ({
   },
 }));
 
-const SidebarContainer = styled(Box)(({ theme }) => ({}));
-
 const StudentSidebar = ({ selectedMenu, handleNavigation, period }) => {
   const ListItem = ({ label, icon, menu }) => (
     <ListItemStyled selected={selectedMenu === menu} onClick={() => handleNavigation(menu)}>
@@ -27,19 +24,25 @@ const StudentSidebar = ({ selectedMenu, handleNavigation, period }) => {
   );
 
   return (
-    <SidebarContainer>
+    <Box>
       <SidebarList>
-        <Accordion defaultExpanded>
+        <Accordion defaultExpanded disableGutters elevation={0} >
+          <AccordionSummary>
+            <ListItem label="Tus Entregas" icon={<FileCopy />} menu="/deliveries"/>
+          </AccordionSummary>
+        </Accordion>
+        <Accordion defaultExpanded disableGutters elevation={0} >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <ListItemText primary="Explorar Ideas" />
+            <ListItemText primary="Explorar ideas de estudiantes"/>
           </AccordionSummary>
           <AccordionDetails>
-            <ListItem label="Ideas de Estudiantes" icon={<GroupAddIcon />} menu="/explore/ideas"/>
-            <ListItem label="Mails de Tutores" icon={<CompareArrowsIcon />} menu="/explore/tutor-emails"/>
+            <ListItem label="Ideas de Estudiantes" icon={<Lightbulb />} menu="/explore/ideas"/>
+            <ListItem label="Contactar Tutores" icon={<Email />} menu="/explore/tutor-emails"/>
+            <ListItem label="Trabajos Anteriores" icon={<Inventory />} menu="/public"/>
           </AccordionDetails>
         </Accordion>
       </SidebarList>
-    </SidebarContainer>
+    </Box>
   );
 };
 
