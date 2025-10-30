@@ -14,6 +14,7 @@ const StudentDeliveryView = () => {
     const isStudent = user?.temporal_role === 'student';
     const [loading, setLoading] = useState(true)
     const navigate = useNavigate();
+    const period = useSelector((state) => state.period);
     useEffect(() => {
         const fetchTeam = async () => {
             const _team = await dispatch(getGroupById(user, user.group_id));

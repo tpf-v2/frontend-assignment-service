@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { downloadProject, fetchProjectPdf } from "../../../../api/handleProjects";
 import MySnackbar from "../../MySnackBar";
 import { getIntermediateProject } from "../../../../api/intermeadiateProjects";
+import { useNavigate } from 'react-router-dom';
 
 // Estilos
 const GroupReviewContainer = styled(Box)(({ theme }) => ({
@@ -44,12 +45,13 @@ const DownloadButton = styled(Button)(({ theme }) => ({
 }));
 
 // Copypaste de Tutor/GroupReview sin funcionalidad de comentario
-const StudentOverview = ({ group_id, team }) => {
+const StudentOverview = ({ group_id, team, period }) => {
   const [pdfUrlInitial, setPdfUrlInitial] = useState(null);
   const [pdfUrlFinal, setPdfUrlFinal] = useState(null);
-  const user = useSelector((state) => state.user);
   const [videoUrl, setVideoUrl] = useState(null);
-  console.log("Inside got team: %s", team)
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.user);
+  
   const loadIntermediateProject = async () => {
     try {
       const response = await getIntermediateProject(group_id, user, user.period_id);
@@ -138,17 +140,29 @@ const StudentOverview = ({ group_id, team }) => {
             <Typography>Cargando ...</Typography>
           )}
         </PdfPreviewBox>
-        <DownloadButton variant="contained" onClick={event => downloadFile('initial-project')} marginbottom="1rem">
-          Descargar PDF
-        </DownloadButton>
+        {
+          <DownloadButton variant="contained" onClick={event => downloadFile('initial-project')} marginbottom="1rem">
+            Descargar PDF
+          </DownloadButton>
+        }
         </>
       ) : <Typography>No entregado.</Typography>}
+      {
+        !!period.initial_project_active && <DownloadButton variant="contained" onClick={event => navigate("/upload/initial-project")} marginbottom="1rem">
+          Entregar
+        </DownloadButton>
+      }
       <Typography variant="h5" align="center" marginTop="1em">
         Entrega Intermedia
       </Typography>
       {!!videoUrl ? (<DownloadButton href={videoUrl} target="_blank" rel="noopener">
         Ver Video
       </DownloadButton>) : <Typography>No entregado.</Typography>}
+      {
+        !!period.intermediate_project_active && <DownloadButton variant="contained" onClick={event => navigate("/upload/intermediate-project")} marginbottom="1rem">
+          Entregar
+        </DownloadButton>
+      }
       <Typography variant="h5" align="center" marginTop="1em">
         Reporte Final
       </Typography>
@@ -167,11 +181,16 @@ const StudentOverview = ({ group_id, team }) => {
             <Typography>Cargando ...</Typography>
           )}
         </PdfPreviewBox>
-        <DownloadButton variant="contained" onClick={event => downloadFile('final-project')} marginbottom="1rem">
-          Descargar PDF
-        </DownloadButton>
+        {
+          <DownloadButton variant="contained" onClick={event => downloadFile('final-project')} marginbottom="1rem">
+            Descargar PDF
+          </DownloadButton>
+        }
         </>
       ) : <Typography>No entregado.</Typography>}
+      <DownloadButton variant="contained" onClick={event => navigate("/upload/final-project")} marginbottom="1rem">
+        Entregar
+      </DownloadButton>
       {/* Botón para descargar el PDF */}
 
       <MySnackbar
