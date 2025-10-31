@@ -51,6 +51,7 @@ const StudentOverview = ({ group_id, team, period }) => {
   const [videoUrl, setVideoUrl] = useState(null);
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  period = useSelector((state) => state.period);
   
   const loadIntermediateProject = async () => {
     try {
