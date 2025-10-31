@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { CalendarStyled } from "../../../styles/AvailabilityCalendarStyle";
@@ -11,9 +11,9 @@ import {
   IconButton,
   Typography,
   Paper,
-  Button,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { EditButton } from "../../Buttons/CustomButtons";
 import 'moment/locale/es';
 import { useMemo } from 'react';
 import SpecificDateDialog from "./SpecificDateDialog";
@@ -69,11 +69,12 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
     }
     return editableItem;
   }
-
-  console.log("---selectedEvent:", selectedEvent);
+  
+  // Distinguimos casos, defaultDate puede valer: una fecha y renderizamos,
+  // undefined (cargando) y va spinner, o null (no hay datos) y no mostramos spinner y sí calendar.
   return (
     <>
-      {loadingDates || !defaultDate ? (
+      {loadingDates || defaultDate===undefined ? (
         <Box
           display="flex"
           justifyContent="center"
@@ -163,7 +164,7 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
                             "HH:mm"
                           )} - ${moment(selectedEvent.end).format("HH:mm")}`}
                         </Typography>
-                        <Button
+                        <EditButton
                           onClick={() => {
                             const constructedItem = makeEditableItem(selectedEvent);
                             setSelectedEvent(constructedItem);
@@ -171,10 +172,8 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
                             // Cerramos este modal de details, pero sin flushear los datos xq los necesitamos para editar
                             setOpenDetails(false);
                           }}
-                          style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja // Aux: pienso cambiar la estética []
-                          sx={{ml: "auto"}}>
-                          Editar
-                        </Button>
+                          sx={{ml: "auto"}}
+                        /> 
                       </Box>
                     </Paper>
                   )}

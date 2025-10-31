@@ -1,10 +1,7 @@
-
-import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { Container, Box, CircularProgress } from "@mui/material";
 import MySnackbar from "../../components/UI/MySnackBar";
-import SubmitButton from "../../components/Buttons/SubmitButton";
 import StudentInfo from "../../components/UI/Dashboards/Student/StudentInfo";
 import Phase from "../../components/UI/Dashboards/Student/Phase";
 import { getStudentInfo } from "../../api/handleStudents";
@@ -13,11 +10,11 @@ import { useNavigate } from "react-router-dom";
 import { getPeriodById } from "../../api/handlePeriods";
 import { setPeriod } from "../../redux/slices/periodSlice";
 import PresentationDateCard from "../../components/UI/Dashboards/Student/PresentationDateCard";
+import StudentSidebar from "./StudentSidebar";
 
 const StudentHomeView = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const periodId = useSelector((state) => state.user.period_id);
   const period = useSelector((state) => state.period);
  
   const [milestones, setMilestones] = useState([]);
@@ -52,10 +49,6 @@ const StudentHomeView = () => {
     const fetchTeamAnswer = async () => {
       try {
         const userData = await dispatch(getStudentInfo(user));
-
-        console.log("--- user.id:", user.id);
-        console.log("--- userData:", userData);
-        
         let team = {};
         if (userData.group_id !== 0) {
           team = await dispatch(getGroupById(user, userData.group_id));
@@ -66,29 +59,28 @@ const StudentHomeView = () => {
         const topic_completed = userData.topic && userData.tutor
         setMilestones([
           {
-            phase: "Inscripción",
+            phase: "Formulario de Inscripción",
+            description: topic_completed ? "Tema y tutor asignado" : "Tema sin asignar",
             tasks: [
               {
-                title: form_completed ? "Formulario enviado" : "Formulario no enviado",
+                title: form_completed ? "Formulario enviado" : "Enviar formulario",
                 completed: form_completed,
-              },
-              {
-                title: topic_completed ? "Tema y tutor asignado" : "Tema sin asignar",
-                completed: topic_completed,
-              },
-              
+                available: period.form_active,
+                urlNotCompleted: "/student-form",
+                urlCompleted:"",
+              },  
             ],
           },
           {
             phase: "Anteproyecto",
+            description: team.pre_report_approved ? "Entrega aprobada" : "Revisión de tutor pendiente",
             tasks: [
               {
-                title: !!team.pre_report_date ? "Enviado" : "No enviado",
+                title: !team.pre_report_date ? (period.initial_project_active ? "Enviar" : "No disponible") : (period.initial_project_active ? "Cambiar entrega" : "Enviado") ,
                 completed: !!team.pre_report_date,
-              },
-              {
-                title: team.pre_report_approved ?  "Revisión terminada" : "Revisión de tutor",
-                completed: team.pre_report_approved,
+                available: period.initial_project_active && !!user.group_id,
+                urlNotCompleted: "/upload/initial-project",
+                urlCompleted: "/upload/initial-project"
               },
             ],
           },
@@ -96,9 +88,12 @@ const StudentHomeView = () => {
             phase: "Entrega Intermedia",
             tasks: [
               {
-                title: !!team.intermediate_assigment_date ? "Enviada" : "No enviada",
+                title: !team.intermediate_assigment_date ? (period.intermediate_project_active ? "Enviar" : "No disponible") : (period.intermediate_project_active ? "Cambiar entrega" : "Enviada") ,
                 completed:
                   !!team.intermediate_assigment_date,
+                available: period.intermediate_project_active && !!user.group_id,
+                urlNotCompleted: "/upload/intermediate-project",
+                urlCompleted: "/upload/intermediate-project"
               },
             ],
           },
@@ -106,30 +101,50 @@ const StudentHomeView = () => {
             phase: "Entrega Final",
             tasks: [
               {
-                title: !!team.final_report_date ? "Enviada" : "No enviada",
+                title: !team.final_report_date ? (period.final_project_active ? "Enviar" : "No disponible") :  (period.final_project_active ? "Cambiar entrega" : "Enviada"),
                 completed: !!team.final_report_date,
+                available: period.final_project_active && !!user.group_id,
+                urlNotCompleted: "/upload/final-project",
+                urlCompleted: "/upload/final-project"
               }
             ],
           },
           {
+            phase: "Exposición de Proyecto Final",
+            tasks: [
+              {
+                title: "Enviar disponibilidad de fechas",
+                completed: false,
+                available: period.presentation_dates_available && !!user.group_id,
+                urlNotCompleted: "/availability-view",
+                urlCompleted: "/availability-view"
+              },
+            ],
+          }/*,
+          {
             phase: "Informe de Cumplimiento PPS",
             tasks: [
               {
-                title: !!userData.pps_report_date ? "Enviado" : "No enviado",
+                title: !userData.pps_report_date ? (!!period.pps_report_active ? "Enviar" : "No disponible") : "Enviado",
                 completed: !!userData.pps_report_date,
+                available: period.pps_report_active && !!user.group_id,
+                urlNotCompleted: "/upload/pps-report",
+                urlCompleted: "/upload/pps-report"
               }
             ],
-          }
+          }*/
         ]);
       } catch (error) {
         console.error("Error al obtener las respuestas", error);
       } finally {
-        setLoading(false); // Finalizar la carga de datos
+        if (!!period) {
+          setLoading(false);
+        } // Finalizar la carga de datos
       }
     };
 
     fetchTeamAnswer();
-  }, [dispatch, user]);
+  }, [dispatch, user, period]);
 
   const navigate = useNavigate();
   const handleNavigation = (url) => {
@@ -143,65 +158,7 @@ const StudentHomeView = () => {
         <Box sx={{ mb: 1 }} />
         {!loading && team.exhibition_date && <PresentationDateCard presentationDate={team.exhibition_date}/>}
         {!loading && (
-          <>
-            {/* AUX PROBANDO: estos dos primeros botones no van a ir acá, solo estoy probando */}
-            <SubmitButton
-              url="/propose-idea"
-              title="Proponer Idea"
-              width="100%"
-              handleSubmit={() => handleNavigation("/propose-idea")}
-              disabled={!milestones[0]?.tasks[0].completed}
-            />
-            <SubmitButton
-              url="/explore/ideas"
-              title="Explorar Ideas"
-              width="100%"
-              handleSubmit={() => handleNavigation("/explore/ideas")}
-              disabled={!milestones[0]?.tasks[0].completed}
-            />
-            <SubmitButton
-              url="/student-form"
-              title="Enviar Formulario de Equipo"
-              width="100%"
-              handleSubmit={() => handleNavigation("/student-form")}
-              disabled={milestones[0]?.tasks[0].completed}
-            />
-            <SubmitButton
-              url="/upload/initial-project"
-              title="Enviar Anteproyecto"
-              width="100%"
-              handleSubmit={() => handleNavigation("/upload/initial-project")}
-              disabled={milestones[1]?.tasks[0].completed}
-            />
-            <SubmitButton
-              url="/upload/intermediate-project"
-              title="Enviar Entrega Intermedia"
-              width="100%"
-              handleSubmit={() => handleNavigation("/upload/intermediate-project")}
-              disabled={milestones[2]?.tasks[0].completed}
-            />
-            <SubmitButton
-              url="/availability-view"
-              title="Disponibilidades de Exposición"
-              width="100%"
-              disabled={!period.presentation_dates_available}
-              handleSubmit={() => handleNavigation("/availability-view")}
-            />
-            <SubmitButton
-              url="/upload/final-project"
-              title="Enviar Entrega Final"
-              width="100%"
-              handleSubmit={() => handleNavigation("/upload/final-project")}
-              disabled={milestones[3]?.tasks[0].completed}
-            />
-            <SubmitButton
-              url="/upload/pps-report"
-              title="Enviar Informe Cumplimiento PPS"
-              width="100%"
-              handleSubmit={() => handleNavigation("/upload/pps-report")}
-              disabled={milestones[4]?.tasks[0].completed}
-            />
-          </>
+          <StudentSidebar selectedMenu={null} handleNavigation={handleNavigation} period={period} />
         )}
       </Box>
       <Box sx={{ flex: 2 }}>
@@ -216,6 +173,7 @@ const StudentHomeView = () => {
                 key={index}
                 phase={phase.phase}
                 tasks={phase.tasks}
+                description={phase.description}
                 circle={true}
               />
             ))

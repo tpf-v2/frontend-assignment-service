@@ -12,6 +12,7 @@ import {
   Button,
   DialogContentText,
 } from "@mui/material";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
@@ -81,9 +82,6 @@ const Dates = ({setSelectedMenu}) => {
   const [initialEvents, setInitialEvents] = useState([]);
   // Lo que se muestra en el modal de resultados y todo lo relacionado a su modo de edición (agregar, eliminar)
   const [events, setEvents] = useState([]);
-  
-  // Genera las opciones de horas (ej: 9:00, 10:00, ..., 17:00) // Aux: borrar esto, lo muevo al Specific []
-  const hours = Array.from({ length: 13 }, (_, i) => `${9 + i}:00`);
 
   const [assignDateOpenDialog, setAssignDateOpenDialog] = useState(false);
   const [openRunDialog, setOpenRunDialog] = useState(false);
@@ -107,7 +105,7 @@ const Dates = ({setSelectedMenu}) => {
   const [errorDialogOpen, setErrorDialogOpen] = useState(false);
 
   const [defaultDate, setDefaultDate] = useState(null); // Fecha inicial a mostrar en los calendarios
-  const [initialDefaultDate, setInitialDefaultDate] = useState(null); // Estado para la fecha predeterminada
+  const [initialDefaultDate, setInitialDefaultDate] = useState(undefined); // Estado para la fecha predeterminada
 
   const [loadingDates, setLoadingDates] = useState(false);
 
@@ -134,7 +132,8 @@ const Dates = ({setSelectedMenu}) => {
 
     // Fechas
     const fetchData = async () => {
-      if (!period) return; // AUX PROBANDO SIN PERIOD EN DEPS.
+      // No hacemos request si period todavía no está cargado
+      if (!period) return;
       setLoadingDates(true);
       try {
         const dates = await getAssignedDates(user, period);
@@ -168,6 +167,9 @@ const Dates = ({setSelectedMenu}) => {
             setInitialDefaultDate(new Date(sortedEvents[0].start));
           }
           setInitialEvents(formattedEvents);
+        } else {
+          // Caso no hay resultados: no se ejecutó el algoritmo y Tampoco se asignó manualmente
+          setInitialDefaultDate(null); // para indicar explícitamente que no valdrá nada esta fecha
         }
       } catch (error) {
         console.error("Error fetching assigned dates:", error);
@@ -180,8 +182,7 @@ const Dates = ({setSelectedMenu}) => {
     fetchData();
     getInputInfo();    
     setLoadingDates(false);
-  //}, [period, user]);
-  }, [user]);
+  }, [period, user]);
 
   // Transforma datesResult en eventos para el calendario, en modal en que se muestran los resultados
   // cuando se ejecuta el algoritmo (calendario grande similar al de pantalla de fechas, pero en modal)
@@ -207,7 +208,9 @@ const Dates = ({setSelectedMenu}) => {
         setDefaultDate(new Date(sortedEvents[0].start));
       }
 
-      setEvents(formattedEvents);
+      // El algoritmo ignora los equipos a los que ya les asigné manualmente en initialEvents
+      // Por eso sé que no estarán duplicados y los combino para no ignorar los asignados inicialmente
+      setEvents([...initialEvents, ...formattedEvents]);
       setShowResults(true);
     }
     setRunning(false);
@@ -302,11 +305,12 @@ const Dates = ({setSelectedMenu}) => {
     return date.toISOString();
   }
 
-  // Busca los datos del equipo, hace request para agregar la asignación manual,
-  // y crea y agrega el resultado de color al estado que renderiza el componente de resultados
+  // Asignar/Editar manualmente, desde la pantalla principal de fechas.
   // Importante: esta función hace request al back para (entre otras cosas( editar la exhibition_date del equipo
   // y puede hacerlo porque los resultados ya fueron confirmados.
   const handleAssignDate = async (team, evaluator, selectedDateTime, selectedHour, handleClose) => {
+    // Busca los datos del equipo, hace request para agregar la asignación manual,
+    // y crea y agrega el resultado de color al estado que renderiza el componente de resultados
     if (!team || !evaluator || !selectedDateTime || !selectedHour) {
       handleSnackbarOpen(
         "Por favor completa todos los campos antes de asignar.",
@@ -337,10 +341,6 @@ const Dates = ({setSelectedMenu}) => {
       // El resultado luego de asignar fecha a un equipo manualmente
       const color = getEvaluatorColor(evaluator, evaluatorColorMap);
 
-      console.log("----- Viendo formato");
-      console.log("--- selectedDateTime:", selectedDateTime);
-      console.log("--- selectedHour:", selectedHour);
-
       const newEvent = {
         title: `Equipo ${team.group_number} - Tutor ${getTutorNameByTutorId(
           tutor.id
@@ -365,27 +365,23 @@ const Dates = ({setSelectedMenu}) => {
           tutor_id: tutor.id,
         },
       };
-      console.log("--- newEvent:", newEvent);
-      // Actualizar el evento si existe, o agregar uno nuevo si no existe
-    setInitialEvents((prevEvents) => {
-      const eventIndex = prevEvents.findIndex(
-        (event) => event.result.group_id === team.id
-      );
 
-      if (eventIndex !== -1) {
-        // Si el evento existe, actualiza el start y end
-        const updatedEvents = [...prevEvents];
-        updatedEvents[eventIndex] = {
-          ...updatedEvents[eventIndex],
-          start: newEvent.start,
-          end: newEvent.end,
-        };
-        return updatedEvents;
-      } else {
-        // Si no existe, agrega el nuevo evento
-        return [...prevEvents, newEvent];
-      }
-    });
+      // Actualizar el evento si existe, o agregarlo en índice nuevo si no existe
+      setInitialEvents((prevEvents) => {
+        const eventIndex = prevEvents.findIndex(
+          (event) => event.result.group_id === team.id
+        );
+
+        if (eventIndex !== -1) {
+          // Si el evento existe, se queda con su versión actualizada
+          const updatedEvents = [...prevEvents];
+          updatedEvents[eventIndex] = newEvent; 
+          return updatedEvents;
+        } else {
+          // Si no existe, agrega el nuevo evento
+          return [...prevEvents, newEvent];
+        }
+      });
     } catch (e) {
       console.log("Error al asignar o editar la fecha:", e);
       handleSnackbarOpen("Hubo un error al asignar la fecha", "error");
@@ -481,7 +477,9 @@ const Dates = ({setSelectedMenu}) => {
     setOpenConfirmDialog(false); // Cerrar el popup de confirmación
     setShowResults(false);
 
-    setInitialEvents((prevEvents) => [...prevEvents, ...events]); // [] aux: ver acá tmb, si no está duplicando
+    // Actualiza los initial events (del fetch + asignaciones manuales) con lo de Resultados+ModoEdición
+    // Se pisa directamente xq events ya incluía a initialEvents (+ posteriores posibles modificaciones)
+    setInitialEvents(events);
   };
 
   const handleSelectSlot = ({ start, end }) => {
@@ -511,7 +509,6 @@ const Dates = ({setSelectedMenu}) => {
 
       // Guardar el intervalo seleccionado (clickeado)
       setSelectedSlot({ start , end });
-      console.log("--- selectedSlot:", selectedSlot);
       
       setModalOpen(true); // Abrir el modal para confirmar
     }
@@ -526,9 +523,14 @@ const Dates = ({setSelectedMenu}) => {
 
   const handleDeleteEvent = async () => {
     if (eventToDelete) {
+      // La UI de este modo edición no permite 2 a la misma hora, pero con el group_id
+      // nos aseguramos de eliminar el correcto (por si el algoritmo así lo arrojara)
       const updatedEvents = events.filter(
-        (event) =>
-          event.start !== eventToDelete.start || event.end !== eventToDelete.end
+        (event) => (
+          event.start !== eventToDelete.start ||
+          event.end !== eventToDelete.end ||
+          event.result.group_id !== eventToDelete.result.group_id
+        )
       );
       setConfirmDeleteOpen(false);
       setEvents(updatedEvents);
@@ -543,7 +545,6 @@ const Dates = ({setSelectedMenu}) => {
     // Crea un evento (una asignación), solo la setea y cierra el dialog    
     // El selectSlot no es de item, es el slot en que clickeaste (en él querés ubicar al equipo)
     if (selectedSlot && item?.team) {
-      console.log("--- selectedSlot, veamos:", selectedSlot);
       const teamTutor = tutors.find(
         (t) =>
           t.tutor_periods &&
@@ -565,8 +566,6 @@ const Dates = ({setSelectedMenu}) => {
 
       // Ahora sí llamamos a la función
       const selectedRealUtc = formatUpdatedDateTime(datePart, hourPart);
-      console.log("---- selectedRealUtc:", selectedRealUtc);
-      console.log("---- selectedSlot:", selectedSlot);
       
       const newEvent = { //
         title: `Equipo ${item?.team.group_number} - Tutor ${getTutorNameByTutorId(
@@ -584,16 +583,20 @@ const Dates = ({setSelectedMenu}) => {
           tutor_id: teamTutor.id,
         },
       };
-      setEvents((prevEvents) => [...prevEvents, newEvent]); // [] Aux: Acá es donde duplica los eventos sin importarle nada (arreglar esto)
+      // El modo edición no me deja agregar dos eventos a la misma hora,
+      // ni confirmar resultados con mismo equipo en horas distintas, por lo que esto No duplica
+      setEvents((prevEvents) => [...prevEvents, newEvent]);
       setModalOpen(false);
-
-      console.log("--- newEvent, veamoss:", newEvent);
-      console.log("--- events, veamoss:", events);
     }
   };
-  console.log("--- events, cada tanto:", events);
-  console.log("--- initialEvents, cada tanto:", initialEvents);
-  
+
+  const teamsWithAssignmMsg = () => {
+    const len = initialEvents.length;
+    if (len == 0) return "No se encontraron asignaciones de fechas para equipos.";
+    if (len == 1) return `Se encontraron asignaciones para 1 equipo.`;
+    return `Se encontraron asignaciones para ${initialEvents.length} equipos.`;
+  };
+
   return (
     <Box sx={{ padding: 3 }}>
       <Grid container spacing={2}>
@@ -656,7 +659,13 @@ const Dates = ({setSelectedMenu}) => {
       </Grid>
 
       {/* Sección de Tabla con resultados (Calendario grande) y Botón a la derecha */}
-      {/* El cartel de edición, similar al de agregar, se llama dentro de CalendarSection */}
+      {/* El cartel de edición, similar al de agregar, se llama dentro de CalendarSection */}      
+      <Grid item xs={12} md={12} sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 2 }}>     
+        <InfoOutlinedIcon sx={{ color: "#0288d1" }} />
+        <Typography variant="body1" sx={{ textAlign: "justify" }}>
+          {teamsWithAssignmMsg()}
+        </Typography>
+      </Grid>
       <Grid item xs={12}>
         <CalendarSection
           events={initialEvents}

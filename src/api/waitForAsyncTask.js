@@ -1,4 +1,3 @@
-import axios from "axios";
 import * as Sentry from "@sentry/react";
 import { io } from "socket.io-client";
 
@@ -49,7 +48,7 @@ export const waitForAsyncTask = async function (task_id, token) {
 
         socket.on("taskstatus", (data) => {
           console.log("Status de la tarea", data);
-          resolve({success: data.status == "success", result: data.result});
+          resolve({success: data.status === "success", result: data.result});
         });
 
         socket.on("disconnect", () => {

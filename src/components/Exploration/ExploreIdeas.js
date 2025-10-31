@@ -5,12 +5,21 @@ import MySnackbar from "../UI/MySnackBar";
 import { Root, Title } from "../../components/Root";
 import { getPeriodIdeas, editIdeaContent, editIdeaStatus } from "../../api/ideas";
 import { EditIdeaModal, EditType } from "./EditIdeaModal";
+import SubmitButton from "../../components/Buttons/SubmitButton";
+import { EditButton } from "../Buttons/CustomButtons"
+import { useNavigate } from "react-router-dom";
+import { getGroupByIdSimple } from "../../api/getGroupById";
 
 const ExploreIdeas = () => {
+  const navigate = useNavigate();
+  const handleNavigation = (url) => {
+    navigate(url);
+  };
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
 
   const [ideas, setIdeas] = useState([]);
+  const [team, setTeam] = useState(null);
   const [loading, setLoading] = useState(false);
   const [editingIdea, setEditingIdea] = useState();
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -30,8 +39,12 @@ const ExploreIdeas = () => {
     const fetchIdeas = async () => {
       try {
         setLoading(true);
-        const response = await getPeriodIdeas(period.id, user);        
+        const response = await getPeriodIdeas(user.period_id, user);        
         setIdeas(response);
+        if (user.temporal_role === 'student' && !!user.group_id && user.group_id != 0) {
+          const team = await getGroupByIdSimple(user, user.group_id)
+          setTeam(team)
+        }
       } catch (error) {
         console.error("Error al obtener las ideas del cuatrimestre", error);
         setNotification({
@@ -110,9 +123,24 @@ const ExploreIdeas = () => {
             Aún no hay ideas propuestas por estudiantes este cuatrimestre.
           </Alert>
         )}
-        {/* Renderizado de ideas */}  
+        {/* Renderizado de ideas */}
+        <SubmitButton
+          url="/propose-idea"
+          title="Proponer Idea"
+          width="100%"
+          handleSubmit={() => handleNavigation("/propose-idea")}
+          disabled={team && team.pre_report_date == null}
+        />
+        <SubmitButton
+          url="/public"
+          title="Ver proyectos anteriores"
+          width="100%"
+          handleSubmit={() => handleNavigation("/public")}
+          disabled={team && team.pre_report_date == null}
+          variant='outlined'
+        />
         {ideas?.map((idea) => (
-          <Box key={idea?.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2 }}>
+          <Box key={idea?.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2}}>
             {/* Botón en mismo renglón que título */}
             <Box
               sx={{ 
@@ -120,6 +148,7 @@ const ExploreIdeas = () => {
                 gap: 2,
                 justifyContent: 'space-between',
                 alignItems: 'center',
+                marginBottom: '1rem'                
               }}
             >
               <Typography variant="subtitle1" fontWeight="bold">               
@@ -127,13 +156,13 @@ const ExploreIdeas = () => {
               </Typography>
               
               {isMyIdea(idea) && (
-                <Button
-                  onClick={() => {setEditingIdea(idea); setOpenEditModal(true)}}
-                  style={{ backgroundColor: "#e0711d", color: "white" }} //botón naranja
-                  sx={{ ml: "auto" }}
-                >
-                  Editar
-                </Button>
+                <EditButton
+                  onClick={() => {
+                    setEditingIdea(idea);
+                    setOpenEditModal(true)
+                  }}
+                  sx={{ml: "auto"}} // a la derecha
+                />
               )}
             </Box>
 
@@ -144,14 +173,16 @@ const ExploreIdeas = () => {
             </Typography>
             <Typography variant="body2">
               Equipo: {idea?.full_team ? "Completo" : "Aún buscando integrantes"} {""}
-              <Link
-                component="span"
-                onClick={() => {setEditingIdea(idea); setOpenChangeStatusModal(true)}}
-                underline="always"
-                sx={{ color: "grey", fontWeight: "bold", cursor: "pointer"}}
-              >
-                Cambiar
-              </Link>.
+              {isMyIdea(idea) && (
+                <Link
+                  component="span"
+                  onClick={() => {setEditingIdea(idea); setOpenChangeStatusModal(true)}}
+                  underline="always"
+                  sx={{ color: "grey", fontWeight: "bold", cursor: "pointer"}}
+                >
+                  Cambiar
+                </Link>
+              )}
             </Typography>
           </Box>        
         ))}

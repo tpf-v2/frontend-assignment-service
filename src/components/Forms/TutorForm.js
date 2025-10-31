@@ -1,18 +1,9 @@
-import React, { useState } from 'react';
-import { Box, Button, Container, Paper, MenuItem, FormControl, InputLabel, Select, Chip } from '@mui/material';
-import { styled } from '@mui/system';
+import { useState } from 'react';
+import { Box, Container, MenuItem, FormControl, InputLabel, Select, Chip } from '@mui/material';
 import { TitleSimple } from '../../styles/Titles';
+import { Root, ButtonSimple } from '../Root';
 
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
-
+const ButtonStyled = ButtonSimple;
 const Title = TitleSimple;
 
 const topics = ['Álgebra', 'Cálculo', 'Física', 'Química', 'Probabilidad', 'Estadística'];

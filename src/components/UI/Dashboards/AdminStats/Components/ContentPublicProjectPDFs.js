@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import { FlexGrowTitle } from "../../../../../styles/Titles";
-
+import { useState } from "react";
 const Title = FlexGrowTitle;
 
 const ContentPublicPdfProjects = ({
@@ -20,6 +20,7 @@ const ContentPublicPdfProjects = ({
   downloadFile,
   projectType,
 }) => {
+  const [downloading, setDownloading] = useState(null)
   if (loadingProjects) {
     return (
       <Box
@@ -50,9 +51,15 @@ const ContentPublicPdfProjects = ({
                       <TableRow key={index}>
                         <TableCell>
                           <IconButton
-                            onClick={() => downloadFile(entrega.project.id, entrega.group_number, entrega.period_id)}
+                            onClick={async () => {
+                              console.log("Not Done")
+                              setDownloading(entrega.project.id)
+                              await downloadFile(entrega.project.id, entrega.group_number, entrega.period_id)
+                              setDownloading(null)
+                              console.log("Done")
+                            }}
                           >
-                          <DownloadIcon />
+                          {(downloading === entrega.project.id) ? <CircularProgress /> : (<DownloadIcon />)}
                           </IconButton>
                         </TableCell>
                         <TableCell style={{overflowWrap: "anywhere"}}>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { HashRouter, Route, Routes, Navigate } from 'react-router-dom';
 import TutorForm from './components/Forms/TutorForm';
 import AddTopicForm from './components/Forms/AddTopicForm';
@@ -23,6 +22,7 @@ import TutorDashboardView from './views/Tutor/TutorDashboardView';
 import UploadView from './views/UploadView';
 import CuatrimestreConfig from './components/UI/CuatrimestreConfig';
 import HomeView from './views/HomeView';
+import StudentDeliveryView from './views/Student/StudentDeliveryView';
 import LoginView from './views/LoginView';
 import ForgotPasswordView from './views/ForgotPasswordView';
 import ConfirmEmailView from './views/ConfirmEmailView';
@@ -33,6 +33,7 @@ import StudentForm from './components/Forms/StudentForm';
 import ProposeIdea from './components/Forms/ProposeIdea';
 
 import ExploreIdeas from './components/Exploration/ExploreIdeas';
+import TutorEmails from './components/Exploration/TutorEmails';
 import StudentAvailabilityView from './views/Student/StudentAvailabilityView';
 import { setStudents } from './redux/slices/studentsSlice';
 import { setTutors } from './redux/slices/tutorsSlice';
@@ -96,6 +97,7 @@ const App = () => {
             <Route path="/confirm-email" element={<ConfirmEmailView />} />
             <Route path="/reset-password" element={<ResetPasswordView />} />
             <Route path="/home" element={<HomeView />} />
+            <Route path="/deliveries" element={<ProtectedRoute><StudentDeliveryView /></ProtectedRoute>} />
             <Route path="/credits" element={<Credits />} />
             {/* <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} /> */}
             <Route path="/dashboard/:period" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />
@@ -112,7 +114,8 @@ const App = () => {
             <Route path="/upload/:projectType" element={<ProtectedRoute><UploadView /></ProtectedRoute>} />
             <Route path="/student-form" element={<ProtectedRoute><StudentForm /></ProtectedRoute>} />
             <Route path="/propose-idea" element={<ProtectedRoute><ProposeIdea /></ProtectedRoute>} />
-            <Route path="/explore/ideas" element={<ProtectedRoute><ExploreIdeas /></ProtectedRoute>} />
+            <Route path="/explore/ideas" element={<ProtectedRoute><ExploreIdeas /></ProtectedRoute>} />            
+            <Route path="/explore/tutor-emails" element={<ProtectedRoute><TutorEmails /></ProtectedRoute>} />
             <Route path="/tutor-form" element={<ProtectedRoute><TutorForm /></ProtectedRoute>} />
             <Route path="/tutor-cuatrimestre/:period" element={<ProtectedRoute><TutorDashboardView /></ProtectedRoute>} />
             <Route path="/admin-add-topic" element={<ProtectedRoute><AddTopicForm /></ProtectedRoute>} />

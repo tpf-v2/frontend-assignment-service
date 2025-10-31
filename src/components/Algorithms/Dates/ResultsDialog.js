@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Dialog,
   DialogTitle,
@@ -94,9 +93,8 @@ const ResultsDialog = ({
         dividers
         sx={{ maxHeight: "90vh", backgroundColor: "#f4f6f8" }}
       >
-        <Typography>
-        Se obtuvieron asignaciones para {events.length} equipos.
-        </Typography>
+        {/* To-Do: acá sería bueno decir acá también cuántos equipos tienen fecha, pero por cómo afecta el
+            modo de edición a los events, eso no es posible xq termina dando información errónea. */}
         <CalendarStyled
           messages = {{next: "Siguiente",previous: "Atrás",today: "Hoy"}}
           localizer={localizer}

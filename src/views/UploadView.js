@@ -1,23 +1,18 @@
-
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import UploadFile from "../components/UploadFile";
 import ChangeDescription from "../components/ChangeDescription";
 import { getGroupById } from "../api/getGroupById";
-import { styled } from "@mui/system";
+import { Root } from "../components/Root";
 import {
-  Paper,
   Container,
   Alert
 } from "@mui/material";
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
+
 const UploadView = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { projectType } = useParams();  // Extrae el projectType desde la URL
   const id = useSelector((state) => state.user.group_id);
   const period = useSelector((state) => state.period);
@@ -27,7 +22,11 @@ const UploadView = () => {
   useEffect(() => {
     const getGroup = async () => {
       try {
-        setGroup(await dispatch(getGroupById(user,id)))
+        if (id !== 0) {
+          setGroup(await dispatch(getGroupById(user,id)))
+        } else {
+          navigate("/")
+        }
         setLoading(false)
       } catch (error) {
         console.error("Error al obtener datos para el upload:", error);
@@ -62,27 +61,28 @@ const UploadView = () => {
 
 
   function getProjectDeliveredDate() {
-    if (projectType=="final-project") {
+    if (projectType==="final-project") {
       return group.final_report_date;
-    } else if (projectType=="initial-project") {
+    } else if (projectType==="initial-project") {
       return group.pre_report_date;
-    } else if (projectType=="intermediate-project") {
-      return group.intermediate_assignment_date;
-    } else if (projectType=="pps-report") {
+    } else if (projectType==="intermediate-project") {
+      return group.intermediate_assigment_date;
+    } else if (projectType==="pps-report") {
       return user.pps_report_date;
     }
   }
 
   function getProjectDeliveredMessage() {
-    if (projectType == "pps-report") {
-      return "Ya realizaste esta entrega el " + getProjectDeliveredDate().substring(0,10) + ".";
+    const date = getProjectDeliveredDate()
+    if (projectType === "pps-report") {
+      return "Ya realizaste esta entrega el " + date.substring(0,10) + ".";
     } else {
-      return "Tu equipo ya realizó esta entrega el " + getProjectDeliveredDate().substring(0,10) + ".";
+      return "Tu equipo ya realizó esta entrega el " + date.substring(0,10) + ".";
     }
   }
 
   function getProjectNotDeliveredMessage() {
-    if (projectType == "pps-report") {
+    if (projectType === "pps-report") {
       return "No realizaste esta entrega aún.";
     } else {
       return "Tu equipo no ha realizado esta entrega aún.";
@@ -94,20 +94,17 @@ const UploadView = () => {
 
   const isProjectActive = period[activeKey];
   let delivered = false;
-  if (group && projectType=="final-project" && !!group.final_report_date) {
+  if (group && projectType==="final-project" && !!group.final_report_date) {
     delivered = true;
-  }
-  if (group && projectType=="initial-project" && !!group.pre_report_date) {
+  } else if (group && projectType==="initial-project" && !!group.pre_report_date) {
     delivered = true;
-  }
-  if (group && projectType=="intermediate-project" && !!group.intermediate_assigment_date) {
+  } else if (group && projectType==="intermediate-project" && !!group.intermediate_assigment_date) {
     delivered = true;
-  } else if (projectType=="pps-report" && !!user.pps_report_date) {
+  } else if (projectType==="pps-report" && !!user.pps_report_date) {
     delivered = true;
   }
 
   let msg = delivered ? getProjectDeliveredMessage() : getProjectNotDeliveredMessage()
-  // TODO: poner spinning circle al cargar el mensaje "Tu equipo ya entregó"
   const ownershipType = ownershipTypeMap[projectType];
   const hasProjectTitle = hasProjectTitleMap[projectType];
 
@@ -121,7 +118,7 @@ const UploadView = () => {
       )
       }
       {
-        (delivered && projectType == "final-project") ? <ChangeDescription projectType={"final-project"} headerInfo={null} user={user} group={group}/> : null
+        (delivered && projectType === "final-project") ? <ChangeDescription projectType={"final-project"} headerInfo={null} user={user} group={group}/> : null
       }
       </Root>
     </Container>

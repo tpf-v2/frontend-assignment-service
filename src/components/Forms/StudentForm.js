@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Typography,
   TextField,
   Button,
   Container,
-  Paper,
   FormControl,
   InputLabel,
   Select,
@@ -18,7 +17,6 @@ import {
   RadioGroup,
   FormControlLabel,
 } from "@mui/material";
-import { styled } from "@mui/system";
 import { sendGroupForm } from "../../api/sendGroupForm";
 import { getStudents } from "../../api/handleStudents";
 import { getTopics } from "../../api/handleTopics";
@@ -27,26 +25,13 @@ import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { NumericFormat } from "react-number-format";
 import ClosedAlert from "../ClosedAlert";
-import { TitleSimple } from "../../styles/Titles";
-
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
-
-const Title = TitleSimple;
+import { Root, Title, ButtonStyled } from "../Root";
 
 const StudentForm = () => {
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
-
   const [formData, setFormData] = useState({
-    uid: user.id,
+    uid: user.student_number,
     uid2: undefined,
     uid3: undefined,
     uid4: undefined,
@@ -210,7 +195,7 @@ const StudentForm = () => {
     <Container maxWidth="sm">
       {period.form_active ? (
         <Root>
-          <Title variant="h5">Formulario de Equipo</Title>
+          <Title variant="h5" align= "center">Formulario de Equipo</Title>
           {submitSuccess && (
             <Alert severity="success">
               Gracias por enviar el formulario de equipo.
@@ -403,8 +388,8 @@ const StudentForm = () => {
                 </>
               )}
   
-              <ButtonStyled variant="contained" color="primary" type="submit">
-                Enviar Formulario
+              <ButtonStyled variant="contained" color="primary" type="submit" align="right">
+                Enviar
               </ButtonStyled>
             </form>
           )}

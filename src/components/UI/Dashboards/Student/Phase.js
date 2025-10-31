@@ -1,7 +1,7 @@
-import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import Milestone from './Milestone';
+import { Alert } from '@mui/material';
 
 const PhaseContainer = styled(Box)(({ theme }) => ({
   border: '2px solid #b8b6b6',
@@ -38,14 +38,18 @@ const Circle = styled(Box)(({ completed }) => ({
 }));
 
 const MilestoneContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-evenly',
+  display: 'grid',
+  gridAutoFlow: 'column',
+  gridAutoColumns: '1fr',
   marginTop: theme.spacing(2),
+  gap: "1em"
 }));
 
-const Phase = ({ phase, tasks, circle }) => {
+const Phase = ({ phase, tasks, circle, description }) => {
   const allTasksCompleted = tasks.every((task) => task.completed);
-
+  if (!description){
+    description=""
+  }
   return (
     <PhaseContainer>
       {circle && <Circle completed={allTasksCompleted} />}
@@ -55,9 +59,12 @@ const Phase = ({ phase, tasks, circle }) => {
       </Typography>
       <MilestoneContainer>
         {tasks.map((task, index) => (
-          <Milestone key={index} title={task.title} completed={task.completed} />
+          <Milestone key={index} title={task.title} completed={task.available} url={ task.available ? (task.completed ? task.urlCompleted : task.urlNotCompleted) : null} />
         ))}
+      {!!description && <Alert severity="info">{description}</Alert>}
       </MilestoneContainer>
+      <Box>
+      </Box>
     </PhaseContainer>
   );
 };

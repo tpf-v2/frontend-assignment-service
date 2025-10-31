@@ -2,13 +2,8 @@ import { useState } from 'react';
 import { TextField, Button, Paper } from '@mui/material';
 import { styled } from '@mui/system';
 import { TitleSimple } from "../../styles/Titles";
-
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-  marginBottom: theme.spacing(5),
-}));
+import { RootMargin } from '../Root';
+const Root = RootMargin;
 
 const ButtonStyled = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),

@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { styled } from "@mui/system";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setTopics } from "../../redux/slices/topicsSlice";
 import { setTutors } from "../../redux/slices/tutorsSlice";
 import { getTableData } from "../../api/handleTableData";
 import { getDashboardData } from "../../api/dashboardStats";
-import { Container, Box, Grid, Paper } from "@mui/material";
+import { Container, Box, Grid } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
 import ContentInicio from "../../components/UI/Dashboards/AdminStats/Components/ContentInicio";
 import ContentInscripciones from "../../components/UI/Dashboards/AdminStats/Components/ContentInscripciones";
@@ -20,14 +19,9 @@ import { downloadProject, getProjects, getPPSReports } from "../../api/handlePro
 import AvailabilityCalendarAdmin from "../../components/AvailabilityCalendarAdmin";
 import Dates from "../../components/Algorithms/Dates";
 import { setStudents } from "../../redux/slices/studentsSlice";
+import { RootWhite } from "../../components/Root";
 // Estilos
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  padding: theme.spacing(2),
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: "#ffffff",
-  boxShadow: theme.shadows[3],
-}));
+const Root = RootWhite;
 
 const DashboardView = () => {
   const navigate = useNavigate();

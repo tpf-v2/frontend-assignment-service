@@ -1,32 +1,21 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Container,
   TextField,
-  Button,
   Typography,
   Box,
-  Paper,
   Divider,
 } from "@mui/material";
 import { togglePasswordVisibility } from "./PasswordVisibility.js";
 import { Link, useNavigate } from "react-router-dom";
-import { styled } from "@mui/system";
 import BackgroundContainer from "../components/UI/BackgroundContainer.js";
 import { authenticateUser } from "../api/auth.js"; // Importa las funciones desde auth.js
 import { useDispatch, useSelector } from "react-redux";
 import MySnackbar from "../components/UI/MySnackBar.js";
 import { TitleSimple } from "../styles/Titles.js";
+import { Root, ButtonSimple } from "../components/Root.js";
 
-const Root = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(10),
-  padding: theme.spacing(4),
-  boxShadow: theme.shadows[10],
-}));
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-}));
-
+const ButtonStyled = ButtonSimple;
 const Title = TitleSimple;
 
 const LoginView = () => {
