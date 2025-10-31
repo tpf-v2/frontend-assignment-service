@@ -230,7 +230,11 @@ const ContentPdfProjects = ({
 
               {selectedNoEntregaron && (
                 <>                
-                {teams.filter((t) => !t.pre_report_date).map((team) => (
+                {teams.filter((t) =>
+                  projectType === "initial"
+                  ? !t.pre_report_date
+                  : !t.final_report_date
+                  ).map((team) => (
 
                   <TableRow key={team.id}>
                     <TableCell>{team.group_number}</TableCell>
