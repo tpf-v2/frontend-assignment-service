@@ -43,7 +43,7 @@ const ChangeDescription = ({ projectType, headerInfo, user, group }) => {
     setDescriptionError("");
     setLoading(true);
     try {
-      const upload = await uploadDescription(user, description)
+      await uploadDescription(user, description)
       setResponseMessage("Descripción publicada."); // TODO: revisar response code
       setIsSuccess(true);
       setLoading(false);
@@ -186,3 +186,5 @@ const ChangeDescription = ({ projectType, headerInfo, user, group }) => {
 };
 
 export default ChangeDescription;
+
+
