@@ -6,7 +6,6 @@ import {
   Container,
   Typography,
   Box,
-  Paper,
   Grid,
   List,
   Accordion,

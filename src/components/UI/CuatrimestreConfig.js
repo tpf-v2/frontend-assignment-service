@@ -99,7 +99,7 @@ const CuatrimestreConfig = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Disponibilidades de presentación</TableCell> 
+              <TableCell>Disponibilidades de Presentación</TableCell> 
               <TableCell align="right">
                 <Switch
                   checked={settings.presentation_dates_available}

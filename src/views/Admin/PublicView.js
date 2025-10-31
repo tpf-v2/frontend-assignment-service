@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { styled } from "@mui/system";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Container, Box, Grid, Paper } from "@mui/material";
+import { Container, Box, Grid } from "@mui/material";
 import { downloadProject, getPublicProjects } from "../../api/handleProjects";
 import ContentPublicPdfProjects from "../../components/UI/Dashboards/AdminStats/Components/ContentPublicProjectPDFs";
 import { RootWhite } from "../../components/Root";
@@ -39,6 +38,7 @@ const PublicPDFView = () => {
         await downloadProject(groupId, user, _period, "final-project", groupNumber);
       } catch (error) {
         console.error("Error al descargar el archivo:", error);
+        return "failure"
       }
     };
 

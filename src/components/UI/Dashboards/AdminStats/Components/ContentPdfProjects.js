@@ -37,6 +37,7 @@ const ContentPdfProjects = ({
   const user = useSelector((state) => state.user);
   const period = useSelector((state) => state.period);
   const [selectedReviewers, setSelectedReviewers] = useState({});
+  const [downloading, setDownloading] = useState(null)
   const dispatch = useDispatch();
 
   const [selectedEntregaron, setSelectedEntregaron] = useState(true);
@@ -212,9 +213,13 @@ const ContentPdfProjects = ({
                     )}
                     <TableCell>
                       <IconButton
-                        onClick={() => downloadFile(getTeam(entrega.name), getTeamNumber(entrega.name))}
+                        onClick={async () => {
+                          setDownloading(entrega.name)
+                          await downloadFile(getTeam(entrega.name), getTeamNumber(entrega.name))
+                          setDownloading(null)
+                        }}
                       >
-                        <DownloadIcon />
+                        {(downloading === entrega.name) ? <CircularProgress /> : (<DownloadIcon />)}
                       </IconButton>
                     </TableCell>
                   </TableRow>

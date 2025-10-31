@@ -5,7 +5,7 @@ import { setTopics } from "../../redux/slices/topicsSlice";
 import { setTutors } from "../../redux/slices/tutorsSlice";
 import { getTableData } from "../../api/handleTableData";
 import { getDashboardData } from "../../api/dashboardStats";
-import { Container, Box, Grid, Paper } from "@mui/material";
+import { Container, Box, Grid } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
 import ContentInicio from "../../components/UI/Dashboards/AdminStats/Components/ContentInicio";
 import ContentInscripciones from "../../components/UI/Dashboards/AdminStats/Components/ContentInscripciones";
