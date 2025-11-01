@@ -19,6 +19,7 @@ const ExploreIdeas = () => {
   const period = useSelector((state) => state.period);
 
   const [ideas, setIdeas] = useState([]);
+  const [userRoleAndPeriod, setUserRoleAndPeriod] = useState(undefined);
   const [team, setTeam] = useState(null);
   const [loading, setLoading] = useState(false);
   const [editingIdea, setEditingIdea] = useState();
@@ -36,13 +37,30 @@ const ExploreIdeas = () => {
   };
 
   useEffect(() => {
+    const getUserRole = async () => {
+      if (!user || !period) return null;
+
+      if (user.temporal_role === 'student') {
+        setUserRoleAndPeriod({role: 'student', period_id: user.period_id});
+      } else {
+        setUserRoleAndPeriod({role: 'tutor', period_id: period.id}); // aux: distinguir entre admin y tutor ]
+      }
+        
+    };
+
+    getUserRole();
+  }, [user, period]);
+
+  useEffect(() => {
     const fetchIdeas = async () => {
       try {
+        if (!period || !user || !userRoleAndPeriod) return null;
+        console.log("--- period:", period);
         setLoading(true);
-        const response = await getPeriodIdeas(user.period_id, user);        
+        const response = await getPeriodIdeas(userRoleAndPeriod.period_id, user);
         setIdeas(response);
         // Obtener equipo para usarlo en los botones
-        if (user.temporal_role === 'student' && !!user.group_id && user.group_id != 0) {
+        if (user.temporal_role === 'student' && !!user.group_id && user.group_id !== 0) {
           const team = await getGroupByIdSimple(user, user.group_id);
           setTeam(team);
         }
@@ -60,7 +78,7 @@ const ExploreIdeas = () => {
     };
 
     fetchIdeas();
-  }, [user, period]);
+  }, [user, userRoleAndPeriod]);
 
   if (loading)
     return (
