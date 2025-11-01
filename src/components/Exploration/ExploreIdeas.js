@@ -125,13 +125,15 @@ const ExploreIdeas = () => {
           </Alert>
         )}
         {/* Botones para estudiantes*/}
-        <SubmitButton
-          url="/propose-idea"
-          title="Proponer Idea"
-          width="100%"
-          handleSubmit={() => handleNavigation("/propose-idea")}
-          disabled={team && team.pre_report_date == null} // [VER]: en este punto no tienen equipo!
-        />
+        {user.temporal_role === 'student' &&
+          <SubmitButton
+            url="/propose-idea"
+            title="Proponer Idea"
+            width="100%"
+            handleSubmit={() => handleNavigation("/propose-idea")}
+            disabled={team && team.pre_report_date == null}
+          /> // [VER]: en este punto no tienen equipo! --> Ok, y da disabled=false, correcto.
+        }
         <SubmitButton
           url="/public"
           title="Ver proyectos anteriores"

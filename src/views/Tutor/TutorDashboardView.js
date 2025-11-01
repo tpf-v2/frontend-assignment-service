@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
 import { useSelector } from "react-redux";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Container,
   Typography,
@@ -25,13 +24,16 @@ import "react-datepicker/dist/react-datepicker.css"; // Estilos por defecto
 import { getMyGroupsToReview } from "../../api/getMyGroupsToReview";
 import TutorEvents from "../../components/UI/Dashboards/Tutor/TutorEvents";
 import { getTutorEvents } from "../../api/getTutorEvents";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HomeIcon from '@mui/icons-material/Home';
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import TodayIcon from '@mui/icons-material/Today';
 import GroupsIcon from '@mui/icons-material/Groups';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
+import { Lightbulb } from "@mui/icons-material";
 import { Title, TitleTop } from "../../styles/Titles";
 import { RootWhite } from "../../components/Root";
+import ExploreIdeas from "../../components/Exploration/ExploreIdeas";
 // Estilos
 const Root = RootWhite;
 
@@ -267,6 +269,7 @@ const transformEventData = (data) => {
     "Mis Equipos": <div>Contenido del Formulario de Fechas</div>,
     "Seleccionar Disponibilidad": <AvailabilityCalendar />,
     "Fechas de presentación": <TutorEvents events={events} loading={loadingEvents}></TutorEvents>,
+    Ideas: <ExploreIdeas />,
     Revisiones: selectedTeamReview ? (
       <GroupReview group={selectedTeamReview} />
     ) : (
@@ -311,6 +314,8 @@ const transformEventData = (data) => {
               <Title variant="h3">{prettyPeriodYear}</Title>
               <SidebarList>
                 <ListItem label="Inicio" icon={<HomeIcon />} menu="Inicio" />
+                <Divider />                
+                <ListItem label="Ideas de Estudiantes" icon={<Lightbulb />} menu="Ideas" />
                 <Divider />
                 {/* Asignaciones - Mis Equipos */}
                 <Accordion defaultExpanded>
