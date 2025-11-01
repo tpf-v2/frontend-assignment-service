@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Container, Box, CircularProgress, Button, Link, Alert } from "@mui/material";
+import { Typography, Container, Box, CircularProgress, Link, Alert, Grid } from "@mui/material";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { Root, Title } from "../../components/Root";
@@ -19,6 +19,7 @@ const ExploreIdeas = () => {
   const period = useSelector((state) => state.period);
 
   const [ideas, setIdeas] = useState([]);
+  const [userRoleAndPeriod, setUserRoleAndPeriod] = useState(undefined);
   const [team, setTeam] = useState(null);
   const [loading, setLoading] = useState(false);
   const [editingIdea, setEditingIdea] = useState();
@@ -36,14 +37,32 @@ const ExploreIdeas = () => {
   };
 
   useEffect(() => {
+    const getUserRole = async () => {
+      if (!user || !period) return null;
+
+      if (user.temporal_role === 'student') {
+        setUserRoleAndPeriod({role: 'student', period_id: user.period_id});
+      } else {
+        setUserRoleAndPeriod({role: 'tutor', period_id: period.id}); // aux: distinguir entre admin y tutor ]
+      }
+        
+    };
+
+    getUserRole();
+  }, [user, period]);
+
+  useEffect(() => {
     const fetchIdeas = async () => {
       try {
+        if (!period || !user || !userRoleAndPeriod) return null;
+        console.log("--- period:", period);
         setLoading(true);
-        const response = await getPeriodIdeas(user.period_id, user);        
+        const response = await getPeriodIdeas(userRoleAndPeriod.period_id, user);
         setIdeas(response);
-        if (user.temporal_role === 'student' && !!user.group_id && user.group_id != 0) {
-          const team = await getGroupByIdSimple(user, user.group_id)
-          setTeam(team)
+        // Obtener equipo para usarlo en los botones
+        if (user.temporal_role === 'student' && !!user.group_id && user.group_id !== 0) {
+          const team = await getGroupByIdSimple(user, user.group_id);
+          setTeam(team);
         }
       } catch (error) {
         console.error("Error al obtener las ideas del cuatrimestre", error);
@@ -59,7 +78,7 @@ const ExploreIdeas = () => {
     };
 
     fetchIdeas();
-  }, [user, period]);
+  }, [user, userRoleAndPeriod]);
 
   if (loading)
     return (
@@ -123,22 +142,26 @@ const ExploreIdeas = () => {
             Aún no hay ideas propuestas por estudiantes este cuatrimestre.
           </Alert>
         )}
-        {/* Renderizado de ideas */}
-        <SubmitButton
-          url="/propose-idea"
-          title="Proponer Idea"
-          width="100%"
-          handleSubmit={() => handleNavigation("/propose-idea")}
-          disabled={team && team.pre_report_date == null}
-        />
-        <SubmitButton
-          url="/public"
-          title="Ver proyectos anteriores"
-          width="100%"
-          handleSubmit={() => handleNavigation("/public")}
-          disabled={team && team.pre_report_date == null}
-          variant='outlined'
-        />
+        {/* Botones para estudiantes*/}
+        <Grid item sx={{mb: 2}}>
+          {user.temporal_role === 'student' &&
+            <SubmitButton
+              url="/propose-idea"
+              title="Proponer Idea"
+              width="100%"
+              handleSubmit={() => handleNavigation("/propose-idea")}
+              disabled={team && team.pre_report_date == null} // (si no tienen equipo, da disabled=false, correcto)
+            />
+          }
+          <SubmitButton
+            url="/public"
+            title="Ver proyectos anteriores"
+            width="100%"
+            handleSubmit={() => handleNavigation("/public")}
+            variant='outlined'
+          />
+        </Grid>
+        {/* Renderizado de ideas */}        
         {ideas?.map((idea) => (
           <Box key={idea?.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2}}>
             {/* Botón en mismo renglón que título */}
