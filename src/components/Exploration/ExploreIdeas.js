@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Container, Box, CircularProgress, Button, Link, Alert } from "@mui/material";
+import { Typography, Container, Box, CircularProgress, Link, Alert, Grid } from "@mui/material";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
 import { Root, Title } from "../../components/Root";
@@ -143,24 +143,25 @@ const ExploreIdeas = () => {
           </Alert>
         )}
         {/* Botones para estudiantes*/}
-        {user.temporal_role === 'student' &&
+        <Grid item sx={{mb: 2}}>
+          {user.temporal_role === 'student' &&
+            <SubmitButton
+              url="/propose-idea"
+              title="Proponer Idea"
+              width="100%"
+              handleSubmit={() => handleNavigation("/propose-idea")}
+              disabled={team && team.pre_report_date == null} // (si no tienen equipo, da disabled=false, correcto)
+            />
+          }
           <SubmitButton
-            url="/propose-idea"
-            title="Proponer Idea"
+            url="/public"
+            title="Ver proyectos anteriores"
             width="100%"
-            handleSubmit={() => handleNavigation("/propose-idea")}
-            disabled={team && team.pre_report_date == null}
-          /> // [VER]: en este punto no tienen equipo! --> Ok, y da disabled=false, correcto.
-        }
-        <SubmitButton
-          url="/public"
-          title="Ver proyectos anteriores"
-          width="100%"
-          handleSubmit={() => handleNavigation("/public")}
-          //disabled={team && team.pre_report_date == null} // Aux: me parece que siempre pueden verlos, no hay condición
-          variant='outlined'
-        />
-        {/* Renderizado de ideas */}
+            handleSubmit={() => handleNavigation("/public")}
+            variant='outlined'
+          />
+        </Grid>
+        {/* Renderizado de ideas */}        
         {ideas?.map((idea) => (
           <Box key={idea?.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2}}>
             {/* Botón en mismo renglón que título */}
