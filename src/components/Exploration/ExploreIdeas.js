@@ -10,7 +10,7 @@ import { EditButton } from "../Buttons/CustomButtons"
 import { useNavigate } from "react-router-dom";
 import { getGroupByIdSimple } from "../../api/getGroupById";
 
-const ExploreIdeas = () => {
+const ExploreIdeas = ({containedStyle=true}) => {
   const navigate = useNavigate();
   const handleNavigation = (url) => {
     navigate(url);
@@ -127,6 +127,7 @@ const ExploreIdeas = () => {
   }
 
   return (
+    <>
     <Container maxWidth="md">
       <Root>
         <Title variant="h5" align="center">Ideas</Title>
@@ -211,6 +212,7 @@ const ExploreIdeas = () => {
         ))}
                       
       </Root>
+    </Container>
       {/* Modals para editar el contenido y el full_team */}
 
       <EditIdeaModal
@@ -246,7 +248,8 @@ const ExploreIdeas = () => {
         message={notification.message}
         status={notification.status}
       />
-    </Container>
+  </>
+    
   );
   
 };
