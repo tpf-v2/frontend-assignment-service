@@ -2,7 +2,7 @@
 // e irlos reemplazando de a poco para poder probar su funcionamiento y asegurar que no rompimos nada.
 
 import { styled } from "@mui/system";
-import { Paper, Button, Container } from "@mui/material";
+import { Paper, Button, Container, Box } from "@mui/material";
 import { TitleSimple } from "../styles/Titles";
 
 // Usados en varios forms de lado estudiante, ej Proponer Idea
@@ -49,4 +49,8 @@ export const Title = TitleSimple;
 
 export const ButtonSimple = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
+}));
+
+export const TopPaddedContainer = styled(Box)(({ theme }) => ({
+  paddingTop: theme.spacing(5),
 }));

@@ -269,7 +269,7 @@ const transformEventData = (data) => {
     "Mis Equipos": <div>Contenido del Formulario de Fechas</div>,
     "Seleccionar Disponibilidad": <AvailabilityCalendar />,
     "Fechas de presentación": <TutorEvents events={events} loading={loadingEvents}></TutorEvents>,
-    Ideas: <ExploreIdeas />,
+    Ideas: <ExploreIdeas containedStyle={false}/>,
     Revisiones: selectedTeamReview ? (
       <GroupReview group={selectedTeamReview} />
     ) : (
