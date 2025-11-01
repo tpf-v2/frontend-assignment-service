@@ -15,7 +15,7 @@ const ListItemStyled = styled(ListItemButton)(({ selected }) => ({
   },
 }));
 
-const StudentSidebar = ({ selectedMenu, handleNavigation, period }) => {
+const StudentSidebar = ({ selectedMenu, handleNavigation }) => {
   const ListItem = ({ label, icon, menu }) => (
     <ListItemStyled selected={selectedMenu === menu} onClick={() => handleNavigation(menu)}>
       <ListItemIcon>{icon}</ListItemIcon>

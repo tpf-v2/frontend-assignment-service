@@ -158,7 +158,7 @@ const StudentHomeView = () => {
         <Box sx={{ mb: 1 }} />
         {!loading && team.exhibition_date && <PresentationDateCard presentationDate={team.exhibition_date}/>}
         {!loading && (
-          <StudentSidebar selectedMenu={null} handleNavigation={handleNavigation} period={period} />
+          <StudentSidebar selectedMenu={null} handleNavigation={handleNavigation}/>
         )}
       </Box>
       <Box sx={{ flex: 2 }}>
