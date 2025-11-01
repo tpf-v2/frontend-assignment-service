@@ -41,9 +41,10 @@ const ExploreIdeas = () => {
         setLoading(true);
         const response = await getPeriodIdeas(user.period_id, user);        
         setIdeas(response);
+        // Obtener equipo para usarlo en los botones
         if (user.temporal_role === 'student' && !!user.group_id && user.group_id != 0) {
-          const team = await getGroupByIdSimple(user, user.group_id)
-          setTeam(team)
+          const team = await getGroupByIdSimple(user, user.group_id);
+          setTeam(team);
         }
       } catch (error) {
         console.error("Error al obtener las ideas del cuatrimestre", error);
@@ -123,22 +124,23 @@ const ExploreIdeas = () => {
             Aún no hay ideas propuestas por estudiantes este cuatrimestre.
           </Alert>
         )}
-        {/* Renderizado de ideas */}
+        {/* Botones para estudiantes*/}
         <SubmitButton
           url="/propose-idea"
           title="Proponer Idea"
           width="100%"
           handleSubmit={() => handleNavigation("/propose-idea")}
-          disabled={team && team.pre_report_date == null}
+          disabled={team && team.pre_report_date == null} // [VER]: en este punto no tienen equipo!
         />
         <SubmitButton
           url="/public"
           title="Ver proyectos anteriores"
           width="100%"
           handleSubmit={() => handleNavigation("/public")}
-          disabled={team && team.pre_report_date == null}
+          //disabled={team && team.pre_report_date == null} // Aux: me parece que siempre pueden verlos, no hay condición
           variant='outlined'
         />
+        {/* Renderizado de ideas */}
         {ideas?.map((idea) => (
           <Box key={idea?.id} sx={{ mb: 3, p: 2, border: "1px solid #ccc", borderRadius: 2}}>
             {/* Botón en mismo renglón que título */}
