@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Typography, Container, Box, CircularProgress, Link, Alert, Grid } from "@mui/material";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
-import { Root, Title } from "../../components/Root";
+import { Root, Title, TopPaddedContainer } from "../../components/Root";
 import { getPeriodIdeas, editIdeaContent, editIdeaStatus } from "../../api/ideas";
 import { EditIdeaModal, EditType } from "./EditIdeaModal";
 import SubmitButton from "../../components/Buttons/SubmitButton";
@@ -127,8 +127,7 @@ const ExploreIdeas = ({containedStyle=true}) => {
   }
 
   const content = (
-    <>
-      <Title variant="h5" align="center">Ideas</Title>
+    <>    
       <Typography>
       En este espacio se pueden ver las ideas propuestas por estudiantes de este cuatrimestre.
       Se muestra email de autores de las ideas, para facilitar el contacto para el armado de equipos.
@@ -213,15 +212,23 @@ const ExploreIdeas = ({containedStyle=true}) => {
 
   return (
     <>
-      {/* Estilo según prop */}
+      {/* Estilo según prop - True es caso estudiante y False caso Tutores */}
       {containedStyle
         ? (
           <Container maxWidth="md">
             <Root>
+              <Title variant="h5" align="center">Ideas</Title>
               {content}
             </Root>
           </Container>
-          ) : content
+          ) : (            
+            <TopPaddedContainer>
+              <Typography variant="h4" align="center" gutterBottom>
+                Ideas
+              </Typography>
+              {content}
+            </TopPaddedContainer>
+          )
       }
       {/* Modals para editar el contenido y el full_team */}
 
