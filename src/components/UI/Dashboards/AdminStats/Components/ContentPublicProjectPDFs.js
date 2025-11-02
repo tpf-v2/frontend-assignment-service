@@ -10,9 +10,8 @@ import {
   IconButton,
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
-import { FlexGrowTitle } from "../../../../../styles/Titles";
+import { FlexGrowSubtitle } from "../../../../../styles/Titles";
 import { useState } from "react";
-const Title = FlexGrowTitle;
 
 const ContentPublicPdfProjects = ({
   loadingProjects,
@@ -45,7 +44,7 @@ const ContentPublicPdfProjects = ({
               deliveries.length ? (
                 periods.map(period => (
                   <div>
-                    <Title variant="h4" padding="1em">{period.substring(2) + " - Cuatrimestre " + period[0] + "º"}</Title>
+                    <FlexGrowSubtitle padding="1em">{period.substring(2) + " - Cuatrimestre " + period[0] + "º"}</FlexGrowSubtitle>
                     {
                     deliveries.filter(delivery => delivery.period_id == period).map((entrega, index) => (
                       <TableRow key={index}>
