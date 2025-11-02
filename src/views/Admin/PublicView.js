@@ -51,8 +51,7 @@ const PublicPDFView = () => {
         delivery?.project?.students?.some(  // estudiantes
           (student) =>
             student.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            student.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            student.email?.toLowerCase().includes(searchTerm.toLowerCase()) // aux: no tienen email acá
+            student.last_name?.toLowerCase().includes(searchTerm.toLowerCase())
         ) ||
 
         delivery?.project?.tutor_name?.name.toLowerCase().includes(searchTerm.toLowerCase()) || // tutor
@@ -60,14 +59,11 @@ const PublicPDFView = () => {
         
         delivery?.project?.final_report_summary?.toLowerCase().includes(searchTerm.toLowerCase()) || // descripción
         
-        (delivery?.project?.topic  // tema (aux: tienen acá?)
-          ? delivery.project.topic.name?.toLowerCase().includes(searchTerm.toLowerCase())
-          : false) || // Filtrar por tema
+        // Campo no mostrado        
         String(delivery?.project?.group_number)
           .toLowerCase()
           .includes(searchTerm.toLowerCase())
     );
-    console.log("--- deliveries:", deliveries);
 
     const renderContent = () => {
       return (
