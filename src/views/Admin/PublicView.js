@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Container, Box, Grid } from "@mui/material";
+import { Container, Box, Grid, TextField, Title } from "@mui/material";
 import { downloadProject, getPublicProjects } from "../../api/handleProjects";
 import ContentPublicPdfProjects from "../../components/UI/Dashboards/AdminStats/Components/ContentPublicProjectPDFs";
-import { RootWhite } from "../../components/Root";
+import { RootWhite, TopPaddedContainer } from "../../components/Root";
+import { TitleSpaced } from "../../styles/Titles";
 // Estilos
 const Root = RootWhite;
 
@@ -13,6 +14,7 @@ const PublicPDFView = () => {
   const period = useParams().period;
   const [loadingFinalProjects, setLoadingFinalProjects] = useState(true);
   const [deliveries, setDeliveries] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const start = async () => {
@@ -41,11 +43,37 @@ const PublicPDFView = () => {
       }
     };
 
+    // Filtrar trabajos según el término de búsqueda
+    const filteredDeliveries = deliveries?.filter(
+      (project) =>
+        project?.final_report_title?.name.toLowerCase().includes(searchTerm.toLowerCase()) || // título
+        
+        project?.students?.some(  // estudiantes
+          (student) =>
+            student.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            student.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            student.email?.toLowerCase().includes(searchTerm.toLowerCase()) // aux: no tienen email acá
+        ) ||
+
+        project?.tutor_name?.name.toLowerCase().includes(searchTerm.toLowerCase()) || // tutor
+        project?.tutor_name?.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        
+        project?.final_report_summary?.last_name.toLowerCase().includes(searchTerm.toLowerCase()) || // descripción
+        
+        (project?.topic  // tema (aux: tienen acá?)
+          ? project.topic.name.toLowerCase().includes(searchTerm.toLowerCase())
+          : false) || // Filtrar por tema
+        String(project?.group_number)
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+    );
+    console.log("--- deliveries:", deliveries);
+
     const renderContent = () => {
       return (
         <ContentPublicPdfProjects
           loadingProjects={loadingFinalProjects}
-          deliveries={deliveries}
+          deliveries={filteredDeliveries}
           downloadFile={downloadFinalFile}
           projectType={"final"}
         />
@@ -61,6 +89,17 @@ const PublicPDFView = () => {
         }}
       >
       <Root>
+        <TopPaddedContainer>
+          <TitleSpaced variant="h4">Trabajos Anteriores</TitleSpaced>
+        </TopPaddedContainer>
+        <TextField
+          label="Buscar"
+          variant="outlined"
+          fullWidth
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          sx={{ marginBottom: 2 }}
+        />
         <Grid container spacing={3}>
           {/* Sidebar */}
           {/* Contenido */}
