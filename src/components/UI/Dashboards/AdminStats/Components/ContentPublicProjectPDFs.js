@@ -43,8 +43,8 @@ const ContentPublicPdfProjects = ({
           <TableBody>
             {
               deliveries.length ? (
-                periods.map(period => {
-                  return <div>
+                periods.map(period => (
+                  <div>
                     <Title variant="h4" padding="1em">{period.substring(2) + " - Cuatrimestre " + period[0] + "º"}</Title>
                     {
                     deliveries.filter(delivery => delivery.period_id == period).map((entrega, index) => (
@@ -59,7 +59,7 @@ const ContentPublicPdfProjects = ({
                               console.log("Done")
                             }}
                           >
-                          {(downloading === entrega.project.id) ? <CircularProgress /> : (<DownloadIcon />)}
+                            {(downloading === entrega.project.id) ? <CircularProgress /> : (<DownloadIcon />)}
                           </IconButton>
                         </TableCell>
                         <TableCell style={{overflowWrap: "anywhere"}}>
@@ -69,9 +69,9 @@ const ContentPublicPdfProjects = ({
                           }
                           </h2>
                           <p>{
-                            "Integrantes: " + entrega.project.students.map((student) => {
-                              return student.name + " " + student.last_name
-                            }).join(", ")
+                            "Integrantes: " + entrega.project.students.map((student) => (
+                              student.name + " " + student.last_name
+                            )).join(", ")
                           }</p>
                           <p>{ "Tutor: " + entrega.project.tutor_name.name + " " + entrega.project.tutor_name.last_name }</p>
                           <p style={entrega.project.final_report_summary ? {} : { fontStyle: 'italic' }}>
@@ -88,7 +88,7 @@ const ContentPublicPdfProjects = ({
 
                   </div>
 
-                })
+                ))
               ) : <h2 style={{padding: "20px", fontStyle: 'italic'}}>No se encontraron entregas.</h2>
             }
           </TableBody>
