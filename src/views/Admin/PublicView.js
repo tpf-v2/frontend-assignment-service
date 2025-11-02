@@ -10,15 +10,14 @@ const Root = RootWhite;
 
 const PublicPDFView = () => {
   const user = useSelector((state) => state.user);
-  const _param_period = useParams().period;
-  const [period, setPeriod] = useState(_param_period); // Da warning set no usado; debería ser const period = seState(_param_period);
+  const period = useParams().period;
   const [loadingFinalProjects, setLoadingFinalProjects] = useState(true);
   const [deliveries, setDeliveries] = useState(null);
-
 
   useEffect(() => {
     const start = async () => {
       setLoadingFinalProjects(true);
+      // Period undefined trae todos los projects
       const finalProjectsData = await getPublicProjects(
         user,
         period
@@ -31,7 +30,7 @@ const PublicPDFView = () => {
       setLoadingFinalProjects(false);
     };
     start()
-    }, []);
+    }, [period]);
 
     const downloadFinalFile = async (groupId, groupNumber, _period) => {
       try {
