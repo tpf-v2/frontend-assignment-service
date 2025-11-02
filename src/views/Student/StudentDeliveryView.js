@@ -6,6 +6,8 @@ import { getGroupById } from "../../api/getGroupById";
 import StudentOverview from "../../components/UI/Dashboards/Student/StudentOverview";
 import StudentInfo from "../../components/UI/Dashboards/Student/StudentInfo";
 import ClosedAlert from "../../components/ClosedAlert";
+import PresentationDateCard from "../../components/UI/Dashboards/Student/PresentationDateCard";
+import StudentSidebar from "./StudentSidebar";
 
 const StudentDeliveryView = () => {
     const dispatch = useDispatch();
@@ -27,11 +29,13 @@ const StudentDeliveryView = () => {
         navigate("/")
     }
     let studentOverview = loading ? <CircularProgress/> : ((!!team && !!user.group_id) ? (<StudentOverview group_id={user.group_id} team={team} />) : <ClosedAlert message="No tienes equipo aún."></ClosedAlert>)
-    return (<Container maxWidth="lg" sx={{ display: "flex", mt: 5 }}>
+    return (
+        <Container maxWidth="lg" sx={{ display: "flex", mt: 5 }}>
         <Box sx={{ flex: 1, mr: 8, mt: 8 }}>
         <StudentInfo />
         <Box sx={{ mb: 1 }} />
-       
+        {!loading && team.exhibition_date && <PresentationDateCard presentationDate={team.exhibition_date}/>}
+        {<StudentSidebar selectedMenu={null} handleNavigation={navigate} />}
         </Box>
         <Box sx={{ flex: 2 }}>
         <Box>
