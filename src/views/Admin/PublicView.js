@@ -45,25 +45,25 @@ const PublicPDFView = () => {
 
     // Filtrar trabajos según el término de búsqueda
     const filteredDeliveries = deliveries?.filter(
-      (project) =>
-        project?.final_report_title?.name.toLowerCase().includes(searchTerm.toLowerCase()) || // título
+      (delivery) =>
+        delivery?.project?.final_report_title?.toLowerCase().includes(searchTerm.toLowerCase()) || // título
         
-        project?.students?.some(  // estudiantes
+        delivery?.project?.students?.some(  // estudiantes
           (student) =>
             student.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             student.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             student.email?.toLowerCase().includes(searchTerm.toLowerCase()) // aux: no tienen email acá
         ) ||
 
-        project?.tutor_name?.name.toLowerCase().includes(searchTerm.toLowerCase()) || // tutor
-        project?.tutor_name?.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        delivery?.project?.tutor_name?.name.toLowerCase().includes(searchTerm.toLowerCase()) || // tutor
+        delivery?.project?.tutor_name?.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         
-        project?.final_report_summary?.last_name.toLowerCase().includes(searchTerm.toLowerCase()) || // descripción
+        delivery?.project?.final_report_summary?.toLowerCase().includes(searchTerm.toLowerCase()) || // descripción
         
-        (project?.topic  // tema (aux: tienen acá?)
-          ? project.topic.name.toLowerCase().includes(searchTerm.toLowerCase())
+        (delivery?.project?.topic  // tema (aux: tienen acá?)
+          ? delivery.project.topic.name?.toLowerCase().includes(searchTerm.toLowerCase())
           : false) || // Filtrar por tema
-        String(project?.group_number)
+        String(delivery?.project?.group_number)
           .toLowerCase()
           .includes(searchTerm.toLowerCase())
     );
