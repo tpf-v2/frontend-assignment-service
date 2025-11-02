@@ -72,7 +72,7 @@ const ContentPublicPdfProjects = ({
                               student.name + " " + student.last_name
                             )).join(", ")
                           }</p>
-                          <p>{ "Tutor: " + entrega.project.tutor_name.name + " " + entrega.project.tutor_name.last_name }</p>
+                          <p>{ "Tutor/a: " + entrega.project.tutor_name.name + " " + entrega.project.tutor_name.last_name }</p>
                           <p style={entrega.project.final_report_summary ? {} : { fontStyle: 'italic' }}>
                           { 
                               entrega.project.final_report_summary
