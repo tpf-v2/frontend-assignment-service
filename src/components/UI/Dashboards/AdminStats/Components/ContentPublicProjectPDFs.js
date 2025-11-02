@@ -49,17 +49,19 @@ const ContentPublicPdfProjects = ({
                     deliveries.filter(delivery => delivery.period_id == period).map((entrega, index) => (
                       <TableRow key={index}>
                         <TableCell>
-                          <IconButton
-                            onClick={async () => {
-                              console.log("Not Done")
-                              setDownloading(entrega.project.id)
-                              await downloadFile(entrega.project.id, entrega.group_number, entrega.period_id)
-                              setDownloading(null)
-                              console.log("Done")
-                            }}
-                          >
-                            {(downloading === entrega.project.id) ? <CircularProgress /> : (<DownloadIcon />)}
-                          </IconButton>
+                          <Box sx={{ width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <IconButton
+                              onClick={async () => {
+                                console.log("Not Done")
+                                setDownloading(entrega.project.id)
+                                await downloadFile(entrega.project.id, entrega.group_number, entrega.period_id)
+                                setDownloading(null)
+                                console.log("Done")
+                              }}
+                            >
+                              {(downloading === entrega.project.id) ? <CircularProgress /> : (<DownloadIcon />)}
+                            </IconButton>
+                          </Box>
                         </TableCell>
                         <TableCell style={{overflowWrap: "anywhere"}}>
                           <h2>
