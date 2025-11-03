@@ -11,6 +11,7 @@ import { getPeriodById } from "../../api/handlePeriods";
 import { setPeriod } from "../../redux/slices/periodSlice";
 import PresentationDateCard from "../../components/UI/Dashboards/Student/PresentationDateCard";
 import StudentSidebar from "./StudentSidebar";
+import { ClosedErrorAlert } from "../../components/ClosedErrorAlert";
 
 const StudentHomeView = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const StudentHomeView = () => {
   const period = useSelector((state) => state.period);
  
   const [milestones, setMilestones] = useState([]);
+  const [infoError, setInfoError] = useState(false);
   const [team, setTeam] = useState({});
   const [loading, setLoading] = useState(true); // Estado para manejar la carga
   const [notification, setNotification] = useState({
@@ -136,6 +138,7 @@ const StudentHomeView = () => {
         ]);
       } catch (error) {
         console.error("Error al obtener las respuestas", error);
+        setInfoError(true);
       } finally {
         if (!!period) {
           setLoading(false);
@@ -168,15 +171,20 @@ const StudentHomeView = () => {
               <CircularProgress /> {/* Spinner de carga */}
             </Box>
           ) : (
-            milestones.map((phase, index) => (
-              <Phase
-                key={index}
-                phase={phase.phase}
-                tasks={phase.tasks}
-                description={phase.description}
-                circle={true}
-              />
-            ))
+            <>  
+              {infoError &&
+                <ClosedErrorAlert message=" Ocurrió un error al obtener los datos de estudiante"/>                
+              }
+              {milestones.map((phase, index) => (
+                <Phase
+                  key={index}
+                  phase={phase.phase}
+                  tasks={phase.tasks}
+                  description={phase.description}
+                  circle={true}
+                />
+              ))}
+            </>
           )}
         </Box>
       </Box>
