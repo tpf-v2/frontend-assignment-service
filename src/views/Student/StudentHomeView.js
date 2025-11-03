@@ -157,7 +157,8 @@ const StudentHomeView = () => {
   return (
     <Container maxWidth="lg" sx={{ display: "flex", mt: 5 }}>
       <Box sx={{ flex: 1, mr: 8, mt: 8 }}>
-        <StudentInfo />
+        {/* Recuadro con info de compañeros tema y tutor; "Tu equipo expondrá/expuso el _" - Tarjeta desplegable */}
+        <StudentInfo infoError={infoError}/>
         <Box sx={{ mb: 1 }} />
         {!loading && team.exhibition_date && <PresentationDateCard presentationDate={team.exhibition_date}/>}
         {!loading && (
@@ -173,7 +174,8 @@ const StudentHomeView = () => {
           ) : (
             <>  
               {infoError &&
-                <ClosedErrorAlert message=" Ocurrió un error al obtener los datos de estudiante"/>                
+                <ClosedErrorAlert message={`Ocurrió un error al obtener los datos de estudiante.
+                Si el problema persiste, contactar a la administración.`}/>
               }
               {milestones.map((phase, index) => (
                 <Phase
