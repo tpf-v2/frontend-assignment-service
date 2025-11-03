@@ -117,7 +117,6 @@ const StudentHomeView = () => {
             phase: "Exposición de Proyecto Final",
             tasks: [
               {
-                //title: team.loaded_date_availability ? "Cambiar disponibilidad de fechas" : "Enviar disponibilidad de fechas",
                 title: period.presentation_dates_available
                   ? (team.loaded_date_availability ? "Cambiar disponibilidad de fechas" : "Enviar disponibilidad de fechas")
                   : (team.loaded_date_availability ? "Disponibilidad de fechas enviada" : "No disponible"),
