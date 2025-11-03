@@ -60,6 +60,9 @@ const StudentHomeView = () => {
         const form_completed = userData.form_answered || (userData.topic && userData.tutor);
         const topic_completed = userData.topic && userData.tutor;
         setMilestones([
+          // completed: marcar visualmente como completado, notar que se relaciona con el title
+          // available: permitirle ingresar (relacionado con el toggle de admin)
+          // url completed y not completed: se puede llevar a distintas pantallas al clickear dependiendo de completed
           {
             phase: "Formulario de Inscripción",
             description: topic_completed ? "Tema y tutor asignado" : "Tema sin asignar",
@@ -91,8 +94,7 @@ const StudentHomeView = () => {
             tasks: [
               {
                 title: !team.intermediate_assigment_date ? (period.intermediate_project_active ? "Enviar" : "No disponible") : (period.intermediate_project_active ? "Cambiar entrega" : "Enviada") ,
-                completed:
-                  !!team.intermediate_assigment_date,
+                completed: !!team.intermediate_assigment_date,
                 available: period.intermediate_project_active && !!user.group_id,
                 urlNotCompleted: "/upload/intermediate-project",
                 urlCompleted: "/upload/intermediate-project"
@@ -115,8 +117,11 @@ const StudentHomeView = () => {
             phase: "Exposición de Proyecto Final",
             tasks: [
               {
-                title: "Enviar disponibilidad de fechas",
-                completed: false,
+                //title: team.loaded_date_availability ? "Cambiar disponibilidad de fechas" : "Enviar disponibilidad de fechas",
+                title: period.presentation_dates_available
+                  ? (team.loaded_date_availability ? "Cambiar disponibilidad de fechas" : "Enviar disponibilidad de fechas")
+                  : (team.loaded_date_availability ? "Disponibilidad de fechas enviada" : "No disponible"),
+                completed: team.loaded_date_availability,
                 available: period.presentation_dates_available && !!user.group_id,
                 urlNotCompleted: "/availability-view",
                 urlCompleted: "/availability-view"
@@ -174,7 +179,7 @@ const StudentHomeView = () => {
           ) : (
             <>  
               {infoError &&
-                <ClosedErrorAlert message={`Ocurrió un error al obtener los datos de estudiante.
+                <ClosedErrorAlert message={`Ocurrió un error al obtener los datos.
                 Si el problema persiste, contactar a la administración.`}/>
               }
               {milestones.map((phase, index) => (
