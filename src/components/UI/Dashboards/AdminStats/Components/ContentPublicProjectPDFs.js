@@ -45,7 +45,7 @@ const ContentPublicPdfProjects = ({
                   <div>
                     <FlexGrowSubtitle padding="1em">{period.substring(2) + " - Cuatrimestre " + period[0] + "º"}</FlexGrowSubtitle>
                     {
-                    deliveries.filter(delivery => delivery.period_id == period).map((entrega, index) => (
+                    deliveries.filter(delivery => delivery.period_id === period).map((entrega, index) => (
                       <TableRow key={index}>
                         <TableCell>
                           <DownloadButtonWithSpinner                            

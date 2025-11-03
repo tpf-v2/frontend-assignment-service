@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Container, Box, Grid, TextField, Title } from "@mui/material";
+import { Container, Box, Grid, TextField } from "@mui/material";
 import { downloadProject, getPublicProjects } from "../../api/handleProjects";
 import ContentPublicPdfProjects from "../../components/UI/Dashboards/AdminStats/Components/ContentPublicProjectPDFs";
 import { RootWhite, TopPaddedContainer } from "../../components/Root";
