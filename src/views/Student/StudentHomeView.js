@@ -57,8 +57,8 @@ const StudentHomeView = () => {
         }
         
         setTeam(team);
-        const form_completed = userData.form_answered || (userData.topic && userData.tutor)
-        const topic_completed = userData.topic && userData.tutor
+        const form_completed = userData.form_answered || (userData.topic && userData.tutor);
+        const topic_completed = userData.topic && userData.tutor;
         setMilestones([
           {
             phase: "Formulario de Inscripción",
