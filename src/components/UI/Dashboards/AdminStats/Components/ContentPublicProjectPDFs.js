@@ -7,11 +7,10 @@ import {
   TableBody,
   CircularProgress,
   Paper,
-  IconButton,
 } from "@mui/material";
-import DownloadIcon from "@mui/icons-material/Download";
 import { FlexGrowSubtitle } from "../../../../../styles/Titles";
 import { useState } from "react";
+import { DownloadButtonWithSpinner } from "../../../../Buttons/CustomButtons";
 
 const ContentPublicPdfProjects = ({
   loadingProjects,
@@ -49,19 +48,16 @@ const ContentPublicPdfProjects = ({
                     deliveries.filter(delivery => delivery.period_id == period).map((entrega, index) => (
                       <TableRow key={index}>
                         <TableCell>
-                          <Box sx={{ width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <IconButton
-                              onClick={async () => {
-                                console.log("Not Done")
-                                setDownloading(entrega.project.id)
-                                await downloadFile(entrega.project.id, entrega.group_number, entrega.period_id)
-                                setDownloading(null)
-                                console.log("Done")
-                              }}
-                            >
-                              {(downloading === entrega.project.id) ? <CircularProgress /> : (<DownloadIcon />)}
-                            </IconButton>
-                          </Box>
+                          <DownloadButtonWithSpinner                            
+                            onClick={async () => {
+                              console.log("Not Done")
+                              setDownloading(entrega.project.id)
+                              await downloadFile(entrega.project.id, entrega.group_number, entrega.period_id)
+                              setDownloading(null)
+                              console.log("Done")
+                            }}
+                            spinningCondition={downloading === entrega.project.id}
+                          />                          
                         </TableCell>
                         <TableCell style={{overflowWrap: "anywhere"}}>
                           <h2>

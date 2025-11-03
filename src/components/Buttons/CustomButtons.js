@@ -1,6 +1,7 @@
-import { Tooltip, IconButton } from "@mui/material";
+import { Tooltip, IconButton, Box, CircularProgress } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DownloadIcon from "@mui/icons-material/Download";
 
 export const EditButton = ({
     onClick,
@@ -31,6 +32,26 @@ export const DeleteButton = ({
             actionIcon={<DeleteIcon />}
             sx={sx} // pasamos los posibles estilos recibidos
         />
+    )
+}
+
+export const DownloadButtonWithSpinner = ({
+    onClick,
+    sx,
+    spinningCondition,
+}) => {
+    return (
+        // Box para asegurar mismo tamaño y alineación entre ícono y spinner
+        <Box sx={{ width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <GenericButton
+                onClick={onClick}
+                title="Descargar"
+                hoverIconColor="#0072C6" // celeste como el fondo
+                hoverTransparentBg="rgba(0, 114, 198, 0.08)" // celeste leve transparente
+                actionIcon={spinningCondition ? <CircularProgress /> : <DownloadIcon />}
+                sx={sx} // pasamos los posibles estilos recibidos
+            />
+        </Box>
     )
 }
 
