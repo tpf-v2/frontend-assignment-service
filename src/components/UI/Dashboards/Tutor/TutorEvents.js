@@ -79,8 +79,7 @@ const TutorEvents = ({ events, loading }) => {
   const upcomingEvent = findUpcomingEvent(events);
 
   return (
-    <StyledCard>
-      <CardContent>
+    <>
         {loading ? (
           <Box
             display="flex"
@@ -140,8 +139,7 @@ const TutorEvents = ({ events, loading }) => {
             </EventList>
           </TopPaddedContainer>
         )}
-      </CardContent>
-    </StyledCard>
+   </>
   );
 };
 
