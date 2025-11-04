@@ -223,9 +223,9 @@ const ExploreIdeas = ({containedStyle=true}) => {
           </Container>
           ) : (            
             <TopPaddedContainer>
-              <Typography variant="h4" align="center" gutterBottom>
+              <Title variant="h4" align="center" gutterBottom>
                 Ideas
-              </Typography>
+              </Title>
               {content}
             </TopPaddedContainer>
           )
