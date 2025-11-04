@@ -19,6 +19,8 @@ import ProjectPdfComponent from "./UI/Dashboards/Tutor/ProjectPdfComponent";
 import TutorIntermediateProjectComponent from "./UI/Dashboards/Tutor/TutorIntermediateProjectComponent"; // Importar el componente
 import { getGroupById } from "../api/getGroupById";
 import GroupReview from "./UI/Dashboards/Tutor/GroupReview";
+import { TitleSimple } from "../styles/Titles";
+import { TopPaddedContainer } from "./Root";
 
 const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),
@@ -134,15 +136,10 @@ const LearningPath = ({ team_id, team }) => {
             <ProjectPdfComponent groupId={team_id} groupNumber={team.group_number} projectType={"Final"}/> 
           ) : (
             // Título de la sección
-            <>              
-              <Typography
-                variant="h4"
-                align="center"
-                gutterBottom
-                marginTop={1}
-              >
+            <TopPaddedContainer>              
+              <TitleSimple variant="h4" align="center" gutterBottom>
                 Equipo {team.group_number}
-              </Typography>
+              </TitleSimple>
               <StyledCard>
                 <CardContent>
                   <Grid container spacing={2}>
@@ -220,7 +217,7 @@ const LearningPath = ({ team_id, team }) => {
                   />
                 ))}
               </Box>
-            </>
+            </TopPaddedContainer>
           )}
         </>
       )}
