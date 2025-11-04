@@ -12,6 +12,8 @@ import {
 import { styled } from "@mui/system";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import EventIcon from "@mui/icons-material/Event";
+import { TitleSimple } from "../../../../styles/Titles";
+import { TopPaddedContainer } from "../../../Root";
 
 const StyledCard = styled(Card)(({ theme }) => ({
   minWidth: 300,
@@ -89,10 +91,10 @@ const TutorEvents = ({ events, loading }) => {
             <CircularProgress />
           </Box>
         ) : (
-          <>
-            <Typography variant="h5" gutterBottom align="center">
+          <TopPaddedContainer>
+            <TitleSimple variant="h4" align="center" gutterBottom>
               Presentaciones
-            </Typography>
+            </TitleSimple>
             <EventList>
               {events.length === 0 ? (
                 <ListItem>
@@ -136,7 +138,7 @@ const TutorEvents = ({ events, loading }) => {
                 ))
               )}
             </EventList>
-          </>
+          </TopPaddedContainer>
         )}
       </CardContent>
     </StyledCard>
