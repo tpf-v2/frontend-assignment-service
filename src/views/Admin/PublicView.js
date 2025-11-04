@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Container, Box, Grid } from "@mui/material";
+import { Container, Box, Grid, TextField } from "@mui/material";
 import { downloadProject, getPublicProjects } from "../../api/handleProjects";
 import ContentPublicPdfProjects from "../../components/UI/Dashboards/AdminStats/Components/ContentPublicProjectPDFs";
-import { RootWhite } from "../../components/Root";
+import { RootWhite, TopPaddedContainer } from "../../components/Root";
+import { TitleSpaced } from "../../styles/Titles";
 // Estilos
 const Root = RootWhite;
 
 const PublicPDFView = () => {
   const user = useSelector((state) => state.user);
-  const _param_period = useParams().period;
-  const [period, setPeriod] = useState(_param_period); // Da warning set no usado; debería ser const period = seState(_param_period);
+  const period = useParams().period;
   const [loadingFinalProjects, setLoadingFinalProjects] = useState(true);
   const [deliveries, setDeliveries] = useState(null);
-
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const start = async () => {
       setLoadingFinalProjects(true);
+      // Period undefined trae todos los projects
       const finalProjectsData = await getPublicProjects(
         user,
         period
@@ -31,7 +32,7 @@ const PublicPDFView = () => {
       setLoadingFinalProjects(false);
     };
     start()
-    }, []);
+    }, [period]);
 
     const downloadFinalFile = async (groupId, groupNumber, _period) => {
       try {
@@ -42,11 +43,33 @@ const PublicPDFView = () => {
       }
     };
 
+    // Filtrar trabajos según el término de búsqueda
+    const filteredDeliveries = deliveries?.filter(
+      (delivery) =>
+        delivery?.project?.final_report_title?.toLowerCase().includes(searchTerm.toLowerCase()) || // título
+        
+        delivery?.project?.students?.some(  // estudiantes
+          (student) =>
+            student.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            student.last_name?.toLowerCase().includes(searchTerm.toLowerCase())
+        ) ||
+
+        delivery?.project?.tutor_name?.name.toLowerCase().includes(searchTerm.toLowerCase()) || // tutor
+        delivery?.project?.tutor_name?.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        
+        delivery?.project?.final_report_summary?.toLowerCase().includes(searchTerm.toLowerCase()) || // descripción
+        
+        // Campo no mostrado        
+        String(delivery?.project?.group_number)
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+    );
+
     const renderContent = () => {
       return (
         <ContentPublicPdfProjects
           loadingProjects={loadingFinalProjects}
-          deliveries={deliveries}
+          deliveries={filteredDeliveries}
           downloadFile={downloadFinalFile}
           projectType={"final"}
         />
@@ -57,11 +80,22 @@ const PublicPDFView = () => {
       <Container
         maxWidth={false}
         sx={{
-          width: "95%", // Ajusta el ancho al 90% del viewport
+          width: "90%", // Ajusta el ancho al 90% del viewport
           maxWidth: "none", // Para que el maxWidth no limite el tamaño
         }}
       >
       <Root>
+        <TopPaddedContainer>
+          <TitleSpaced variant="h4">Trabajos Anteriores</TitleSpaced>
+        </TopPaddedContainer>
+        <TextField
+          label="Buscar"
+          variant="outlined"
+          fullWidth
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          sx={{ marginBottom: 2 }}
+        />
         <Grid container spacing={3}>
           {/* Sidebar */}
           {/* Contenido */}

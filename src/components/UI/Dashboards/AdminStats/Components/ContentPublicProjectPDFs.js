@@ -7,12 +7,10 @@ import {
   TableBody,
   CircularProgress,
   Paper,
-  IconButton,
 } from "@mui/material";
-import DownloadIcon from "@mui/icons-material/Download";
-import { FlexGrowTitle } from "../../../../../styles/Titles";
+import { FlexGrowSubtitle } from "../../../../../styles/Titles";
 import { useState } from "react";
-const Title = FlexGrowTitle;
+import { DownloadButtonWithSpinner } from "../../../../Buttons/CustomButtons";
 
 const ContentPublicPdfProjects = ({
   loadingProjects,
@@ -43,14 +41,14 @@ const ContentPublicPdfProjects = ({
           <TableBody>
             {
               deliveries.length ? (
-                periods.map(period => {
-                  return <div>
-                    <Title variant="h4" padding="1em">{period.substring(2) + " - Cuatrimestre " + period[0] + "º"}</Title>
+                periods.map(period => (
+                  <div>
+                    <FlexGrowSubtitle padding="1em">{period.substring(2) + " - Cuatrimestre " + period[0] + "º"}</FlexGrowSubtitle>
                     {
-                    deliveries.filter(delivery => delivery.period_id == period).map((entrega, index) => (
+                    deliveries.filter(delivery => delivery.period_id === period).map((entrega, index) => (
                       <TableRow key={index}>
                         <TableCell>
-                          <IconButton
+                          <DownloadButtonWithSpinner                            
                             onClick={async () => {
                               console.log("Not Done")
                               setDownloading(entrega.project.id)
@@ -58,9 +56,8 @@ const ContentPublicPdfProjects = ({
                               setDownloading(null)
                               console.log("Done")
                             }}
-                          >
-                          {(downloading === entrega.project.id) ? <CircularProgress /> : (<DownloadIcon />)}
-                          </IconButton>
+                            spinningCondition={downloading === entrega.project.id}
+                          />                          
                         </TableCell>
                         <TableCell style={{overflowWrap: "anywhere"}}>
                           <h2>
@@ -69,11 +66,11 @@ const ContentPublicPdfProjects = ({
                           }
                           </h2>
                           <p>{
-                            "Integrantes: " + entrega.project.students.map((student) => {
-                              return student.name + " " + student.last_name
-                            }).join(", ")
+                            "Integrantes: " + entrega.project.students.map((student) => (
+                              student.name + " " + student.last_name
+                            )).join(", ")
                           }</p>
-                          <p>{ "Tutor: " + entrega.project.tutor_name.name + " " + entrega.project.tutor_name.last_name }</p>
+                          <p>{ "Tutor/a: " + entrega.project.tutor_name.name + " " + entrega.project.tutor_name.last_name }</p>
                           <p style={entrega.project.final_report_summary ? {} : { fontStyle: 'italic' }}>
                           { 
                               entrega.project.final_report_summary
@@ -88,7 +85,7 @@ const ContentPublicPdfProjects = ({
 
                   </div>
 
-                })
+                ))
               ) : <h2 style={{padding: "20px", fontStyle: 'italic'}}>No se encontraron entregas.</h2>
             }
           </TableBody>
