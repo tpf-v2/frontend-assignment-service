@@ -57,7 +57,7 @@ const ContentPublicPdfProjects = ({
                               console.log("Done")
                             }}
                             spinningCondition={downloading === entrega.project.id}
-                          />                          
+                          />
                         </TableCell>
                         <TableCell style={{overflowWrap: "anywhere"}}>
                           <h2>
