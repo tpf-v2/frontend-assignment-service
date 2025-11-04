@@ -48,7 +48,7 @@ const ContentPublicPdfProjects = ({
                     deliveries.filter(delivery => delivery.period_id === period).map((entrega, index) => (
                       <TableRow key={index}>
                         <TableCell>
-                          <DownloadButtonWithSpinner                            
+                          <DownloadButtonWithSpinner
                             onClick={async () => {
                               console.log("Not Done")
                               setDownloading(entrega.project.id)
