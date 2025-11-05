@@ -15,18 +15,21 @@ export const sendGroupForm = async (period, payload, existingGroup, user) => {
     }
     else{
       //TO-DO dynamic period in QP
+      // Admin conoce los ids de estudiantes pero estudiante no los conoce.
+      // Entonces acá estudiante envía campo student_numbers (y funFact: son strings).
       const groupPayload = {
-        students_ids: [
+        student_numbers: [
           payload.user_id_sender,
           payload.user_id_student_2,
           payload.user_id_student_3,
           payload.user_id_student_4,
-        ],
+        ]
+        .filter(uid => uid) // sin undefined/null
+        .map(String),       // conversión de tipo
         tutor_email: payload.tutor_email,
         topic: payload.topic_1
       }
-
-      groupPayload.students_ids = groupPayload.students_ids.filter(uid => uid);
+      
       response = await axios.post(`${BASE_URL}/groups/?period=${period}`, groupPayload, config);
     }
     return response;
