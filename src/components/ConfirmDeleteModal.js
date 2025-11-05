@@ -11,14 +11,14 @@ const ConfirmDeleteModal = ({ open, onClose, onConfirm, showExtraWarningFor=unde
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Eliminar Evento</DialogTitle>
       <DialogContent>
-        <p>¿Estás seguro de que deseas eliminar este bloque de disponibilidad?</p>
+        <p>¿Realmente se desea eliminar este bloque de disponibilidad?</p>
         {showExtraWarningFor === "admin" && (
           <p><strong>Importante: esto eliminará irreversiblemente las disponibilidades que equipos y tutores hayan            
             cargado dentro de esta franja horaria ¿Eliminar?</strong></p>
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="secondary" variant="outlined">
+        <Button onClick={onClose} color="primary" variant="outlined">
           Cancelar
         </Button>
         <Button onClick={handleConfirm}  color="error" variant="contained">
