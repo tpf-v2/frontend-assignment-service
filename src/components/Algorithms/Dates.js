@@ -592,8 +592,8 @@ const Dates = ({setSelectedMenu}) => {
 
   const teamsWithAssignmMsg = () => {
     const len = initialEvents.length;
-    if (len == 0) return "No se encontraron asignaciones de fechas para equipos.";
-    if (len == 1) return `Se encontraron asignaciones para 1 equipo.`;
+    if (len === 0) return "No se encontraron asignaciones de fechas para equipos.";
+    if (len === 1) return `Se encontraron asignaciones para 1 equipo.`;
     return `Se encontraron asignaciones para ${initialEvents.length} equipos.`;
   };
 
