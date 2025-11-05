@@ -174,18 +174,18 @@ const AvailabilityCalendarAdmin = () => {
   return (
     <AvailabilityContainer>
       <Typography variant="h4" align="center" gutterBottom>
-        Selecciona tu disponibilidad
+        Selecciona las Fechas de Exposición Disponibles
       </Typography>
       {/* Descripción del Calendario */}
       <DescriptionBox>
         <Typography variant="body1" align="justify" gutterBottom>
           En este calendario podrás seleccionar los intervalos de tiempo que
-          están disponibles para que los equipos realicen sus presentaciones. Haz
+          están disponibles para que los equipos realicen sus exposiciones. Haz
           clic en cualquier espacio en blanco para agregar un intervalo de
           disponibilidad. Si deseas crear un intervalo que dure más de 1 hora,
           simplemente arrastra el mouse desde el inicio hasta el final del
           intervalo. Si necesitas eliminar un intervalo existente, simplemente
-          selecciónalo de nuevo.
+          clickéalo.
         </Typography>
       </DescriptionBox>
       {!loading ? (
