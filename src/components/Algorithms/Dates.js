@@ -35,7 +35,7 @@ import ResultsDialog from "./Dates/ResultsDialog";
 
 import { getInputAnalysis } from "../../api/handleAlgorithmAnalysis";
 import { DatesPreCheck } from "./SpecificAlgorithmsPreCheck";
-import { MSG_FOR } from "../deleteDatesMsgEnum";
+import { DELETE_MSG_FOR } from "../deleteDatesMsgEnum";
 
 const evaluatorColors = [
   "#87CEFA", // Light Blue
@@ -731,7 +731,7 @@ const Dates = ({setSelectedMenu}) => {
         open={confirmDeleteOpen}
         onClose={() => setConfirmDeleteOpen(false)}
         onConfirm={handleDeleteEvent}
-        msgFor={MSG_FOR.ADMIN_EDIT_MODE}
+        msgFor={DELETE_MSG_FOR.ADMIN_EDIT_MODE}
       />
 
       <SpecificDateDialog // Asignar manualmente: ResultsDialog -> Editar -> clickear un slot vacío

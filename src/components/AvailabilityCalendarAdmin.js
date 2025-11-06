@@ -25,7 +25,7 @@ import { useMemo } from 'react';
 import browser from '../services/browserDetect';
 import BrowserWarning from './BrowserWarning';
 import { CalendarInterval } from "./CalendarInterval";
-import { MSG_FOR } from "./deleteDatesMsgEnum";
+import { ADD_MSG_FOR, DELETE_MSG_FOR } from "./deleteDatesMsgEnum";
 
 // Localizador de momento
 moment.tz.setDefault('America/Argentina/Buenos Aires')
@@ -243,13 +243,14 @@ const AvailabilityCalendarAdmin = () => {
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onConfirm={handleConfirmEvent}
+        msgFor={ADD_MSG_FOR.ADMIN}
       />
 
       <ConfirmDeleteModal
         open={confirmDeleteOpen}
         onClose={() => setConfirmDeleteOpen(false)}
         onConfirm={handleDeleteEvent}
-        msgFor={MSG_FOR.ADMIN}
+        msgFor={DELETE_MSG_FOR.ADMIN}
       />
 
       <MySnackbar

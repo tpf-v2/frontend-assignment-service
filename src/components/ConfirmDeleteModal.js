@@ -1,12 +1,15 @@
 // ConfirmDeleteModal.js
 import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
-import { MSG_FOR } from './deleteDatesMsgEnum.js';
+import { DELETE_MSG_FOR } from './deleteDatesMsgEnum.js';
 
-const ConfirmDeleteModal = ({ open, onClose, onConfirm, msgFor=MSG_FOR.NON_ADMIN_ROLES}) => {
+const ConfirmDeleteModal = ({ open, onClose, onConfirm, msgFor = undefined}) => {
   const handleConfirm = () => {
     onConfirm(); // Llama a onConfirm sin parámetros
   };
+
+  // No renderizar hasta que esté la prop cargada
+  if (!msgFor) return null;
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -14,13 +17,13 @@ const ConfirmDeleteModal = ({ open, onClose, onConfirm, msgFor=MSG_FOR.NON_ADMIN
       <DialogContent>
 
         {/* estudiantes y tutores borran su disponibilidad */}
-        {msgFor === MSG_FOR.NON_ADMIN_ROLES && ( 
+        {msgFor === DELETE_MSG_FOR.NON_ADMIN_ROLES && ( 
           <p>¿Realmente se desea eliminar este bloque de disponibilidad?</p>
           )
         }
         
         {/* admin borra lo disponible */}
-        {msgFor === MSG_FOR.ADMIN && (
+        {msgFor === DELETE_MSG_FOR.ADMIN && (
           <>
             <p>¿Realmente se desea eliminar este rango horario de las fechas de exposición disponibles?</p>
 
@@ -30,7 +33,7 @@ const ConfirmDeleteModal = ({ open, onClose, onConfirm, msgFor=MSG_FOR.NON_ADMIN
         )}
 
         {/* admin desde el modo de edición, borra resultado de asignación */}
-        {msgFor === MSG_FOR.ADMIN_EDIT_MODE && (
+        {msgFor === DELETE_MSG_FOR.ADMIN_EDIT_MODE && (
           <p>¿Realmente se desea eliminar esta asignación?</p> 
         )}
       </DialogContent>

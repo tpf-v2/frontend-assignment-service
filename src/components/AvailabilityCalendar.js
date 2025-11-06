@@ -34,6 +34,7 @@ import { useMemo } from 'react';
 import browser from '../services/browserDetect';
 import BrowserWarning from './BrowserWarning';
 import { TitleSimple } from "../styles/Titles";
+import { ADD_MSG_FOR, DELETE_MSG_FOR } from "./deleteDatesMsgEnum";
 // Set the IANA time zone you want to use
 moment.tz.setDefault('America/Argentina/Buenos Aires')
 // Localizador de momento
@@ -244,7 +245,7 @@ const AvailabilityCalendar = () => {
                 En este calendario, podrás seleccionar los bloques de tiempo que estás
                 disponible para presentar. Haz clic en cualquier espacio en blanco
                 para agregar un bloque de disponibilidad. Si necesitas eliminar un
-                bloque existente, simplemente selecciónalo de nuevo.
+                bloque existente, simplemente clickéalo.
               </Typography>
             </DescriptionBox>
   
@@ -291,12 +292,14 @@ const AvailabilityCalendar = () => {
               open={modalOpen}
               onClose={() => setModalOpen(false)}
               onConfirm={handleConfirmEvent}
+              msgFor={ADD_MSG_FOR.NON_ADMIN_ROLES}
             />
   
             <ConfirmDeleteModal
               open={confirmDeleteOpen}
               onClose={() => setConfirmDeleteOpen(false)}
               onConfirm={handleDeleteEvent}
+              msgFor={DELETE_MSG_FOR.NON_ADMIN_ROLES}
             />
   
             <MySnackbar
