@@ -795,7 +795,7 @@ const Dates = ({setSelectedMenu}) => {
         <DialogContent>
           <Typography variant="body1">
             Importante: Al confirmar los resultados no podrá volver a correr el
-            algoritmo ni editar las fechas de presentación.
+            algoritmo.
           </Typography>
         </DialogContent>
         <DialogActions sx={{ padding: "16px 24px" }}>
