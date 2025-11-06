@@ -3,6 +3,7 @@ import { Button, Container, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import fiubaLogo from '../assets/fiuba-logo.png';
 
+// Nadie usa esto
 const RoleSelection = () => {
     const navigate = useNavigate();
     return (
