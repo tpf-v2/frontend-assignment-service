@@ -17,9 +17,9 @@ const EventModal = ({ open, onClose, onConfirm, msgFor = undefined }) => {
   }
   const getContent = () => {
     if (msgFor === ADD_MSG_FOR.ADMIN) {
-      return <p>¿Deseas indicar que este rango está disponible para exposiciones?</p>;
+      return <p>¿Se desea indicar que este rango está disponible para exposiciones?</p>;
     }
-    else return <p>¿Deseas indicar disponibilidad en este rango horario?</p>;
+    else return <p>¿Se desea indicar disponibilidad en este rango horario?</p>;
   }
 
   return (
