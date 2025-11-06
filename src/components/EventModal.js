@@ -12,10 +12,10 @@ const EventModal = ({ open, onClose, onConfirm }) => {
         <p>¿Deseas crear un nuevo bloque de disponibilidad?</p>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="secondary">
+        <Button onClick={onClose} color="error" variant="outlined">
           Cancelar
         </Button>
-        <Button onClick={handleConfirm} color="primary">
+        <Button onClick={handleConfirm} color="primary" variant="contained">
           Confirmar
         </Button>
       </DialogActions>
