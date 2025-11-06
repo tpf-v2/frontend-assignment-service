@@ -13,14 +13,25 @@ const ConfirmDeleteModal = ({ open, onClose, onConfirm, msgFor=MSG_FOR.NON_ADMIN
       <DialogTitle>Eliminar Evento</DialogTitle>
       <DialogContent>
 
-        {msgFor === MSG_FOR.ADMIN
-        ? <p>¿Realmente se desea eliminar este rango horario de las fechas de exposición disponibles?</p> // admin borra lo disponible
-        : <p>¿Realmente se desea eliminar este bloque de disponibilidad?</p> // estudiantes y tutores borran su disponibilidad
+        {/* estudiantes y tutores borran su disponibilidad */}
+        {msgFor === MSG_FOR.NON_ADMIN_ROLES && ( 
+          <p>¿Realmente se desea eliminar este bloque de disponibilidad?</p>
+          )
         }
         
-        {msgFor === MSG_FOR.ADMIN && ( 
-          <p><strong>Importante: esto eliminará irreversiblemente las disponibilidades que equipos y tutores hayan            
-            cargado dentro de esta franja horaria ¿Eliminar?</strong></p>
+        {/* admin borra lo disponible */}
+        {msgFor === MSG_FOR.ADMIN && (
+          <>
+            <p>¿Realmente se desea eliminar este rango horario de las fechas de exposición disponibles?</p>
+
+            <p><strong>Importante: esto eliminará irreversiblemente las disponibilidades que equipos y tutores hayan            
+              cargado dentro de esta franja horaria ¿Eliminar?</strong></p>
+          </>
+        )}
+
+        {/* admin desde el modo de edición, borra resultado de asignación */}
+        {msgFor === MSG_FOR.ADMIN_EDIT_MODE && (
+          <p>¿Realmente se desea eliminar esta asignación?</p> 
         )}
       </DialogContent>
       <DialogActions>
