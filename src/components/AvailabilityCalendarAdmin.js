@@ -25,7 +25,7 @@ import { useMemo } from 'react';
 import browser from '../services/browserDetect';
 import BrowserWarning from './BrowserWarning';
 import { CalendarInterval } from "./CalendarInterval";
-import { ADD_MSG_FOR, DELETE_MSG_FOR } from "./deleteDatesMsgEnum";
+import { ADD_MSG_FOR, DELETE_MSG_FOR } from "./datesMsgsEnums";
 
 // Localizador de momento
 moment.tz.setDefault('America/Argentina/Buenos Aires')

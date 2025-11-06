@@ -35,7 +35,7 @@ import ResultsDialog from "./Dates/ResultsDialog";
 
 import { getInputAnalysis } from "../../api/handleAlgorithmAnalysis";
 import { DatesPreCheck } from "./SpecificAlgorithmsPreCheck";
-import { DELETE_MSG_FOR } from "../deleteDatesMsgEnum";
+import { DELETE_MSG_FOR } from "../datesMsgsEnums";
 
 const evaluatorColors = [
   "#87CEFA", // Light Blue

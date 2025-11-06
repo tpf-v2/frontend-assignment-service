@@ -1,7 +1,7 @@
 // ConfirmDeleteModal.js
 import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
-import { DELETE_MSG_FOR } from './deleteDatesMsgEnum.js';
+import { DELETE_MSG_FOR } from './datesMsgsEnums.js';
 
 const ConfirmDeleteModal = ({ open, onClose, onConfirm, msgFor = undefined}) => {
   const handleConfirm = () => {

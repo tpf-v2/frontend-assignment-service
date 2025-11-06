@@ -34,7 +34,7 @@ import { useMemo } from 'react';
 import browser from '../services/browserDetect';
 import BrowserWarning from './BrowserWarning';
 import { TitleSimple } from "../styles/Titles";
-import { ADD_MSG_FOR, DELETE_MSG_FOR } from "./deleteDatesMsgEnum";
+import { ADD_MSG_FOR, DELETE_MSG_FOR } from "./datesMsgsEnums";
 // Set the IANA time zone you want to use
 moment.tz.setDefault('America/Argentina/Buenos Aires')
 // Localizador de momento

@@ -1,5 +1,5 @@
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
-import { ADD_MSG_FOR } from './deleteDatesMsgEnum';
+import { ADD_MSG_FOR } from './datesMsgsEnums';
 
 const EventModal = ({ open, onClose, onConfirm, msgFor = undefined }) => {
   const handleConfirm = () => {
