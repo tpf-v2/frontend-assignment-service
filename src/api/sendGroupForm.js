@@ -15,18 +15,21 @@ export const sendGroupForm = async (period, payload, existingGroup, user) => {
     }
     else{
       //TO-DO dynamic period in QP
+      // Admin conoce los ids de estudiantes pero estudiante no los conoce.
+      // Entonces acá estudiante envía campo student_numbers (y funFact: son strings).
       const groupPayload = {
-        students_ids: [
+        student_numbers: [
           payload.user_id_sender,
           payload.user_id_student_2,
           payload.user_id_student_3,
           payload.user_id_student_4,
-        ],
+        ]
+        .filter(uid => uid) // sin undefined/null
+        .map(String),       // conversión de tipo
         tutor_email: payload.tutor_email,
         topic: payload.topic_1
       }
-
-      groupPayload.students_ids = groupPayload.students_ids.filter(uid => uid);
+      
       response = await axios.post(`${BASE_URL}/groups/?period=${period}`, groupPayload, config);
     }
     return response;
@@ -74,7 +77,7 @@ export const addTeam = async (newItem, user, periodId, confirm_move=false, confi
     },
   };
   const intStudentIds = newItem.students
-  .map(s => s.student_number)
+  .map(s => s.id)
   .filter(number => !!number); // un filter de front no es necesario por tener dropdown
   
   // Construyo un payload para reutilizar la función createTeam
@@ -105,8 +108,8 @@ export const editTeam = async (groupId, periodId, teamToEdit, user, confirm_move
   const studentsInput = teamToEdit.students;
   
   const intStudentIds = studentsInput
-  .map(s => s.group_number)
-  .filter(number => !!number);; // un filter de front no es necesario por tener dropdown
+  .map(s => s.id)
+  .filter(number => !!number); // un filter de front no es necesario por tener dropdown
 
   const sendableTeamToEdit = {
     "students_ids": intStudentIds,

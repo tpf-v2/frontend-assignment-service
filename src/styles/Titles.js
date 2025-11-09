@@ -25,18 +25,19 @@ export const TitleTop = styled(Typography)(({ theme }) => ({
   
 
 export const TitleSpaced = styled(Typography)(({ theme }) => ({
-marginBottom: theme.spacing(2),
-color: "#0072C6",
-textAlign: "center",
-fontSize: "2rem",
-fontWeight: "bold",
+  marginBottom: theme.spacing(2),
+  color: "#0072C6",
+  textAlign: "center",
+  fontSize: "2rem",
+  fontWeight: "bold",
 }));
 
-export const FlexGrowTitle = styled(Typography)(({ theme }) => ({
+export const FlexGrowSubtitle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(3),
   color: '#0072C6',
   textAlign: 'center',
-  fontSize: '2rem',
+  // obs: tener fontSize acá, hace que afuera se ignore el "variant" pasado
+  fontSize: '1.5rem', // más chico que el título principal
   fontWeight: 'bold',
   flexGrow: 1, // Asegura que ocupa todo el espacio
 }));
