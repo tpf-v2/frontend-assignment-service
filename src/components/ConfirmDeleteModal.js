@@ -11,14 +11,27 @@ const ConfirmDeleteModal = ({ open, onClose, onConfirm, msgFor = undefined}) => 
   // No renderizar hasta que esté la prop cargada
   if (!msgFor) return null;
 
+  const getTitle = () => {
+    if (msgFor === DELETE_MSG_FOR.ADMIN) {
+      return "Eliminar Rango de los Disponibles"
+    }
+    if (msgFor === DELETE_MSG_FOR.NON_ADMIN_ROLES) {
+      return "Eliminar Disponibilidad";
+    }
+    if (msgFor === DELETE_MSG_FOR.ADMIN_EDIT_MODE) {
+      return "Eliminar Asignación"
+    }
+    else return ""; // no deber+ía llegar hasta acá
+  }
+
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Eliminar Evento</DialogTitle>
+      <DialogTitle>{getTitle()}</DialogTitle>
       <DialogContent>
 
         {/* estudiantes y tutores borran su disponibilidad */}
         {msgFor === DELETE_MSG_FOR.NON_ADMIN_ROLES && ( 
-          <p>¿Realmente se desea eliminar este bloque de disponibilidad?</p>
+          <p>¿Realmente se desea eliminar este rango de la disponibilidad indicada?</p>
           )
         }
         
