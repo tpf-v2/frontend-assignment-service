@@ -41,7 +41,7 @@ const ConfirmDeleteModal = ({ open, onClose, onConfirm, msgFor = undefined}) => 
             <p>¿Realmente se desea eliminar este rango horario de las fechas de exposición disponibles?</p>
 
             <p><strong>Importante: esto eliminará irreversiblemente las disponibilidades que equipos y tutores hayan            
-              cargado dentro de esta franja horaria ¿Eliminar?</strong></p>
+              cargado dentro de este rango horario ¿Eliminar?</strong></p>
           </>
         )}
 
