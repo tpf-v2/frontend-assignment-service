@@ -515,6 +515,7 @@ const Dates = ({setSelectedMenu}) => {
     }
   };
 
+  // Para click durante modo edición
   const handleSelectEvent = (event) => {
     if (isEditing) {
       setEventToDelete(event);
