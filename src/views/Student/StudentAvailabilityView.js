@@ -3,6 +3,7 @@ import AvailabilityCalendar from "../../components/AvailabilityCalendar";
 import { useSelector } from "react-redux";
 import ClosedAlert from "../../components/ClosedAlert";
 import { RootWhite } from "../../components/Root";
+import { StudentOrTutor } from "../../components/roleTypes";
 // Estilos
 const Root = RootWhite;
 
@@ -14,7 +15,7 @@ const StudentAvailabilityView = () => {
     <Container maxWidth={false} sx={{ maxWidth: "1350px" }}>
     {period.presentation_dates_available ? (
       <Root>
-        <AvailabilityCalendar />
+        <AvailabilityCalendar role={StudentOrTutor.STUDENT} />
       </Root>
     ) : (
       <ClosedAlert message="No se aceptan respuestas al formulario de fechas." />

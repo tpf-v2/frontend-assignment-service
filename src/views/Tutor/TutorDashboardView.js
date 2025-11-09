@@ -34,6 +34,7 @@ import { Lightbulb } from "@mui/icons-material";
 import { Title, TitleTop } from "../../styles/Titles";
 import { RootWhite } from "../../components/Root";
 import ExploreIdeas from "../../components/Exploration/ExploreIdeas";
+import { StudentOrTutor } from "../../components/roleTypes";
 // Estilos
 const Root = RootWhite;
 
@@ -267,7 +268,7 @@ const transformEventData = (data) => {
   const contentMap = {
     Inicio: <Inicio />,
     "Mis Equipos": <div>Contenido del Formulario de Fechas</div>,
-    "Seleccionar Disponibilidad": <AvailabilityCalendar />,
+    "Seleccionar Disponibilidad": <AvailabilityCalendar role={StudentOrTutor.TUTOR}/>,
     "Fechas de Exposiciones": <TutorEvents events={events} loading={loadingEvents}></TutorEvents>,
     Ideas: <ExploreIdeas containedStyle={false}/>,
     Revisiones: selectedTeamReview ? (
