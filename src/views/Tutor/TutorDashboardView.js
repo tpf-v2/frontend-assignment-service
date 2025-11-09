@@ -335,7 +335,7 @@ const transformEventData = (data) => {
 
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    Exposiciones
+                    Mis Exposiciones
                   </AccordionSummary>
                   <AccordionDetails>
                     <ListItem label="Seleccionar Disponibilidad" icon={<EditCalendarIcon />} menu="Seleccionar Disponibilidad" />
