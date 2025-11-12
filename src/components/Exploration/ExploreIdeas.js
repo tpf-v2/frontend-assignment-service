@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Typography, Container, Box, CircularProgress, Link, Alert, Grid } from "@mui/material";
 import { useSelector } from "react-redux";
 import MySnackbar from "../UI/MySnackBar";
-import { Root, Title, TopPaddedContainer } from "../../components/Root";
+import { Root, TopPaddedContainer } from "../../components/Root";
+import { TitleSimple } from "../../styles/Titles";
 import { getPeriodIdeas, editIdeaContent, editIdeaStatus } from "../../api/ideas";
 import { EditIdeaModal, EditType } from "./EditIdeaModal";
 import SubmitButton from "../../components/Buttons/SubmitButton";
@@ -217,15 +218,15 @@ const ExploreIdeas = ({containedStyle=true}) => {
         ? (
           <Container maxWidth="md">
             <Root>
-              <Title variant="h5" align="center">Ideas</Title>
+              <TitleSimple variant="h5" align="center">Ideas</TitleSimple>
               {content}
             </Root>
           </Container>
           ) : (            
             <TopPaddedContainer>
-              <Typography variant="h4" align="center" gutterBottom>
+              <TitleSimple variant="h4" align="center" gutterBottom>
                 Ideas
-              </Typography>
+              </TitleSimple>
               {content}
             </TopPaddedContainer>
           )

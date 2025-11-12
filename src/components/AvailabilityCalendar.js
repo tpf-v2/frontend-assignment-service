@@ -33,6 +33,7 @@ import { useMemo } from 'react';
 
 import browser from '../services/browserDetect';
 import BrowserWarning from './BrowserWarning';
+import { TitleSimple } from "../styles/Titles";
 // Set the IANA time zone you want to use
 moment.tz.setDefault('America/Argentina/Buenos Aires')
 // Localizador de momento
@@ -233,10 +234,10 @@ const AvailabilityCalendar = () => {
     <>
       {!loading ? (
         period.presentation_dates_available ? (
-          <AvailabilityContainer>
-            <Typography variant="h4" align="center" gutterBottom>
-              Selecciona tu disponibilidad
-            </Typography>
+          <AvailabilityContainer>              
+            <TitleSimple variant="h4" align="center" gutterBottom>
+              Selecciona tu Disponibilidad
+            </TitleSimple>
             {/* Descripción del Calendario */}
             <DescriptionBox>
               <Typography variant="body1" align="justify" gutterBottom>

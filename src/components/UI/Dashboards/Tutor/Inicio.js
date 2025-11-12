@@ -1,14 +1,15 @@
 import React from "react";
 import { Box, Typography, Container } from "@mui/material";
+import { TitleSimple } from "../../../../styles/Titles";
 
 const Inicio = () => {
 
   return (
     <Container maxWidth="lg" sx={{ display: "flex", mt: 5 }}>
       <Box sx={{ flex: 2 }}>
-        <Typography variant="h4" align="center" gutterBottom>
+        <TitleSimple variant="h4" align="center" gutterBottom>
           Información Inicio
-        </Typography>
+        </TitleSimple>
 
         <Box mt={4}>
           <Typography variant="body1" gutterBottom>
