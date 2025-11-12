@@ -61,6 +61,8 @@ const LearningPath = ({ team_id, team }) => {
       try {
         const team = await dispatch(getGroupById(user, team_id));
 
+        // To-Do: title y completed de cada milestone usan la misma condición, sería bueno algún refactor
+        // que permita indicar la condición una sola vez, para no 'olvidar' escribirla en alguno de los dos lugares.
         setMilestones([
           {
             phase: "Anteproyecto",
@@ -85,7 +87,7 @@ const LearningPath = ({ team_id, team }) => {
             phase: "Entrega Final",
             tasks: [
               {
-                title: "Enviado",
+                title: team.final_report_date !== null ? "Enviado" : "No enviado",
                 completed: team.final_report_date !== null ? true : false,
               }
             ],
