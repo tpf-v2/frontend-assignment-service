@@ -78,7 +78,7 @@ const LearningPath = ({ team_id, team }) => {
             phase: "Entrega Intermedia",
             tasks: [
               {
-                title: team.intermediate_assigment_date !== null ? "Enviado" : "No enviado",
+                title: team.intermediate_assigment_date !== null ? "Enviada" : "No enviada",
                 completed: team.intermediate_assigment_date !== null ? true : false,
               }
             ],
@@ -87,7 +87,7 @@ const LearningPath = ({ team_id, team }) => {
             phase: "Entrega Final",
             tasks: [
               {
-                title: team.final_report_date !== null ? "Enviado" : "No enviado",
+                title: team.final_report_date !== null ? "Enviada" : "No enviada",
                 completed: team.final_report_date !== null ? true : false,
               }
             ],
