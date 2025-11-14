@@ -25,6 +25,7 @@ import { useMemo } from 'react';
 import browser from '../services/browserDetect';
 import BrowserWarning from './BrowserWarning';
 import { CalendarInterval } from "./CalendarInterval";
+import { ADD_MSG_FOR, DELETE_MSG_FOR } from "./datesMsgsEnums";
 
 // Localizador de momento
 moment.tz.setDefault('America/Argentina/Buenos Aires')
@@ -174,18 +175,18 @@ const AvailabilityCalendarAdmin = () => {
   return (
     <AvailabilityContainer>
       <Typography variant="h4" align="center" gutterBottom>
-        Selecciona tu disponibilidad
+        Selecciona las Fechas de Exposición Disponibles
       </Typography>
       {/* Descripción del Calendario */}
       <DescriptionBox>
         <Typography variant="body1" align="justify" gutterBottom>
           En este calendario podrás seleccionar los intervalos de tiempo que
-          están disponibles para que los equipos realicen sus presentaciones. Haz
+          están disponibles para que los equipos realicen sus exposiciones. Haz
           clic en cualquier espacio en blanco para agregar un intervalo de
           disponibilidad. Si deseas crear un intervalo que dure más de 1 hora,
           simplemente arrastra el mouse desde el inicio hasta el final del
           intervalo. Si necesitas eliminar un intervalo existente, simplemente
-          selecciónalo de nuevo.
+          clickéalo.
         </Typography>
       </DescriptionBox>
       {!loading ? (
@@ -242,13 +243,14 @@ const AvailabilityCalendarAdmin = () => {
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onConfirm={handleConfirmEvent}
+        msgFor={ADD_MSG_FOR.ADMIN}
       />
 
       <ConfirmDeleteModal
         open={confirmDeleteOpen}
         onClose={() => setConfirmDeleteOpen(false)}
         onConfirm={handleDeleteEvent}
-        showExtraWarningFor={"admin"}
+        msgFor={DELETE_MSG_FOR.ADMIN}
       />
 
       <MySnackbar

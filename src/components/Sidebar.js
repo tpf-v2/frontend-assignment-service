@@ -52,7 +52,7 @@ const Sidebar = ({ selectedMenu, handleNavigation, period }) => {
         <Divider />
         <ListItem label="Inscripciones" icon={<EditNoteIcon />} menu="Inscripciones"/>
         <Divider />
-        <ListItem label="Disponibilidad Fechas de Presentación" icon={<CalendarMonthIcon />} menu="Disponibilidad fechas de Presentación" />
+        <ListItem label="Fechas de Exposición Disponibles" icon={<CalendarMonthIcon />} menu="Fechas de Exposición Disponibles" />
         <Divider />
         {/* Asignaciones - Desplegable */}
         <Accordion defaultExpanded>
@@ -62,7 +62,7 @@ const Sidebar = ({ selectedMenu, handleNavigation, period }) => {
           <AccordionDetails>
             <ListItem label="Completar Equipos" icon={<GroupAddIcon />} menu="Equipos"/>
             <ListItem label="Temas y Tutores" icon={<CompareArrowsIcon />} menu="Temas - Tutores - Equipos"/>
-            <ListItem label="Fechas de Presentación" icon={<TodayIcon />} menu="Fechas de presentación"/>
+            <ListItem label="Fechas de Exposición" icon={<TodayIcon />} menu="Fechas de Exposición"/>
           </AccordionDetails>
         </Accordion>
         {/* Entregas - Desplegable */}

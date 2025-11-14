@@ -168,9 +168,9 @@ const DashboardView = () => {
         );
       case "PPS":
         return <ContentPPS students={students} deliveries={deliveries} loadingPPS={loadingPPS} />;
-      case "Fechas de presentación":
+      case "Fechas de Exposición":
         return <Dates setSelectedMenu={setSelectedMenu}/>;
-      case "Disponibilidad fechas de Presentación":
+      case "Fechas de Exposición Disponibles":
         return <AvailabilityCalendarAdmin />;
 
       default:

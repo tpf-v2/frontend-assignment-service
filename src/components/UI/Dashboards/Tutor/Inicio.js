@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Typography, Container } from "@mui/material";
 import { TitleSimple } from "../../../../styles/Titles";
 
+// Inicio para tutores
 const Inicio = () => {
 
   return (
@@ -41,18 +42,17 @@ const Inicio = () => {
               correspondientes.
             </li>
             <li>
-              <strong>Presentaciones:</strong> Esta sección contiene dos
+              <strong>Exposiciones:</strong> Esta sección contiene dos
               opciones:
               <ul>
                 <li>
                   <strong>Seleccionar disponibilidad:</strong> Utiliza esta
-                  opción para elegir tus bloques de disponibilidad. Se te
-                  mostrará un calendario en el que podrás seleccionar fechas y
-                  horas.
+                  opción para elegir los rangos horarios de cada fecha en los que estés disponible.
+                  Se te mostrará un calendario en el que podrás seleccionar fechas y horas.
                 </li>
                 <li>
-                  <strong>Fechas de presentación:</strong> Aquí podrás ver y
-                  gestionar las fechas de presentación de los trabajos de los
+                  <strong>Fechas de exposición:</strong> Aquí podrás ver y
+                  gestionar las fechas de exposición de los trabajos de los
                   equipos.
                 </li>
               </ul>

@@ -35,6 +35,7 @@ import ResultsDialog from "./Dates/ResultsDialog";
 
 import { getInputAnalysis } from "../../api/handleAlgorithmAnalysis";
 import { DatesPreCheck } from "./SpecificAlgorithmsPreCheck";
+import { DELETE_MSG_FOR } from "../datesMsgsEnums";
 
 const evaluatorColors = [
   "#87CEFA", // Light Blue
@@ -514,6 +515,7 @@ const Dates = ({setSelectedMenu}) => {
     }
   };
 
+  // Para click durante modo edición
   const handleSelectEvent = (event) => {
     if (isEditing) {
       setEventToDelete(event);
@@ -592,8 +594,8 @@ const Dates = ({setSelectedMenu}) => {
 
   const teamsWithAssignmMsg = () => {
     const len = initialEvents.length;
-    if (len == 0) return "No se encontraron asignaciones de fechas para equipos.";
-    if (len == 1) return `Se encontraron asignaciones para 1 equipo.`;
+    if (len === 0) return "No se encontraron asignaciones de fechas para equipos.";
+    if (len === 1) return `Se encontraron asignaciones para 1 equipo.`;
     return `Se encontraron asignaciones para ${initialEvents.length} equipos.`;
   };
 
@@ -730,6 +732,7 @@ const Dates = ({setSelectedMenu}) => {
         open={confirmDeleteOpen}
         onClose={() => setConfirmDeleteOpen(false)}
         onConfirm={handleDeleteEvent}
+        msgFor={DELETE_MSG_FOR.ADMIN_EDIT_MODE}
       />
 
       <SpecificDateDialog // Asignar manualmente: ResultsDialog -> Editar -> clickear un slot vacío
@@ -795,7 +798,7 @@ const Dates = ({setSelectedMenu}) => {
         <DialogContent>
           <Typography variant="body1">
             Importante: Al confirmar los resultados no podrá volver a correr el
-            algoritmo ni editar las fechas de presentación.
+            algoritmo.
           </Typography>
         </DialogContent>
         <DialogActions sx={{ padding: "16px 24px" }}>
