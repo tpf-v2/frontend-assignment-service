@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, Box, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { useSelector } from "react-redux";
 import { ClosedErrorAlert } from "../../../ClosedErrorAlert";
@@ -23,6 +23,10 @@ const StudentInfo = ({infoError}) => {
           <ClosedErrorAlert message="Error al obtener los datos." contoured={false}/>
         ) : (
           <>
+          <Box
+            display="grid"
+            rowGap={0.8}
+          >
           <Typography color="text.secondary">
             <Typography component="span" color="text.primary" fontWeight="bold" marginRight={1}>
               Número de equipo:
@@ -53,6 +57,7 @@ const StudentInfo = ({infoError}) => {
             </Typography>
             {period || "Sin asignar aún"}
           </Typography>
+          </Box>
           </>
         )}
         </>
