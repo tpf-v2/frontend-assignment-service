@@ -45,7 +45,7 @@ const MilestoneContainer = styled(Box)(({ theme }) => ({
   gap: "1em"
 }));
 
-const Phase = ({ phase, tasks, circle, description }) => {
+const Phase = ({ phase, tasks, circle, description, notDoneMsg }) => {
   const allTasksCompleted = tasks.every((task) => task.completed);
   if (!description){
     description=""
@@ -62,6 +62,7 @@ const Phase = ({ phase, tasks, circle, description }) => {
           <Milestone key={index} title={task.title} completed={task.available} url={ task.available ? (task.completed ? task.urlCompleted : task.urlNotCompleted) : null} />
         ))}
         {!!description && <Alert severity="info" sx={{mt: 1}}>{description}</Alert>}
+        {!!notDoneMsg && <Alert severity="info" sx={{mt: 1}}>{notDoneMsg}</Alert>}
       </MilestoneContainer>
       <Box>
       </Box>

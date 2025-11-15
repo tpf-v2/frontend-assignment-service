@@ -46,10 +46,36 @@ const StudentHomeView = () => {
     
     fetchPeriod();
   }, [user, dispatch]);
+  
+  const getTeamFormPhase = (team, is_form_completed, is_topic_assigned) => {
+    const tasks = [];
+    let notDoneMsg = undefined;
+
+    if (period.form_active) { // fecha activa (toggle admin activado)
+      tasks.push({
+        title: is_form_completed ? "Formulario enviado" : "Enviar formulario",
+        completed: is_form_completed,
+        available: period.form_active,
+        urlNotCompleted: "/student-form",
+        urlCompleted:"",
+      });
+    } else {
+      notDoneMsg = "No enviado.";
+    }
+
+    return {
+      phase: "Formulario de Inscripción",
+      description: is_topic_assigned ? "Tema y tutor asignado" : "Tema sin asignar",
+      tasks: tasks,
+      notDoneMsg: notDoneMsg,
+    }
+  }
 
   // Existen 4 combinaciones de sí/no toggle fecha de entrega activo y sí/no entrega realizada.
   const getAnteproyectoPhase = (team) => {
-    let tasks = []
+    let tasks = [];
+    let notDoneMsg = undefined;
+
     if (!!team.pre_report_date) { // Siempre que haya entregado, no importa si fecha activa o no
       // Botón ver (Nuevo!)
       tasks.push({
@@ -69,17 +95,23 @@ const StudentHomeView = () => {
         urlNotCompleted: "/upload/initial-project",
         urlCompleted: "/upload/initial-project"
       });
+    } else {
+      notDoneMsg = "No enviado.";
     }
 
     return ({
       phase: "Anteproyecto",
       description: team.pre_report_approved ? "Entrega aprobada" : "Revisión de tutor pendiente",
       tasks: tasks,
+      notDoneMsg: notDoneMsg,
     })
   };
 
-  const getIntermediateOrFinalPhase = (type, team) => {
-    let tasks = []
+
+  const getIntermediateOrFinalPhase = (team) => {
+    let tasks = [];
+    let notDoneMsg = undefined;
+
     if (!!team.intermediate_assigment_date) { // Siempre que haya entregado, no importa si fecha activa o no
       // Botón ver (Nuevo!)
       tasks.push({
@@ -99,16 +131,21 @@ const StudentHomeView = () => {
         urlNotCompleted: "/upload/intermediate-project",
         urlCompleted: "/upload/intermediate-project"
       });     
+    } else {
+      notDoneMsg = "No enviada.";
     }
 
     return ({
       phase: "Entrega Intermedia",
       tasks: tasks,
+      notDoneMsg: notDoneMsg,
     })
   };
 
-  const getFinalDeliveryPhase = (type, fetchedTeam) => {
-    let tasks = []
+  const getFinalDeliveryPhase = (fetchedTeam) => {
+    let tasks = [];
+    let notDoneMsg = undefined;
+
     if (!!fetchedTeam.final_report_date) { // Siempre que haya entregado, no importa si fecha activa o no
       // Botón ver (Nuevo!)
       tasks.push({
@@ -128,11 +165,14 @@ const StudentHomeView = () => {
         urlNotCompleted: "/upload/final-project",
         urlCompleted: "/upload/final-project"
       });     
+    } else {
+      notDoneMsg = "No enviada.";
     }
 
     return ({
         phase: "Entrega Final",
         tasks: tasks,
+        notDoneMsg: notDoneMsg,
     })
   };
   
@@ -154,25 +194,13 @@ const StudentHomeView = () => {
           // completed: marcar visualmente como completado, notar que se relaciona con el title
           // available: permitirle ingresar (relacionado con el toggle de admin)
           // url completed y not completed: se puede llevar a distintas pantallas al clickear dependiendo de completed
-          {
-            phase: "Formulario de Inscripción",
-            description: topic_completed ? "Tema y tutor asignado" : "Tema sin asignar",
-            tasks: [
-              {
-                title: form_completed ? "Formulario enviado" : "Enviar formulario",
-                completed: form_completed,
-                available: period.form_active,
-                urlNotCompleted: "/student-form",
-                urlCompleted:"",
-              },  
-            ],
-          },
-          
+            getTeamFormPhase(fetchedTeam, form_completed, topic_completed)
+          ,          
             getAnteproyectoPhase(fetchedTeam)
           ,
-            getIntermediateOrFinalPhase("intermediate", fetchedTeam)
+            getIntermediateOrFinalPhase(fetchedTeam)
           ,
-            getFinalDeliveryPhase("final", fetchedTeam)
+            getFinalDeliveryPhase(fetchedTeam)
           ,
           {
             phase: "Exposición de Proyecto Final",
@@ -250,6 +278,7 @@ const StudentHomeView = () => {
                   phase={phase.phase}
                   tasks={phase.tasks}
                   description={phase.description}
+                  notDoneMsg={phase.notDoneMsg}
                   circle={true}
                 />
               ))}
