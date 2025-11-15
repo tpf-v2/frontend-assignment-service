@@ -98,6 +98,9 @@ const App = () => {
             <Route path="/reset-password" element={<ResetPasswordView />} />
             <Route path="/home" element={<HomeView />} />
             <Route path="/deliveries" element={<ProtectedRoute><StudentDeliveryView /></ProtectedRoute>} />
+            <Route path="/delivery/final-project" element={<ProtectedRoute><StudentDeliveryView selectedDelivery={"final"}/></ProtectedRoute>} />
+            <Route path="/delivery/intermediate-project" element={<ProtectedRoute><StudentDeliveryView selectedDelivery={"intermediate"}/></ProtectedRoute>} />
+            <Route path="/delivery/initial-project" element={<ProtectedRoute><StudentDeliveryView selectedDelivery={"initial"}/></ProtectedRoute>} />
             <Route path="/credits" element={<Credits />} />
             {/* <Route path="/form-selection" element={<ProtectedRoute><FormSelection /></ProtectedRoute>} /> */}
             <Route path="/dashboard/:period" element={<ProtectedRoute><DashboardView /></ProtectedRoute>} />

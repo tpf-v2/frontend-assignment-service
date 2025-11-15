@@ -80,8 +80,8 @@ const StudentHomeView = () => {
         title: "Ver Entrega", // No hay título condicional, solo quiero appendearlo si sí entregó
         completed: !!team.pre_report_date,
         available: !!user.group_id,
-        urlNotCompleted: "/upload/initial-project",
-        urlCompleted: "/upload/initial-project"
+        urlNotCompleted: "/delivery/initial-project",
+        urlCompleted: "/delivery/initial-project"
       });
     }
     if (period.initial_project_active) { // fecha activa (toggle admin activado)
@@ -114,8 +114,8 @@ const StudentHomeView = () => {
         title: "Ver Entrega", // No hay título condicional, solo quiero appendearlo si sí entregó
         completed: !!team.intermediate_assigment_date,
         available: !!user.group_id,
-        urlNotCompleted: "/upload/intermediate-project",
-        urlCompleted: "/upload/intermediate-project"
+        urlNotCompleted: "/delivery/intermediate-project",
+        urlCompleted: "/delivery/intermediate-project"
       });
     }
     if (period.intermediate_project_active) { // fecha activa (toggle admin activado)
@@ -146,8 +146,8 @@ const StudentHomeView = () => {
         title: "Ver Entrega", // No hay título condicional, solo quiero appendearlo si sí entregó
         completed: !!fetchedTeam.final_report_date,
         available: !!user.group_id,
-        urlNotCompleted: "/upload/final-project",
-        urlCompleted: "/upload/final-project"
+        urlNotCompleted: "/delivery/final-project",
+        urlCompleted: "/delivery/final-project"
       });
     }
     if (period.final_project_active) { // fecha activa (toggle admin activado)
