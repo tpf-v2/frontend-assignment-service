@@ -46,19 +46,52 @@ const StudentHomeView = () => {
     
     fetchPeriod();
   }, [user, dispatch]);
+
+  // Existen 4 combinaciones de sí/no toggle fecha de entrega activo y sí/no entrega realizada.
+  const getAnteproyectoPhase = (team) => {
+    let tasks = []
+    if (!!team.pre_report_date) { // Siempre que haya entregado, no importa si fecha activa o no
+      // Botón ver (Nuevo!)
+      tasks.push({
+        title: "Ver Entrega", // No hay título condicional, solo quiero appendearlo si sí entregó
+        completed: !!team.pre_report_date,
+        available: !!user.group_id,
+        urlNotCompleted: "/upload/initial-project",
+        urlCompleted: "/upload/initial-project"
+      });
+    }
+    if (period.initial_project_active) { // fecha activa (toggle admin activado)
+      // Botón Enviar o Cambiar entrega
+      tasks.push({
+        title: !team.pre_report_date ? (period.initial_project_active ? "Enviar" : "No disponible") : (period.initial_project_active ? "Cambiar entrega" : "Enviado") ,
+        completed: !!team.pre_report_date,
+        available: period.initial_project_active && !!user.group_id,
+        urlNotCompleted: "/upload/initial-project",
+        urlCompleted: "/upload/initial-project"
+      });
+    }
+
+    return ({
+      phase: "Anteproyecto",
+      description: team.pre_report_approved ? "Entrega aprobada" : "Revisión de tutor pendiente",
+      tasks: tasks,
+    })
+  };
   
   useEffect(() => {
     const fetchTeamAnswer = async () => {
       try {
         const userData = await dispatch(getStudentInfo(user));
-        let team = {};
+        let fetchedTeam = {};
         if (userData.group_id !== 0) {
-          team = await dispatch(getGroupById(user, userData.group_id));
+          fetchedTeam = await dispatch(getGroupById(user, userData.group_id));
         }
         
-        setTeam(team);
+        setTeam(fetchedTeam);
         const form_completed = userData.form_answered || (userData.topic && userData.tutor);
         const topic_completed = userData.topic && userData.tutor;
+        //const milestonesToSet = {};
+
         setMilestones([
           // completed: marcar visualmente como completado, notar que se relaciona con el title
           // available: permitirle ingresar (relacionado con el toggle de admin)
@@ -76,25 +109,15 @@ const StudentHomeView = () => {
               },  
             ],
           },
-          {
-            phase: "Anteproyecto",
-            description: team.pre_report_approved ? "Entrega aprobada" : "Revisión de tutor pendiente",
-            tasks: [
-              {
-                title: !team.pre_report_date ? (period.initial_project_active ? "Enviar" : "No disponible") : (period.initial_project_active ? "Cambiar entrega" : "Enviado") ,
-                completed: !!team.pre_report_date,
-                available: period.initial_project_active && !!user.group_id,
-                urlNotCompleted: "/upload/initial-project",
-                urlCompleted: "/upload/initial-project"
-              },
-            ],
-          },
+          
+            getAnteproyectoPhase(fetchedTeam)
+          ,
           {
             phase: "Entrega Intermedia",
             tasks: [
               {
-                title: !team.intermediate_assigment_date ? (period.intermediate_project_active ? "Enviar" : "No disponible") : (period.intermediate_project_active ? "Cambiar entrega" : "Enviada") ,
-                completed: !!team.intermediate_assigment_date,
+                title: !fetchedTeam.intermediate_assigment_date ? (period.intermediate_project_active ? "Enviar" : "No disponible") : (period.intermediate_project_active ? "Cambiar entrega" : "Enviada") ,
+                completed: !!fetchedTeam.intermediate_assigment_date,
                 available: period.intermediate_project_active && !!user.group_id,
                 urlNotCompleted: "/upload/intermediate-project",
                 urlCompleted: "/upload/intermediate-project"
@@ -105,8 +128,8 @@ const StudentHomeView = () => {
             phase: "Entrega Final",
             tasks: [
               {
-                title: !team.final_report_date ? (period.final_project_active ? "Enviar" : "No disponible") :  (period.final_project_active ? "Cambiar entrega" : "Enviada"),
-                completed: !!team.final_report_date,
+                title: !fetchedTeam.final_report_date ? (period.final_project_active ? "Enviar" : "No disponible") :  (period.final_project_active ? "Cambiar entrega" : "Enviada"),
+                completed: !!fetchedTeam.final_report_date,
                 available: period.final_project_active && !!user.group_id,
                 urlNotCompleted: "/upload/final-project",
                 urlCompleted: "/upload/final-project"
@@ -118,9 +141,9 @@ const StudentHomeView = () => {
             tasks: [
               {
                 title: period.presentation_dates_available
-                  ? (team.loaded_date_availability ? "Cambiar disponibilidad de fechas" : "Enviar disponibilidad de fechas")
-                  : (team.loaded_date_availability ? "Disponibilidad de fechas enviada" : "No disponible"),
-                completed: team.loaded_date_availability,
+                  ? (fetchedTeam.loaded_date_availability ? "Cambiar disponibilidad de fechas" : "Enviar disponibilidad de fechas")
+                  : (fetchedTeam.loaded_date_availability ? "Disponibilidad de fechas enviada" : "No disponible"),
+                completed: fetchedTeam.loaded_date_availability,
                 available: period.presentation_dates_available && !!user.group_id,
                 urlNotCompleted: "/availability-view",
                 urlCompleted: "/availability-view"
@@ -157,6 +180,8 @@ const StudentHomeView = () => {
   const handleNavigation = (url) => {
     navigate(url);
   };
+
+  console.log("--- milestones:", milestones);
 
   return (
     <Container maxWidth="lg" sx={{ display: "flex", mt: 5 }}>
