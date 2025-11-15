@@ -41,7 +41,7 @@ const StudentDeliveryView = ({
         {<StudentSidebar selectedMenu={null} handleNavigation={navigate} />}
         </Box>
         <Box sx={{ flex: 2 }}>
-        <Box>
+        <Box>            
             {studentOverview}
         </Box>
         </Box>

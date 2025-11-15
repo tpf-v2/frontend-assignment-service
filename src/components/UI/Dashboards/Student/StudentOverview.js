@@ -121,84 +121,96 @@ const StudentOverview = ({ group_id, team, period, selectedDelivery}) => {
 
   const renderAnteproyectoDelivery = () => {
     {/* Anteproyecto */}
-    <Typography variant="h5" align="center" marginTop="1em">
-        Anteproyecto
-      </Typography>
-      {pdfUrlInitial != "failed" ? (
-        <>
-        <PdfPreviewBox>
-          {!!pdfUrlInitial ? (
-            <iframe
-              src={pdfUrlInitial}
-              title="Previsualización del PDF"
-              width="100%"
-              height="100%"
-              style={{ border: "none" }}
-            />
-          ) : (
-            <Typography>Cargando ...</Typography>
-          )}
-        </PdfPreviewBox>
+    return (
+      <>
+        <Typography variant="h5" align="center" marginTop="1em">
+          Anteproyecto
+        </Typography>
+        {pdfUrlInitial != "failed" ? (
+          <>
+          <PdfPreviewBox>
+            {!!pdfUrlInitial ? (
+              <iframe
+                src={pdfUrlInitial}
+                title="Previsualización del PDF"
+                width="100%"
+                height="100%"
+                style={{ border: "none" }}
+              />
+            ) : (
+              <Typography>Cargando ...</Typography>
+            )}
+          </PdfPreviewBox>
+          {
+            <DownloadButton variant="contained" onClick={event => downloadFile('initial-project')} marginbottom="1rem">
+              Descargar PDF
+            </DownloadButton>
+          }
+          </>
+        ) : <Typography>No entregado.</Typography>}
         {
-          <DownloadButton variant="contained" onClick={event => downloadFile('initial-project')} marginbottom="1rem">
-            Descargar PDF
+          !!period.initial_project_active && <DownloadButton variant="contained" onClick={event => navigate("/upload/initial-project")} marginbottom="1rem">
+            Entregar
           </DownloadButton>
         }
-        </>
-      ) : <Typography>No entregado.</Typography>}
-      {
-        !!period.initial_project_active && <DownloadButton variant="contained" onClick={event => navigate("/upload/initial-project")} marginbottom="1rem">
-          Entregar
-        </DownloadButton>
-      }
+      </>
+    )
   };
 
   const renderIntermediateDelivery = () => {
     {/* Entrega intermedia */}
-    <Typography variant="h5" align="center" marginTop="1em">
-      Entrega Intermedia
-    </Typography>
-    {!!videoUrl ? (<DownloadButton href={videoUrl} target="_blank" rel="noopener">
-      Ver Video
-    </DownloadButton>) : <Typography>No entregado.</Typography>}
-    {
-      !!period.intermediate_project_active && <DownloadButton variant="contained" onClick={event => navigate("/upload/intermediate-project")} marginbottom="1rem">
-        Entregar
-      </DownloadButton>
-    }
+    return (
+      <>    
+        <Typography variant="h5" align="center" marginTop="1em">
+          Entrega Intermedia
+        </Typography>
+        {!!videoUrl ? (<DownloadButton href={videoUrl} target="_blank" rel="noopener">
+          Ver Video
+        </DownloadButton>) : <Typography>No entregado.</Typography>}
+        {
+          !!period.intermediate_project_active && <DownloadButton variant="contained" onClick={event => navigate("/upload/intermediate-project")} marginbottom="1rem">
+            Entregar
+          </DownloadButton>
+        }
+      </>
+    )
   };
 
   const renderFinalDelivery = () => {
     {/* Entrega final */}
-    <Typography variant="h5" align="center" marginTop="1em">
-      Entrega Final
-    </Typography>
-    {pdfUrlFinal != "failed" ? (
+    return (
       <>
-      <PdfPreviewBox>
-        {!!pdfUrlFinal ? (
-          <iframe
-            src={pdfUrlFinal}
-            title="Previsualización del PDF"
-            width="100%"
-            height="100%"
-            style={{ border: "none" }}
-          />
-        ) : (
-          <Typography>Cargando ...</Typography>
-        )}
-      </PdfPreviewBox>
-      {
-        <DownloadButton variant="contained" onClick={event => downloadFile('final-project')} marginbottom="1rem">
-          Descargar PDF
+        <Typography variant="h5" align="center" marginTop="1em">
+          Entrega Final
+        </Typography>
+        {pdfUrlFinal != "failed" ? (
+          <>
+          <PdfPreviewBox>
+            {!!pdfUrlFinal ? (
+              <iframe
+                src={pdfUrlFinal}
+                title="Previsualización del PDF"
+                width="100%"
+                height="100%"
+                style={{ border: "none" }}
+              />
+            ) : (
+              <Typography>Cargando ...</Typography>
+            )}
+          </PdfPreviewBox>
+          {
+            <DownloadButton variant="contained" onClick={event => downloadFile('final-project')} marginbottom="1rem">
+              Descargar PDF
+            </DownloadButton>
+          }
+          </>
+        ) : <Typography>No entregado.</Typography>}
+        <DownloadButton variant="contained" onClick={event => navigate("/upload/final-project")} marginbottom="1rem">
+          Entregar
         </DownloadButton>
-      }
+        {/* Botón para descargar el PDF */}
       </>
-    ) : <Typography>No entregado.</Typography>}
-    <DownloadButton variant="contained" onClick={event => navigate("/upload/final-project")} marginbottom="1rem">
-      Entregar
-    </DownloadButton>
-    {/* Botón para descargar el PDF */}
+    )
   };
 
   return (
@@ -213,11 +225,11 @@ const StudentOverview = ({ group_id, team, period, selectedDelivery}) => {
       )}
 
       {selectedDelivery==="intermediate" && (
-        renderAnteproyectoDelivery()
+        renderIntermediateDelivery()
       )}
       
       {selectedDelivery==="final" && (
-        renderAnteproyectoDelivery()
+        renderFinalDelivery()
       )}      
 
       <MySnackbar
