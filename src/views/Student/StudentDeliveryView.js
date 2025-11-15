@@ -9,7 +9,9 @@ import ClosedAlert from "../../components/ClosedAlert";
 import PresentationDateCard from "../../components/UI/Dashboards/Student/PresentationDateCard";
 import StudentSidebar from "./StudentSidebar";
 
-const StudentDeliveryView = () => {
+const StudentDeliveryView = ({
+    selectedDelivery
+}) => {
     const dispatch = useDispatch();
     const [team, setTeam] = useState(null)
     const user = useSelector((state) => state.user);
@@ -28,7 +30,8 @@ const StudentDeliveryView = () => {
     if(!isStudent) {
         navigate("/")
     }
-    let studentOverview = loading ? <CircularProgress/> : ((!!team && !!user.group_id) ? (<StudentOverview group_id={user.group_id} team={team} />) : <ClosedAlert message="No tienes equipo aún."></ClosedAlert>)
+    // Aux: no está en team.id?
+    let studentOverview = loading ? <CircularProgress/> : ((!!team && !!user.group_id) ? (<StudentOverview group_id={user.group_id} team={team} selectedDelivery={selectedDelivery}/>) : <ClosedAlert message="No tienes equipo aún."></ClosedAlert>)
     return (
         <Container maxWidth="lg" sx={{ display: "flex", mt: 5 }}>
         <Box sx={{ flex: 1, mr: 8, mt: 8 }}>
