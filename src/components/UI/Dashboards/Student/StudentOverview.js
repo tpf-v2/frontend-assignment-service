@@ -123,6 +123,8 @@ const StudentOverview = ({ group_id, team, period }) => {
       <Typography variant="h4" align="center" gutterBottom>
         Entregas
       </Typography>
+      
+      {/* Anteproyecto */}
       <Typography variant="h5" align="center" marginTop="1em">
         Anteproyecto
       </Typography>
@@ -153,6 +155,8 @@ const StudentOverview = ({ group_id, team, period }) => {
           Entregar
         </DownloadButton>
       }
+
+      {/* Entrega intermedia */}
       <Typography variant="h5" align="center" marginTop="1em">
         Entrega Intermedia
       </Typography>
@@ -164,8 +168,10 @@ const StudentOverview = ({ group_id, team, period }) => {
           Entregar
         </DownloadButton>
       }
+
+      {/* Entrega final */}
       <Typography variant="h5" align="center" marginTop="1em">
-        Reporte Final
+        Entrega Final
       </Typography>
       {pdfUrlFinal != "failed" ? (
         <>
