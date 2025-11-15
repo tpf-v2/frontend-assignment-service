@@ -27,11 +27,11 @@ const StudentSidebar = ({ selectedMenu, handleNavigation }) => {
       <SidebarList>        
         <Accordion defaultExpanded disableGutters elevation={0} >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <ListItemText primary="Explorar ideas de estudiantes"/>
+            <ListItemText primary="Explorar"/>
           </AccordionSummary>
           <AccordionDetails>
             <ListItem label="Ideas de Estudiantes" icon={<Lightbulb />} menu="/explore/ideas"/>
-            <ListItem label="Contactar Tutores" icon={<Email />} menu="/explore/tutor-emails"/>
+            <ListItem label="Contacto de Tutores" icon={<Email />} menu="/explore/tutor-emails"/>
             <ListItem label="Trabajos Anteriores" icon={<Inventory />} menu="/public"/>
           </AccordionDetails>
         </Accordion>
