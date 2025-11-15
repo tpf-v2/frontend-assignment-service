@@ -59,22 +59,20 @@ const StudentHomeView = () => {
         urlNotCompleted: "/student-form",
         urlCompleted:"",
       });
-    } else {
-      notDoneMsg = "No enviado.";
-    }
+    } 
 
     return {
       phase: "Formulario de Inscripción",
       description: is_topic_assigned ? "Tema y tutor asignado" : "Tema sin asignar",
       tasks: tasks,
-      notDoneMsg: notDoneMsg,
+      notDoneCondition: !is_form_completed & !period.form_active,
+      notDoneMsg: "No enviado.",      
     }
   }
 
   // Existen 4 combinaciones de sí/no toggle fecha de entrega activo y sí/no entrega realizada.
   const getAnteproyectoPhase = (team) => {
     let tasks = [];
-    let notDoneMsg = undefined;
 
     if (!!team.pre_report_date) { // Siempre que haya entregado, no importa si fecha activa o no
       // Botón ver (Nuevo!)
@@ -95,22 +93,20 @@ const StudentHomeView = () => {
         urlNotCompleted: "/upload/initial-project",
         urlCompleted: "/upload/initial-project"
       });
-    } else {
-      notDoneMsg = "No enviado.";
     }
 
     return ({
       phase: "Anteproyecto",
       description: team.pre_report_approved ? "Entrega aprobada" : "Revisión de tutor pendiente",
       tasks: tasks,
-      notDoneMsg: notDoneMsg,
+      notDoneCondition: !team.pre_report_date && !period.initial_project_active, // !completed & !available
+      notDoneMsg: "No enviado.",
     })
   };
 
 
   const getIntermediateOrFinalPhase = (team) => {
     let tasks = [];
-    let notDoneMsg = undefined;
 
     if (!!team.intermediate_assigment_date) { // Siempre que haya entregado, no importa si fecha activa o no
       // Botón ver (Nuevo!)
@@ -131,20 +127,18 @@ const StudentHomeView = () => {
         urlNotCompleted: "/upload/intermediate-project",
         urlCompleted: "/upload/intermediate-project"
       });     
-    } else {
-      notDoneMsg = "No enviada.";
     }
 
     return ({
       phase: "Entrega Intermedia",
       tasks: tasks,
-      notDoneMsg: notDoneMsg,
+      notDoneCondition: !team.intermediate_assigment_date && !period.intermediate_project_active,
+      notDoneMsg: "No enviada.",
     })
   };
 
   const getFinalDeliveryPhase = (fetchedTeam) => {
     let tasks = [];
-    let notDoneMsg = undefined;
 
     if (!!fetchedTeam.final_report_date) { // Siempre que haya entregado, no importa si fecha activa o no
       // Botón ver (Nuevo!)
@@ -164,21 +158,19 @@ const StudentHomeView = () => {
         available: period.final_project_active && !!user.group_id,
         urlNotCompleted: "/upload/final-project",
         urlCompleted: "/upload/final-project"
-      });     
-    } else {
-      notDoneMsg = "No enviada.";
+      });
     }
 
     return ({
         phase: "Entrega Final",
         tasks: tasks,
-        notDoneMsg: notDoneMsg,
+        notDoneCondition: !period.final_project_active && !fetchedTeam.final_report_date,
+        notDoneMsg: "No enviada.",
     })
   };
 
   const getExpositionPhase = (fetchedTeam) => {
     let tasks = [];
-    let notDoneMsg = undefined;
 
     if (fetchedTeam.loaded_date_availability) {
       tasks.push({
@@ -190,14 +182,13 @@ const StudentHomeView = () => {
           urlNotCompleted: "/availability-view",
           urlCompleted: "/availability-view"
       });
-    } else {
-      notDoneMsg = "No enviada.";
     }
 
     return {
       phase: "Exposición de Proyecto Final",
       tasks: tasks,
-      notDoneMsg: notDoneMsg,
+      notDoneCondition: !fetchedTeam.loaded_date_availability && !period.presentation_dates_available,
+      notDoneMsg: "No enviada.",
     }
   }
   
@@ -291,6 +282,7 @@ const StudentHomeView = () => {
                   phase={phase.phase}
                   tasks={phase.tasks}
                   description={phase.description}
+                  notDoneCondition={phase.notDoneCondition}
                   notDoneMsg={phase.notDoneMsg}
                   circle={true}
                 />
