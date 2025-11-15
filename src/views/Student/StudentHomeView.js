@@ -77,6 +77,35 @@ const StudentHomeView = () => {
       tasks: tasks,
     })
   };
+
+  const getIntermediateOrFinalPhase = (type, team) => {
+    let tasks = []
+    if (!!team.intermediate_assigment_date) { // Siempre que haya entregado, no importa si fecha activa o no
+      // Botón ver (Nuevo!)
+      tasks.push({
+        title: "Ver Entrega", // No hay título condicional, solo quiero appendearlo si sí entregó
+        completed: !!team.intermediate_assigment_date,
+        available: !!user.group_id,
+        urlNotCompleted: "/upload/intermediate-project",
+        urlCompleted: "/upload/intermediate-project"
+      });
+    }
+    if (period.initial_project_active) { // fecha activa (toggle admin activado)
+      // Botón Enviar o Cambiar entrega
+      tasks.push({
+        title: !team.intermediate_assigment_date ? (period.intermediate_project_active ? "Enviar" : "No disponible") : (period.intermediate_project_active ? "Cambiar entrega" : "Enviada") ,
+        completed: !!team.intermediate_assigment_date,
+        available: period.intermediate_project_active && !!user.group_id,
+        urlNotCompleted: "/upload/intermediate-project",
+        urlCompleted: "/upload/intermediate-project"
+      });     
+    }
+
+    return ({
+      phase: "Entrega Intermedia",
+      tasks: tasks,
+    })
+  };
   
   useEffect(() => {
     const fetchTeamAnswer = async () => {
@@ -112,18 +141,8 @@ const StudentHomeView = () => {
           
             getAnteproyectoPhase(fetchedTeam)
           ,
-          {
-            phase: "Entrega Intermedia",
-            tasks: [
-              {
-                title: !fetchedTeam.intermediate_assigment_date ? (period.intermediate_project_active ? "Enviar" : "No disponible") : (period.intermediate_project_active ? "Cambiar entrega" : "Enviada") ,
-                completed: !!fetchedTeam.intermediate_assigment_date,
-                available: period.intermediate_project_active && !!user.group_id,
-                urlNotCompleted: "/upload/intermediate-project",
-                urlCompleted: "/upload/intermediate-project"
-              },
-            ],
-          },
+            getIntermediateOrFinalPhase("intermediate", fetchedTeam)
+          ,
           {
             phase: "Entrega Final",
             tasks: [
