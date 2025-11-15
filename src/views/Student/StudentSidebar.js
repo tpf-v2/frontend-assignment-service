@@ -2,7 +2,6 @@ import { Box, List, ListItemText, ListItemIcon, Accordion, AccordionSummary, Acc
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/system";
 import { Lightbulb, Inventory } from "@mui/icons-material";
-import { FileCopy } from "@mui/icons-material";
 import { Email } from "@mui/icons-material";
 const SidebarList = styled(List)(({ theme }) => ({
 }));
@@ -25,12 +24,7 @@ const StudentSidebar = ({ selectedMenu, handleNavigation }) => {
 
   return (
     <Box>
-      <SidebarList>
-        <Accordion defaultExpanded disableGutters elevation={0} >
-          <AccordionSummary>
-            <ListItem label="Tus Entregas" icon={<FileCopy />} menu="/deliveries"/>
-          </AccordionSummary>
-        </Accordion>
+      <SidebarList>        
         <Accordion defaultExpanded disableGutters elevation={0} >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <ListItemText primary="Explorar ideas de estudiantes"/>
