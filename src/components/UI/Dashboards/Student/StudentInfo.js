@@ -47,7 +47,7 @@ const StudentInfo = ({infoError}) => {
           </Typography>
           <Typography color="text.primary">
             <Typography component="span" color="text.primary" fontWeight="bold" marginRight={1}>
-              Tutor:
+              Tutor/a:
             </Typography>
             {user.tutor || "Sin asignar aún"}
           </Typography>
