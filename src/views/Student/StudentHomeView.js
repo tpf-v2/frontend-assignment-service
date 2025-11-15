@@ -175,6 +175,31 @@ const StudentHomeView = () => {
         notDoneMsg: notDoneMsg,
     })
   };
+
+  const getExpositionPhase = (fetchedTeam) => {
+    let tasks = [];
+    let notDoneMsg = undefined;
+
+    if (fetchedTeam.loaded_date_availability) {
+      tasks.push({
+          title: period.presentation_dates_available
+            ? (fetchedTeam.loaded_date_availability ? "Cambiar disponibilidad de fechas" : "Enviar disponibilidad de fechas")
+            : (fetchedTeam.loaded_date_availability ? "Disponibilidad de fechas enviada" : "No disponible"),
+          completed: fetchedTeam.loaded_date_availability,
+          available: period.presentation_dates_available && !!user.group_id,
+          urlNotCompleted: "/availability-view",
+          urlCompleted: "/availability-view"
+      });
+    } else {
+      notDoneMsg = "No enviada.";
+    }
+
+    return {
+      phase: "Exposición de Proyecto Final",
+      tasks: tasks,
+      notDoneMsg: notDoneMsg,
+    }
+  }
   
   useEffect(() => {
     const fetchTeamAnswer = async () => {
@@ -202,20 +227,8 @@ const StudentHomeView = () => {
           ,
             getFinalDeliveryPhase(fetchedTeam)
           ,
-          {
-            phase: "Exposición de Proyecto Final",
-            tasks: [
-              {
-                title: period.presentation_dates_available
-                  ? (fetchedTeam.loaded_date_availability ? "Cambiar disponibilidad de fechas" : "Enviar disponibilidad de fechas")
-                  : (fetchedTeam.loaded_date_availability ? "Disponibilidad de fechas enviada" : "No disponible"),
-                completed: fetchedTeam.loaded_date_availability,
-                available: period.presentation_dates_available && !!user.group_id,
-                urlNotCompleted: "/availability-view",
-                urlCompleted: "/availability-view"
-              },
-            ],
-          }/*,
+            getExpositionPhase(fetchedTeam)
+          /*,
           {
             phase: "Informe de Cumplimiento PPS",
             tasks: [
