@@ -90,7 +90,7 @@ const StudentHomeView = () => {
         urlCompleted: "/upload/intermediate-project"
       });
     }
-    if (period.initial_project_active) { // fecha activa (toggle admin activado)
+    if (period.intermediate_project_active) { // fecha activa (toggle admin activado)
       // Botón Enviar o Cambiar entrega
       tasks.push({
         title: !team.intermediate_assigment_date ? (period.intermediate_project_active ? "Enviar" : "No disponible") : (period.intermediate_project_active ? "Cambiar entrega" : "Enviada") ,
@@ -104,6 +104,35 @@ const StudentHomeView = () => {
     return ({
       phase: "Entrega Intermedia",
       tasks: tasks,
+    })
+  };
+
+  const getFinalDeliveryPhase = (type, fetchedTeam) => {
+    let tasks = []
+    if (!!fetchedTeam.final_report_date) { // Siempre que haya entregado, no importa si fecha activa o no
+      // Botón ver (Nuevo!)
+      tasks.push({
+        title: "Ver Entrega", // No hay título condicional, solo quiero appendearlo si sí entregó
+        completed: !!fetchedTeam.final_report_date,
+        available: !!user.group_id,
+        urlNotCompleted: "/upload/final-project",
+        urlCompleted: "/upload/final-project"
+      });
+    }
+    if (period.final_project_active) { // fecha activa (toggle admin activado)
+      // Botón Enviar o Cambiar entrega
+      tasks.push({
+        title: !fetchedTeam.final_report_date ? (period.final_project_active ? "Enviar" : "No disponible") :  (period.final_project_active ? "Cambiar entrega" : "Enviada"),
+        completed: !!fetchedTeam.final_report_date,
+        available: period.final_project_active && !!user.group_id,
+        urlNotCompleted: "/upload/final-project",
+        urlCompleted: "/upload/final-project"
+      });     
+    }
+
+    return ({
+        phase: "Entrega Final",
+        tasks: tasks,
     })
   };
   
@@ -143,18 +172,8 @@ const StudentHomeView = () => {
           ,
             getIntermediateOrFinalPhase("intermediate", fetchedTeam)
           ,
-          {
-            phase: "Entrega Final",
-            tasks: [
-              {
-                title: !fetchedTeam.final_report_date ? (period.final_project_active ? "Enviar" : "No disponible") :  (period.final_project_active ? "Cambiar entrega" : "Enviada"),
-                completed: !!fetchedTeam.final_report_date,
-                available: period.final_project_active && !!user.group_id,
-                urlNotCompleted: "/upload/final-project",
-                urlCompleted: "/upload/final-project"
-              }
-            ],
-          },
+            getFinalDeliveryPhase("final", fetchedTeam)
+          ,
           {
             phase: "Exposición de Proyecto Final",
             tasks: [
