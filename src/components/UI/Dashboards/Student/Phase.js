@@ -61,7 +61,8 @@ const Phase = ({ phase, tasks, circle, description, notDoneMsg }) => {
         {tasks.map((task, index) => (
           <Milestone key={index} title={task.title} completed={task.available} url={ task.available ? (task.completed ? task.urlCompleted : task.urlNotCompleted) : null} />
         ))}
-        {!!description && <Alert severity="info" sx={{mt: 1}}>{description}</Alert>}
+        {/* Mostramos o bien el cartel de description, o bien solamente el notDoneMsg (y ocultamos lo demás)  */}
+        {!!description && !notDoneMsg && <Alert severity="info" sx={{mt: 1}}>{description}</Alert>}
         {!!notDoneMsg && <Alert severity="info" sx={{mt: 1}}>{notDoneMsg}</Alert>}
       </MilestoneContainer>
       <Box>
