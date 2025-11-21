@@ -193,7 +193,7 @@ const SpecificDateDialog = ({
                     value={item?.selectedDateTime ? dayjs(item.selectedDateTime) : null}
                     onChange={(newValue) => setItem({...item, selectedDateTime: newValue.startOf("day")})}
                     format="DD/MM/YYYY"
-                    minDate={initialDate ? dayjs.min(dayjs(initialDate), dayjs()) : dayjs()} // Desde qué fecha permite seleccionar
+                    // To-Do: si se quiere poner acá "mindate", ok, pero pasarle el dato de la primera fecha de admin (requiere obtenerla de algún lado primero). Mindate es desde qué fecha permite seleccionar.
                     defaultCalendarMonth={initialDate ? dayjs.min(dayjs(initialDate), dayjs()) : dayjs()}
                     shouldDisableDate={(date) => {
                       const day = date.day();
