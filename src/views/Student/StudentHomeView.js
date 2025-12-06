@@ -51,7 +51,7 @@ const StudentHomeView = () => {
     const tasks = [];
     
     tasks.push({
-      title: is_form_completed ? "Formulario enviado" : "Enviar formulario", // [VER, tenía más cosas]
+      title: period.form_active ? (is_form_completed ? "Formulario enviado" : "Enviar formulario") : "No dispobible",
       completed: is_form_completed,
       available: period.form_active,
       urlNotCompleted: "/student-form",
@@ -186,8 +186,7 @@ const StudentHomeView = () => {
         
         setTeam(fetchedTeam);
         const form_completed = userData.form_answered || (userData.topic && userData.tutor);
-        const topic_completed = userData.topic && userData.tutor;
-        //const milestonesToSet = {};
+        const topic_completed = userData.topic && userData.tutor;        
 
         setMilestones([
           // completed: marcar visualmente como completado, notar que se relaciona con el title
@@ -214,7 +213,10 @@ const StudentHomeView = () => {
                 urlCompleted: "/upload/pps-report"
               }
             ],
-          }*/
+          }
+            // ToDo: refactorizarlo similar a las demás entregas para agregar un botón de "Ver"
+            //       (incluye agregar ese tipo de documento al ver entregas (/delicery/...) que actualmente no lo obtiene del back).
+          */
         ]);
       } catch (error) {
         console.error("Error al obtener las respuestas", error);
