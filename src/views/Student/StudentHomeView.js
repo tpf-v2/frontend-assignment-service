@@ -97,7 +97,7 @@ const StudentHomeView = () => {
   };
 
 
-  const getIntermediateOrFinalPhase = (team) => {
+  const getIntermediatePhase = (team) => {
     let tasks = [];
 
     if (!!team.intermediate_assigment_date) { // Siempre que haya entregado, no importa si fecha activa o no
@@ -196,7 +196,7 @@ const StudentHomeView = () => {
           ,          
             getAnteproyectoPhase(fetchedTeam)
           ,
-            getIntermediateOrFinalPhase(fetchedTeam)
+            getIntermediatePhase(fetchedTeam)
           ,
             getFinalDeliveryPhase(fetchedTeam)
           ,
