@@ -63,9 +63,7 @@ const StudentHomeView = () => {
     return {
       phase: "Formulario de Inscripción",
       description: is_topic_assigned ? "Tema y tutor asignado" : "Tema sin asignar",
-      tasks: tasks,
-      notDoneCondition: !is_form_completed & !period.form_active,
-      notDoneMsg: "No enviado.",      
+      tasks: tasks, 
     }
   }
 
@@ -97,8 +95,6 @@ const StudentHomeView = () => {
       phase: "Anteproyecto",
       description: team.pre_report_approved ? "Entrega aprobada" : "Revisión de tutor pendiente",
       tasks: tasks,
-      notDoneCondition: !team.pre_report_date && !period.initial_project_active, // !completed & !available
-      notDoneMsg: "No enviado.",
     })
   };
 
@@ -130,8 +126,6 @@ const StudentHomeView = () => {
     return ({
       phase: "Entrega Intermedia",
       tasks: tasks,
-      notDoneCondition: !team.intermediate_assigment_date && !period.intermediate_project_active,
-      notDoneMsg: "No enviada.",
     })
   };
 
@@ -161,8 +155,6 @@ const StudentHomeView = () => {
     return ({
         phase: "Entrega Final",
         tasks: tasks,
-        notDoneCondition: !period.final_project_active && !fetchedTeam.final_report_date,
-        notDoneMsg: "No enviada.",
     })
   };
 
@@ -182,8 +174,6 @@ const StudentHomeView = () => {
     return {
       phase: "Exposición de Proyecto Final",
       tasks: tasks,
-      notDoneCondition: !fetchedTeam.loaded_date_availability && !period.presentation_dates_available,
-      notDoneMsg: "No enviada.",
     }
   }
   
@@ -277,8 +267,6 @@ const StudentHomeView = () => {
                   phase={phase.phase}
                   tasks={phase.tasks}
                   description={phase.description}
-                  notDoneCondition={phase.notDoneCondition}
-                  notDoneMsg={phase.notDoneMsg}
                   circle={true}
                 />
               ))}

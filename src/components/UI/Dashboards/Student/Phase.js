@@ -45,7 +45,7 @@ const MilestoneContainer = styled(Box)(({ theme }) => ({
   gap: "1em"
 }));
 
-const Phase = ({ phase, tasks, circle, description, notDoneCondition, notDoneMsg }) => {
+const Phase = ({ phase, tasks, circle, description }) => {
   const allTasksCompleted = tasks.every((task) => task.completed);
   if (!description){
     description=""
@@ -62,9 +62,7 @@ const Phase = ({ phase, tasks, circle, description, notDoneCondition, notDoneMsg
         {tasks.map((task, index) => (
           <Milestone key={index} title={task.title} completed={task.available} url={ task.available ? (task.completed ? task.urlCompleted : task.urlNotCompleted) : null} />
         ))}
-        {/* Mostramos o bien el cartel de description, o bien solamente el notDoneMsg (y ocultamos lo demás)  */}
-        {!!description && !notDoneCondition && <Alert severity="info" sx={{mt: 1}}>{description}</Alert>}
-        {!!notDoneCondition && <Alert severity="info" sx={{mt: 1}}>{notDoneMsg}</Alert>}
+        {!!description && <Alert severity="info" sx={{mt: 1}}>{description}</Alert>}
       </MilestoneContainer>
     </PhaseContainer>
   );
