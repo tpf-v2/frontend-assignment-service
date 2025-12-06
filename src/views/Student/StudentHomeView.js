@@ -49,8 +49,6 @@ const StudentHomeView = () => {
   
   const getTeamFormPhase = (team, is_form_completed, is_topic_assigned) => {
     const tasks = [];
-    let notDoneMsg = undefined;
-
     
     tasks.push({
       title: is_form_completed ? "Formulario enviado" : "Enviar formulario", // [VER, tenía más cosas]
@@ -235,8 +233,6 @@ const StudentHomeView = () => {
   const handleNavigation = (url) => {
     navigate(url);
   };
-
-  console.log("--- milestones:", milestones);
 
   return (
     <Container maxWidth="lg" sx={{ display: "flex", mt: 5 }}>

@@ -30,7 +30,7 @@ const StudentDeliveryView = ({
     if(!isStudent) {
         navigate("/")
     }
-    // Aux: no está en team.id?
+    
     let studentOverview = loading ? <CircularProgress/> : ((!!team && !!user.group_id) ? (<StudentOverview group_id={user.group_id} team={team} selectedDelivery={selectedDelivery}/>) : <ClosedAlert message="No tienes equipo aún."></ClosedAlert>)
     return (
         <Container maxWidth="lg" sx={{ display: "flex", mt: 5 }}>
@@ -41,7 +41,7 @@ const StudentDeliveryView = ({
         {<StudentSidebar selectedMenu={null} handleNavigation={navigate} />}
         </Box>
         <Box sx={{ flex: 2 }}>
-        <Box>            
+        <Box>
             {studentOverview}
         </Box>
         </Box>
