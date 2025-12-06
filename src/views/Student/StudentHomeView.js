@@ -51,15 +51,14 @@ const StudentHomeView = () => {
     const tasks = [];
     let notDoneMsg = undefined;
 
-    if (period.form_active) { // fecha activa (toggle admin activado)
-      tasks.push({
-        title: is_form_completed ? "Formulario enviado" : "Enviar formulario",
-        completed: is_form_completed,
-        available: period.form_active,
-        urlNotCompleted: "/student-form",
-        urlCompleted:"",
-      });
-    } 
+    
+    tasks.push({
+      title: is_form_completed ? "Formulario enviado" : "Enviar formulario", // [VER, tenía más cosas]
+      completed: is_form_completed,
+      available: period.form_active,
+      urlNotCompleted: "/student-form",
+      urlCompleted:"",
+    });    
 
     return {
       phase: "Formulario de Inscripción",
@@ -84,16 +83,15 @@ const StudentHomeView = () => {
         urlCompleted: "/delivery/initial-project"
       });
     }
-    if (period.initial_project_active) { // fecha activa (toggle admin activado)
-      // Botón Enviar o Cambiar entrega
-      tasks.push({
-        title: !team.pre_report_date ? (period.initial_project_active ? "Enviar" : "No disponible") : (period.initial_project_active ? "Cambiar entrega" : "Enviado") ,
-        completed: !!team.pre_report_date,
-        available: period.initial_project_active && !!user.group_id,
-        urlNotCompleted: "/upload/initial-project",
-        urlCompleted: "/upload/initial-project"
-      });
-    }
+    
+    // Botón Enviar o Cambiar entrega
+    tasks.push({
+      title: !team.pre_report_date ? (period.initial_project_active ? "Enviar" : "No disponible") : (period.initial_project_active ? "Cambiar entrega" : "Enviado") ,
+      completed: !!team.pre_report_date,
+      available: period.initial_project_active && !!user.group_id,
+      urlNotCompleted: "/upload/initial-project",
+      urlCompleted: "/upload/initial-project"
+    });    
 
     return ({
       phase: "Anteproyecto",
@@ -118,16 +116,16 @@ const StudentHomeView = () => {
         urlCompleted: "/delivery/intermediate-project"
       });
     }
-    if (period.intermediate_project_active) { // fecha activa (toggle admin activado)
-      // Botón Enviar o Cambiar entrega
-      tasks.push({
-        title: !team.intermediate_assigment_date ? (period.intermediate_project_active ? "Enviar" : "No disponible") : (period.intermediate_project_active ? "Cambiar entrega" : "Enviada") ,
-        completed: !!team.intermediate_assigment_date,
-        available: period.intermediate_project_active && !!user.group_id,
-        urlNotCompleted: "/upload/intermediate-project",
-        urlCompleted: "/upload/intermediate-project"
-      });     
-    }
+    
+    // Botón Enviar o Cambiar entrega
+    tasks.push({
+      title: !team.intermediate_assigment_date ? (period.intermediate_project_active ? "Enviar" : "No disponible") : (period.intermediate_project_active ? "Cambiar entrega" : "Enviada") ,
+      completed: !!team.intermediate_assigment_date,
+      available: period.intermediate_project_active && !!user.group_id,
+      urlNotCompleted: "/upload/intermediate-project",
+      urlCompleted: "/upload/intermediate-project"
+    });     
+    
 
     return ({
       phase: "Entrega Intermedia",
@@ -150,17 +148,16 @@ const StudentHomeView = () => {
         urlCompleted: "/delivery/final-project"
       });
     }
-    if (period.final_project_active) { // fecha activa (toggle admin activado)
-      // Botón Enviar o Cambiar entrega
-      tasks.push({
-        title: !fetchedTeam.final_report_date ? (period.final_project_active ? "Enviar" : "No disponible") :  (period.final_project_active ? "Cambiar entrega" : "Enviada"),
-        completed: !!fetchedTeam.final_report_date,
-        available: period.final_project_active && !!user.group_id,
-        urlNotCompleted: "/upload/final-project",
-        urlCompleted: "/upload/final-project"
-      });
-    }
 
+    // Botón Enviar o Cambiar entrega
+    tasks.push({
+      title: !fetchedTeam.final_report_date ? (period.final_project_active ? "Enviar" : "No disponible") :  (period.final_project_active ? "Cambiar entrega" : "Enviada"),
+      completed: !!fetchedTeam.final_report_date,
+      available: period.final_project_active && !!user.group_id,
+      urlNotCompleted: "/upload/final-project",
+      urlCompleted: "/upload/final-project"
+    });
+    
     return ({
         phase: "Entrega Final",
         tasks: tasks,
@@ -171,18 +168,16 @@ const StudentHomeView = () => {
 
   const getExpositionPhase = (fetchedTeam) => {
     let tasks = [];
-
-    if (fetchedTeam.loaded_date_availability) {
-      tasks.push({
-          title: period.presentation_dates_available
-            ? (fetchedTeam.loaded_date_availability ? "Cambiar disponibilidad de fechas" : "Enviar disponibilidad de fechas")
-            : (fetchedTeam.loaded_date_availability ? "Disponibilidad de fechas enviada" : "No disponible"),
-          completed: fetchedTeam.loaded_date_availability,
-          available: period.presentation_dates_available && !!user.group_id,
-          urlNotCompleted: "/availability-view",
-          urlCompleted: "/availability-view"
-      });
-    }
+    
+    tasks.push({
+        title: period.presentation_dates_available
+          ? (fetchedTeam.loaded_date_availability ? "Cambiar disponibilidad de fechas" : "Enviar disponibilidad de fechas")
+          : (fetchedTeam.loaded_date_availability ? "Disponibilidad de fechas enviada" : "No disponible"),
+        completed: fetchedTeam.loaded_date_availability,
+        available: period.presentation_dates_available && !!user.group_id,
+        urlNotCompleted: "/availability-view",
+        urlCompleted: "/availability-view"
+    });    
 
     return {
       phase: "Exposición de Proyecto Final",
