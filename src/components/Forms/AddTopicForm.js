@@ -22,7 +22,7 @@ const AddTopicForm = () => {
 
   return (
     <Root>
-      <Title variant="h5">Agregar nuevo Tema</Title>
+      <Title variant="h5">Agregar Tema</Title>
       <form onSubmit={handleAddTopicSubmit}>
         <TextField
           label="Nuevo Tema"
