@@ -19,7 +19,7 @@ const LoadingDialog = ({ open, setOpenDialog, loading }) => (
       maxHeight: "100vh",
     }}
   >
-    <DialogTitle>{!loading && "Fechas de Presentación Asignadas"}</DialogTitle>
+    <DialogTitle>{!loading && "Fechas de Exposición Asignadas"}</DialogTitle>
     <DialogContent
       sx={{
         display: "flex",
@@ -43,7 +43,7 @@ const LoadingDialog = ({ open, setOpenDialog, loading }) => (
         >
           <CircularProgress />
           <Typography sx={{ ml: 2 }}>
-            Asignando Fechas de Presentación...
+            Asignando Fechas de Exposición...
           </Typography>
         </Box>
       )}

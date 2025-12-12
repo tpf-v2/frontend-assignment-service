@@ -63,11 +63,11 @@ export const DatesPreCheck = ({inputInfo, setSelectedMenu}) => {
                 </Typography>
                 <Link
                     component="span"
-                    onClick={() => setSelectedMenu("Disponibilidad fechas de Presentación")}
+                    onClick={() => setSelectedMenu("Fechas de Exposición Disponibles")}
                     underline="always"
                     sx={{ color: "blue", cursor: "pointer", ml: 0.5}}
                     >
-                    Disponibilidad fechas de Presentación
+                    Fechas de Exposición Disponibles
                 </Link>.
             </>
         );

@@ -48,15 +48,15 @@ export const DeleteConfirmationModal = ({
               }}
             >
               <DialogContent dividers sx={{ padding: "24px 24px 16px" }}>
-                ¿Confirmar la eliminación de {itemTypeName}?
+                ¿Realmente se desea eliminar {itemTypeName}?
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleCloseModal} variant="outlined" color="error">
+                <Button onClick={handleCloseModal} variant="outlined" color="primary">
                   Cancelar
                 </Button>
-                <Button type="submit" variant="contained" color="primary" disabled={!item}>
-                  Confirmar
-                </Button>
+                <Button type="submit" variant="contained" color="error" disabled={!item}>
+                  Eliminar
+                </Button>                
               </DialogActions>
             </form>
           </Dialog>

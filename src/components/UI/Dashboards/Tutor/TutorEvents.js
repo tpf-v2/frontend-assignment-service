@@ -91,7 +91,7 @@ const TutorEvents = ({ events, loading }) => {
         ) : (
           <TopPaddedContainer>
             <TitleSimple variant="h4" align="center" gutterBottom>
-              Presentaciones
+              Exposiciones
             </TitleSimple>
             <EventList>
               {events.length === 0 ? (

@@ -38,6 +38,7 @@ const Title = styled(Typography)(({ theme }) => ({
   textShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
 }));
 
+// Nadie usa esto
 const FormSelection = () => {
   const { cuatrimestre } = useParams(); // Captura del cuatrimestre
   const period = useSelector((state) => state.period);
