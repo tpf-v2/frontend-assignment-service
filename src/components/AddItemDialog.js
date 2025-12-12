@@ -93,7 +93,7 @@ const AddItemDialog = ({ open, handleClose, itemFields, addItemAction, title, it
     return (
         <>
         <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Agregar Nuevo {title}</DialogTitle>
+            <DialogTitle>Agregar {title}</DialogTitle>
             <DialogContent>
                 {itemFields.map(renderField)}
             </DialogContent>

@@ -45,7 +45,7 @@ const DownloadButton = styled(Button)(({ theme }) => ({
 }));
 
 // Copypaste de Tutor/GroupReview sin funcionalidad de comentario
-const StudentOverview = ({ group_id, team, period }) => {
+const StudentOverview = ({ group_id, team, period, selectedDelivery}) => {
   const [pdfUrlInitial, setPdfUrlInitial] = useState(null);
   const [pdfUrlFinal, setPdfUrlFinal] = useState(null);
   const [videoUrl, setVideoUrl] = useState(null);
@@ -53,25 +53,17 @@ const StudentOverview = ({ group_id, team, period }) => {
   const user = useSelector((state) => state.user);
   period = useSelector((state) => state.period);
   
-  const loadIntermediateProject = async () => {
-    try {
-      const response = await getIntermediateProject(group_id, user, user.period_id);
-      setVideoUrl(response.intermediate_assigment); // Guarda la URL en el estado
-    } catch (error) {
-      console.error("Error al cargar la previsualización del video:", error);
-    }
-  };
-
+  
   const [notification, setNotification] = useState({
     open: false,
     message: "",
     status: "",
   });
-
+  
   const handleSnackbarClose = () => {
     setNotification({ ...notification, open: false });
   };
-
+  
   const downloadFile = async (projectType) => {
     try {
       await downloadProject(group_id, user, user.period_id, projectType, group_id);
@@ -79,8 +71,16 @@ const StudentOverview = ({ group_id, team, period }) => {
       console.error("Error al descargar el archivo:", error);
     }
   };
-
+  
   useEffect(() => {
+    const loadIntermediateProject = async () => {
+      try {
+        const response = await getIntermediateProject(group_id, user, user.period_id);
+        setVideoUrl(response.intermediate_assigment); // Guarda la URL en el estado
+      } catch (error) {
+        console.error("Error al cargar la previsualización del video:", error);
+      }
+    };
     loadIntermediateProject();
   }, [group_id, user, user.period_id]);
   useEffect(() => {
@@ -118,81 +118,119 @@ const StudentOverview = ({ group_id, team, period }) => {
     loadPdfPreview();
   }, [user, group_id]);
 
+
+  const renderAnteproyectoDelivery = () => {
+    {/* Anteproyecto */}
+    return (
+      <>
+        <Typography variant="h5" align="center" marginTop="1em">
+          Anteproyecto
+        </Typography>
+        {pdfUrlInitial != "failed" ? (
+          <>
+          <PdfPreviewBox>
+            {!!pdfUrlInitial ? (
+              <iframe
+                src={pdfUrlInitial}
+                title="Previsualización del PDF"
+                width="100%"
+                height="100%"
+                style={{ border: "none" }}
+              />
+            ) : (
+              <Typography>Cargando ...</Typography>
+            )}
+          </PdfPreviewBox>
+          {
+            <DownloadButton variant="contained" onClick={event => downloadFile('initial-project')} marginbottom="1rem">
+              Descargar PDF
+            </DownloadButton>
+          }
+          </>
+        ) : <Typography>No entregado.</Typography>}
+        {
+          !!period.initial_project_active && <DownloadButton variant="contained" onClick={event => navigate("/upload/initial-project")} marginbottom="1rem">
+            Entregar
+          </DownloadButton>
+        }
+      </>
+    )
+  };
+
+  const renderIntermediateDelivery = () => {
+    {/* Entrega intermedia */}
+    return (
+      <>    
+        <Typography variant="h5" align="center" marginTop="1em">
+          Entrega Intermedia
+        </Typography>
+        {!!videoUrl ? (<DownloadButton href={videoUrl} target="_blank" rel="noopener">
+          Ver Video
+        </DownloadButton>) : <Typography>No entregado.</Typography>}
+        {
+          !!period.intermediate_project_active && <DownloadButton variant="contained" onClick={event => navigate("/upload/intermediate-project")} marginbottom="1rem">
+            Entregar
+          </DownloadButton>
+        }
+      </>
+    )
+  };
+
+  const renderFinalDelivery = () => {
+    {/* Entrega final */}
+    return (
+      <>
+        <Typography variant="h5" align="center" marginTop="1em">
+          Entrega Final
+        </Typography>
+        {pdfUrlFinal != "failed" ? (
+          <>
+          <PdfPreviewBox>
+            {!!pdfUrlFinal ? (
+              <iframe
+                src={pdfUrlFinal}
+                title="Previsualización del PDF"
+                width="100%"
+                height="100%"
+                style={{ border: "none" }}
+              />
+            ) : (
+              <Typography>Cargando ...</Typography>
+            )}
+          </PdfPreviewBox>
+          {
+            <DownloadButton variant="contained" onClick={event => downloadFile('final-project')} marginbottom="1rem">
+              Descargar PDF
+            </DownloadButton>
+          }
+          </>
+        ) : <Typography>No entregado.</Typography>}
+        <DownloadButton variant="contained" onClick={event => navigate("/upload/final-project")} marginbottom="1rem">
+          Entregar
+        </DownloadButton>
+        {/* Botón para descargar el PDF */}
+      </>
+    )
+  };
+
   return (
     <GroupReviewContainer>
-      <Typography variant="h4" align="center" gutterBottom>
+      {/*<Typography variant="h4" align="center" gutterBottom>
         Entregas
       </Typography>
-      <Typography variant="h5" align="center" marginTop="1em">
-        Anteproyecto
-      </Typography>
-      {pdfUrlInitial != "failed" ? (
-        <>
-        <PdfPreviewBox>
-          {!!pdfUrlInitial ? (
-            <iframe
-              src={pdfUrlInitial}
-              title="Previsualización del PDF"
-              width="100%"
-              height="100%"
-              style={{ border: "none" }}
-            />
-          ) : (
-            <Typography>Cargando ...</Typography>
-          )}
-        </PdfPreviewBox>
-        {
-          <DownloadButton variant="contained" onClick={event => downloadFile('initial-project')} marginbottom="1rem">
-            Descargar PDF
-          </DownloadButton>
-        }
-        </>
-      ) : <Typography>No entregado.</Typography>}
-      {
-        !!period.initial_project_active && <DownloadButton variant="contained" onClick={event => navigate("/upload/initial-project")} marginbottom="1rem">
-          Entregar
-        </DownloadButton>
-      }
-      <Typography variant="h5" align="center" marginTop="1em">
-        Entrega Intermedia
-      </Typography>
-      {!!videoUrl ? (<DownloadButton href={videoUrl} target="_blank" rel="noopener">
-        Ver Video
-      </DownloadButton>) : <Typography>No entregado.</Typography>}
-      {
-        !!period.intermediate_project_active && <DownloadButton variant="contained" onClick={event => navigate("/upload/intermediate-project")} marginbottom="1rem">
-          Entregar
-        </DownloadButton>
-      }
-      <Typography variant="h5" align="center" marginTop="1em">
-        Reporte Final
-      </Typography>
-      {pdfUrlFinal != "failed" ? (
-        <>
-        <PdfPreviewBox>
-          {!!pdfUrlFinal ? (
-            <iframe
-              src={pdfUrlFinal}
-              title="Previsualización del PDF"
-              width="100%"
-              height="100%"
-              style={{ border: "none" }}
-            />
-          ) : (
-            <Typography>Cargando ...</Typography>
-          )}
-        </PdfPreviewBox>
-        {
-          <DownloadButton variant="contained" onClick={event => downloadFile('final-project')} marginbottom="1rem">
-            Descargar PDF
-          </DownloadButton>
-        }
-        </>
-      ) : <Typography>No entregado.</Typography>}
-      <DownloadButton variant="contained" onClick={event => navigate("/upload/final-project")} marginbottom="1rem">
-        Entregar
-      </DownloadButton>
-      {/* Botón para descargar el PDF */}
+      */}
+      
+      {selectedDelivery==="initial" && (
+        renderAnteproyectoDelivery()
+      )}
+
+      {selectedDelivery==="intermediate" && (
+        renderIntermediateDelivery()
+      )}
+      
+      {selectedDelivery==="final" && (
+        renderFinalDelivery()
+      )}      
 
       <MySnackbar
         open={notification.open}

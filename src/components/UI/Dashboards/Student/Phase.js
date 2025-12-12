@@ -50,6 +50,7 @@ const Phase = ({ phase, tasks, circle, description }) => {
   if (!description){
     description=""
   }
+
   return (
     <PhaseContainer>
       {circle && <Circle completed={allTasksCompleted} />}
@@ -63,8 +64,6 @@ const Phase = ({ phase, tasks, circle, description }) => {
         ))}
         {!!description && <Alert severity="info" sx={{mt: 1}}>{description}</Alert>}
       </MilestoneContainer>
-      <Box>
-      </Box>
     </PhaseContainer>
   );
 };

@@ -11,6 +11,7 @@ const Root = styled(Paper)(({ theme }) => ({
 
 const ButtonStyled = ButtonSimple;
 
+// Nadie usa este componente AdminForm
 const AdminForm = () => {
   const navigate = useNavigate();
 
@@ -24,7 +25,7 @@ const AdminForm = () => {
             color="primary"
             onClick={() => navigate('/admin-add-topic')}
           >
-            Agregar Nuevo Tema
+            Agregar Tema
           </ButtonStyled>
           <ButtonStyled
             variant="contained"

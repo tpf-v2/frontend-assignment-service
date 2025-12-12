@@ -123,7 +123,7 @@ export const TutorModals = ({
       };
 
       const addTutorModal = () => {
-        return innerActionTutorModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar Nuevo", "Agregar")
+        return innerActionTutorModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar", "Agregar")
       };
     
       const editTutorModal = () => {
