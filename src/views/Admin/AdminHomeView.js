@@ -197,10 +197,10 @@ const AdminHomeView = () => {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary">
+          <Button onClick={handleClose} color="error" variant="outlined">
             Cancelar
           </Button>
-          <Button onClick={handleAddPeriod} color="primary">
+          <Button onClick={handleAddPeriod} color="primary" variant="contained">
             Agregar
           </Button>
         </DialogActions>

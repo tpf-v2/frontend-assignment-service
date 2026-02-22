@@ -90,6 +90,11 @@ const ContentPPS = ({ students, deliveries, loadingPPS }) => {
                                     <TableCell>{getStudentFullName(delivery.student_id)}</TableCell>
                                     <TableCell>{formatDate(delivery.created_on)}</TableCell>
                                     <TableCell>
+                                        {/* To-Do: reemplazar este IconButton por este botón custom
+                                        <DownloadButtonWithSpinner
+                                            onClick={() => downloadFile(delivery.student_id)}
+                                            spinningCondition={false} // ToDo: useState para qué id is_downldng
+                                        /> */}
                                         <IconButton
                                             onClick={() => downloadFile(delivery.student_id)}
                                         >

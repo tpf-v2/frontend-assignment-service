@@ -34,6 +34,7 @@ import { Lightbulb } from "@mui/icons-material";
 import { Title, TitleTop } from "../../styles/Titles";
 import { RootWhite } from "../../components/Root";
 import ExploreIdeas from "../../components/Exploration/ExploreIdeas";
+import { StudentOrTutor } from "../../components/roleTypes";
 // Estilos
 const Root = RootWhite;
 
@@ -267,8 +268,8 @@ const transformEventData = (data) => {
   const contentMap = {
     Inicio: <Inicio />,
     "Mis Equipos": <div>Contenido del Formulario de Fechas</div>,
-    "Seleccionar Disponibilidad": <AvailabilityCalendar />,
-    "Fechas de presentación": <TutorEvents events={events} loading={loadingEvents}></TutorEvents>,
+    "Seleccionar Disponibilidad": <AvailabilityCalendar role={StudentOrTutor.TUTOR}/>,
+    "Fechas de Exposiciones": <TutorEvents events={events} loading={loadingEvents}></TutorEvents>,
     Ideas: <ExploreIdeas containedStyle={false}/>,
     Revisiones: selectedTeamReview ? (
       <GroupReview group={selectedTeamReview} />
@@ -334,11 +335,11 @@ const transformEventData = (data) => {
 
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    Mis Presentaciones
+                    Mis Exposiciones
                   </AccordionSummary>
                   <AccordionDetails>
                     <ListItem label="Seleccionar Disponibilidad" icon={<EditCalendarIcon />} menu="Seleccionar Disponibilidad" />
-                    <ListItem label="Fechas de Presentaciones" icon={<TodayIcon />} menu="Fechas de presentación" />
+                    <ListItem label="Fechas de Exposiciones" icon={<TodayIcon />} menu="Fechas de Exposiciones" />
                   </AccordionDetails>
                 </Accordion>
               </SidebarList>

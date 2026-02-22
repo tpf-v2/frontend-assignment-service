@@ -19,6 +19,8 @@ import ProjectPdfComponent from "./UI/Dashboards/Tutor/ProjectPdfComponent";
 import TutorIntermediateProjectComponent from "./UI/Dashboards/Tutor/TutorIntermediateProjectComponent"; // Importar el componente
 import { getGroupById } from "../api/getGroupById";
 import GroupReview from "./UI/Dashboards/Tutor/GroupReview";
+import { TitleSimple } from "../styles/Titles";
+import { TopPaddedContainer } from "./Root";
 
 const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),
@@ -61,6 +63,8 @@ const LearningPath = ({ team_id, team }) => {
       try {
         const team = await dispatch(getGroupById(user, team_id));
 
+        // To-Do: title y completed de cada milestone usan la misma condición, sería bueno algún refactor
+        // que permita indicar la condición una sola vez, para no 'olvidar' escribirla en alguno de los dos lugares.
         setMilestones([
           {
             phase: "Anteproyecto",
@@ -76,7 +80,7 @@ const LearningPath = ({ team_id, team }) => {
             phase: "Entrega Intermedia",
             tasks: [
               {
-                title: team.intermediate_assigment_date !== null ? "Enviado" : "No enviado",
+                title: team.intermediate_assigment_date !== null ? "Enviada" : "No enviada",
                 completed: team.intermediate_assigment_date !== null ? true : false,
               }
             ],
@@ -85,7 +89,7 @@ const LearningPath = ({ team_id, team }) => {
             phase: "Entrega Final",
             tasks: [
               {
-                title: "Enviado",
+                title: team.final_report_date !== null ? "Enviada" : "No enviada",
                 completed: team.final_report_date !== null ? true : false,
               }
             ],
@@ -134,15 +138,10 @@ const LearningPath = ({ team_id, team }) => {
             <ProjectPdfComponent groupId={team_id} groupNumber={team.group_number} projectType={"Final"}/> 
           ) : (
             // Título de la sección
-            <>              
-              <Typography
-                variant="h4"
-                align="center"
-                gutterBottom
-                marginTop={1}
-              >
+            <TopPaddedContainer>              
+              <TitleSimple variant="h4" align="center" gutterBottom>
                 Equipo {team.group_number}
-              </Typography>
+              </TitleSimple>
               <StyledCard>
                 <CardContent>
                   <Grid container spacing={2}>
@@ -220,7 +219,7 @@ const LearningPath = ({ team_id, team }) => {
                   />
                 ))}
               </Box>
-            </>
+            </TopPaddedContainer>
           )}
         </>
       )}

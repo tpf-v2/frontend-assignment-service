@@ -154,7 +154,7 @@ export const TopicModals = ({
       };
 
       const addTopicModal = () => {
-        return innerActionTopicModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar Nuevo", "Agregar");
+        return innerActionTopicModal(openAddModal, handleCloseAddModal, handleAddItem, newItem, setNewItem, "Agregar", "Agregar");
       };
     
       const editTopicModal = () => {

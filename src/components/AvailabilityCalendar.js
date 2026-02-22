@@ -26,6 +26,7 @@ import {
 } from "../styles/AvailabilityCalendarStyle";
 import { useSelector } from "react-redux";
 import { transformSlotsToIntervals, fixExternalDate } from "../utils/TransformSlotsToIntervals";
+import { StudentOrTutor } from "./roleTypes";
 import ClosedAlert from "./ClosedAlert";
 import { Box } from "@mui/system";
 import 'moment/locale/es';
@@ -33,12 +34,16 @@ import { useMemo } from 'react';
 
 import browser from '../services/browserDetect';
 import BrowserWarning from './BrowserWarning';
+import { TitleSimple } from "../styles/Titles";
+import { ADD_MSG_FOR, DELETE_MSG_FOR } from "./datesMsgsEnums";
 // Set the IANA time zone you want to use
 moment.tz.setDefault('America/Argentina/Buenos Aires')
 // Localizador de momento
 const localizer = momentLocalizer(moment);
 
-const AvailabilityCalendar = () => {
+const AvailabilityCalendar = ({
+  role
+}) => {
   const [userAvailability, setUserAvailability] = useState([]); // Fechas seleccionadas por el estudiante
   const [modalOpen, setModalOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -233,17 +238,17 @@ const AvailabilityCalendar = () => {
     <>
       {!loading ? (
         period.presentation_dates_available ? (
-          <AvailabilityContainer>
-            <Typography variant="h4" align="center" gutterBottom>
-              Selecciona tu disponibilidad
-            </Typography>
+          <AvailabilityContainer>              
+            <TitleSimple variant="h4" align="center" gutterBottom>
+              Selecciona tu Disponibilidad
+            </TitleSimple>
             {/* Descripción del Calendario */}
             <DescriptionBox>
               <Typography variant="body1" align="justify" gutterBottom>
                 En este calendario, podrás seleccionar los bloques de tiempo que estás
-                disponible para presentar. Haz clic en cualquier espacio en blanco
-                para agregar un bloque de disponibilidad. Si necesitas eliminar un
-                bloque existente, simplemente selecciónalo de nuevo.
+                disponible para {role === StudentOrTutor.STUDENT ? "exponer" : "asistir a exposiciones"}.
+                Haz clic en cualquier espacio en blanco para agregar un bloque de disponibilidad.
+                Si necesitas eliminar un bloque existente, simplemente clickéalo.
               </Typography>
             </DescriptionBox>
   
@@ -290,12 +295,14 @@ const AvailabilityCalendar = () => {
               open={modalOpen}
               onClose={() => setModalOpen(false)}
               onConfirm={handleConfirmEvent}
+              msgFor={ADD_MSG_FOR.NON_ADMIN_ROLES}
             />
   
             <ConfirmDeleteModal
               open={confirmDeleteOpen}
               onClose={() => setConfirmDeleteOpen(false)}
               onConfirm={handleDeleteEvent}
+              msgFor={DELETE_MSG_FOR.NON_ADMIN_ROLES}
             />
   
             <MySnackbar

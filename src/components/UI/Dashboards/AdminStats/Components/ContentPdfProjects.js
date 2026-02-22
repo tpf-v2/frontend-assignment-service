@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateGroup } from "../../../../../api/updateGroups";
 import { setGroups } from "../../../../../redux/slices/groupsSlice";
 import { getTeamById, getTutorNameById, formatDate } from "../../../../../utils/getEntitiesUtils";
+import { DownloadButtonWithSpinner } from "../../../../Buttons/CustomButtons";
 
 const ContentPdfProjects = ({
   loadingProjects,
@@ -212,15 +213,14 @@ const ContentPdfProjects = ({
                       </TableCell>
                     )}
                     <TableCell>
-                      <IconButton
+                      <DownloadButtonWithSpinner
                         onClick={async () => {
                           setDownloading(entrega.name)
                           await downloadFile(getTeam(entrega.name), getTeamNumber(entrega.name))
                           setDownloading(null)
                         }}
-                      >
-                        {(downloading === entrega.name) ? <CircularProgress /> : (<DownloadIcon />)}
-                      </IconButton>
+                        spinningCondition={downloading === entrega.name}
+                      />                      
                     </TableCell>
                   </TableRow>
                 )) // cierra deliveries.map

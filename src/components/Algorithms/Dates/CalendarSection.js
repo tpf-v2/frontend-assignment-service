@@ -27,6 +27,7 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
   const [selectedEvent, setSelectedEvent] = useState(null); // Construiré "item" a editar, a partir de esto
   const [editDateOpenDialog, setEditDateOpenDialog] = useState(false); // Editar luego de confirmar resultados
 
+  // Para click viendo el calendario principal
   const handleEventSelect = (event) => {
     setSelectedEvent(event);
     setOpenDetails(true);
@@ -136,7 +137,7 @@ const CalendarSection = ({ events, defaultDate, loadingDates, teams, tutors, per
               {/* Dialog para mostrar la información del evento */}
               <Dialog open={openDetails} onClose={handleClose}>
                 <DialogTitle>
-                  Detalles del Evento
+                  Detalles de la Asignación
                   <IconButton
                     edge="end"
                     color="inherit"
