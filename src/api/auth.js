@@ -78,3 +78,25 @@ export const resetPasswordWithToken = async (password, token) => {
         }
     }
 };
+
+export const downloadPasswordResetLinks = async (user) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${user.token}`,
+        },
+        responseType: 'blob',
+    };
+
+    const response = await axios.get(`${BASE_URL}/password-reset-links`, config);
+
+    const blob = new Blob([response.data], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'password-reset-links.txt');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+};

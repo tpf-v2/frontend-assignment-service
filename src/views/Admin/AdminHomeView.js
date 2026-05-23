@@ -5,6 +5,7 @@ import { styled } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllPeriods, addPeriod } from '../../api/handlePeriods'
+import { downloadPasswordResetLinks } from '../../api/auth'
 import MySnackbar from '../../components/UI/MySnackBar';
 import { setPeriod } from '../../redux/slices/periodSlice';
 import { AddCardStyled } from '../../styles/AddCardStyled';
@@ -113,6 +114,23 @@ const AdminHomeView = () => {
   };
   const dispatch = useDispatch();
 
+  const downloadResetLinks = async () => {
+    try {
+      await downloadPasswordResetLinks(user);
+      setNotification({
+        open: true,
+        message: "Links de reset descargados exitosamente",
+        status: "success",
+      });
+    } catch (error) {
+      setNotification({
+        open: true,
+        message: "Error al descargar los links de reset: " + error.message,
+        status: "error",
+      });
+    }
+  };
+
   const handleCardClick = (period) => {
     dispatch(setPeriod(period))
     navigate(`/dashboard/${period.id}`);
@@ -205,6 +223,7 @@ const AdminHomeView = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Button onClick={() => downloadResetLinks()} color="primary" variant="contained">Bajar Reset Links de Passwords</Button>
       <MySnackbar
         open={notification.open}
         handleClose={handleSnackbarClose}
